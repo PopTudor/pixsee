@@ -1,0 +1,28 @@
+apply plugin: 'com.android.application'
+
+android {
+	compileSdkVersion 23
+	buildToolsVersion "23.0.1"
+
+	defaultConfig {
+		applicationId "com.marked.vifo"
+		minSdkVersion 16
+		targetSdkVersion 23
+		versionCode 1
+		versionName "1.0"
+	}
+	buildTypes {
+		release {
+			minifyEnabled true
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
+}
+
+dependencies {
+	compile fileTree(include: ['*.jar'], dir: 'libs')
+	compile 'com.android.support:appcompat-v7:23.0.1'
+	compile files('C:/Users/Marked/Documents/git/Vifo/libs/Vuforia.jar')
+	compile 'com.github.medyo:fancybuttons:1.5@aar'
+	compile files('C:/Users/Marked/Documents/git/Vifo/libs/jpct_ae.jar')
+}
