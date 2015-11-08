@@ -21,11 +21,9 @@ import com.qualcomm.vuforia.VideoBackgroundConfig;
 
 
 public class RefFreeFrame {
-
-	private static final String LOGTAG = "RefFreeFrame";
+	private static final String LOGTAG = "RefFreeFrame***";
 	STATUS curStatus;
 
-	;
 	// / Current color of the target finder. This changes color
 	// / depending on frame quality.
 	float              colorFrame[];
@@ -39,17 +37,17 @@ public class RefFreeFrame {
 	RefFreeFrameGL     frameGL;
 	// The latest trackable source to be extracted from the Target Builder
 	TrackableSource    trackableSource;
-	PreviewActivity    mActivity;
+	ImageTargets mActivity;
 	ApplicationSession vuforiaAppSession;
 
-	public RefFreeFrame(PreviewActivity activity, ApplicationSession session) {
+	public RefFreeFrame(ImageTargets activity, ApplicationSession session) {
 		mActivity = activity;
 		vuforiaAppSession = session;
 		colorFrame = new float[4];
 		curStatus = STATUS.STATUS_IDLE;
 		lastSuccessTime = 0;
 		trackableSource = null;
-		colorFrame[0] = 1.0f;
+		colorFrame[0] = 0.0f;
 		colorFrame[1] = 0.0f;
 		colorFrame[2] = 0.0f;
 		colorFrame[3] = 0.75f;
@@ -108,7 +106,6 @@ public class RefFreeFrame {
 
 	void reset() {
 		curStatus = STATUS.STATUS_IDLE;
-
 	}
 
 	void setCreating() {

@@ -43,4 +43,14 @@
 
     <string name="menu_back">Vuforia Samples</string>
     <string name="menu_extended_tracking">Extended Tracking</string>
+    <string name="sign_in_with_pixy">Sign in with Pixy</string>
+    <string name="user_data_file_name">com.marked.vifo.USER_DATA_LOGGED</string>
+    <string name="title_activity_login">loginActivity</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="title_contact_list">Contacts</string>
+    <string name="title_contact_detail">Contact Detail</string>
+
+    <string name="senderID">515334962063</string>
+    <string name="serverAPIKey">AIzaSyDsBUHhZ05Gc8w2y45k7E7s8T509yvawl4</string>
+
 </resources>

@@ -28,7 +28,7 @@ public class RefFreeFrameGL {
 
 	private static final String LOGTAG = "RefFreeFrameGL";
 
-	PreviewActivity    mActivity;
+	ImageTargets mActivity;
 	ApplicationSession vuforiaAppSession;
 	// Projection and Modelview Matrices
 	Matrix44F          projectionOrtho, modelview;
@@ -62,7 +62,7 @@ public class RefFreeFrameGL {
 	private int colorHandle; // Handle to the color vector
 	private int mvpMatrixHandle; // Handle to the product of the Projection
 
-	public RefFreeFrameGL(PreviewActivity activity, ApplicationSession session) {
+	public RefFreeFrameGL(ImageTargets activity, ApplicationSession session) {
 		mActivity = activity;
 		vuforiaAppSession = session;
 		shaderProgramID = 0;

@@ -10,7 +10,6 @@ package com.marked.vifo.VuforiaApplication.utils;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -46,8 +45,8 @@ public class Texture {
 
 			return loadTextureFromIntBuffer(data, bitMap.getWidth(), bitMap.getHeight());
 		} catch (IOException e) {
-			Log.e(LOGTAG, "Failed to log texture '" + fileName + "' from APK");
-			Log.i(LOGTAG, e.getMessage());
+//			Log.e(LOGTAG, "Failed to log texture '" + fileName + "' from APK");
+//			Log.i(LOGTAG, e.getMessage());
 			return null;
 		}
 	}

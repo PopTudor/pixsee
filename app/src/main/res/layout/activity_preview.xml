@@ -7,6 +7,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
+                android:id="@+id/container"
                 tools:context=".PreviewActivity">
     <RelativeLayout
         android:id="@+id/loading_layout"
@@ -37,16 +38,12 @@
         android:weightSum="1"
         android:gravity="center">
 
-        <mehdi.sakout.fancybuttons.FancyButton
+        <Button
             android:id="@+id/camera_button"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            fancy:fb_borderColor="#000"
-            fancy:fb_borderWidth="5dp"
-            fancy:fb_defaultColor="#ffffff"
-            fancy:fb_radius="50dp"
-            fancy:fb_text=""
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:onClick="onCameraClick"
-            android:alpha="0.8"/>
+            android:alpha="0.8"
+            android:background="@drawable/round_button"/>
     </LinearLayout>
 </RelativeLayout>

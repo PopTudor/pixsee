@@ -9,13 +9,9 @@ package com.marked.vifo.VuforiaApplication.utils;
 
 import android.content.res.AssetManager;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 
 public class SampleApplication3DModel extends MeshObject {
@@ -26,47 +22,51 @@ public class SampleApplication3DModel extends MeshObject {
 	private ByteBuffer norms;
 
 	public void loadModel(AssetManager assetManager, String filename) throws IOException {
-		InputStream is = null;
-		try {
-			is = assetManager.open(filename);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-			String line= reader.readLine();
-
-			int floatsToRead= Integer.parseInt(line);
-			numVerts = floatsToRead / 3;
-
-			verts = ByteBuffer.allocateDirect(floatsToRead * 4);
-			verts.order(ByteOrder.nativeOrder());
-			for (int i = 0; i < floatsToRead; i++) {
-				verts.putFloat(Float.parseFloat(reader.readLine()));
-			}
-			verts.rewind();
-
-			line = reader.readLine();
-			floatsToRead = Integer.parseInt(line);
-
-			norms = ByteBuffer.allocateDirect(floatsToRead * 4);
-			norms.order(ByteOrder.nativeOrder());
-			for (int i = 0; i < floatsToRead; i++) {
-				norms.putFloat(Float.parseFloat(reader.readLine()));
-			}
-			norms.rewind();
-
-			line = reader.readLine();
-			floatsToRead = Integer.parseInt(line);
-
-			textCoords = ByteBuffer.allocateDirect(floatsToRead * 4);
-			textCoords.order(ByteOrder.nativeOrder());
-			for (int i = 0; i < floatsToRead; i++) {
-				textCoords.putFloat(Float.parseFloat(reader.readLine()));
-			}
-			textCoords.rewind();
-
-		} finally {
-			if (is != null)
-				is.close();
-		}
+//		InputStream objStream = new FileInputStream(filename);
+//		InputStream mtlStream = null;
+//		Object3D[] model;
+//
+//		try {
+////			objStream = assetManager.open(filename);
+//			BufferedReader reader = new BufferedReader(new InputStreamReader(objStream));
+////			model = Loader.loadOBJ(objStream, mtlStream, 1);
+//
+//			String line= reader.readLine();
+//
+//			int floatsToRead= Integer.parseInt(line);
+//			numVerts = floatsToRead / 3;
+//
+//			verts = ByteBuffer.allocateDirect(floatsToRead * 4);
+//			verts.order(ByteOrder.nativeOrder());
+//			for (int i = 0; i < floatsToRead; i++) {
+//				verts.putFloat(Float.parseFloat(reader.readLine()));
+//			}
+//			verts.rewind();
+//
+//			line = reader.readLine();
+//			floatsToRead = Integer.parseInt(line);
+//
+//			norms = ByteBuffer.allocateDirect(floatsToRead * 4);
+//			norms.order(ByteOrder.nativeOrder());
+//			for (int i = 0; i < floatsToRead; i++) {
+//				norms.putFloat(Float.parseFloat(reader.readLine()));
+//			}
+//			norms.rewind();
+//
+//			line = reader.readLine();
+//			floatsToRead = Integer.parseInt(line);
+//
+//			textCoords = ByteBuffer.allocateDirect(floatsToRead * 4);
+//			textCoords.order(ByteOrder.nativeOrder());
+//			for (int i = 0; i < floatsToRead; i++) {
+//				textCoords.putFloat(Float.parseFloat(reader.readLine()));
+//			}
+//			textCoords.rewind();
+//
+//		} finally {
+//			if (objStream != null)
+//				objStream.close();
+//		}
 	}
 
 
