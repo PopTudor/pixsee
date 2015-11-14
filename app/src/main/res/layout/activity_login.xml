@@ -70,21 +70,21 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/nameEditText"
+        android:id="@+id/emailEditText"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:hint="Name"/>
+        android:hint="Email"
+        android:inputType="textEmailAddress"/>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
         android:ems="10"
-        android:id="@+id/emailEditText"
-        android:layout_below="@+id/nameEditText"
+        android:id="@+id/passwordEditText"
+        android:layout_below="@+id/emailEditText"
         android:layout_centerHorizontal="true"
-        android:hint="email"/>
+        android:hint="Password"
+        android:inputType="textPassword"/>
 
 </RelativeLayout>

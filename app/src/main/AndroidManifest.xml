@@ -70,6 +70,7 @@
             android:name=".activities.LoginActivity"
             android:clearTaskOnLaunch="true"
             android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask">
         </activity>
         <activity

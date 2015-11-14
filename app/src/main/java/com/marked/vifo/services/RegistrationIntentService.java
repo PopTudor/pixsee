@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Google Inc. All Rights Reserved.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,48 +19,45 @@ package com.marked.vifo.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.support.v4.content.IntentCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.marked.vifo.R;
 import com.marked.vifo.activities.ContactListActivity;
+import com.marked.vifo.extras.GCMConstants;
 import com.marked.vifo.extras.GCMPreferences;
-import com.marked.vifo.helper.JSONParser;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * To receive GCM messages, this app must register with GCM and get a unique identifier called a registration token.
  * If you are using the XMPP connection server, the client app can send "upstream" messages back to the app server.
  */
 public class RegistrationIntentService extends IntentService {
-
+    public static final String TOKEN = "TOKEN";
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
-    public static final String REG_TOKEN = "REG_TOKEN";
+    private Intent mIntent;
+    private SharedPreferences defaultSharedPreferences;
 
     public RegistrationIntentService() {
         super(TAG);
     }
 
-    private Intent mIntent;
-
     @Override
     protected void onHandleIntent(Intent intent) {
-        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        defaultSharedPreferences = getSharedPreferences(getString(R.string.user_data_file_name), MODE_PRIVATE);
         mIntent = intent;
         try {
             // [START register_for_gcm]
@@ -99,7 +96,7 @@ public class RegistrationIntentService extends IntentService {
 
     /**
      * Persist registration to third-party servers.
-     *
+     * <p/>
      * Modify this method to associate the user's GCM registration token with any server-side account
      * maintained by your application.
      *
@@ -107,7 +104,34 @@ public class RegistrationIntentService extends IntentService {
      */
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
-        new Login(mIntent.getStringExtra("name"), mIntent.getStringExtra("email"), token).execute();
+        String email = mIntent.getStringExtra("email"), password = mIntent.getStringExtra("password");
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        String verifyUserURL = GCMConstants.SEND_CHAT_URL+"?email=" + email + "&password=" + password;
+        verifyUserURL = verifyUserURL.replaceAll(" ", "%20");
+
+        StringRequest request = new StringRequest(Request.Method.GET, verifyUserURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(RegistrationIntentService.this,
+                        " " + response, Toast.LENGTH_SHORT).show();
+                if (response.equalsIgnoreCase("success")) {
+                    Intent intent = new Intent(RegistrationIntentService.this, ContactListActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("***","onErrorResponse "+error.getMessage());
+                Toast.makeText(RegistrationIntentService.this,
+                        " " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        requestQueue.add(request);
+
     }
 
     /**
@@ -124,50 +148,9 @@ public class RegistrationIntentService extends IntentService {
         }
     }
 
-    ArrayList<NameValuePair> params;
-    // [END subscribe_topics]
-    private class Login extends AsyncTask<String, String, JSONObject> {
-        String name,email, token;
-        public Login(String name,String email,String token) {
-            super();
-            this.name = name;
-            this.email = email;
-            this.token = token;
-        }
-
-        @Override
-        protected JSONObject doInBackground(String... args) {
-            Log.d("***","doInBackground "+name+"/"+email+"/"+token);
-
-            JSONParser json = new JSONParser();
-            params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("name", name));
-            params.add(new BasicNameValuePair("mobno", email));
-            params.add((new BasicNameValuePair("reg_id", token)));
-
-            JSONObject jObj = json.getJSONFromUrl("http://127.0.0.1:27017/login",params);
-            return jObj;
-        }
-        @Override
-        protected void onPostExecute(JSONObject json) {
-            try {
-                String res = json.getString("response");
-                Log.d("***","onPostExecute "+res);
-
-                if(res.equals("Sucessfully Registered")) {
-                    Intent intent = new Intent(RegistrationIntentService.this, ContactListActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-
-                }else{
-                    Toast.makeText(RegistrationIntentService.this, res, Toast.LENGTH_SHORT).show();
-
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
+    public void storeUserDetails() {
+        defaultSharedPreferences.edit().putString(GCMConstants.EMAIL, mIntent.getStringExtra("email")).putString(GCMConstants.PASSWORD, mIntent.getStringExtra("password")).apply();
     }
+
+    // [END subscribe_topics]
 }
