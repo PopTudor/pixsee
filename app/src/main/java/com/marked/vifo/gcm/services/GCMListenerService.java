@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.marked.vifo.services;
+package com.marked.vifo.gcm.services;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;

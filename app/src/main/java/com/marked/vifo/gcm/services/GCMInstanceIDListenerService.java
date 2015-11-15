@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package com.marked.vifo.services;
+package com.marked.vifo.gcm.services;
 
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.android.gms.iid.InstanceIDListenerService;
+import com.marked.vifo.activities.EntryActivity;
 
 public class GCMInstanceIDListenerService extends InstanceIDListenerService {
 
@@ -33,7 +35,8 @@ public class GCMInstanceIDListenerService extends InstanceIDListenerService {
     @Override
     public void onTokenRefresh() {
         // Fetch updated Instance ID token and notify our app's server of any changes (if applicable).
-        Intent intent = new Intent(this, RegistrationIntentService.class);
+        Log.e("***", "onTokenRefresh ");
+        Intent intent = new Intent(this, EntryActivity.class);
         startService(intent);
     }
     // [END refresh_token]

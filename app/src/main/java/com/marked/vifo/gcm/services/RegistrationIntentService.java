@@ -14,29 +14,37 @@
  * limitations under the License.
  */
 
-package com.marked.vifo.services;
+package com.marked.vifo.gcm.services;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.content.IntentCompat;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.marked.vifo.R;
-import com.marked.vifo.activities.ContactListActivity;
-import com.marked.vifo.extras.GCMConstants;
-import com.marked.vifo.extras.GCMPreferences;
+import com.marked.vifo.gcm.extras.IgcmConstants;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -45,11 +53,11 @@ import java.io.IOException;
  * If you are using the XMPP connection server, the client app can send "upstream" messages back to the app server.
  */
 public class RegistrationIntentService extends IntentService {
-    public static final String TOKEN = "TOKEN";
     private static final String TAG = "RegIntentService";
+
     private static final String[] TOPICS = {"global"};
     private Intent mIntent;
-    private SharedPreferences defaultSharedPreferences;
+    private SharedPreferences mSharedPreferences;
 
     public RegistrationIntentService() {
         super(TAG);
@@ -57,7 +65,7 @@ public class RegistrationIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        defaultSharedPreferences = getSharedPreferences(getString(R.string.user_data_file_name), MODE_PRIVATE);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mIntent = intent;
         try {
             // [START register_for_gcm]
@@ -65,33 +73,21 @@ public class RegistrationIntentService extends IntentService {
             // are local.
             // R.string.gcm_defaultSenderId (the Sender ID) is typically derived from google-services.json.
             // See https://developers.google.com/cloud-messaging/android/start for details on this file.
-            // [START get_token]
-
             InstanceID instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            // [END get_token]
-            Log.i(TAG, "GCM Registration Token: " + token);
 
-            // TODO: Implement this method to send any registration to your app's servers.
             sendRegistrationToServer(token);
-
             // Subscribe to topic channels
             subscribeTopics(token);
 
-            // You should store a boolean that indicates whether the generated token has been
-            // sent to your server. If the boolean is false, send the token to your server,
-            // otherwise your server should have already received the token.
-            defaultSharedPreferences.edit().putBoolean(GCMPreferences.SENT_TOKEN_TO_SERVER, true).apply();
             // [END register_for_gcm]
-        } catch (Exception e) {
-            Log.d(TAG, "Failed to complete token refresh", e);
+        } catch (IOException e) {
+
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
-            defaultSharedPreferences.edit().putBoolean(GCMPreferences.SENT_TOKEN_TO_SERVER, false).apply();
+            mSharedPreferences.edit().putBoolean(IgcmConstants.SENT_TOKEN_TO_SERVER, false).apply();
         }
-        // Notify UI that registration has completed, so the progress indicator can be hidden.
-        Intent registrationComplete = new Intent(GCMPreferences.REGISTRATION_COMPLETE);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
+
     }
 
     /**
@@ -108,30 +104,47 @@ public class RegistrationIntentService extends IntentService {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        String verifyUserURL = GCMConstants.SEND_CHAT_URL+"?email=" + email + "&password=" + password;
+        String verifyUserURL = IgcmConstants.SERVER_REGISTER_USER +"?token="+token+"&email=" + email + "&password=" + password;
         verifyUserURL = verifyUserURL.replaceAll(" ", "%20");
 
-        StringRequest request = new StringRequest(Request.Method.GET, verifyUserURL, new Response.Listener<String>() {
+        JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, verifyUserURL, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(String response) {
-                Toast.makeText(RegistrationIntentService.this,
-                        " " + response, Toast.LENGTH_SHORT).show();
-                if (response.equalsIgnoreCase("success")) {
-                    Intent intent = new Intent(RegistrationIntentService.this, ContactListActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                }
+            public void onResponse(JSONObject response) {
+                // You should store a boolean that indicates whether the generated token has been
+                // sent to your server. If the boolean is false, send the token to your server,
+                // otherwise your server should have already received the token.
+                mSharedPreferences.edit().putBoolean(IgcmConstants.SENT_TOKEN_TO_SERVER, true).apply();
+                // Notify UI that registration has completed, so the progress indicator can be hidden.
+                Intent registrationComplete = new Intent(IgcmConstants.REGISTRATION_COMPLETE);
+                registrationComplete.putExtra("response", "ok");
+                LocalBroadcastManager.getInstance(RegistrationIntentService.this).sendBroadcast(registrationComplete);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("***","onErrorResponse "+error.getMessage());
-                Toast.makeText(RegistrationIntentService.this,
-                        " " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null) {
+                    Log.e("Volley", "Error. HTTP Status Code:"+networkResponse.statusCode);
+                }
+
+                if (error instanceof TimeoutError) {
+                    Log.e("Volley", "TimeoutError");
+                }else if(error instanceof NoConnectionError){
+                    Log.e("Volley", "NoConnectionError");
+                } else if (error instanceof AuthFailureError) {
+                    Log.e("Volley", "AuthFailureError");
+                } else if (error instanceof ServerError) {
+                    Log.e("Volley", "ServerError");
+                } else if (error instanceof NetworkError) {
+                    Log.e("Volley", "NetworkError");
+                } else if (error instanceof ParseError) {
+                    Log.e("Volley", "ParseError");
+                }
+//                Log.e("***","onErrorResponse "+error.getMessage());
+                Toast.makeText(RegistrationIntentService.this," " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        requestQueue.add(request);
-
+        requestQueue.add(jsonRequest);
     }
 
     /**
@@ -147,10 +160,5 @@ public class RegistrationIntentService extends IntentService {
             pubSub.subscribe(token, "/topics/" + topic, null);
         }
     }
-
-    public void storeUserDetails() {
-        defaultSharedPreferences.edit().putString(GCMConstants.EMAIL, mIntent.getStringExtra("email")).putString(GCMConstants.PASSWORD, mIntent.getStringExtra("password")).apply();
-    }
-
     // [END subscribe_topics]
 }

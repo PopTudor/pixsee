@@ -1,14 +1,13 @@
 package com.marked.vifo.activities;
 
-import android.Manifest.permission;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.preference.PreferenceManager;
 import android.support.v4.content.IntentCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -24,38 +23,36 @@ import com.caverock.androidsvg.SVGParseException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.marked.vifo.R;
-import com.marked.vifo.extras.GCMConstants;
-import com.marked.vifo.extras.GCMPreferences;
+import com.marked.vifo.gcm.extras.IgcmConstants;
+import com.marked.vifo.gcm.services.RegistrationIntentService;
 import com.marked.vifo.helper.GooglePlusLoginUtils;
-import com.marked.vifo.services.RegistrationIntentService;
+import com.marked.vifo.helper.Utils;
 
 import java.io.IOException;
 
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static com.marked.vifo.gcm.extras.IgcmConstants.REGISTRATION_COMPLETE;
+import static com.marked.vifo.gcm.extras.IgcmConstants.USER_REGISTERED;
 
 public class LoginActivity extends AppCompatActivity implements GooglePlusLoginUtils.GPlusLoginStatus, View.OnClickListener {
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private GooglePlusLoginUtils gLogin;
     private Button mSignInButtonGoogle;
     private Button mSignInButtonPixy;
-
     private EditText mEmail;
     private EditText mPassword;
-
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
-
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final String TAG = "LOGIN_ACTIVITY";
     private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private ProgressDialog mProgressDialog;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mSharedPreferences = getSharedPreferences(getString(R.string.user_data_file_name), MODE_PRIVATE);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mSignInButtonGoogle = (Button) findViewById(R.id.signInButtonGoogle);
-        mSignInButtonPixy = (Button) findViewById(R.id.signInPixy);
+        mSignInButtonPixy = (Button) findViewById(R.id.signInButtonPixy);
         mEmail = (EditText) findViewById(R.id.emailEditText);
         mPassword = (EditText) findViewById(R.id.passwordEditText);
 
@@ -89,11 +86,20 @@ public class LoginActivity extends AppCompatActivity implements GooglePlusLoginU
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                boolean sentToken = mSharedPreferences.getBoolean(GCMPreferences.SENT_TOKEN_TO_SERVER, false);
+                boolean sentToken = mSharedPreferences.getBoolean(IgcmConstants.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
-                    Log.d("***","onReceive "+"Success");
+                    String response = intent.getStringExtra("response");
+                    if (response.equals("ok")) {
+                        mSharedPreferences.edit().putBoolean(IgcmConstants.USER_REGISTERED, true).apply();
+                        mProgressDialog.dismiss();
+                        Intent intent1 = new Intent(LoginActivity.this, ContactListActivity.class);
+                        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent1);
+
+                    }
+                    Log.d("***", "onReceive " + "Success");
                 } else {
-                    Log.d("***","onReceive "+"Error");
+                    Log.d("***", "onReceive " + "Error");
                 }
             }
         };
@@ -113,9 +119,9 @@ public class LoginActivity extends AppCompatActivity implements GooglePlusLoginU
     protected void onStart() {
         super.onStart();
         gLogin.connect();
-        if (ContextCompat.checkSelfPermission(this, permission.READ_EXTERNAL_STORAGE) != PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, permission.CAMERA) != PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, permission.RECORD_AUDIO) != PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{permission.READ_EXTERNAL_STORAGE, permission.CAMERA, permission.RECORD_AUDIO, permission.WRITE_EXTERNAL_STORAGE}, 100);
-        }
+        //        if (ContextCompat.checkSelfPermission(this, permission.READ_EXTERNAL_STORAGE) != PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, permission.CAMERA) != PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, permission.RECORD_AUDIO) != PERMISSION_GRANTED) {
+        //            ActivityCompat.requestPermissions(this, new String[]{permission.READ_EXTERNAL_STORAGE, permission.CAMERA, permission.RECORD_AUDIO, permission.WRITE_EXTERNAL_STORAGE}, 100);
+        //        }
 
     }
 
@@ -125,30 +131,28 @@ public class LoginActivity extends AppCompatActivity implements GooglePlusLoginU
         gLogin.disconnect();
     }
 
-
     @Override
     public void onClick(View v) {
         Intent intent = null;
-        switch (v.getId()) {
-            case R.id.signInPixy:
-                if (checkPlayServices()) {
+        if (Utils.isOnline(this)) // if we got internet process the click else tell them to activate it
+            switch (v.getId()) {
+                case R.id.signInButtonPixy:
                     // Start IntentService to register this application with GCM.
                     intent = new Intent(this, RegistrationIntentService.class);
                     intent.putExtra("email", mEmail.getText().toString());
                     intent.putExtra("password", mPassword.getText().toString());
                     startService(intent);
-                }
-                break;
-            case R.id.signInButtonGoogle:
-                mEditor = mSharedPreferences.edit();
-                mEditor.putBoolean(GCMConstants.USER_REGISTERED, true);
-                mEditor.apply();
-                intent = new Intent(this, ContactListActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                    mProgressDialog = ProgressDialog.show(this, "Login", "Please wait...",true);
 
-                break;
-        }
+                    break;
+                case R.id.signInButtonGoogle:
+                    intent = new Intent(this, ContactListActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    break;
+            }
+        else
+            Utils.showNoConnectionDialog(this);
     }
 
 
@@ -160,8 +164,9 @@ public class LoginActivity extends AppCompatActivity implements GooglePlusLoginU
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(GCMPreferences.REGISTRATION_COMPLETE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(REGISTRATION_COMPLETE));
     }
+
     @Override
     protected void onPause() {
         // TODO: 08-Nov-15 maybe move the registration from here to Contacts activity so that you register with the server when you want to start a new conversation
@@ -181,13 +186,14 @@ public class LoginActivity extends AppCompatActivity implements GooglePlusLoginU
             if (apiAvailability.isUserResolvableError(resultCode)) {
                 apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Log.i(TAG, "This device is not supported.");
+                Log.d("***", "This device is not supported.");
                 finish();
             }
             return false;
         }
         return true;
     }
+
     @Override
     public void OnSuccessGPlusLogin(Bundle profile) throws IOException {
         String name = profile.getString(GooglePlusLoginUtils.NAME);
@@ -196,13 +202,14 @@ public class LoginActivity extends AppCompatActivity implements GooglePlusLoginU
         String coverURL = profile.getString(GooglePlusLoginUtils.COVERURL);
 
         mEditor = mSharedPreferences.edit();
-        mEditor.putBoolean(GCMConstants.USER_REGISTERED, true);
+        mEditor.putBoolean(USER_REGISTERED, true);
         mEditor.putString(GooglePlusLoginUtils.NAME, name);
         mEditor.putString(GooglePlusLoginUtils.EMAIL, email);
         mEditor.putString(GooglePlusLoginUtils.ICONURL, iconURL);
         mEditor.putString(GooglePlusLoginUtils.COVERURL, coverURL);
         mEditor.apply();
-        Log.d("***", "OnSuccessGPlusLogin " + name + " " + email + " \n" + iconURL + " \n" + coverURL);
+        Log.d("***",
+                "OnSuccessGPlusLogin " + name + " " + email + " \n" + iconURL + " \n" + coverURL);
     }
 
 }

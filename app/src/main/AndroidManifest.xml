@@ -44,6 +44,9 @@
          assumed as required.
     -->
     <uses-feature android:name="android.hardware.camera"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.SET_DEBUG_APP"/>
 
     <application
         android:allowBackup="true"
@@ -86,13 +89,13 @@
         <activity
             android:name=".activities.ContactListActivity"
             android:label="@string/title_contact_list"
-            android:theme="@style/AppTheme">
+            >
         </activity>
         <activity
             android:name=".activities.ContactDetailActivity"
             android:label="@string/title_contact_detail"
             android:parentActivityName=".activities.ContactListActivity"
-            android:theme="@style/AppTheme">
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ContactListActivity"/>
@@ -111,7 +114,7 @@
         <!-- [END gcm_receiver] -->
         <!-- [START gcm_listener] -->
         <service
-            android:name="com.marked.vifo.services.GCMListenerService"
+            android:name=".gcm.services.GCMListenerService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -120,7 +123,7 @@
         <!-- [END gcm_listener] -->
         <!-- [START instanceId_listener] -->
         <service
-            android:name=".services.GCMInstanceIDListenerService"
+            android:name=".gcm.services.GCMInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID"/>
@@ -128,7 +131,7 @@
         </service>
         <!-- [END instanceId_listener] -->
         <service
-            android:name=".services.RegistrationIntentService"
+            android:name=".gcm.services.RegistrationIntentService"
             android:exported="false">
         </service>
     </application>
