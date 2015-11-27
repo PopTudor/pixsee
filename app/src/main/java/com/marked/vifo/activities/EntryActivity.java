@@ -16,7 +16,7 @@ public class EntryActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		mUserRegistered = mSharedPreferences.getBoolean(IgcmConstants.USER_REGISTERED, false);
+		mUserRegistered = mSharedPreferences.getBoolean(IgcmConstants.SENT_TOKEN_TO_SERVER, false);
 	}
 
 	@Override

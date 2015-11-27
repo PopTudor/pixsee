@@ -23,13 +23,15 @@ public interface IgcmConstants {
 
     String PORT = ":3000";
     String BASE_URL = "http://192.168.0.108";
-    String SERVER = BASE_URL+PORT;
-    String SERVER_REGISTER_USER = SERVER + "/register";
+    String SERVER = BASE_URL + PORT;
+    String SERVER_REGISTER_USER = SERVER + "/login";
 
     String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
-    String REGISTRATION_COMPLETE = "registrationComplete";
 
-    String USER_REGISTERED = "user_registered";
+    /* LOGIN Constants*/ 
     String PASSWORD = "password";
     String EMAIL = "email";
+    String NAME = "name";
+    String ICONURL = "photo";
+    String COVERURL = "coverURL";
 }

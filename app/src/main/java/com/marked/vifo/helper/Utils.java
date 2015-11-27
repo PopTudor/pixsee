@@ -1,5 +1,6 @@
 package com.marked.vifo.helper;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,7 +33,9 @@ public class Utils {
         builder.setNegativeButton("Cellular", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ctx.startActivity(new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS));
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
+                ctx.startActivity(intent);
             }
         });
 

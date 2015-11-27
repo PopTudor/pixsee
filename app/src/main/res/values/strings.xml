@@ -8,16 +8,14 @@
     <string name="button_OK">OK</string>
     <string name="menu_back">Vuforia Samples</string>
     <string name="menu_extended_tracking">Extended Tracking</string>
-    <string name="sign_in_with_pixy">Sign in with Pixy</string>
     <string name="user_data_file_name">com.marked.vifo.USER_DATA_LOGGED</string>
     <string name="title_activity_login">loginActivity</string>
+    <string name="log_in_with_pixy">Log in with Pixy</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="title_contact_list">Contacts</string>
     <string name="title_contact_detail">Contact Detail</string>
 
     <string name="no_connection_message">No internet connection. Please activate wi-fi or cellular network</string>
-
-
 
 
     <!-- VUFORIA -->
@@ -56,6 +54,9 @@
     <string name="no_connection_title">No internet !</string>
     <string name="settings_button_text">Activate</string>
     <string name="cancel_button_text">Cancel</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

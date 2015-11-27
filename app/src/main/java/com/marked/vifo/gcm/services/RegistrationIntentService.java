@@ -22,7 +22,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
@@ -42,11 +41,14 @@ import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.marked.vifo.R;
+import com.marked.vifo.extras.IHTTPStatusCodes;
 import com.marked.vifo.gcm.extras.IgcmConstants;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * To receive GCM messages, this app must register with GCM and get a unique identifier called a registration token.
@@ -54,10 +56,13 @@ import java.io.IOException;
  */
 public class RegistrationIntentService extends IntentService {
     private static final String TAG = "RegIntentService";
-
     private static final String[] TOPICS = {"global"};
     private Intent mIntent;
+    private String email,password;
     private SharedPreferences mSharedPreferences;
+    /* used to generate unique ID per instance of the app. This can be used in authentification
+    * https://developers.google.com/instance-id/ */
+    private InstanceID instanceID;
 
     public RegistrationIntentService() {
         super(TAG);
@@ -68,15 +73,16 @@ public class RegistrationIntentService extends IntentService {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mIntent = intent;
         try {
+            email = mIntent.getStringExtra("email");
+            password = mIntent.getStringExtra("password");
             // [START register_for_gcm]
             // Initially this call goes out to the network to retrieve the token, subsequent calls
             // are local.
             // R.string.gcm_defaultSenderId (the Sender ID) is typically derived from google-services.json.
             // See https://developers.google.com/cloud-messaging/android/start for details on this file.
-            InstanceID instanceID = InstanceID.getInstance(this);
+            instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-
-            sendRegistrationToServer(token);
+            sendTokenToServer(token);
             // Subscribe to topic channels
             subscribeTopics(token);
 
@@ -98,15 +104,14 @@ public class RegistrationIntentService extends IntentService {
      *
      * @param token The new token.
      */
-    private void sendRegistrationToServer(String token) {
+    private void sendTokenToServer(String token) throws UnsupportedEncodingException {
         // Add custom implementation, as needed.
-        String email = mIntent.getStringExtra("email"), password = mIntent.getStringExtra("password");
-
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        String verifyUserURL = IgcmConstants.SERVER_REGISTER_USER +"?token="+token+"&email=" + email + "&password=" + password;
-        verifyUserURL = verifyUserURL.replaceAll(" ", "%20");
+        String verifyUserURL = IgcmConstants.SERVER_REGISTER_USER + "?token=" + token + "&email=" + URLEncoder.encode(email, "UTF-8")  + "&password=" + URLEncoder.encode(password, "UTF-8");
 
+
+        /* if sent_token_to_server == true, we are registered*/
         JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, verifyUserURL, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -115,21 +120,26 @@ public class RegistrationIntentService extends IntentService {
                 // otherwise your server should have already received the token.
                 mSharedPreferences.edit().putBoolean(IgcmConstants.SENT_TOKEN_TO_SERVER, true).apply();
                 // Notify UI that registration has completed, so the progress indicator can be hidden.
-                Intent registrationComplete = new Intent(IgcmConstants.REGISTRATION_COMPLETE);
-                registrationComplete.putExtra("response", "ok");
+                Intent registrationComplete = new Intent(IgcmConstants.SENT_TOKEN_TO_SERVER);
+                registrationComplete.putExtra(IgcmConstants.SENT_TOKEN_TO_SERVER, true);
                 LocalBroadcastManager.getInstance(RegistrationIntentService.this).sendBroadcast(registrationComplete);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                mSharedPreferences.edit().putBoolean(IgcmConstants.SENT_TOKEN_TO_SERVER, false).apply();
                 NetworkResponse networkResponse = error.networkResponse;
-                if (networkResponse != null) {
-                    Log.e("Volley", "Error. HTTP Status Code:"+networkResponse.statusCode);
-                }
 
+                Intent registrationError = new Intent(IgcmConstants.SENT_TOKEN_TO_SERVER);
+                registrationError.putExtra(IgcmConstants.SENT_TOKEN_TO_SERVER, false);
+                if (networkResponse != null) {
+                    Log.e("Volley", "Error. HTTP Status Code:" + networkResponse.statusCode);
+                    registrationError.putExtra(IHTTPStatusCodes.ERROR_RESPONSE_STATUS_CODE, networkResponse.statusCode);
+                }
                 if (error instanceof TimeoutError) {
                     Log.e("Volley", "TimeoutError");
-                }else if(error instanceof NoConnectionError){
+                    registrationError.putExtra(IHTTPStatusCodes.ERROR_RESPONSE_STATUS_CODE, IHTTPStatusCodes.REQUEST_TIMEOUT);
+                } else if (error instanceof NoConnectionError) {
                     Log.e("Volley", "NoConnectionError");
                 } else if (error instanceof AuthFailureError) {
                     Log.e("Volley", "AuthFailureError");
@@ -140,8 +150,10 @@ public class RegistrationIntentService extends IntentService {
                 } else if (error instanceof ParseError) {
                     Log.e("Volley", "ParseError");
                 }
-//                Log.e("***","onErrorResponse "+error.getMessage());
-                Toast.makeText(RegistrationIntentService.this," " + error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                LocalBroadcastManager.getInstance(RegistrationIntentService.this).sendBroadcast(registrationError);
+                //                Toast.makeText(RegistrationIntentService.this,
+//                        " " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
         requestQueue.add(jsonRequest);
