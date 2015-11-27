@@ -16,7 +16,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.IntentCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -148,7 +147,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         if (Utils.isOnline(mContext)) // if we got internet, process the click. else tell them to activate it
             switch (v.getId()) {
                 case R.id.logInButtonPixy:
-                    if (!checkEnteredData())
+                    if (!Utils.checkEnteredData(mContext,mEmail.getText().toString(),mPassword.getText().toString(),mContainer))
                         break;
                     // Start IntentService to register this application with GCM.
                     intent = new Intent(mContext, RegistrationIntentService.class);
@@ -161,30 +160,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         else
             Utils.showNoConnectionDialog(mContext);
     }
-    public boolean checkEnteredData() {
-        String emailString = mEmail.getText().toString().trim();
-        String passwordString = mPassword.getText().toString().trim();
-        if (emailString.isEmpty()) {
-            Snackbar view = Snackbar.make(mContainer, "The email field is empty", Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(mContext, R.color.white));
-            view.getView().setBackgroundColor(Color.WHITE);
-            view.show();
-            return false;
-        }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(emailString).matches()) {
-            Snackbar view = Snackbar.make(mContainer, "You must enter a valid email", Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(mContext, R.color.white));
-            view.getView().setBackgroundColor(Color.WHITE);
-            view.show();
-            return false;
-        }
-        if (passwordString.isEmpty()) {
-            Snackbar view = Snackbar.make(mContainer, "The password field is empty", Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(mContext, R.color.white));
-            view.getView().setBackgroundColor(Color.WHITE);
-            view.show();
-            return false;
-        }
-        return true;
-    }
 
     /**
      * This interface must be implemented by activities that contain this
