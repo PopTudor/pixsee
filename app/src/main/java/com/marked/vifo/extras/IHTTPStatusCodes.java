@@ -6,6 +6,7 @@ package com.marked.vifo.extras;
 public interface IHTTPStatusCodes {
     String ERROR_RESPONSE_STATUS_CODE = "error_response";
 
+    int NOT_FOUND = 404;
     int REQUEST_TIMEOUT = 408;
     int REQUEST_CONFLICT = 409;
 

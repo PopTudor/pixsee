@@ -21,12 +21,14 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_PROFILE"/>
-    <!-- An applicationPackage + ".permission.C2D_MESSAGE" permission to prevent other Android applications
+    <!--
+    An applicationPackage + ".permission.C2D_MESSAGE" permission to prevent other Android applications
     from registering and receiving the Android application's messages.
     The permission name must exactly match this pattern—otherwise the
     Android application will not receive the messages.
     -->
     <permission android:name="com.marked.vifo.permission.C2D_MESSAGE"/>
+
     <uses-permission android:name="com.marked.vifo.permission.C2D_MESSAGE"/>
     <!-- [END gcm_permission] -->
     <uses-feature
@@ -47,8 +49,8 @@
          assumed as required.
     -->
     <uses-feature android:name="android.hardware.camera"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.SET_DEBUG_APP"/>
 
     <application
@@ -76,8 +78,8 @@
             android:name=".activities.LoginActivity"
             android:clearTaskOnLaunch="true"
             android:label="@string/title_activity_login"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activities.EntryActivity"
@@ -91,14 +93,12 @@
         </activity>
         <activity
             android:name=".activities.ContactListActivity"
-            android:label="@string/title_contact_list"
-            >
+            android:label="@string/title_contact_list">
         </activity>
         <activity
             android:name=".activities.ContactDetailActivity"
             android:label="@string/title_contact_detail"
-            android:parentActivityName=".activities.ContactListActivity"
-            >
+            android:parentActivityName=".activities.ContactListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ContactListActivity"/>
@@ -108,19 +108,20 @@
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.marked.vifo" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+
+                <category android:name="com.marked.vifo"/>
             </intent-filter>
         </receiver>
         <!-- [END gcm_receiver] -->
         <!-- [START gcm_listener] -->
         <service
             android:name=".gcm.services.GCMListenerService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
         <!-- [END gcm_listener] -->
@@ -134,7 +135,7 @@
         </service>
         <!-- [END instanceId_listener] -->
         <service
-            android:name=".gcm.services.RegistrationIntentService"
+            android:name=".gcm.services.LogInRegistrationIntentService"
             android:exported="false">
         </service>
     </application>

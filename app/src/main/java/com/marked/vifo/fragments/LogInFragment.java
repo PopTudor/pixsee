@@ -5,16 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.IntentCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +18,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.marked.vifo.R;
-import com.marked.vifo.activities.ContactListActivity;
-import com.marked.vifo.extras.IHTTPStatusCodes;
+import com.marked.vifo.gcm.RegistrationBroadcastReceiver;
 import com.marked.vifo.gcm.extras.IgcmConstants;
-import com.marked.vifo.gcm.services.RegistrationIntentService;
+import com.marked.vifo.gcm.services.LogInRegistrationIntentService;
 import com.marked.vifo.helper.Utils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -39,14 +33,12 @@ import com.rengwuxian.materialedittext.MaterialEditText;
  * Use the {@link LogInFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LogInFragment extends Fragment implements View.OnClickListener{
+public class LogInFragment extends Fragment implements View.OnClickListener ,RegistrationBroadcastReceiver.Dismiss{
     private Button mLogInButtonPixy;
-    private MaterialEditText mEmail,mPassword;
+    private MaterialEditText mEmail, mPassword;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private ProgressDialog mProgressDialog;
     private CoordinatorLayout mContainer;
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mEditor;
     private ImageView mMoreImageView;
     private Context mContext;
 
@@ -68,7 +60,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
     @Override
@@ -81,45 +72,11 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         mMoreImageView = (ImageView) rootView.findViewById(R.id.moreImageView);
 
         mLogInButtonPixy.setOnClickListener(this);
+        mMoreImageView.setColorFilter(ContextCompat.getColor(mContext, R.color.primary));
 
-        mMoreImageView.setColorFilter(ContextCompat.getColor(mContext,R.color.primary));
         // GCM registration
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getBooleanExtra(IgcmConstants.SENT_TOKEN_TO_SERVER,false)) { // if token was sent login
-                    Intent intent1 = new Intent(mContext, ContactListActivity.class);
-                    intent1.setFlags(
-                            Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent1);
-                    mProgressDialog.dismiss();
-                }else {
-                    Snackbar snackbar=null;
-                    mProgressDialog.dismiss();
-                    int errorStatusCode = intent.getIntExtra(IHTTPStatusCodes.ERROR_RESPONSE_STATUS_CODE, 0);
-                    switch (errorStatusCode) {
-                        case IHTTPStatusCodes.REQUEST_CONFLICT:
-                            snackbar = Snackbar.make(mContainer, "You already have an account", Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(mContext, R.color.white));
-                            break;
-                        case IHTTPStatusCodes.REQUEST_TIMEOUT:
-                            snackbar = Snackbar.make(mContainer, "Timeout error", Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(mContext, R.color.white));
-                            break;
-                        case IHTTPStatusCodes.REQUEST_INCORRECT_PASSWORD:
-                            snackbar = Snackbar.make(mContainer, "Incorrect password", Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(mContext, R.color.white));
-                            break;
+        mRegistrationBroadcastReceiver = new RegistrationBroadcastReceiver(mContext,this,mContainer);
 
-                    }
-                    if (snackbar!=null) {
-                        snackbar.getView().setBackgroundColor(Color.WHITE);
-                        snackbar.show();
-                    }
-                }
-            }
-        };
-
-
-
-        // Inflate the layout for this fragment
         return rootView;
     }
 
@@ -147,13 +104,9 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         if (Utils.isOnline(mContext)) // if we got internet, process the click. else tell them to activate it
             switch (v.getId()) {
                 case R.id.logInButtonPixy:
-                    if (!Utils.checkEnteredData(mContext,mEmail.getText().toString(),mPassword.getText().toString(),mContainer))
+                    if (!Utils.checkEnteredData(mContext, mEmail.getText().toString(), mPassword.getText().toString(), mContainer))
                         break;
-                    // Start IntentService to register this application with GCM.
-                    intent = new Intent(mContext, RegistrationIntentService.class);
-                    intent.putExtra("email", mEmail.getText().toString());
-                    intent.putExtra("password", mPassword.getText().toString());
-                    mContext.startService(intent);
+                    LogInRegistrationIntentService.startActionLogin(mContext, mEmail.getText().toString(), mPassword.getText().toString());
                     mProgressDialog = ProgressDialog.show(mContext, "Login", "Please wait...", true);
                     break;
             }
@@ -161,6 +114,32 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
             Utils.showNoConnectionDialog(mContext);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(mContext);
+        broadcastManager.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.ACTION_LOGIN));
+        broadcastManager.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.ACTION_SIGNUP));
+        broadcastManager.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.ACTION_RECOVERY));
+        broadcastManager.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.ACTION_ERROR));
+    }
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    @Override
+    public void dismissDialog() {
+        mProgressDialog.dismiss();
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -175,22 +154,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
     public interface LogInInteractionFragmentListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.SENT_TOKEN_TO_SERVER));
-    }
-
-    @Override
-    public void onPause() {
-        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mRegistrationBroadcastReceiver);
-        super.onPause();
-    }
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
 }

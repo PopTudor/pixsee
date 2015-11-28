@@ -110,6 +110,8 @@
             android:text="Recover password."
             android:id="@+id/textView2"
             android:layout_below="@+id/passwordEditText"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"
+            />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
