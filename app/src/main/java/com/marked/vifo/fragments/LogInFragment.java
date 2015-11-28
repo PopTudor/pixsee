@@ -1,13 +1,14 @@
 package com.marked.vifo.fragments;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.marked.vifo.R;
+import com.marked.vifo.extras.IHTTPStatusCodes;
 import com.marked.vifo.gcm.RegistrationBroadcastReceiver;
 import com.marked.vifo.gcm.extras.IgcmConstants;
 import com.marked.vifo.gcm.services.LogInRegistrationIntentService;
@@ -33,14 +35,15 @@ import com.rengwuxian.materialedittext.MaterialEditText;
  * Use the {@link LogInFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LogInFragment extends Fragment implements View.OnClickListener ,RegistrationBroadcastReceiver.Dismiss{
+public class LogInFragment extends Fragment implements View.OnClickListener {
     private Button mLogInButtonPixy;
     private MaterialEditText mEmail, mPassword;
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private RegistrationBroadcastReceiver mRegistrationBroadcastReceiver;
     private ProgressDialog mProgressDialog;
     private CoordinatorLayout mContainer;
     private ImageView mMoreImageView;
     private Context mContext;
+    private LocalBroadcastManager mBroadcastManagerastManager;
 
     private LogInInteractionFragmentListener mListener;
 
@@ -60,6 +63,36 @@ public class LogInFragment extends Fragment implements View.OnClickListener ,Reg
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
+        mBroadcastManagerastManager = LocalBroadcastManager.getInstance(mContext);
+        // GCM registration
+        mRegistrationBroadcastReceiver = new RegistrationBroadcastReceiver();
+        mRegistrationBroadcastReceiver.setOnRegistrationBroadcastReceiverListener(new RegistrationBroadcastReceiver.RegistrationBroadcastReceiverListener() {
+            @Override
+            public void dismissDialog() {mProgressDialog.dismiss();}
+
+            @Override
+            public void actionError(int errorStatusCode) {
+                Snackbar snackbar = null;
+                switch (errorStatusCode) {
+                    case IHTTPStatusCodes.REQUEST_CONFLICT:
+                        snackbar = createWhiteSnackBar(mContext, mContainer, "You already have an account");
+                        break;
+                    case IHTTPStatusCodes.REQUEST_TIMEOUT:
+                        snackbar = createWhiteSnackBar(mContext,mContainer,"Timeout error");
+                        break;
+                    case IHTTPStatusCodes.REQUEST_INCORRECT_PASSWORD:
+                        snackbar = createWhiteSnackBar(mContext,mContainer,"Incorrect password");
+                        break;
+                    case IHTTPStatusCodes.NOT_FOUND:
+                        snackbar = createWhiteSnackBar(mContext, mContainer, "We are sorry, but we did not found you");
+                        break;
+                }
+                if (snackbar != null) {
+                    snackbar.getView().setBackgroundColor(Color.WHITE);
+                    snackbar.show();
+                }
+            }
+        });
     }
 
     @Override
@@ -73,9 +106,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener ,Reg
 
         mLogInButtonPixy.setOnClickListener(this);
         mMoreImageView.setColorFilter(ContextCompat.getColor(mContext, R.color.primary));
-
-        // GCM registration
-        mRegistrationBroadcastReceiver = new RegistrationBroadcastReceiver(mContext,this,mContainer);
 
         return rootView;
     }
@@ -117,11 +147,10 @@ public class LogInFragment extends Fragment implements View.OnClickListener ,Reg
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(mContext);
-        broadcastManager.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.ACTION_LOGIN));
-        broadcastManager.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.ACTION_SIGNUP));
-        broadcastManager.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.ACTION_RECOVERY));
-        broadcastManager.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.ACTION_ERROR));
+        mBroadcastManagerastManager.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.ACTION_LOGIN));
+        mBroadcastManagerastManager.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.ACTION_SIGNUP));
+        mBroadcastManagerastManager.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.ACTION_RECOVERY));
+        mBroadcastManagerastManager.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(IgcmConstants.ACTION_ERROR));
     }
 
     @Override
@@ -134,11 +163,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener ,Reg
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void dismissDialog() {
-        mProgressDialog.dismiss();
     }
 
     /**
@@ -156,4 +180,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener ,Reg
         void onFragmentInteraction(Uri uri);
     }
 
+    private Snackbar createWhiteSnackBar(Context context, CoordinatorLayout coordinatorLayout,String message){
+        return Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(mContext, R.color.white));
+    }
 }
