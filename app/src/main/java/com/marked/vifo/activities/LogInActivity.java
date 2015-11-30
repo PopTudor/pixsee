@@ -25,7 +25,7 @@ import com.marked.vifo.gcm.services.LogInRegistrationIntentService;
 import com.marked.vifo.helper.Utils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-public class LogInActivityy extends AppCompatActivity implements View.OnClickListener ,PopupMenu.OnMenuItemClickListener{
+public class LogInActivity extends AppCompatActivity implements View.OnClickListener ,PopupMenu.OnMenuItemClickListener{
     private Button mLogInButtonPixy;
     private MaterialEditText mEmail, mPassword;
     private RegistrationBroadcastReceiver mRegistrationBroadcastReceiver;
@@ -61,16 +61,16 @@ public class LogInActivityy extends AppCompatActivity implements View.OnClickLis
                 Snackbar snackbar = null;
                 switch (errorStatusCode) {
                     case IHTTPStatusCodes.REQUEST_CONFLICT:
-                        snackbar = Utils.createWhiteSnackBar(LogInActivityy.this, mContainer, "You already have an account");
+                        snackbar = Utils.createWhiteSnackBar(LogInActivity.this, mContainer, "You already have an account");
                         break;
                     case IHTTPStatusCodes.REQUEST_TIMEOUT:
-                        snackbar = Utils.createWhiteSnackBar(LogInActivityy.this, mContainer, "Timeout error");
+                        snackbar = Utils.createWhiteSnackBar(LogInActivity.this, mContainer, "Timeout error");
                         break;
                     case IHTTPStatusCodes.REQUEST_INCORRECT_PASSWORD:
-                        snackbar = Utils.createWhiteSnackBar(LogInActivityy.this, mContainer, "Incorrect password");
+                        snackbar = Utils.createWhiteSnackBar(LogInActivity.this, mContainer, "Incorrect password");
                         break;
                     case IHTTPStatusCodes.NOT_FOUND:
-                        snackbar = Utils.createWhiteSnackBar(LogInActivityy.this, mContainer, "We are sorry, but we did not found you");
+                        snackbar = Utils.createWhiteSnackBar(LogInActivity.this, mContainer, "We are sorry, but we did not found you");
                         break;
                 }
                 if (snackbar != null) {

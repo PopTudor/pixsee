@@ -33,7 +33,7 @@ public class EntryAuthActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.logInButton:
-                startActivity(new Intent(this,LogInActivityy.class));
+                startActivity(new Intent(this,LogInActivity.class));
                 break;
             case R.id.signUpButton:
                 startActivity(new Intent(this,SignUpActivity.class));
