@@ -144,7 +144,7 @@
                   android:screenOrientation="portrait"
             >
         </activity>
-        <activity android:name=".activities.LoginActivity"
+        <activity android:name=".activities.LogInActivity"
                   android:screenOrientation="portrait"
             >
         </activity>

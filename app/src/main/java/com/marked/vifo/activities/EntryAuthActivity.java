@@ -3,10 +3,7 @@ package com.marked.vifo.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
 import android.util.Log;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,7 +11,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.marked.vifo.R;
 
-public class EntryAuthActivity extends AppCompatActivity implements View.OnClickListener,PopupMenu.OnMenuItemClickListener {
+public class EntryAuthActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private Button mLogInButton, mSignUp;
 
@@ -30,23 +27,13 @@ public class EntryAuthActivity extends AppCompatActivity implements View.OnClick
 
         checkPlayServices();// check if the user has google play services, else finish
     }
-    /*
-    * Triggered when the 'more' icon is clicked
-    * The icon is in fragment_log_in.xml but handeled here because it won't get triggered in LogInFragment.java
-    * */
-    public void showPopup(View view){
-        PopupMenu popup = new PopupMenu(this, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_popup_login, popup.getMenu());
-        popup.setOnMenuItemClickListener(this);
-        popup.show();
-    }
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.logInButton:
-                startActivity(new Intent(this,LoginActivity.class));
+                startActivity(new Intent(this,LogInActivity.class));
                 break;
             case R.id.signUpButton:
                 startActivity(new Intent(this,SignUpActivity.class));
@@ -74,13 +61,4 @@ public class EntryAuthActivity extends AppCompatActivity implements View.OnClick
         return true;
     }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.aboutMenuItem:
-
-                break;
-        }
-        return false;
-    }
 }

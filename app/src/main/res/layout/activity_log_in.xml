@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbarStyle="outsideOverlay"
-    tools:context=".activities.LoginActivity"
+    tools:context=".activities.LogInActivity"
     >
 
     <RelativeLayout
@@ -25,7 +25,7 @@
             >
 
             <TextView
-                android:id="@+id/button"
+                android:id="@+id/signUpButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -36,7 +36,8 @@
                 android:focusable="true"
                 android:text="Sign up"
                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
-                android:textColor="@color/primary"/>
+                android:textColor="@color/primary"
+                android:onClick="onClick"/>
 
             <ImageView
                 android:id="@+id/moreImageView"
@@ -64,7 +65,8 @@
             android:text="@string/log_in_with_pixy"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
             android:textColor="#ffffff"
-            android:textSize="@dimen/abc_text_size_button_material"/>
+            android:textSize="@dimen/abc_text_size_button_material"
+            android:onClick="onClick"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/emailEditText"
