@@ -19,6 +19,37 @@ public class RegistrationBroadcastReceiver extends BroadcastReceiver {
         this.registrationBroadcastReceiverListener = registrationBroadcastReceiverListener;
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Intent toStart;
+        if (intent != null) {
+            String action = intent.getAction();
+            if (action.equals(IgcmConstants.ACTION_LOGIN)) {
+                toStart = new Intent(context, ContactListActivity.class);
+                toStart.setFlags(
+                        Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(toStart);
+                if (registrationBroadcastReceiverListener != null)
+                    registrationBroadcastReceiverListener.onDismiss();
+            } else if (action.equals(IgcmConstants.ACTION_SIGNUP)) {
+                toStart = new Intent(context, ContactListActivity.class);
+                toStart.setFlags(
+                        Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(toStart);
+                if (registrationBroadcastReceiverListener != null)
+                    registrationBroadcastReceiverListener.onDismiss();
+            } else if (action.equals(IgcmConstants.ACTION_RECOVERY)) {
+                // TODO: 28-Nov-15 implement this
+            } else if (action.equals(IgcmConstants.ACTION_ERROR)) {
+                int errorStatusCode = intent.getIntExtra(IHTTPStatusCodes.ERROR_RESPONSE_STATUS_CODE, 0);
+                if (registrationBroadcastReceiverListener != null) {
+                    registrationBroadcastReceiverListener.onDismiss();
+                    registrationBroadcastReceiverListener.onError(errorStatusCode);
+                }
+            }
+        }
+    }
+
     /**
      * If we have an indeterminate ProgressDialog loading and we want to dismiss it
      * when we RegistrationBroadcastReceiver receives a signal(Login,signup,recovery)
@@ -29,38 +60,15 @@ public class RegistrationBroadcastReceiver extends BroadcastReceiver {
         /**
          * Used to dismiss an indeterminate loading of a ProgressDialog
          */
-        void dismissDialog();
+        void onDismiss();
 
         /**
          * This needs to be implemented in the Activity/Fragment that launches the RegistrationBroadcastReceiver
          * because we want to make a SnackBar if occurs some kind of error and you can not create UI elements
          * inside a BroadcastReceiver
+         *
          * @param errorStatusCode the error code sent by the server
          */
-        void actionError(int errorStatusCode);
-    }
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        Intent toStart;
-        if (intent != null){
-            String action = intent.getAction();
-            if (action.equals(IgcmConstants.ACTION_LOGIN)) {
-                toStart = new Intent(context, ContactListActivity.class);
-                toStart.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                context.startActivity(toStart);
-                if(registrationBroadcastReceiverListener != null)
-                    registrationBroadcastReceiverListener.dismissDialog();
-            } else if (action.equals(IgcmConstants.ACTION_SIGNUP)) {
-                // TODO: 28-Nov-15 implement this
-            } else if (action.equals(IgcmConstants.ACTION_RECOVERY)) {
-                // TODO: 28-Nov-15 implement this
-            } else if (action.equals(IgcmConstants.ACTION_ERROR)) {
-                int errorStatusCode = intent.getIntExtra(IHTTPStatusCodes.ERROR_RESPONSE_STATUS_CODE, 0);
-                if (registrationBroadcastReceiverListener != null) {
-                    registrationBroadcastReceiverListener.dismissDialog();
-                    registrationBroadcastReceiverListener.actionError(errorStatusCode);
-                }
-            }
-        }
+        void onError(int errorStatusCode);
     }
 }

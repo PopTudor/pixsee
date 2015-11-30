@@ -25,9 +25,11 @@ public interface IgcmConstants {
     String PORT = ":3000";
     String BASE_URL = "http://192.168.0.101";
     String SERVER = BASE_URL + PORT;
-    String SERVER_SIGNUP_USER = SERVER + "/signup";
-    String SERVER_LOGIN_USER = SERVER + "/login";
-    String SERVER_RECOVERY_USER = SERVER + "/recovery";
+    String SERVER_USER = SERVER + "/user";
+    String SERVER_USER_LOGIN = SERVER_USER + "/login";
+    String SERVER_USER_RECOVERY = SERVER_USER + "/recovery";
+    String SERVER_USER_EXISTS = SERVER_USER + "/exists";
+
 
     String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
     String ACTION_SIGNUP = String.format("%s.SIGNUP", PACKAGE_NAME);

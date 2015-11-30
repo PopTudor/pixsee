@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragmentContainer"
     android:animateLayoutChanges="true"
-    tools:context="com.marked.pixienote.activities.LoginActivity"
+    tools:context=".activities.EntryAuthActivity"
     >
 
     <RelativeLayout
@@ -16,7 +15,8 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
 
-        android:background="@drawable/login_gradient">
+        android:background="@drawable/login_gradient"
+        android:minWidth="88dp">
 
         <ImageView
             android:layout_width="50dp"
@@ -32,8 +32,6 @@
             android:id="@+id/logInButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white_transparent"
-            android:capitalize="words"
             android:enabled="true"
             android:focusable="false"
             android:text="Log in"
@@ -41,23 +39,34 @@
             android:layout_above="@+id/signUpButton"
             android:layout_marginBottom="8dp"
             android:focusableInTouchMode="false"
-            android:longClickable="false"/>
+            android:longClickable="false"
+            android:background="@drawable/transparent_button"
+            android:elevation="0dp"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:minWidth="88dp"
+            android:textSize="@dimen/abc_text_size_button_material"
+            android:minHeight="48dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"/>
 
         <Button
             android:id="@+id/signUpButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:capitalize="sentences"
             android:enabled="true"
             android:focusable="true"
             android:text="Sign up"
             android:textColor="#ffffff"
-            android:background="#00ffffff"
+            android:background="@drawable/hollow_button"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:longClickable="false"
-            />
+            android:elevation="0dp"
+            android:minWidth="88dp"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:textSize="@dimen/abc_text_size_button_material"
+            android:minHeight="48dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"/>
 
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

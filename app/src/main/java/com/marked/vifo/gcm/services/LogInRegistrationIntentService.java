@@ -67,6 +67,7 @@ public class LogInRegistrationIntentService extends IntentService {
     // Parameters send from outside, for example when clicked the login button and we send from there the email and password to
     // this service
     private static final String EXTRA_PARAM_EMAIL = "com.marked.vifo.gcm.services.extra.EMAIL";
+    private static final String EXTRA_PARAM_NAME = "com.marked.vifo.gcm.services.extra.NAME";
     private static final String EXTRA_PARAM_PASSWORD = "com.marked.vifo.gcm.services.extra.PASSWORD";
 
     private static final String[] TOPICS = {"global"};
@@ -91,9 +92,10 @@ public class LogInRegistrationIntentService extends IntentService {
      * @see IntentService
      */
     // helper method
-    public static void startActionSignup(Context context, String email, String password) {
+    public static void startActionSignup(Context context,String name, String email, String password) {
         Intent intent = new Intent(context, LogInRegistrationIntentService.class);
         intent.setAction(ACTION_SIGNUP);
+        intent.putExtra(EXTRA_PARAM_NAME, name);
         intent.putExtra(EXTRA_PARAM_EMAIL, email);
         intent.putExtra(EXTRA_PARAM_PASSWORD, password);
         context.startService(intent);
@@ -148,9 +150,10 @@ public class LogInRegistrationIntentService extends IntentService {
                     final String param2 = intent.getStringExtra(EXTRA_PARAM_PASSWORD);
                     handleActionLogin(param1, param2, token);
                 } else if (ACTION_SIGNUP.equals(action)) {
-                    final String param1 = intent.getStringExtra(EXTRA_PARAM_EMAIL);
-                    final String param2 = intent.getStringExtra(EXTRA_PARAM_PASSWORD);
-                    handleActionSignup(param1, param2, token);
+                    final String param1 = intent.getStringExtra(EXTRA_PARAM_NAME);
+                    final String param2 = intent.getStringExtra(EXTRA_PARAM_EMAIL);
+                    final String param3 = intent.getStringExtra(EXTRA_PARAM_PASSWORD);
+                    handleActionSignup(param1, param2, param3, token);
                 } else if (ACTION_RECOVERY.equals(action)) {
                     final String param1 = intent.getStringExtra(EXTRA_PARAM_EMAIL);
                     handleActionRecovery(param1, token);
@@ -198,7 +201,7 @@ public class LogInRegistrationIntentService extends IntentService {
     private void handleActionLogin(String email, String password, String token) {
         try {
             /* Use URLEncoder to replace spaces with %20 or + and replace invalid URL chars with equivalent in hex*/
-            String verifyUserURL = getVerifyUserURL(IgcmConstants.SERVER_LOGIN_USER, email, password, token);
+            String verifyUserURL = getVerifyUserURL(IgcmConstants.SERVER_USER_LOGIN, email, password, token);
             /* if sent_token_to_server == true, we are registered*/
             JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, verifyUserURL, new Response.Listener<JSONObject>() {
                 @Override
@@ -234,12 +237,15 @@ public class LogInRegistrationIntentService extends IntentService {
      * @param password The password of the user.
      * @param token    The new token.
      */
-    private void handleActionSignup(String email, String password, String token) {
+    private void handleActionSignup(String name, String email, String password, String token) {
         try {
             /* Use URLEncoder to replace spaces with %20 or + and replace invalid URL chars with equivalent in hex*/
-            String verifyUserURL = getVerifyUserURL(IgcmConstants.SERVER_SIGNUP_USER, email, password, token);
+            String verifyUserURL = IgcmConstants.SERVER_USER + "?token=" + token +
+                                   "&name=" + URLEncoder.encode(name, "UTF-8") +
+                                   "&email=" + URLEncoder.encode(email, "UTF-8") +
+                                   "&password=" + URLEncoder.encode(password, "UTF-8");
             /* if sent_token_to_server == true, we are registered*/
-            JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, verifyUserURL, new Response.Listener<JSONObject>() {
+            JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.PUT, verifyUserURL, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     // You should store a boolean that indicates whether the generated token has been
@@ -276,7 +282,7 @@ public class LogInRegistrationIntentService extends IntentService {
     private void handleActionRecovery(String email, String token) {
         try {
             /* Use URLEncoder to replace spaces with %20 or + and replace invalid URL chars with equivalent in hex*/
-            String verifyUserURL = getVerifyUserURL(IgcmConstants.SERVER_RECOVERY_USER, email, "", token);
+            String verifyUserURL = getVerifyUserURL(IgcmConstants.SERVER_USER_RECOVERY, email, "", token);
             /* if sent_token_to_server == true, we are registered*/
             JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, verifyUserURL, new Response.Listener<JSONObject>() {
                 @Override
@@ -304,7 +310,7 @@ public class LogInRegistrationIntentService extends IntentService {
     /**
      * Notify UI ProgressDialog that the login/signup/password recovery is done
      */
-    private void notifyBroadcastReceiver(String action){
+    private void notifyBroadcastReceiver(String action) {
         // Notify UI that registration has completed, so the progress indicator can be hidden.
         Intent registrationComplete = new Intent(action);
         LocalBroadcastManager.getInstance(LogInRegistrationIntentService.this).sendBroadcast(registrationComplete);
@@ -332,7 +338,6 @@ public class LogInRegistrationIntentService extends IntentService {
         } else if (error instanceof ParseError) {
             Log.e("Volley", "ParseError");
         }
-
         LocalBroadcastManager.getInstance(LogInRegistrationIntentService.this).sendBroadcast(intent);
     }
 

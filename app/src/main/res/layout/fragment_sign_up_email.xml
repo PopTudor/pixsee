@@ -1,0 +1,54 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/material_grey_100"
+    android:padding="16dp"
+    tools:context=".fragments.SignUpEmailFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="60dp"
+        android:text="What is your email ?"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+        android:textSize="@dimen/abc_text_size_headline_material"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/emailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="140dp"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="?colorAccent"
+        android:layout_alignParentTop="true">
+        <requestFocus/>
+    </com.rengwuxian.materialedittext.MaterialEditText>
+
+    <Button
+        android:id="@+id/nextButton"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@color/primary"
+        android:clickable="true"
+        android:text="Next"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/emailEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+</RelativeLayout>

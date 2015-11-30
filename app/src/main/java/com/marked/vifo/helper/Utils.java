@@ -70,18 +70,15 @@ public class Utils {
      * @return true if everything works fine, false otherwise
      */
     public static boolean checkEnteredData(Context mContext, String email, String password, CoordinatorLayout coordinatorLayout) {
-        String emailString = email.trim();
-        String passwordString = password.trim();
-        if (emailString.isEmpty()) {
+        if (isEmpty(email)){
             if (coordinatorLayout != null) {
                 Snackbar view = Snackbar.make(coordinatorLayout, "The email field is empty", Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(mContext, R.color.white));
                 view.getView().setBackgroundColor(Color.WHITE);
                 view.show();
             }else
                 Toast.makeText(mContext, "The email field is empty", Toast.LENGTH_SHORT).show();
-            return false;
         }
-        if (passwordString.isEmpty()) {
+        if (isEmpty(password)) {
             if (coordinatorLayout != null) {
                 Snackbar view = Snackbar.make(coordinatorLayout, "The password field is empty", Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(mContext, R.color.white));
                 view.getView().setBackgroundColor(Color.WHITE);
@@ -90,7 +87,7 @@ public class Utils {
                 Toast.makeText(mContext, "The password field is empty", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(emailString).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()) {
             if (coordinatorLayout!=null) {
                 Snackbar view = Snackbar.make(coordinatorLayout, "You must enter a valid email", Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(mContext, R.color.white));
                 view.getView().setBackgroundColor(Color.WHITE);
@@ -100,5 +97,52 @@ public class Utils {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Check if given string is empty
+     * @param string
+     * @return
+     */
+    public static boolean isEmpty(String string){
+        String str = string.trim();
+        return string == null||str.isEmpty();
+    }
+
+    public static int getNumberDigits(String inString){
+        if (isEmpty(inString)) {
+            return 0;
+        }
+        int numDigits= 0;
+        int length= inString.length();
+        for (int i = 0; i < length; i++)
+            if (Character.isDigit(inString.charAt(i)))
+                numDigits++;
+        return numDigits;
+    }
+
+    private float getRating(String password) throws IllegalArgumentException {
+        if (password == null)
+            throw new IllegalArgumentException();
+        int passwordStrength = 0;
+        if (password.length() > 5) {
+            passwordStrength++;
+        } // minimal pw length of 6
+        if (password.toLowerCase().equals(password)) {
+            passwordStrength++;
+        } // lower and upper case
+        if (password.length() > 8) {
+            passwordStrength++;
+        } // good pw length of 9+
+        int numDigits = Utils.getNumberDigits(password);
+        if (numDigits > 0 && numDigits != password.length()) {
+            passwordStrength++;
+        } // contains digits and non-digits
+        return (float) passwordStrength;
+    }
+
+
+    public static Snackbar createWhiteSnackBar(Context context,CoordinatorLayout coordinatorLayout, String message) {
+        return Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(context, R.color.white));
     }
 }

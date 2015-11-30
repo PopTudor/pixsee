@@ -26,7 +26,7 @@ public class EntryActivity extends AppCompatActivity {
 		if (mUserRegistered) {
 			intent = new Intent(this, ContactListActivity.class);
 		} else {
-			intent = new Intent(this, LoginActivity.class);
+			intent = new Intent(this, EntryAuthActivity.class);
 		}
 		startActivity(intent);
         finish();

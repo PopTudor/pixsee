@@ -75,7 +75,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".activities.EntryAuthActivity"
             android:clearTaskOnLaunch="true"
             android:label="@string/title_activity_login"
             android:launchMode="singleTask"
@@ -83,6 +83,7 @@
         </activity>
         <activity
             android:name=".activities.EntryActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -138,6 +139,15 @@
             android:name=".gcm.services.LogInRegistrationIntentService"
             android:exported="false">
         </service>
+
+        <activity android:name=".activities.SignUpActivity"
+                  android:screenOrientation="portrait"
+            >
+        </activity>
+        <activity android:name=".activities.LoginActivity"
+                  android:screenOrientation="portrait"
+            >
+        </activity>
     </application>
 
 </manifest>
