@@ -10,6 +10,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,7 +25,7 @@ import com.marked.vifo.gcm.services.LogInRegistrationIntentService;
 import com.marked.vifo.helper.Utils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LogInActivityy extends AppCompatActivity implements View.OnClickListener ,PopupMenu.OnMenuItemClickListener{
     private Button mLogInButtonPixy;
     private MaterialEditText mEmail, mPassword;
     private RegistrationBroadcastReceiver mRegistrationBroadcastReceiver;
@@ -41,7 +44,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mContainer = (CoordinatorLayout) findViewById(R.id.container_log_in_fragment);
         mMoreImageView = (ImageView) findViewById(R.id.moreImageView);
 
-        mLogInButtonPixy.setOnClickListener(this);
         mMoreImageView.setColorFilter(ContextCompat.getColor(this, R.color.primary));
 
         mBroadcastManagerastManager = LocalBroadcastManager.getInstance(this);
@@ -59,16 +61,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Snackbar snackbar = null;
                 switch (errorStatusCode) {
                     case IHTTPStatusCodes.REQUEST_CONFLICT:
-                        snackbar = Utils.createWhiteSnackBar(LoginActivity.this, mContainer, "You already have an account");
+                        snackbar = Utils.createWhiteSnackBar(LogInActivityy.this, mContainer, "You already have an account");
                         break;
                     case IHTTPStatusCodes.REQUEST_TIMEOUT:
-                        snackbar = Utils.createWhiteSnackBar(LoginActivity.this, mContainer, "Timeout error");
+                        snackbar = Utils.createWhiteSnackBar(LogInActivityy.this, mContainer, "Timeout error");
                         break;
                     case IHTTPStatusCodes.REQUEST_INCORRECT_PASSWORD:
-                        snackbar = Utils.createWhiteSnackBar(LoginActivity.this, mContainer, "Incorrect password");
+                        snackbar = Utils.createWhiteSnackBar(LogInActivityy.this, mContainer, "Incorrect password");
                         break;
                     case IHTTPStatusCodes.NOT_FOUND:
-                        snackbar = Utils.createWhiteSnackBar(LoginActivity.this, mContainer, "We are sorry, but we did not found you");
+                        snackbar = Utils.createWhiteSnackBar(LogInActivityy.this, mContainer, "We are sorry, but we did not found you");
                         break;
                 }
                 if (snackbar != null) {
@@ -106,9 +108,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     LogInRegistrationIntentService.startActionLogin(this, mEmail.getText().toString(), mPassword.getText().toString());
                     mProgressDialog = ProgressDialog.show(this, "Login", "Please wait ...", true);
                     break;
+                case R.id.signUpButton:
+                    startActivity(new Intent(this,SignUpActivity.class));
+                    break;
             }
         else
             Utils.showNoConnectionDialog(this);
+    }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.aboutMenuItem:
+                // TODO: 30-Nov-15 implement this
+                break;
+        }
+        return false;
+    }
+    /*
+   * Triggered when the 'more' icon is clicked
+   * The icon is in fragment_log_in.xml but handeled here because it won't get triggered in LogInFragment.java
+   * */
+    public void showPopup(View view){
+        PopupMenu popup = new PopupMenu(this, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_popup_login, popup.getMenu());
+        popup.setOnMenuItemClickListener(this);
+        popup.show();
     }
 }
