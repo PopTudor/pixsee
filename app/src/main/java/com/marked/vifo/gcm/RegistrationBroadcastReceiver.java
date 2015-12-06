@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.IntentCompat;
 
-import com.marked.vifo.activities.ContactListActivity;
-import com.marked.vifo.extras.IHTTPStatusCodes;
-import com.marked.vifo.gcm.extras.IgcmConstants;
+import com.marked.vifo.activity.ContactListActivity;
+import com.marked.vifo.extra.HTTPStatusCodes;
+import com.marked.vifo.extra.GCMConstants;
 
 /**
  * Created by Tudor Pop on 28-Nov-15.
@@ -24,24 +24,24 @@ public class RegistrationBroadcastReceiver extends BroadcastReceiver {
         Intent toStart;
         if (intent != null) {
             String action = intent.getAction();
-            if (action.equals(IgcmConstants.ACTION_LOGIN)) {
+            if (action.equals(GCMConstants.ACTION_LOGIN)) {
                 toStart = new Intent(context, ContactListActivity.class);
                 toStart.setFlags(
                         Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 context.startActivity(toStart);
                 if (registrationBroadcastReceiverListener != null)
                     registrationBroadcastReceiverListener.onDismiss();
-            } else if (action.equals(IgcmConstants.ACTION_SIGNUP)) {
+            } else if (action.equals(GCMConstants.ACTION_SIGNUP)) {
                 toStart = new Intent(context, ContactListActivity.class);
                 toStart.setFlags(
                         Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 context.startActivity(toStart);
                 if (registrationBroadcastReceiverListener != null)
                     registrationBroadcastReceiverListener.onDismiss();
-            } else if (action.equals(IgcmConstants.ACTION_RECOVERY)) {
+            } else if (action.equals(GCMConstants.ACTION_RECOVERY)) {
                 // TODO: 28-Nov-15 implement this
-            } else if (action.equals(IgcmConstants.ACTION_ERROR)) {
-                int errorStatusCode = intent.getIntExtra(IHTTPStatusCodes.ERROR_RESPONSE_STATUS_CODE, 0);
+            } else if (action.equals(GCMConstants.ACTION_ERROR)) {
+                int errorStatusCode = intent.getIntExtra(HTTPStatusCodes.ERROR_RESPONSE_STATUS_CODE, 0);
                 if (registrationBroadcastReceiverListener != null) {
                     registrationBroadcastReceiverListener.onDismiss();
                     registrationBroadcastReceiverListener.onError(errorStatusCode);
@@ -53,7 +53,7 @@ public class RegistrationBroadcastReceiver extends BroadcastReceiver {
     /**
      * If we have an indeterminate ProgressDialog loading and we want to dismiss it
      * when we RegistrationBroadcastReceiver receives a signal(Login,signup,recovery)
-     * we will make the Activity/entity that owns the dialog to dismiss it if it has one.
+     * we will make the Activity/entity that owns the dialog to dismiss it(for us) if it has one.
      */
     public interface RegistrationBroadcastReceiverListener {
 
