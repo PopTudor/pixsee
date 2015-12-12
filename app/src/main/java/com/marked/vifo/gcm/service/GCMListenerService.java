@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Google Inc. All Rights Reserved.
- * <p>
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,9 +20,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
@@ -30,13 +32,11 @@ import com.marked.vifo.R;
 import com.marked.vifo.activity.EntryActivity;
 import com.marked.vifo.fragment.ContactDetailFragment;
 
-import static android.app.PendingIntent.FLAG_ONE_SHOT;
 import static android.app.PendingIntent.getActivity;
 import static android.media.RingtoneManager.TYPE_NOTIFICATION;
 import static android.media.RingtoneManager.getDefaultUri;
-import static com.marked.vifo.extra.MessageConstants.NOTIFICATION_BODY;
-import static com.marked.vifo.extra.MessageConstants.NOTIFICATION_PAYLOAD;
-import static com.marked.vifo.extra.MessageConstants.NOTIFICATION_TITLE;
+import static com.marked.vifo.extra.MessageConstants.NOTIFICATION_PAYLOAD_BODY;
+import static com.marked.vifo.extra.MessageConstants.NOTIFICATION_PAYLOAD_TITLE;
 import static com.marked.vifo.extra.MessageConstants.TEXT_PAYLOAD;
 
 /**
@@ -54,15 +54,14 @@ public class GCMListenerService extends GcmListenerService {
 	/**
 	 * Called when message is received.
 	 *
-	 * @param from    SenderID of the sender.
+	 * @param from    SenderID of the app.
 	 * @param payload Data bundle containing message data as key/value pairs.
 	 *                For Set of keys use data.keySet().
 	 */
 	@Override
 	public void onMessageReceived(String from, Bundle payload) {
-		String message = payload.getString(TEXT_PAYLOAD);
-		Log.d(TAG, "From: " + from);
-		Log.d(TAG, "Message: " + message);
+		String text = payload.getString(TEXT_PAYLOAD);
+		Log.d(TAG, "Message: " + text);
 		for (String s : payload.keySet())
 			Log.d("***", "onMessageReceived " + s);
 
@@ -89,6 +88,35 @@ public class GCMListenerService extends GcmListenerService {
 		// [END_EXCLUDE]
 	}
 
+
+	/**
+	 * Create and show a simple notification containing the received GCM message.
+	 *
+	 * @param bundle GCM message received.
+	 */
+	private void sendNotification(Bundle bundle) {
+		//		Bundle[{text=h, links=[null], notification=Bundle[{e=1, body=This is a notification that will be displayed ASAP., icon=ic_launcher, title=Hello, World}], collapse_key=com.marked.vifo}]
+		if (bundle != null) {
+			Intent intent = new Intent(this, EntryActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			PendingIntent pendingIntent = getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
+			Uri defaultSoundUri = getDefaultUri(TYPE_NOTIFICATION);
+			NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_communication_message)
+			                                                                                     .setWhen(0)
+			                                                                                     .setLargeIcon(BitmapFactory
+					                                                             .decodeResource(getResources(), R.mipmap.ic_launcher))
+			                                                                                     .setContentTitle(bundle.getString(NOTIFICATION_PAYLOAD_TITLE))
+			                                                                                     .setContentText(bundle.getString(NOTIFICATION_PAYLOAD_BODY))
+			                                                                                     .setAutoCancel(true)
+			                                                                                     .setColor(ContextCompat.getColor(this,R.color.accent))
+			                                                                                     .setSound(defaultSoundUri)
+			                                                                                     .setContentIntent(pendingIntent);
+
+			NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+		}
+	}
+
 	/**
 	 * Called when an upstream message has been successfully sent to the GCM connection server.
 	 *
@@ -97,7 +125,6 @@ public class GCMListenerService extends GcmListenerService {
 	@Override
 	public void onMessageSent(String msgId) {
 		super.onMessageSent(msgId);
-		Log.d("***", "onMessageSent " + msgId);
 	}
 
 	/**
@@ -110,35 +137,6 @@ public class GCMListenerService extends GcmListenerService {
 	public void onSendError(String msgId, String error) {
 		super.onSendError(msgId, error);
 	}
-
-	/**
-	 * Create and show a simple notification containing the received GCM message.
-	 *
-	 * @param bundle GCM message received.
-	 */
-	private void sendNotification(Bundle bundle) {
-		//		Bundle[{text=h, links=[null], notification=Bundle[{e=1, body=This is a notification that will be displayed ASAP., icon=ic_launcher, title=Hello, World}], collapse_key=com.marked.vifo}]
-		Bundle notificationBundle = bundle.getBundle(NOTIFICATION_PAYLOAD);
-		if (notificationBundle != null) {
-			Intent intent = new Intent(this, EntryActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			PendingIntent pendingIntent =getActivity(this, 0 /* Request code */, intent, FLAG_ONE_SHOT);
-
-			Uri defaultSoundUri = getDefaultUri(TYPE_NOTIFICATION);
-			Builder notificationBuilder = new Builder(this).setSmallIcon(R.mipmap.ic_launcher)
-			                                               .setContentTitle(notificationBundle
-					                                                                .getString(NOTIFICATION_TITLE))
-			                                               .setContentText(notificationBundle
-					                                                               .getString(NOTIFICATION_BODY))
-			                                               .setAutoCancel(true)
-			                                               .setSound(defaultSoundUri)
-			                                               .setContentIntent(pendingIntent);
-
-			NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-		}
-	}
-
 
 	public interface Callbacks {
 		void receiveMessage(String from, Bundle data);

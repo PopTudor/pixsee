@@ -7,11 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -113,7 +111,6 @@ public class ContactListFragment extends Fragment {
 //							Log.d("***", "onCreateView "+mContacts.getContacts().get(0).toString());
 //							Log.d("***", "onResponse " + mContacts.getContacts());
 						}
-						Contacts.toJSONArray(mContacts.getContacts());
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -122,7 +119,7 @@ public class ContactListFragment extends Fragment {
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					Toast.makeText(mContext, " " + error, Toast.LENGTH_LONG).show();
+					// TODO: 12-Dec-15 add empty view
 				}
 			});
 			mQueue.add(request);
@@ -149,9 +146,6 @@ public class ContactListFragment extends Fragment {
 		mCallbacks = null;
 	}
 
-	public void sendMessage(View view) {
-		Log.d("***", "sendMessage ");
-	}
 
 	public interface Callbacks {
 		/**

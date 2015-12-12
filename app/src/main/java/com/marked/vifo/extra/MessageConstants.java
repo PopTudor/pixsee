@@ -18,7 +18,9 @@ public interface MessageConstants {
 	String TEXT_PAYLOAD = "text";
 	String DATA_PAYLOAD = "data";
 	/**This parameter specifies the predefined, user-visible key-value pairs of the notification payload. */
-	String NOTIFICATION_PAYLOAD = "notification";
+	String NOTIFICATION_PAYLOAD = "gcm.notification";
+	String NOTIFICATION_PAYLOAD_TITLE = NOTIFICATION_PAYLOAD+".title";
+	String NOTIFICATION_PAYLOAD_BODY = NOTIFICATION_PAYLOAD+".body";
 	String NOTIFICATION_PARAMS_KEY = "notificationParams";
 
 
