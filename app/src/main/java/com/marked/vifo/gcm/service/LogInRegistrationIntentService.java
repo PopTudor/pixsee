@@ -20,6 +20,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -40,9 +41,9 @@ import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.marked.vifo.R;
-import com.marked.vifo.controller.RequestQueue;
-import com.marked.vifo.extra.HTTPStatusCodes;
 import com.marked.vifo.extra.GCMConstants;
+import com.marked.vifo.extra.HTTPStatusCodes;
+import com.marked.vifo.model.RequestQueue;
 
 import org.json.JSONObject;
 
@@ -72,10 +73,7 @@ public class LogInRegistrationIntentService extends IntentService {
     private static final String[] TOPICS = {"global"};
 
     private SharedPreferences mSharedPreferences;
-    /* used to generate unique ID per instance of the app. This can be used in authentification
-    * https://developers.google.com/instance-id/ */
-    private InstanceID instanceID;
-    private RequestQueue requestQueue;
+	private RequestQueue requestQueue;
 
     /*
     * One time initialization
@@ -140,8 +138,14 @@ public class LogInRegistrationIntentService extends IntentService {
             // R.string.gcm_defaultSenderId (the Sender ID) is typically derived from google-services.json.
             // See https://developers.google.com/cloud-messaging/android/start for details on this file.
 
-            instanceID = InstanceID.getInstance(this);
-            String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+	        InstanceID instanceID = InstanceID.getInstance(this);
+	        String scope = GoogleCloudMessaging.INSTANCE_ID_SCOPE;
+	        Bundle extras = null;
+	        String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId), scope, extras);
+
+	        PreferenceManager.getDefaultSharedPreferences(this).edit()
+	                         .putString(GCMConstants.TOKEN, token).apply();
+
             if (intent != null) {
                 final String action = intent.getAction();
                 if (ACTION_LOGIN.equals(action)) {

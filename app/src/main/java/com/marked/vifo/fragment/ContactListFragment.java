@@ -1,5 +1,6 @@
 package com.marked.vifo.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,18 +11,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.marked.vifo.R;
 import com.marked.vifo.adapter.ContactsAdapter;
-import com.marked.vifo.model.Contact;
+import com.marked.vifo.extra.GCMConstants;
 import com.marked.vifo.model.Contacts;
+import com.marked.vifo.model.RequestQueue;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 /**
  * A list fragment representing a list of Contacts. This fragment
  * also supports tablet devices by allowing list items to be given an
  * 'activated' state upon selection. This helps indicate which item is
  * currently being viewed in a {@link ContactDetailFragment}.
- * <p/>
+ * <p>
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
@@ -33,6 +47,7 @@ public class ContactListFragment extends Fragment {
 	private Context mContext;
 
 	private Contacts mContacts;
+	private RequestQueue mQueue;
 
 
 	/**
@@ -52,10 +67,8 @@ public class ContactListFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		mContext = getActivity();
 		mContacts = Contacts.getInstance(getActivity());
-		for (int i = 0; i < 10; i++) {
-			mContacts.addContact(new Contact(i + " bacon", Math.random() + "", i + ""));
-		}
-
+		mQueue = RequestQueue.getInstance(mContext);
+		requestListFriends();
 
 		mContactsAdapter = new ContactsAdapter(mContext, mContacts.getContacts());
 		mLayoutManager = new LinearLayoutManager(mContext);
@@ -69,7 +82,51 @@ public class ContactListFragment extends Fragment {
 		mRecyclerView.setAdapter(mContactsAdapter);
 		mRecyclerView.setLayoutManager(mLayoutManager);
 
+
 		return rootView;
+	}
+
+	/**
+	 * Use the token to send a request to the server for an array of friends for the user of the app
+	 */
+	private void requestListFriends() {
+		String token = getDefaultSharedPreferences(mContext).getString(GCMConstants.TOKEN, null);
+		if (token != null) {
+			JsonRequest request = new JsonObjectRequest(Request.Method.GET,
+					                                           GCMConstants.SERVER_USER_FRIENDS +
+					                                           "?token=" +
+					                                           token, new Response.Listener<JSONObject>() {
+				@Override
+				public void onResponse(JSONObject response) {
+					try {
+						JSONArray friends = response.getJSONArray("friends");
+						if (friends.length() != mContacts.getContacts().size()) { // only add friends
+							mContacts.setFriends(Contacts.fromJSONArray(friends));
+							((Activity) mContext).runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									mContactsAdapter
+											.notifyItemRangeInserted(0, mContacts.getContacts().size() - 1);
+								}
+							});
+						}else {
+//							Log.d("***", "onCreateView "+mContacts.getContacts().get(0).toString());
+//							Log.d("***", "onResponse " + mContacts.getContacts());
+						}
+						Contacts.toJSONArray(mContacts.getContacts());
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+
+				}
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					Toast.makeText(mContext, " " + error, Toast.LENGTH_LONG).show();
+				}
+			});
+			mQueue.add(request);
+		}
 	}
 
 	@Override

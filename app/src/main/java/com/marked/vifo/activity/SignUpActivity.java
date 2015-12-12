@@ -25,7 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.marked.vifo.R;
-import com.marked.vifo.controller.RequestQueue;
+import com.marked.vifo.model.RequestQueue;
 import com.marked.vifo.extra.HTTPStatusCodes;
 import com.marked.vifo.fragment.SignUpEmailFragment;
 import com.marked.vifo.fragment.SignUpNameFragment;

@@ -8,8 +8,8 @@ import java.io.File;
 
 public class TheBackupAgent extends BackupAgentHelper {
 	// The name of the SharedPreferences file
-	static final         String DATABASE_FILE_NAME = "notes.db";
-	private static final String DATABASE_FILE_KEY  = "notesdb_key";
+	static final         String DATABASE_FILE_NAME = "pixsee.db";
+	private static final String DATABASE_FILE_KEY  = "pixseedb_key";
     // TODO: 01-Nov-15 create database
 
 	// Allocate a helper and add it to the backup agent

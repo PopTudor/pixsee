@@ -3,6 +3,7 @@ package com.marked.vifo.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.marked.vifo.model.Contact;
 
 import java.util.List;
 
+import static com.marked.vifo.activity.ContactDetailActivity.EXTRA_CONTACT;
+
 /**
  * Created by Tudor Pop on 30-Nov-15.
  */
@@ -22,8 +25,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactHolder> {
 	private Context mContext;
 
 	public ContactsAdapter(Context context, List<Contact> dataSet) {
-        mDataSet = dataSet;
 		mContext = context;
+        mDataSet = dataSet;
     }
 
     @Override
@@ -36,14 +39,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactHolder> {
 
     @Override
     public void onBindViewHolder(ContactHolder holder, final int position) {
-        Contact contact = mDataSet.get(position);
+	    final Contact contact = mDataSet.get(position);
         holder.bindContact(contact);
 	    holder.itemView.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) { // itemView is a public member that points to the root element of the contactHolder (in the layout)
 			    // TODO: 03-Dec-15 send contact detail from here to ContactDetailActivity
+
 			    Intent intent = new Intent(mContext, ContactDetailActivity.class);
-			    mContext.startActivity(new Intent(mContext, ContactDetailActivity.class));
+			    intent.putExtra(EXTRA_CONTACT,contact);
+			    mContext.startActivity(intent); // RIGHT !!!
 		    }
 	    });
     }

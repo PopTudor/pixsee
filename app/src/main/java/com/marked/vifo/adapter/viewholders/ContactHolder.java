@@ -13,8 +13,8 @@ import com.marked.vifo.model.Contact;
  * Created by Tudor Pop on 03-Dec-15.
  */
 public class ContactHolder extends RecyclerView.ViewHolder {
-	private NetworkImageView mContactIconImageView;
-	private TextView mContactNameEditText;
+	private NetworkImageView mFriendIconImageView;
+	private TextView mFriendTextView;
 
 	public ContactHolder(View v, final Context context) {
 		super(v);
@@ -27,13 +27,13 @@ public class ContactHolder extends RecyclerView.ViewHolder {
 		//                }
 		//            });
 
-		mContactIconImageView = (NetworkImageView) v.findViewById(R.id.contactIconImageView);
-		mContactNameEditText = (TextView) v.findViewById(R.id.contactNameTextView);
+		mFriendIconImageView = (NetworkImageView) v.findViewById(R.id.contactIconImageView);
+		mFriendTextView = (TextView) v.findViewById(R.id.contactNameTextView);
 	}
 
 	public void bindContact(Contact contact){
-		mContactNameEditText.setText(contact.getName());
-		mContactIconImageView.setDefaultImageResId(R.drawable.ic_action_refresh);
+		mFriendTextView.setText(contact.getName());
+		mFriendIconImageView.setDefaultImageResId(R.drawable.ic_action_refresh);
 	}
 
 }

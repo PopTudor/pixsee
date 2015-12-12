@@ -2,15 +2,42 @@ package com.marked.vifo.extra;
 
 /**
  * Created by Tudor Pop on 06-Dec-15.
- */
+ * https://developers.google.com/cloud-messaging/http-server-ref#downstream
+ **/
 public interface MessageConstants {
-	String MESSAGE_KEY = "message";
-	String COLLAPSE_KEY = "collapseKey";
-	String TIME_TO_LIVE_KEY = "timeToLive";
-	String DELAY_WHILE_IDLE_KEY = "delayWhileIdle";
-	String DRY_RUN_KEY = "dryRun";
-	String RESTRICTED_PACKAGE_NAME_KEY = "restrictedPackageName";
-	String DATA_KEY = "data";
+
+	String TO_TARGETS = "to";
+	String REGISTRATION_IDS_TARGETS = "registration_ids";
+	String PRIORITY_OPTION = "priority";
+	String COLLAPSE_OPTION = "collapse_key";
+	String TIME_TO_LIVE_OPTION = "timeToLive";
+	String DELAY_WHILE_IDLE_OPTION = "delayWhileIdle";
+	String DRY_RUN_OPTION = "dryRun";
+	String RESTRICTED_PACKAGE_NAME_OPTION = "restrictedPackageName";
+
+	String TEXT_PAYLOAD = "text";
+	String DATA_PAYLOAD = "data";
+	/**This parameter specifies the predefined, user-visible key-value pairs of the notification payload. */
+	String NOTIFICATION_PAYLOAD = "notification";
 	String NOTIFICATION_PARAMS_KEY = "notificationParams";
 
+
+	/*Notification payload support
+	* https://developers.google.com/cloud-messaging/http-server-ref#downstream
+	* */
+	String NOTIFICATION_TITLE = "title";
+	String NOTIFICATION_BODY = "body";
+	String NOTIFICATION_ICON = "icon";
+	String NOTIFICATION_SOUND = "sound";
+	String NOTIFICATION_TAG = "tag";
+	String NOTIFICATION_COLOR = "color";
+	String NOTIFICATION_ACTION_CLICK = "click_action";
+	String NOTIFICATION_TITLE_LOCK_KEY = "title_loc_key";
+	String NOTIFICATION_TITLE_LOCK_ARGS = "title_loc_args";
+	String NOTIFICATION_BODY_LOCK_KEY = "body_loc_key";
+	String NOTIFICATION_BODY_LOCK_ARGS = "body_loc_args";
+
+	interface MessageType {
+		int ME = 0, YOU = 1, PHOTO = 2, VIDEO = 3;
+	}
 }

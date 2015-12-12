@@ -1,5 +1,7 @@
 package com.marked.vifo.model;
 
+import android.os.Bundle;
+
 import com.marked.vifo.extra.MessageConstants;
 
 import java.io.Serializable;
@@ -18,6 +20,7 @@ public final class Message implements Serializable, MessageConstants {
 	private final Map<String, String> notificationParams;
 	private final Boolean dryRun;
 	private final String restrictedPackageName;
+	private int messageType;
 
 	private Message(Builder builder) {
 		collapseKey = builder.collapseKey;
@@ -27,6 +30,15 @@ public final class Message implements Serializable, MessageConstants {
 		timeToLive = builder.timeToLive;
 		dryRun = builder.dryRun;
 		restrictedPackageName = builder.restrictedPackageName;
+		messageType = builder.viewType;
+	}
+
+
+	/**
+	 * Gets the message type.
+	 */
+	public int getMessageType() {
+		return messageType;
 	}
 
 	/**
@@ -78,23 +90,42 @@ public final class Message implements Serializable, MessageConstants {
 		return notificationParams;
 	}
 
+	public Bundle toBundle() {
+		Bundle bundle = new Bundle();
+		if (data.containsKey(COLLAPSE_OPTION))
+			bundle.putString(COLLAPSE_OPTION, data.get(COLLAPSE_OPTION));
+		if (data.containsKey(TIME_TO_LIVE_OPTION))
+			bundle.putString(TIME_TO_LIVE_OPTION, data.get(TIME_TO_LIVE_OPTION));
+		if (data.containsKey(DELAY_WHILE_IDLE_OPTION))
+			bundle.putString(DELAY_WHILE_IDLE_OPTION, data.get(DELAY_WHILE_IDLE_OPTION));
+		if (data.containsKey(DRY_RUN_OPTION))
+			bundle.putString(DRY_RUN_OPTION, data.get(DRY_RUN_OPTION));
+		if (data.containsKey(RESTRICTED_PACKAGE_NAME_OPTION))
+			bundle.putString(RESTRICTED_PACKAGE_NAME_OPTION, data.get(RESTRICTED_PACKAGE_NAME_OPTION));
+		if (data.containsKey(TEXT_PAYLOAD))
+			bundle.putString(TEXT_PAYLOAD, data.get(TEXT_PAYLOAD));
+
+		return bundle;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder("Message(");
 		if (collapseKey != null) {
-			builder.append("collapseKey=").append(collapseKey).append(", ");
+			builder.append(COLLAPSE_OPTION + "=").append(collapseKey).append(", ");
 		}
 		if (timeToLive != null) {
-			builder.append("timeToLive=").append(timeToLive).append(", ");
+			builder.append(TIME_TO_LIVE_OPTION + "timeToLive=").append(timeToLive).append(", ");
 		}
 		if (delayWhileIdle != null) {
-			builder.append("delayWhileIdle=").append(delayWhileIdle).append(", ");
+			builder.append(DELAY_WHILE_IDLE_OPTION + "=").append(delayWhileIdle).append(", ");
 		}
 		if (dryRun != null) {
-			builder.append("dryRun=").append(dryRun).append(", ");
+			builder.append("dryRun:").append(dryRun).append(", ");
 		}
 		if (restrictedPackageName != null) {
-			builder.append("restrictedPackageName=").append(restrictedPackageName).append(", ");
+			builder.append(RESTRICTED_PACKAGE_NAME_OPTION + "=").append(restrictedPackageName)
+			       .append(", ");
 		}
 		appendMap(builder, "data", data);
 		appendMap(builder, "notificationParams", notificationParams);
@@ -108,7 +139,7 @@ public final class Message implements Serializable, MessageConstants {
 
 	private void appendMap(StringBuilder builder, String name, Map<String, String> map) {
 		if (!map.isEmpty()) {
-			builder.append(name).append(": {");
+			builder.append(name).append("= {");
 			for (Map.Entry<String, String> entry : map.entrySet()) {
 				builder.append(entry.getKey()).append("=").append(entry.getValue()).append(",");
 			}
@@ -130,9 +161,39 @@ public final class Message implements Serializable, MessageConstants {
 		private Boolean dryRun;
 		private String restrictedPackageName;
 
+		private int viewType;
+
 		public Builder() {
 			this.data = new LinkedHashMap<>();
 			this.notificationParams = new LinkedHashMap<>();
+		}
+
+		/**
+		 * Adds a key/value pair to the payload data.
+		 */
+		public Builder addData(String key, String value) {
+			data.put(key, value);
+			return this;
+		}
+
+		/**
+		 * Adds a bundle to the payload data.
+		 */
+		public Builder addData(Bundle bundle) {
+			if (collapseKey != null)
+				data.put(COLLAPSE_OPTION, bundle.getString(COLLAPSE_OPTION));
+			if (timeToLive != null)
+				data.put(TIME_TO_LIVE_OPTION, bundle.getString(TIME_TO_LIVE_OPTION));
+			if (delayWhileIdle != null)
+				data.put(DELAY_WHILE_IDLE_OPTION, bundle.getString(DELAY_WHILE_IDLE_OPTION));
+			if (dryRun != null)
+				data.put(DRY_RUN_OPTION, bundle.getString(DRY_RUN_OPTION));
+			if (restrictedPackageName != null)
+				data.put(RESTRICTED_PACKAGE_NAME_OPTION, bundle.getString(RESTRICTED_PACKAGE_NAME_OPTION));
+
+			/*data:{'text':'very long string'}*/
+			data.put(TEXT_PAYLOAD, bundle.getString(TEXT_PAYLOAD));
+			return this;
 		}
 
 		/**
@@ -150,6 +211,15 @@ public final class Message implements Serializable, MessageConstants {
 			delayWhileIdle = value;
 			return this;
 		}
+		/**
+		 * Sets the messageType property (default value is {@literal 0}).
+		 * MessageType is defined in MessageConstants.MessageType( ME, YOU, PHOTO, VIDEO )
+		 */
+		public Builder viewType(int value) {
+			viewType = value;
+			return this;
+		}
+
 
 		/**
 		 * Sets the time to live, in seconds.
@@ -159,13 +229,6 @@ public final class Message implements Serializable, MessageConstants {
 			return this;
 		}
 
-		/**
-		 * Adds a key/value pair to the payload data.
-		 */
-		public Builder addData(String key, String value) {
-			data.put(key, value);
-			return this;
-		}
 
 		/**
 		 * Sets the dryRun property (default value is {@literal false}).
@@ -187,7 +250,7 @@ public final class Message implements Serializable, MessageConstants {
 		 * Sets the notification icon.
 		 */
 		public Builder notificationIcon(String value) {
-			notificationParams.put("icon", value);
+			notificationParams.put(NOTIFICATION_ICON, value);
 			return this;
 		}
 
@@ -195,7 +258,7 @@ public final class Message implements Serializable, MessageConstants {
 		 * Sets the notification title text.
 		 */
 		public Builder notificationTitle(String value) {
-			notificationParams.put("title", value);
+			notificationParams.put(NOTIFICATION_TITLE, value);
 			return this;
 		}
 
@@ -203,7 +266,7 @@ public final class Message implements Serializable, MessageConstants {
 		 * Sets the notification body text.
 		 */
 		public Builder notificationBody(String value) {
-			notificationParams.put("body", value);
+			notificationParams.put(NOTIFICATION_BODY, value);
 			return this;
 		}
 
@@ -211,7 +274,7 @@ public final class Message implements Serializable, MessageConstants {
 		 * Sets the notification click action.
 		 */
 		public Builder notificationClickAction(String value) {
-			notificationParams.put("click_action", value);
+			notificationParams.put(NOTIFICATION_ACTION_CLICK, value);
 			return this;
 		}
 

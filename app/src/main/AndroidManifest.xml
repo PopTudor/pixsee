@@ -50,9 +50,6 @@
     -->
     <uses-feature android:name="android.hardware.camera"/>
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.SET_DEBUG_APP"/>
-
     <application
         android:allowBackup="true"
         android:backupAgent=".helper.TheBackupAgent"
@@ -150,6 +147,9 @@
                   android:screenOrientation="portrait"
             >
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="2a07f1340e2ceb691a40b8f9b4f847fd933de5ea" />
     </application>
 
 </manifest>

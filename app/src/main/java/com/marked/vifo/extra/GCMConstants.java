@@ -30,6 +30,7 @@ public interface GCMConstants {
     String SERVER_USER_LOGIN = SERVER_USER + "/login";
     String SERVER_USER_RECOVERY = SERVER_USER + "/recovery";
     String SERVER_USER_EXISTS = SERVER_USER + "/exists";
+    String SERVER_USER_FRIENDS = SERVER_USER + "/friends";
 
 
     String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
@@ -44,4 +45,9 @@ public interface GCMConstants {
     String NAME = "name";
     String ICONURL = "photo";
     String COVERURL = "coverURL";
+
+	// DeviceGroup constants
+	String NOTIFICATION_KEY_NAME = "notificationKeyName";
+	String NOTIFICATION_KEY = "notificationKey";
+	String TOKEN = "token";
 }

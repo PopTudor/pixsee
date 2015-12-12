@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,8 @@ import com.marked.vifo.activity.ContactListActivity;
 import com.marked.vifo.adapter.MessageAdapter;
 import com.marked.vifo.extra.GCMConstants;
 import com.marked.vifo.extra.MessageConstants;
+import com.marked.vifo.gcm.service.GCMListenerService;
+import com.marked.vifo.helper.SpacesItemDecoration;
 import com.marked.vifo.model.Contact;
 import com.marked.vifo.model.Message;
 
@@ -35,15 +38,16 @@ import java.util.UUID;
  * in two-pane mode (on tablets) or a {@link ContactDetailActivity}
  * on handsets.
  */
-public class ContactDetailFragment extends Fragment {
-	RecyclerView mMessagesRecyclerView;
-	ArrayList<Message> mMessagesDataset;
-	Context mContext;
-	ContactDetailFragmentInteraction mCallback;
-	/**
-	 * The user that we are talking with content this fragment is presenting.
-	 */
-	private Contact mItem;
+public class ContactDetailFragment extends Fragment implements GCMListenerService.Callbacks {
+	private static boolean mIsInForegroundMode;
+	private ArrayList<Message> mMessagesDataset;
+	private MessageAdapter mMessageAdapter;
+	private LinearLayoutManager mLinearLayoutManager;
+	private RecyclerView mMessagesRecyclerView;
+	private Context mContext;
+	private Contact mUser;
+	
+	private ContactDetailFragmentInteraction mCallback;
 
 
 	public ContactDetailFragment() {
@@ -53,39 +57,54 @@ public class ContactDetailFragment extends Fragment {
 		 */
 	}
 
-	public static ContactDetailFragment newInstance() {
+	public static ContactDetailFragment newInstance(Parcelable parcelable) {
 		Bundle bundle = new Bundle();
+		bundle.putParcelable(ContactDetailActivity.EXTRA_CONTACT, parcelable);
 		ContactDetailFragment fragment = new ContactDetailFragment();
 		fragment.setArguments(bundle);
 		return fragment;
 	}
 
-	@Override
-	public void onAttach(Context context) {
-		super.onAttach(context);
-		try {
-			mCallback = (ContactDetailFragmentInteraction) context;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(context.toString() + " must implement " +
-			                             ContactDetailFragmentInteraction.class);
-		}
+
+	/**
+	 * Check if the user is using the app
+	 *
+	 * @return if the app is in foreground or not
+	 */
+	public static boolean isInForeground() {
+		return mIsInForegroundMode;
 	}
 
-	public void sendMessage(String message) {
+	public void sendMessage(String messageText) {
+		Message message = new Message.Builder().addData(MessageConstants.TEXT_PAYLOAD, messageText).build();
 		doGcmSendUpstreamMessage(message);
-		Message message1 = new Message.Builder().addData("message", message).build();
-		mMessagesDataset.add(message1);
-		mMessagesRecyclerView.getAdapter().notifyItemInserted(mMessagesDataset.size());
+		mMessagesDataset.add(message);
+		mMessageAdapter.notifyItemInserted(mMessagesDataset.size());
 		mMessagesRecyclerView.scrollToPosition(mMessagesDataset.size() - 1);
 	}
+
+	@Override
+	public void receiveMessage(String from, Bundle data) {
+		Message message = new Message.Builder().addData(data).viewType(MessageConstants.MessageType.YOU).build();
+		mMessagesDataset.add(message);
+		((Activity) mContext).runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				mMessageAdapter.notifyItemInserted(mMessagesDataset.size());
+				mMessagesRecyclerView.scrollToPosition(mMessagesDataset.size() - 1);
+			}
+		});
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContext = getActivity();
+		if (getArguments()!=null){
+			mUser = getArguments().getParcelable(ContactDetailActivity.EXTRA_CONTACT);
+		}
+		GCMListenerService.setCallbacks(this);
 	}
-
-	MessageAdapter mMessageAdapter;
-	LinearLayoutManager mLinearLayoutManager;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,6 +113,7 @@ public class ContactDetailFragment extends Fragment {
 
 		mLinearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
 		mMessagesRecyclerView.setLayoutManager(mLinearLayoutManager);
+		mMessagesRecyclerView.addItemDecoration(new SpacesItemDecoration(15));
 
 		mMessagesDataset = new ArrayList<>();
 		mMessageAdapter = new MessageAdapter(mContext, mMessagesDataset);
@@ -101,9 +121,9 @@ public class ContactDetailFragment extends Fragment {
 		mMessagesRecyclerView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				View view = ((AppCompatActivity)mContext).getCurrentFocus();
+				View view = ((AppCompatActivity) mContext).getCurrentFocus();
 				if (view != null) {
-					InputMethodManager imm = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+					InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 				}
 				return false;
@@ -113,18 +133,16 @@ public class ContactDetailFragment extends Fragment {
 		return rootView;
 	}
 
-	private void doGcmSendUpstreamMessage(String message) {
-		final Activity activity = getActivity();
-		final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(activity);
+	private void doGcmSendUpstreamMessage(Message message) {
+		final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(mContext);
 		final String senderId = getString(R.string.gcm_defaultSenderId);
 		final String msgId = UUID.randomUUID().toString();
-		//		final String timeToLive = getValue(R.id.upstream_ttl); // time to live is by defaul 4 weeks
-		final Bundle data = new Bundle();
-		data.putString(MessageConstants.MESSAGE_KEY, message);
+		final String token = mUser.getToken();
+		final Bundle data = message.toBundle();
+		data.putString(GCMConstants.TOKEN, token);
 
-		if (msgId.isEmpty()) {
+		if (msgId.isEmpty())
 			return;
-		}
 
 		new AsyncTask<Void, Void, String>() {
 			@Override
@@ -140,14 +158,36 @@ public class ContactDetailFragment extends Fragment {
 			@Override
 			protected void onPostExecute(String result) {
 				if (result != null) {
-					Toast.makeText(activity,
+					Toast.makeText(mContext,
 							"send message failed: " + result, Toast.LENGTH_LONG).show();
 				}
 			}
 		}.execute(null, null, null);
 	}
 
-	public interface ContactDetailFragmentInteraction {
+	@Override
+	public void onPause() {
+		super.onPause();
+		mIsInForegroundMode = false;
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		mIsInForegroundMode = true;
+	}
+
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		try {
+			mCallback = (ContactDetailFragmentInteraction) context;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(context.toString() + " must implement " +
+			                             ContactDetailFragmentInteraction.class);
+		}
+	}
+
+	public interface ContactDetailFragmentInteraction {
+	}
 }

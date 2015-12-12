@@ -1,6 +1,5 @@
 package com.marked.vifo.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,9 +11,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.marked.vifo.R;
 import com.marked.vifo.fragment.ContactDetailFragment;
 import com.marked.vifo.fragment.ContactListFragment;
+
+import io.fabric.sdk.android.Fabric;
 
 
 /**
@@ -46,6 +48,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_app_bar);
+	    Fabric.with(this, new Crashlytics());
         mFragmentManager = getSupportFragmentManager();
 
         mFragmentManager.beginTransaction().add(R.id.fragmentContainer, ContactListFragment.newInstance()).commit();
@@ -91,22 +94,22 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
      */
     @Override
     public void onItemSelected(String id) {
-        if (mTwoPane) {
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(ContactDetailFragment.ARG_ITEM_ID, id);
-            ContactDetailFragment fragment = new ContactDetailFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
-
-        } else {
-            // In single-pane mode, simply start the detail activity
-            // for the selected item ID.
-            Intent detailIntent = new Intent(this, ContactDetailActivity.class);
-            detailIntent.putExtra(ContactDetailFragment.ARG_ITEM_ID, id);
-            startActivity(detailIntent);
-        }
+//        if (mTwoPane) {
+//            // In two-pane mode, show the detail view in this activity by
+//            // adding or replacing the detail fragment using a
+//            // fragment transaction.
+//            Bundle arguments = new Bundle();
+//            arguments.putString(ContactDetailFragment.ARG_ITEM_ID, id);
+//            ContactDetailFragment fragment = new ContactDetailFragment();
+//            fragment.setArguments(arguments);
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+//
+//        } else {
+//            // In single-pane mode, simply start the detail activity
+//            // for the selected item ID.
+//            Intent detailIntent = new Intent(this, ContactDetailActivity.class);
+//            detailIntent.putExtra(ContactDetailFragment.ARG_ITEM_ID, id);
+//            startActivity(detailIntent);
+//        }
     }
 }

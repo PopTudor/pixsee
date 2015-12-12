@@ -1,8 +1,9 @@
-package com.marked.vifo.controller;
+package com.marked.vifo.model;
 
 import android.content.Context;
 
 import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 /**
@@ -27,4 +28,7 @@ public class RequestQueue {
     public void add(JsonRequest request) {
         mQueue.add(request);
     }
+	public void add(StringRequest request) {
+		mQueue.add(request);
+	}
 }
