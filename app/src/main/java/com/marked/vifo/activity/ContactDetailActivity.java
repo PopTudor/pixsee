@@ -9,13 +9,23 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.marked.vifo.R;
+import com.marked.vifo.extra.GCMConstants;
 import com.marked.vifo.fragment.ContactDetailFragment;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
 
 /**
  * An activity representing a single Contact detail screen. This
@@ -31,12 +41,20 @@ public class ContactDetailActivity extends AppCompatActivity implements ContactD
 
 	EditText mMesageEditText;
 	FragmentManager mFragmentManager;
-
+	private Socket mSocket;
+	{
+		try {
+			mSocket = IO.socket(GCMConstants.SERVER);
+		} catch (URISyntaxException e) {}
+	}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contact_detail);
+	    mSocket.on("new message", onNewMessage);
+	    mSocket.connect();
+
+	    setContentView(R.layout.activity_contact_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 	    mMesageEditText = (EditText) findViewById(R.id.messageEditText);
@@ -51,6 +69,36 @@ public class ContactDetailActivity extends AppCompatActivity implements ContactD
 	    getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
     }
+	private Emitter.Listener onNewMessage = new Emitter.Listener() {
+		@Override
+		public void call(final Object... args) {
+			ContactDetailActivity.this.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					JSONObject data = (JSONObject) args[0];
+					String username;
+					String message;
+					try {
+						username = data.getString("username");
+						message = data.getString("message");
+					} catch (JSONException e) {
+						return;
+					}
+
+					// add the message to view
+//					addMessage(username, message);
+					Log.d("***", "run " + username + "/" + message);
+				}
+			});
+		}
+	};
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mSocket.disconnect();
+		mSocket.off("new message", onNewMessage);
+	}
 
 	@Override
 	protected void onStop() {
@@ -81,6 +129,7 @@ public class ContactDetailActivity extends AppCompatActivity implements ContactD
 		String message = mMesageEditText.getText().toString();
 		mMesageEditText.setText("");
 		((ContactDetailFragment) mFragmentManager.findFragmentById(R.id.fragmentContainer)).sendMessage(message);
+		mSocket.emit("new message", message);
 	}
 
 }

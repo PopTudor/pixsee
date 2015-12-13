@@ -34,6 +34,7 @@ public interface GCMConstants {
 
 
     String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
+    String USER_ID = "_id";
     String ACTION_SIGNUP = String.format("%s.SIGNUP", PACKAGE_NAME);
     String ACTION_LOGIN = String.format("%s.LOGIN", PACKAGE_NAME);
     String ACTION_RECOVERY = String.format("%s.ACTION_RECOVERY", PACKAGE_NAME);

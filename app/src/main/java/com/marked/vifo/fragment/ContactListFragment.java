@@ -88,12 +88,12 @@ public class ContactListFragment extends Fragment {
 	 * Use the token to send a request to the server for an array of friends for the user of the app
 	 */
 	private void requestListFriends() {
-		String token = getDefaultSharedPreferences(mContext).getString(GCMConstants.TOKEN, null);
-		if (token != null) {
+		String id = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null);
+		if (id != null) {
 			JsonRequest request = new JsonObjectRequest(Request.Method.GET,
 					                                           GCMConstants.SERVER_USER_FRIENDS +
-					                                           "?token=" +
-					                                           token, new Response.Listener<JSONObject>() {
+					                                           "?id=" +
+					                                           id, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
 					try {

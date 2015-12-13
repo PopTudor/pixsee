@@ -50,7 +50,6 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         setContentView(R.layout.activity_contact_app_bar);
 	    Fabric.with(this, new Crashlytics());
         mFragmentManager = getSupportFragmentManager();
-
         mFragmentManager.beginTransaction().add(R.id.fragmentContainer, ContactListFragment.newInstance()).commit();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

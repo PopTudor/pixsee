@@ -45,6 +45,7 @@ import com.marked.vifo.extra.GCMConstants;
 import com.marked.vifo.extra.HTTPStatusCodes;
 import com.marked.vifo.model.RequestQueue;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -213,6 +214,11 @@ public class LogInRegistrationIntentService extends IntentService {
                     // sent to your server. If the boolean is false, send the token to your server,
                     // otherwise your server should have already received the token.
                     mSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply();
+	                try {
+		                mSharedPreferences.edit().putString(GCMConstants.USER_ID,response.getString(GCMConstants.USER_ID)).apply();
+	                } catch (JSONException e) {
+		                e.printStackTrace();
+	                }
                     notifyBroadcastReceiver(GCMConstants.ACTION_LOGIN);
                 }
             }, new Response.ErrorListener() {
@@ -255,7 +261,12 @@ public class LogInRegistrationIntentService extends IntentService {
                     // sent to your server. If the boolean is false, send the token to your server,
                     // otherwise your server should have already received the token.
                     mSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply();
-                    notifyBroadcastReceiver(GCMConstants.ACTION_SIGNUP);
+	                try {
+		                mSharedPreferences.edit().putString(GCMConstants.USER_ID,response.getString(GCMConstants.USER_ID)).apply();
+	                } catch (JSONException e) {
+		                e.printStackTrace();
+	                }
+	                notifyBroadcastReceiver(GCMConstants.ACTION_SIGNUP);
                 }
             }, new Response.ErrorListener() {
                 @Override

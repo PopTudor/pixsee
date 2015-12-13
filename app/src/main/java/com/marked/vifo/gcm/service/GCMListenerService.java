@@ -24,7 +24,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
@@ -108,7 +107,6 @@ public class GCMListenerService extends GcmListenerService {
 			                                                                                     .setContentTitle(bundle.getString(NOTIFICATION_PAYLOAD_TITLE))
 			                                                                                     .setContentText(bundle.getString(NOTIFICATION_PAYLOAD_BODY))
 			                                                                                     .setAutoCancel(true)
-			                                                                                     .setColor(ContextCompat.getColor(this,R.color.accent))
 			                                                                                     .setSound(defaultSoundUri)
 			                                                                                     .setContentIntent(pendingIntent);
 
