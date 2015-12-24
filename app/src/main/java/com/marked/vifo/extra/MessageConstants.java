@@ -7,6 +7,7 @@ package com.marked.vifo.extra;
 public interface MessageConstants {
 
 	String TO_TARGETS = "to";
+	String FROM_TARGETS = "from";
 	String REGISTRATION_IDS_TARGETS = "registration_ids";
 	String PRIORITY_OPTION = "priority";
 	String COLLAPSE_OPTION = "collapse_key";
@@ -15,7 +16,8 @@ public interface MessageConstants {
 	String DRY_RUN_OPTION = "dryRun";
 	String RESTRICTED_PACKAGE_NAME_OPTION = "restrictedPackageName";
 
-	String TEXT_PAYLOAD = "text";
+	String DATA_BODY = "body";
+	String DATA_ROOM = "room";
 	String DATA_PAYLOAD = "data";
 	/**This parameter specifies the predefined, user-visible key-value pairs of the notification payload. */
 	String NOTIFICATION_PAYLOAD = "gcm.notification";
@@ -39,7 +41,9 @@ public interface MessageConstants {
 	String NOTIFICATION_BODY_LOCK_KEY = "body_loc_key";
 	String NOTIFICATION_BODY_LOCK_ARGS = "body_loc_args";
 
+	String MESSAGE_TYPE = "type";
 	interface MessageType {
 		int ME = 0, YOU = 1, PHOTO = 2, VIDEO = 3;
 	}
+
 }

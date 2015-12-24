@@ -24,7 +24,7 @@ public interface GCMConstants {
 	String SERVER_UPSTREAM_ADRESS = "@gcm.googleapis.com";
 
     String PORT = ":3000";
-    String BASE_URL = "http://192.168.0.109";
+    String BASE_URL = "http://192.168.0.102";
     String SERVER = BASE_URL + PORT;
     String SERVER_USER = SERVER + "/user";
     String SERVER_USER_LOGIN = SERVER_USER + "/login";

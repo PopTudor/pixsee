@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +19,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.marked.vifo.R;
 import com.marked.vifo.activity.ContactDetailActivity;
@@ -28,9 +34,15 @@ import com.marked.vifo.helper.SpacesItemDecoration;
 import com.marked.vifo.model.Contact;
 import com.marked.vifo.model.Message;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 /**
  * A fragment representing a single Contact detail screen.
@@ -48,7 +60,37 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 	private Contact mUser;
 	
 	private ContactDetailFragmentInteraction mCallback;
+	private Emitter.Listener onNewMessage = new Emitter.Listener() {
+		@Override
+		public void call(final Object... args) {
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+				@Override
+				public void run() {
+					JSONObject data = (JSONObject) args[0];
+					String username;
+					String message;
+					try {
+						username = data.getString("username");
+						message = data.getString("message");
+					} catch (JSONException e) {
+						return;
+					}
 
+					// add the message to view
+					//					addMessage(username, message);
+					Log.d("***", "run " + username + "/" + message);
+				}
+			});
+		}
+	};
+	private Socket mSocket;
+
+	{
+		try {
+			mSocket = IO.socket(GCMConstants.SERVER);
+		} catch (URISyntaxException e) {
+		}
+	}
 
 	public ContactDetailFragment() {
 		/**
@@ -65,7 +107,6 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 		return fragment;
 	}
 
-
 	/**
 	 * Check if the user is using the app
 	 *
@@ -75,9 +116,25 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 		return mIsInForegroundMode;
 	}
 
-	public void sendMessage(String messageText) {
-		Message message = new Message.Builder().addData(MessageConstants.TEXT_PAYLOAD, messageText).build();
-		doGcmSendUpstreamMessage(message);
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mSocket.disconnect();
+		mSocket.off("new message", onNewMessage);
+	}
+
+	public void sendMessage(String messageText) throws JSONException {
+		String id = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null);
+		Message message = new Message.Builder()
+				                  .addData(MessageConstants.DATA_BODY, messageText)
+				                  .from(id)
+				                  .to(mUser.getId())
+				                  .build();
+		//		doGcmSendUpstreamMessage(message);
+		JSONObject jsonObject = message.toJSON();
+
+		mSocket.emit("new message", jsonObject);
+		/*UI update*/
 		mMessagesDataset.add(message);
 		mMessageAdapter.notifyItemInserted(mMessagesDataset.size());
 		mMessagesRecyclerView.scrollToPosition(mMessagesDataset.size() - 1);
@@ -85,7 +142,8 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 
 	@Override
 	public void receiveMessage(String from, Bundle data) {
-		Message message = new Message.Builder().addData(data).viewType(MessageConstants.MessageType.YOU).build();
+		Message message = new Message.Builder().addData(data)
+		                                       .viewType(MessageConstants.MessageType.YOU).build();
 		mMessagesDataset.add(message);
 		((Activity) mContext).runOnUiThread(new Runnable() {
 			@Override
@@ -100,30 +158,42 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContext = getActivity();
-		if (getArguments()!=null){
+		mSocket.on("new message", onNewMessage);
+		mSocket.on("news", new Emitter.Listener() {
+			@Override
+			public void call(Object... args) {
+				Log.d("***", "call ");
+			}
+		});
+
+		mSocket.connect();
+		if (getArguments() != null) {
 			mUser = getArguments().getParcelable(ContactDetailActivity.EXTRA_CONTACT);
 		}
 		GCMListenerService.setCallbacks(this);
+		mMessagesDataset = new ArrayList<>();
+		mMessageAdapter = new MessageAdapter(mContext, mMessagesDataset);
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	                         Bundle savedInstanceState) {
 		final View rootView = inflater.inflate(R.layout.fragment_contact_detail, container, false);
 		mMessagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.messagesRecyclerView);
 
-		mLinearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+		mLinearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL,
+		                                               false);
 		mMessagesRecyclerView.setLayoutManager(mLinearLayoutManager);
 		mMessagesRecyclerView.addItemDecoration(new SpacesItemDecoration(15));
 
-		mMessagesDataset = new ArrayList<>();
-		mMessageAdapter = new MessageAdapter(mContext, mMessagesDataset);
 		mMessagesRecyclerView.setAdapter(mMessageAdapter);
 		mMessagesRecyclerView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				View view = ((AppCompatActivity) mContext).getCurrentFocus();
 				if (view != null) {
-					InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+					InputMethodManager imm = (InputMethodManager) mContext.getSystemService(
+							Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 				}
 				return false;
@@ -158,8 +228,8 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 			@Override
 			protected void onPostExecute(String result) {
 				if (result != null) {
-					Toast.makeText(mContext,
-							"send message failed: " + result, Toast.LENGTH_LONG).show();
+					Toast.makeText(mContext, "send message failed: " + result, Toast.LENGTH_LONG)
+					     .show();
 				}
 			}
 		}.execute(null, null, null);

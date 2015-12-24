@@ -36,7 +36,7 @@ import static android.media.RingtoneManager.TYPE_NOTIFICATION;
 import static android.media.RingtoneManager.getDefaultUri;
 import static com.marked.vifo.extra.MessageConstants.NOTIFICATION_PAYLOAD_BODY;
 import static com.marked.vifo.extra.MessageConstants.NOTIFICATION_PAYLOAD_TITLE;
-import static com.marked.vifo.extra.MessageConstants.TEXT_PAYLOAD;
+import static com.marked.vifo.extra.MessageConstants.DATA_BODY;
 
 /**
  * Receives messages sent by GCM server
@@ -59,7 +59,7 @@ public class GCMListenerService extends GcmListenerService {
 	 */
 	@Override
 	public void onMessageReceived(String from, Bundle payload) {
-		String text = payload.getString(TEXT_PAYLOAD);
+		String text = payload.getString(DATA_BODY);
 		Log.d(TAG, "Message: " + text);
 		for (String s : payload.keySet())
 			Log.d("***", "onMessageReceived " + s);

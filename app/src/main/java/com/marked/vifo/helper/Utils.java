@@ -142,7 +142,6 @@ public class Utils {
     }
 
 
-
     public static Snackbar createWhiteSnackBar(Context context,CoordinatorLayout coordinatorLayout, String message) {
         return Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(context, R.color.white));
     }

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/material_grey_100"
     android:padding="16dp"
-    tools:context=".fragment.SignUpEmailFragment">
+    tools:context=".fragment.signup.SignUpEmailFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

@@ -1,8 +1,12 @@
 package com.marked.vifo.model;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.marked.vifo.extra.MessageConstants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -20,6 +24,9 @@ public final class Message implements Serializable, MessageConstants {
 	private final Map<String, String> notificationParams;
 	private final Boolean dryRun;
 	private final String restrictedPackageName;
+	private final String to;
+	private final String from;
+	private final String room;
 	private int messageType;
 
 	private Message(Builder builder) {
@@ -31,9 +38,38 @@ public final class Message implements Serializable, MessageConstants {
 		dryRun = builder.dryRun;
 		restrictedPackageName = builder.restrictedPackageName;
 		messageType = builder.viewType;
+		to = builder.to;
+		from = builder.from;
+		room = builder.room;
 	}
 
 
+	@NonNull
+	public JSONObject toJSON(){
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put(MessageConstants.COLLAPSE_OPTION,collapseKey);
+			jsonObject.put(MessageConstants.DELAY_WHILE_IDLE_OPTION, delayWhileIdle);
+			jsonObject.put(MessageConstants.TIME_TO_LIVE_OPTION, timeToLive);
+			jsonObject.put(MessageConstants.DRY_RUN_OPTION, dryRun);
+			jsonObject.put(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION, restrictedPackageName);
+			jsonObject.put(MessageConstants.MESSAGE_TYPE, messageType);
+			jsonObject.put(MessageConstants.DATA_PAYLOAD,mapToJSON(data));
+			jsonObject.put(MessageConstants.TO_TARGETS, to);
+			jsonObject.put(MessageConstants.FROM_TARGETS, from);
+			jsonObject.put(MessageConstants.DATA_ROOM, room);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
+	private static JSONObject mapToJSON(Map<String,String> map) throws JSONException {
+		JSONObject object = new JSONObject();
+		if (!map.isEmpty())
+			for (Map.Entry<String, String> entry : map.entrySet())
+				object.put(entry.getKey(), entry.getValue());
+		return object;
+	}
 	/**
 	 * Gets the message type.
 	 */
@@ -102,8 +138,14 @@ public final class Message implements Serializable, MessageConstants {
 			bundle.putString(DRY_RUN_OPTION, data.get(DRY_RUN_OPTION));
 		if (data.containsKey(RESTRICTED_PACKAGE_NAME_OPTION))
 			bundle.putString(RESTRICTED_PACKAGE_NAME_OPTION, data.get(RESTRICTED_PACKAGE_NAME_OPTION));
-		if (data.containsKey(TEXT_PAYLOAD))
-			bundle.putString(TEXT_PAYLOAD, data.get(TEXT_PAYLOAD));
+		if (data.containsKey(DATA_BODY))
+			bundle.putString(DATA_BODY, data.get(DATA_BODY));
+		if (data.containsKey(TO_TARGETS))
+			bundle.putString(TO_TARGETS, data.get(TO_TARGETS));
+		if (data.containsKey(FROM_TARGETS))
+			bundle.putString(FROM_TARGETS, data.get(FROM_TARGETS));
+		if (data.containsKey(DATA_ROOM))
+			bundle.putString(DATA_ROOM, data.get(DATA_ROOM));
 
 		return bundle;
 	}
@@ -115,16 +157,28 @@ public final class Message implements Serializable, MessageConstants {
 			builder.append(COLLAPSE_OPTION + "=").append(collapseKey).append(", ");
 		}
 		if (timeToLive != null) {
-			builder.append(TIME_TO_LIVE_OPTION + "timeToLive=").append(timeToLive).append(", ");
+			builder.append(TIME_TO_LIVE_OPTION + "=").append(timeToLive).append(", ");
 		}
 		if (delayWhileIdle != null) {
 			builder.append(DELAY_WHILE_IDLE_OPTION + "=").append(delayWhileIdle).append(", ");
 		}
 		if (dryRun != null) {
-			builder.append("dryRun:").append(dryRun).append(", ");
+			builder.append(DRY_RUN_OPTION+":").append(dryRun).append(", ");
 		}
 		if (restrictedPackageName != null) {
 			builder.append(RESTRICTED_PACKAGE_NAME_OPTION + "=").append(restrictedPackageName)
+			       .append(", ");
+		}
+		if (to != null) {
+			builder.append(TO_TARGETS + "=").append(to)
+			       .append(", ");
+		}
+		if (from != null) {
+			builder.append(FROM_TARGETS + "=").append(from)
+			       .append(", ");
+		}
+		if (room != null) {
+			builder.append(DATA_ROOM + "=").append(room)
 			       .append(", ");
 		}
 		appendMap(builder, "data", data);
@@ -160,6 +214,10 @@ public final class Message implements Serializable, MessageConstants {
 		private Integer timeToLive;
 		private Boolean dryRun;
 		private String restrictedPackageName;
+		private String to;
+		private String from;
+		private String room;
+
 
 		private int viewType;
 
@@ -175,7 +233,6 @@ public final class Message implements Serializable, MessageConstants {
 			data.put(key, value);
 			return this;
 		}
-
 		/**
 		 * Adds a bundle to the payload data.
 		 */
@@ -192,7 +249,7 @@ public final class Message implements Serializable, MessageConstants {
 				data.put(RESTRICTED_PACKAGE_NAME_OPTION, bundle.getString(RESTRICTED_PACKAGE_NAME_OPTION));
 
 			/*data:{'text':'very long string'}*/
-			data.put(TEXT_PAYLOAD, bundle.getString(TEXT_PAYLOAD));
+			data.put(DATA_BODY, bundle.getString(DATA_BODY));
 			return this;
 		}
 
@@ -201,6 +258,33 @@ public final class Message implements Serializable, MessageConstants {
 		 */
 		public Builder collapseKey(String value) {
 			collapseKey = value;
+			return this;
+		}
+
+		/**
+		 * Sets the target where to send the message
+		 * @param target the contact where to send the message
+		 */
+		public Builder to(String target){
+			to = target;
+			return this;
+		}
+
+		/**
+		 * Set the source of this message. The current user that is using the app
+		 * @param from this user
+		 */
+		public Builder from(String from){
+			this.from = from;
+			return this;
+		}
+
+		/**
+		 * The room where to send the message
+		 * @param room
+		 */
+		public Builder room(String room){
+			this.room = room;
 			return this;
 		}
 
@@ -305,6 +389,8 @@ public final class Message implements Serializable, MessageConstants {
 		public Message build() {
 			return new Message(this);
 		}
+
+
 
 	}
 

@@ -3,7 +3,6 @@ package com.marked.vifo.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +44,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactHolder> {
 		    @Override
 		    public void onClick(View v) { // itemView is a public member that points to the root element of the contactHolder (in the layout)
 			    // TODO: 03-Dec-15 send contact detail from here to ContactDetailActivity
-
+				// send the clicked contact to detail activity
 			    Intent intent = new Intent(mContext, ContactDetailActivity.class);
 			    intent.putExtra(EXTRA_CONTACT,contact);
 			    mContext.startActivity(intent); // RIGHT !!!

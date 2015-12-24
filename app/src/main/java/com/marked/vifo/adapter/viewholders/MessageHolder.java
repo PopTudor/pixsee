@@ -19,7 +19,7 @@ public class MessageHolder extends RecyclerView.ViewHolder {
 
 
 	}
-	public void bindContact(Message contact){
-		mMessageTextView.setText(contact.getData().get(MessageConstants.TEXT_PAYLOAD));
+	public void bindContact(Message message){
+		mMessageTextView.setText(message.getData().get(MessageConstants.DATA_BODY));
 	}
 }
