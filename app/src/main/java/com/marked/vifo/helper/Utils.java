@@ -17,6 +17,9 @@ import android.widget.Toast;
 
 import com.marked.vifo.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by Tudor Pop on 15-Nov-15.
  */
@@ -141,8 +144,16 @@ public class Utils {
         return (float) passwordStrength;
     }
 
-
     public static Snackbar createWhiteSnackBar(Context context,CoordinatorLayout coordinatorLayout, String message) {
         return Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).setActionTextColor(ContextCompat.getColor(context, R.color.white));
     }
+
+	public static JSONObject toJSON(String arg){
+		try {
+			return new JSONObject(arg);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

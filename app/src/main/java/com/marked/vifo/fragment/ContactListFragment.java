@@ -46,13 +46,41 @@ public class ContactListFragment extends Fragment {
 
 	private Contacts mContacts;
 	private RequestQueue mQueue;
+//
+//	private Socket mSocket;
+//	{
+//		try {
+//			mSocket = IO.socket(GCMConstants.SERVER);
+//		} catch (URISyntaxException e) {
+//		}
+//	}
+//
+//	public static String room;
+//
+//	private Emitter.Listener onNewRoom = new Emitter.Listener() {
+//		@Override
+//		public void call(final Object... args) {
+//			new Handler(Looper.getMainLooper()).post(new Runnable() {
+//				@Override
+//				public void run() {
+////					room = (String) args[0];
+//
+//
+//					// add the message to view
+//					//					addMessage(username, message);
+//					Toast.makeText(getActivity(), "newRoom TOAAST ", Toast.LENGTH_SHORT).show();
+//					//					room = (String) args[0];
+//				}
+//
+//			});
+//		}
+//	};
 
 
 	/**
 	 * A dummy implementation of the {@link Callbacks} interface that does
 	 * nothing. Used only when this fragment is not attached to an activity.
 	 */
-
 	public ContactListFragment() {
 	}
 
@@ -70,6 +98,11 @@ public class ContactListFragment extends Fragment {
 
 		mContactsAdapter = new ContactsAdapter(mContext, mContacts.getContacts());
 		mLayoutManager = new LinearLayoutManager(mContext);
+
+//		attachListeners();
+//		mSocket.on("hi", onNewRoom);
+//		mSocket.emit("room",new JSONObject());
+//		mSocket.connect();
 	}
 
 	@Nullable
@@ -141,10 +174,20 @@ public class ContactListFragment extends Fragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-
 		// Reset the active callbacks interface to the dummy implementation.
 		mCallbacks = null;
+//		dettachListeners();
 	}
+
+//	public void attachListeners(){
+//		for (Contact contact:mContacts.getContacts())
+//			mSocket.on(contact.getId(), onNewRoom);
+//	}
+//	public void dettachListeners(){
+//		for (Contact contact:mContacts.getContacts())
+//			mSocket.off(contact.getId(), onNewRoom);
+//	}
+
 
 
 	public interface Callbacks {
