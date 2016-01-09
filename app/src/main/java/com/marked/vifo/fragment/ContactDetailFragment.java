@@ -3,6 +3,8 @@ package com.marked.vifo.fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -22,8 +24,8 @@ import com.marked.vifo.activity.ContactListActivity;
 import com.marked.vifo.adapter.MessageAdapter;
 import com.marked.vifo.extra.GCMConstants;
 import com.marked.vifo.extra.MessageConstants;
+import com.marked.vifo.extra.ServerConstants;
 import com.marked.vifo.gcm.service.GCMListenerService;
-import com.marked.vifo.helper.EmitterListeners;
 import com.marked.vifo.helper.SpacesItemDecoration;
 import com.marked.vifo.helper.Utils;
 import com.marked.vifo.model.Contact;
@@ -39,6 +41,8 @@ import java.util.UUID;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+import jp.wasabeef.recyclerview.animators.FadeInAnimator;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static java.lang.String.format;
@@ -50,6 +54,9 @@ import static java.lang.String.format;
  * on handsets.
  */
 public class ContactDetailFragment extends Fragment implements GCMListenerService.Callbacks {
+	public static final String ON_NEW_MESSAGE = "onMessage";
+	public static final String ON_NEW_ROOM = "onRoom";
+	public static final String ON_TYPING = "onTyping";
 	/**
 	 * keep track if the user is interacting with the app. If not, disconnect the socket
 	 */
@@ -62,14 +69,13 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 	private String mThisUser;
 	private Contact mOtherUser; // this user (app user)
 	private Socket mSocket;
-
-
 	private ContactDetailFragmentInteraction mCallback;
-	private EmitterListeners mEmitterListeners;
+	private Emitter.Listener onMessage = onNewMessage();
+	private Emitter.Listener onTyping = onTyping();
 
 	{
 		try {
-			mSocket = IO.socket(GCMConstants.SERVER);
+			mSocket = IO.socket(ServerConstants.SERVER);
 		} catch (URISyntaxException e) {
 			Toast.makeText(getActivity(), "Internet error", Toast.LENGTH_SHORT).show();
 		}
@@ -100,41 +106,71 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 		//		doGcmSendUpstreamMessage(message);
 		JSONObject jsonObject = message.toJSON();
 
-		mSocket.emit(EmitterListeners.ON_NEW_MESSAGE, jsonObject);
+		mSocket.emit(ON_NEW_MESSAGE, jsonObject);
 		addMessage(message);
 	}
 
+	/**
+	 * This is used to receive messages from socket.io
+	 *
+	 * @param from
+	 * @param data
+	 */
 	@Override
 	public void receiveMessage(String from, Bundle data) {
 		Message message = new Message.Builder().addData(data).viewType(MessageConstants.MessageType.YOU).build();
 		addMessage(message);
 	}
 
+	/** Add message to dataset and notify the adapter of the change
+	 * @param message the message to add
+	 */
 	private void addMessage(Message message) {
 		mMessagesDataset.add(message);
-		mMessageAdapter.notifyItemInserted(mMessagesDataset.size());
+		mMessageAdapter.notifyItemInserted(mMessagesDataset.size()-1);
 		mMessagesRecyclerView.scrollToPosition(mMessagesDataset.size() - 1);
 	}
 
+	/**
+	 * Remove message from dataset and notify the adapter
+	 */
+	private void removeMessage() {
+		if (mMessagesDataset.isEmpty())
+			return;
+		mMessagesDataset.remove(mMessagesDataset.size()-1);
+		mMessageAdapter.notifyItemRemoved(mMessagesDataset.size()-1);
+		mMessagesRecyclerView.scrollToPosition(mMessagesDataset.size() - 1);
+
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContext = getActivity();
-		if (getArguments() != null)
+		mThisUser = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null);
+		if (getArguments() != null) // get the clicked user
 			mOtherUser = getArguments().getParcelable(ContactDetailActivity.EXTRA_CONTACT);
-		mEmitterListeners = new EmitterListeners(mContext, this);
+
+
 		mMessagesDataset = new ArrayList<>();
 		mMessageAdapter = new MessageAdapter(mContext, mMessagesDataset);
 
-		mThisUser = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null);
-		mSocket.on(EmitterListeners.ON_NEW_MESSAGE, mEmitterListeners.onNewMessage());
+		mSocket.on(ON_NEW_MESSAGE, onNewMessage());
+		mSocket.on(ON_TYPING, onTyping());
 
 
 		mSocket.connect();
 
-		mSocket.emit("room", Utils.toJSON(format("{from:%s,to:%s}", mThisUser, mOtherUser.getId())));
+		mSocket.emit(ON_NEW_ROOM, Utils.toJSON(format("{from:%s,to:%s}", mThisUser, mOtherUser.getId())));
 		GCMListenerService.setCallbacks(this);
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mSocket.off(ON_NEW_MESSAGE, onNewMessage());
+		mSocket.off(ON_TYPING, onTyping());
+		mSocket.disconnect();
 	}
 
 	@Override
@@ -145,6 +181,7 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 		mLinearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
 		mMessagesRecyclerView.setLayoutManager(mLinearLayoutManager);
 		mMessagesRecyclerView.addItemDecoration(new SpacesItemDecoration(15));
+		mMessagesRecyclerView.setItemAnimator(new FadeInAnimator());
 
 		mMessagesRecyclerView.setAdapter(mMessageAdapter);
 		mMessagesRecyclerView.setOnTouchListener(new View.OnTouchListener() {
@@ -211,13 +248,6 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		mSocket.disconnect();
-		mSocket.off(EmitterListeners.ON_NEW_MESSAGE, mEmitterListeners.onNewMessage());
-	}
-
-	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		try {
@@ -227,7 +257,71 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 			                             ContactDetailFragmentInteraction.class);
 		}
 	}
+	public void onTyping(boolean typing) {
+		mSocket.emit(ON_TYPING, Utils.toJSON(format("{from:%s,to:%s,typing:%s}", mThisUser, mOtherUser.getId(), typing)));
+	}
+
+	public Emitter.Listener onNewMessage() {
+		if (onMessage != null)
+			return onMessage;
+		onMessage = new Emitter.Listener() {
+			@Override
+			public void call(final Object... args) {
+				new Handler(Looper.getMainLooper()).post(new Runnable() {
+					@Override
+					public void run() {
+						JSONObject object = null;
+						JSONObject data = null;
+						try {
+							object = new JSONObject(args[0].toString());
+							data = object.getJSONObject("data");
+
+							String body = data.getString("body");
+							int type = object.getInt("type"); // MessageConstants.MessageType.ME
+							String from = object.getString("from");
+
+							Bundle bundle = new Bundle();
+							bundle.putInt("type", type);
+							bundle.putString("body", body);
+
+							receiveMessage(from, bundle);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		};
+
+		return onMessage;
+	}
+
+	public Emitter.Listener onTyping() {
+		if (onTyping != null)
+			return onTyping;
+		onTyping = new Emitter.Listener() {
+			@Override
+			public void call(final Object... args) {
+				new Handler(Looper.getMainLooper()).post(new Runnable() {
+					@Override
+					public void run() {
+						boolean typing = (boolean) args[0];
+						if (typing) {
+							if (!mMessagesDataset.isEmpty() && mMessagesDataset.get(mMessagesDataset.size()-1).getMessageType()==MessageConstants.MessageType.TYPING)
+								return;
+							Message message = new Message.Builder().viewType(MessageConstants.MessageType.TYPING).build();
+							addMessage(message);
+						}else if (!mMessagesDataset.isEmpty()) // !typing
+							removeMessage();
+					}
+				});
+			}
+		};
+
+		return onTyping;
+	}
 
 	public interface ContactDetailFragmentInteraction {
 	}
+
 }

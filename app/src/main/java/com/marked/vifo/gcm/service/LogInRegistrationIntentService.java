@@ -43,6 +43,7 @@ import com.google.android.gms.iid.InstanceID;
 import com.marked.vifo.R;
 import com.marked.vifo.extra.GCMConstants;
 import com.marked.vifo.extra.HTTPStatusCodes;
+import com.marked.vifo.extra.ServerConstants;
 import com.marked.vifo.model.RequestQueue;
 
 import org.json.JSONException;
@@ -205,7 +206,7 @@ public class LogInRegistrationIntentService extends IntentService {
     private void handleActionLogin(String email, String password, String token) {
         try {
             /* Use URLEncoder to replace spaces with %20 or + and replace invalid URL chars with equivalent in hex*/
-            String verifyUserURL = getVerifyUserURL(GCMConstants.SERVER_USER_LOGIN, email, password, token);
+            String verifyUserURL = getVerifyUserURL(ServerConstants.SERVER_USER_LOGIN, email, password, token);
             /* if sent_token_to_server == true, we are registered*/
             JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, verifyUserURL, new Response.Listener<JSONObject>() {
                 @Override
@@ -249,7 +250,7 @@ public class LogInRegistrationIntentService extends IntentService {
     private void handleActionSignup(String name, String email, String password, String token) {
         try {
             /* Use URLEncoder to replace spaces with %20 or + and replace invalid URL chars with equivalent in hex*/
-            String verifyUserURL = GCMConstants.SERVER_USER + "?token=" + token +
+            String verifyUserURL = ServerConstants.SERVER_USER + "?token=" + token +
                                    "&name=" + URLEncoder.encode(name, "UTF-8") +
                                    "&email=" + URLEncoder.encode(email, "UTF-8") +
                                    "&password=" + URLEncoder.encode(password, "UTF-8");
@@ -296,7 +297,7 @@ public class LogInRegistrationIntentService extends IntentService {
     private void handleActionRecovery(String email, String token) {
         try {
             /* Use URLEncoder to replace spaces with %20 or + and replace invalid URL chars with equivalent in hex*/
-            String verifyUserURL = getVerifyUserURL(GCMConstants.SERVER_USER_RECOVERY, email, "", token);
+            String verifyUserURL = getVerifyUserURL(ServerConstants.SERVER_USER_RECOVERY, email, "", token);
             /* if sent_token_to_server == true, we are registered*/
             JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, verifyUserURL, new Response.Listener<JSONObject>() {
                 @Override

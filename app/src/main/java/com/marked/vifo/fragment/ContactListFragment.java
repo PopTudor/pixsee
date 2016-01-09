@@ -19,6 +19,7 @@ import com.android.volley.toolbox.JsonRequest;
 import com.marked.vifo.R;
 import com.marked.vifo.adapter.ContactsAdapter;
 import com.marked.vifo.extra.GCMConstants;
+import com.marked.vifo.extra.ServerConstants;
 import com.marked.vifo.model.Contacts;
 import com.marked.vifo.model.RequestQueue;
 
@@ -124,9 +125,9 @@ public class ContactListFragment extends Fragment {
 		String id = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null);
 		if (id != null) {
 			JsonRequest request = new JsonObjectRequest(Request.Method.GET,
-					                                           GCMConstants.SERVER_USER_FRIENDS +
-					                                           "?id=" +
-					                                           id, new Response.Listener<JSONObject>() {
+			                                            ServerConstants.SERVER_USER_FRIENDS +
+			                                            "?id=" +
+			                                            id, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
 					try {

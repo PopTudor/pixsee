@@ -1,7 +1,6 @@
 package com.marked.vifo.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -24,8 +23,8 @@ public class EntryActivity extends AppCompatActivity {
 			    .debuggable(true) // TODO: 13-Dec-15 disable this
 			    .build();
 	    Fabric.with(fabric);
-        SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		mUserRegistered = mSharedPreferences.getBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, false);
+
+		mUserRegistered =  PreferenceManager.getDefaultSharedPreferences(this).getBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, false);
 	}
 
 	@Override

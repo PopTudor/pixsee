@@ -23,17 +23,8 @@ public interface GCMConstants {
     String SECRET_KEY = "kJ0lUiDoL1lnJqMg";
 	String SERVER_UPSTREAM_ADRESS = "@gcm.googleapis.com";
 
-    String PORT = ":3000";
-    String BASE_URL = "http://192.168.0.102";
-    String SERVER = BASE_URL + PORT;
-    String SERVER_USER = SERVER + "/user";
-    String SERVER_USER_LOGIN = SERVER_USER + "/login";
-    String SERVER_USER_RECOVERY = SERVER_USER + "/recovery";
-    String SERVER_USER_EXISTS = SERVER_USER + "/exists";
-    String SERVER_USER_FRIENDS = SERVER_USER + "/friends";
 
-
-    String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
+	String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
     String USER_ID = "_id";
     String ACTION_SIGNUP = String.format("%s.SIGNUP", PACKAGE_NAME);
     String ACTION_LOGIN = String.format("%s.LOGIN", PACKAGE_NAME);

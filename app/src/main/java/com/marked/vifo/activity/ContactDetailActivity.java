@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -31,14 +33,19 @@ import org.json.JSONException;
 public class ContactDetailActivity extends AppCompatActivity implements ContactDetailFragment.ContactDetailFragmentInteraction {
 	public static final String EXTRA_CONTACT="com.marked.vifo.activity.EXTRA_CONTACT";
 
+
 	EditText mMesageEditText;
 	FragmentManager mFragmentManager;
 	ContactDetailFragment mFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_contact_detail);
+	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		    getWindow().setAllowEnterTransitionOverlap(true);
+	    }
 	    mFragmentManager = getSupportFragmentManager();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -53,12 +60,38 @@ public class ContactDetailActivity extends AppCompatActivity implements ContactD
 	    final Drawable upArrow = ContextCompat.getDrawable(this,R.drawable.abc_ic_ab_back_mtrl_am_alpha);
 	    upArrow.setColorFilter(ContextCompat.getColor(this,R.color.white), PorterDuff.Mode.SRC_ATOP);
 	    getSupportActionBar().setHomeAsUpIndicator(upArrow);
+	    mMesageEditText.addTextChangedListener(new TextWatcher() {
+		    private boolean mTyping;
+
+		    @Override
+		    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+		    }
+
+		    @Override
+		    public void onTextChanged(CharSequence s, int start, int before, int count) {
+			    if (!mTyping && count>0) {
+				    mTyping = true;
+				    mFragment.onTyping(mTyping);
+			    }
+			    if (mTyping && count==0) {
+				    mTyping = false;
+				    mFragment.onTyping(mTyping);
+			    }
+		    }
+
+		    @Override
+		    public void afterTextChanged(Editable s) {
+
+		    }
+	    });
 
     }
 	public void sendMessage(View view) throws JSONException {
 		String message = mMesageEditText.getText().toString();
 		mMesageEditText.setText("");
-		mFragment.sendMessage(message);
+		if(!message.isEmpty())
+			mFragment.sendMessage(message);
 	}
 	@Override
 	protected void onStop() {
@@ -84,7 +117,6 @@ public class ContactDetailActivity extends AppCompatActivity implements ContactD
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }

@@ -43,7 +43,7 @@ public interface MessageConstants {
 
 	String MESSAGE_TYPE = "type";
 	interface MessageType {
-		int ME = 0, YOU = 1, PHOTO = 2, VIDEO = 3;
+		int ME = 0, YOU = 1, PHOTO = 2, VIDEO = 3,TYPING=4;
 	}
 
 }

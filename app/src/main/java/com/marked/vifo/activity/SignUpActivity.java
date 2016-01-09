@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.marked.vifo.R;
+import com.marked.vifo.extra.ServerConstants;
 import com.marked.vifo.model.RequestQueue;
 import com.marked.vifo.extra.HTTPStatusCodes;
 import com.marked.vifo.fragment.signup.SignUpEmailFragment;
@@ -140,7 +141,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpNameFragm
     private void checkEmail(String email) {
         String verifyUserURL = null;
         try {
-            verifyUserURL = GCMConstants.SERVER_USER_EXISTS +
+            verifyUserURL = ServerConstants.SERVER_USER_EXISTS +
                             "?email=" + URLEncoder.encode(email, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

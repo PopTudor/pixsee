@@ -49,6 +49,7 @@ dependencies {
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.makeramen:roundedimageview:2.2.1'
     compile 'com.lguipeng.bubbleview:library:1.0.0'
+    compile 'jp.wasabeef:recyclerview-animators:2.1.0'
     compile ('io.socket:socket.io-client:0.6.3'){
         exclude group: 'org.json', module: 'json'
     }

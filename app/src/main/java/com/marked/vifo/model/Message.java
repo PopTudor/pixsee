@@ -26,7 +26,6 @@ public final class Message implements Serializable, MessageConstants {
 	private final String restrictedPackageName;
 	private final String to;
 	private final String from;
-	private final String room;
 	private int messageType;
 
 	private Message(Builder builder) {
@@ -40,7 +39,6 @@ public final class Message implements Serializable, MessageConstants {
 		messageType = builder.viewType;
 		to = builder.to;
 		from = builder.from;
-		room = builder.room;
 	}
 
 
@@ -57,7 +55,6 @@ public final class Message implements Serializable, MessageConstants {
 			jsonObject.put(MessageConstants.DATA_PAYLOAD,mapToJSON(data));
 			jsonObject.put(MessageConstants.TO_TARGETS, to);
 			jsonObject.put(MessageConstants.FROM_TARGETS, from);
-			jsonObject.put(MessageConstants.DATA_ROOM, room);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -177,10 +174,6 @@ public final class Message implements Serializable, MessageConstants {
 			builder.append(FROM_TARGETS + "=").append(from)
 			       .append(", ");
 		}
-		if (room != null) {
-			builder.append(DATA_ROOM + "=").append(room)
-			       .append(", ");
-		}
 		appendMap(builder, "data", data);
 		appendMap(builder, "notificationParams", notificationParams);
 		// Remove trailing ", "
@@ -297,7 +290,7 @@ public final class Message implements Serializable, MessageConstants {
 		}
 		/**
 		 * Sets the messageType property (default value is {@literal 0}).
-		 * MessageType is defined in MessageConstants.MessageType( ME, YOU, PHOTO, VIDEO )
+		 * MessageType is defined in MessageConstants.MessageType( ME, YOU )
 		 */
 		public Builder viewType(int value) {
 			viewType = value;

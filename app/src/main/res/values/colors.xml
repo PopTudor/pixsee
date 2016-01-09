@@ -4,6 +4,10 @@
     <color name="primary">#03A9F4</color>
     <color name="primary_dark">#0277BD</color>
     <color name="accent">#FFAB40</color>
+    <color name="accent_dark">#FF9100</color>
+    <color name="accent_light">#FFD180</color>
+
+
     <color name="white_transparent">#50ffffff</color>
     <color name="white_transparent_pressed">#3cffffff</color>
     <color name="white_transparent_focused">#64ffffff</color>
