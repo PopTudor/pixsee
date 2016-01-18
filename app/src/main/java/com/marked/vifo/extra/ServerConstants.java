@@ -5,7 +5,9 @@ package com.marked.vifo.extra;
  */
 public interface ServerConstants {
 	String PORT = ":3000";
-	String BASE_URL = "http://192.168.0.101";
+	String BASE_URL =
+			//			"http://192.168.0.107";
+			"http://46.101.168.55";
 	String SERVER = BASE_URL + PORT;
 	String SERVER_USER = SERVER + "/user";
 	String SERVER_USER_FRIENDS = SERVER_USER + "/friends";

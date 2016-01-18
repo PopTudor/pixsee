@@ -2,7 +2,6 @@ package com.marked.vifo.adapter;
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,12 +51,6 @@ public class MessageAdapter(context: Context, dataSet: kotlin.List<Message>) : R
         }
     }
 
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder?) {
-        super.onViewRecycled(holder)
-        if(holder is TypingHolder)
-            holder.stop()
-        Log.d("***","*****")
-    }
     /** If the message has the flag MessageConstants.MessageType.ME then the message will be printed to the right
      * else if the message has the flag MessageConstants.MessageType.YOU then the message will be positioned to the left
      * or if the MessageConstants.MessageType.Typing then the message will be positioned on the left as in You are typing and

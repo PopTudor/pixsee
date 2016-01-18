@@ -27,7 +27,10 @@ public class ContactHolder(itemView: View, context: Context) : RecyclerView.View
 
 
     fun bindContact(contact: Contact) {
-        mFriendTextView.setText(contact.getName());
+        //        itemView.contactIconImageView.setDefaultImageResId(R.drawable.ic_action_refresh_24dp)
+        //        itemView.contactNameTextView.text = contact.name
+
+        mFriendTextView.setText(contact.name);
         mFriendIconImageView.setDefaultImageResId(R.drawable.ic_action_refresh_24dp);
     }
 

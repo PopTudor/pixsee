@@ -31,6 +31,7 @@ import com.marked.vifo.helper.Utils;
 import com.marked.vifo.model.Contact;
 import com.marked.vifo.model.Message;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -174,7 +175,7 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
 		final View rootView = inflater.inflate(R.layout.fragment_contact_detail, container, false);
 		mMessagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.messagesRecyclerView);
 

@@ -14,13 +14,12 @@ import com.marked.vifo.R
  * This makes the animation dots happens
  */
 public class TypingHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
-    private val context = context
     private val dot1 = itemView.findViewById(R.id.dot1) as TextView
     private val dot2 = itemView.findViewById(R.id.dot2) as TextView
     private val dot3 = itemView.findViewById(R.id.dot3) as TextView
-    private var animatorSet = AnimatorSet()
 
     companion object {
+        private var animatorSet = AnimatorSet()
     }
 
     val dot1Typing = AnimatorInflater.loadAnimator(context, R.animator.typing)
@@ -34,7 +33,6 @@ public class TypingHolder(itemView: View, context: Context) : RecyclerView.ViewH
 
         dot2Typing.startDelay = 200
         dot3Typing.startDelay = 400
-
 
         animatorSet.playTogether(dot1Typing, dot2Typing, dot3Typing)
         animatorSet.addListener(object : Animator.AnimatorListener {

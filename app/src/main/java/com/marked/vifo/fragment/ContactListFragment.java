@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,6 +100,8 @@ public class ContactListFragment extends Fragment {
 
 		mContactsAdapter = new ContactsAdapter(mContext, mContacts.getContacts());
 		mLayoutManager = new LinearLayoutManager(mContext);
+		//		mRecyclerView.setAdapter(mContactsAdapter);
+		//		mRecyclerView.setLayoutManager(mLayoutManager);
 
 //		attachListeners();
 //		mSocket.on("hi", onNewRoom);
@@ -142,8 +145,8 @@ public class ContactListFragment extends Fragment {
 								}
 							});
 						}else {
-//							Log.d("***", "onCreateView "+mContacts.getContacts().get(0).toString());
-//							Log.d("***", "onResponse " + mContacts.getContacts());
+							Log.d("***", "onCreateView " + mContacts.getContacts().get(0).toString());
+							Log.d("***", "onResponse " + mContacts.getContacts());
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();

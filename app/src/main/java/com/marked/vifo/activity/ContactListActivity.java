@@ -46,6 +46,7 @@ public class ContactListActivity extends AppCompatActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contact_app_bar);
+		
 		mFragmentManager = getSupportFragmentManager();
 		mFragmentManager.beginTransaction()
 		                .add(R.id.fragmentContainer, ContactListFragment.newInstance()).commit();

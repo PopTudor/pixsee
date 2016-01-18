@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by Tudor Pop on 12-Dec-15.
+ * Singleton class used to keep all the friends (the list of contacts) of the user
  */
 public class Contacts {
 	private static Contacts ourInstance;
@@ -44,7 +45,7 @@ public class Contacts {
 				lastName = object.getString(Contact.LAST_NAME);
 				token = object.getString(Contact.TOKEN);
 
-				contacts.add(new Contact(id, firstName, lastName, token));
+				contacts.add(new Contact(id, firstName, lastName, firstName + " " + lastName, token));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
