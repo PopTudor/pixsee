@@ -31,6 +31,7 @@ public class TypingHolder(itemView: View, context: Context) : RecyclerView.ViewH
         dot2Typing.setTarget(dot2)
         dot3Typing.setTarget(dot3)
 
+
         dot2Typing.startDelay = 200
         dot3Typing.startDelay = 400
 

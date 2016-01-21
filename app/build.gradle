@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.marked.vifo"
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -31,11 +31,6 @@ repositories {
 dependencies {
     compile files('C:/Users/Marked/Documents/git/Vifo/libs/jpct_ae.jar')
     compile files('C:/Users/Marked/Documents/git/Vifo/libs/Vuforia.jar')
-    compile files('C:/Users/Marked/Documents/git/Vifo/libs/jME3-android.jar')
-    compile files('C:/Users/Marked/Documents/git/Vifo/libs/jME3-blender.jar')
-    compile files('C:/Users/Marked/Documents/git/Vifo/libs/jME3-core.jar')
-    compile files('C:/Users/Marked/Documents/git/Vifo/libs/jME3-jogg.jar')
-    compile files('C:/Users/Marked/Documents/git/Vifo/libs/jME3-plugins.jar')
     compile 'com.google.android.gms:play-services-plus:8.3.0'
     compile 'com.google.android.gms:play-services-identity:8.3.0'
     compile 'com.google.android.gms:play-services-auth:8.3.0'
@@ -46,6 +41,7 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.makeramen:roundedimageview:2.2.1'
+    compile 'com.wnafee:vector-compat:1.0.5'
     compile 'com.lguipeng.bubbleview:library:1.0.0'
     compile 'jp.wasabeef:recyclerview-animators:2.1.0'
     compile ('io.socket:socket.io-client:0.6.3'){
@@ -57,7 +53,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 buildscript {
-    ext.kotlin_version = '1.0.0-beta-4584'
+    ext.kotlin_version = '1.0.0-beta-4589'
     repositories {
         mavenCentral()
     }
