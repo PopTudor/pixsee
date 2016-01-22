@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DotView">
+        <attr name="dotType">
+            <flag name="Pulse" value="0"/>
+        </attr>
+        <attr name="dotColor" format="color"/>
+        <attr name="dotSpeed" format="float"/>
+    </declare-styleable>
+</resources>

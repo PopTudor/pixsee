@@ -1,8 +1,8 @@
 package com.marked.vifo.adapter;
 
-import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -34,7 +34,7 @@ public class ContactsAdapter(context: Context, dataSet: kotlin.List<Contact>) : 
             // send the clicked contact to detail activity
             val intent = Intent(context, ContactDetailActivity::class.java)
             intent.putExtra(ContactDetailActivity.EXTRA_CONTACT, contact);
-            context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(context as ContactListActivity).toBundle()); // RIGHT !!!
+            context.startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(context as ContactListActivity).toBundle()); // RIGHT !!!
         };
     }
 

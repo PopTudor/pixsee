@@ -16,55 +16,68 @@ import com.marked.vifo.model.Message
  * Created by Tudor Pop on 04-Dec-15.
  */
 public class MessageAdapter(context: Context, dataSet: kotlin.List<Message>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    val dataSet = dataSet
-    val context = context
+	val dataSet = dataSet
+	val context = context
 
-    public override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        // Create a new view.
-        var v: View;
-        when (viewType) {
-            MessageConstants.MessageType.ME -> {
-                v = LayoutInflater.from(parent.context).inflate(R.layout.message_layout_item_right, parent, false);
-                return MessageHolder(v, context);
-            }
-            MessageConstants.MessageType.YOU -> {
-                v = LayoutInflater.from(parent.context).inflate(R.layout.message_layout_item_left, parent, false);
-                return MessageHolder(v, context);
-            }
-            MessageConstants.MessageType.TYPING -> {
-                v = LayoutInflater.from(parent.context).inflate(R.layout.message_layout_typing, parent, false);
-                return TypingHolder(v, context);
-            }
-            else -> {
-                v = LayoutInflater.from(parent.context).inflate(R.layout.message_layout_item_right, parent, false);
-                return MessageHolder(v, context);
-            }
-        }
-    }
+	override
+	fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+		// Create a new view.
+		var v: View;
+		when (viewType) {
+			MessageConstants.MessageType.ME -> {
+				v = LayoutInflater.from(parent.context).inflate(R.layout.message_layout_item_right, parent, false);
+				return MessageHolder(v, context);
+			}
+			MessageConstants.MessageType.YOU -> {
+				v = LayoutInflater.from(parent.context).inflate(R.layout.message_layout_item_left, parent, false);
+				return MessageHolder(v, context);
+			}
+			MessageConstants.MessageType.TYPING -> {
+				v = LayoutInflater.from(parent.context).inflate(R.layout.message_layout_typing, parent, false);
+				return TypingHolder(v);
+			}
+			else -> {
+				v = LayoutInflater.from(parent.context).inflate(com.marked.vifo.R.layout.message_layout_item_right, parent, false);
+				return MessageHolder(v, context);
+			}
+		}
+	}
 
-    public override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is MessageHolder ->
-                holder.bindMessage(dataSet.get(position));
-            is TypingHolder ->
-                holder.animate()
-        }
-    }
+	override
+	fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder?) {
+		super.onViewDetachedFromWindow(holder)
+		if (holder is TypingHolder) {
+			/* must call stop and set recyclable to false because else will cache the 'typing animation' and it will not stop or it will block*/
+			holder.stop()
+			holder.setIsRecyclable(false)
+		} else
+			holder?.setIsRecyclable(true)
+	}
 
-    /** If the message has the flag MessageConstants.MessageType.ME then the message will be printed to the right
-     * else if the message has the flag MessageConstants.MessageType.YOU then the message will be positioned to the left
-     * or if the MessageConstants.MessageType.Typing then the message will be positioned on the left as in You are typing and
-     * I wait for you to finish
-     * @param position
-     * @return
-     */
-    public override fun getItemViewType(position: Int): Int {
-        return dataSet.get(position).messageType;
-    }
+	override
+	fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+		when (holder) {
+			is MessageHolder ->
+				holder.bindMessage(dataSet.get(position));
+			is TypingHolder ->
+				holder.start()
+		}
+	}
 
-    public override fun getItemCount(): Int {
-        return dataSet.size;
-    }
+	/** If the message has the flag MessageConstants.MessageType.ME then the message will be printed to the right
+	 * else if the message has the flag MessageConstants.MessageType.YOU then the message will be positioned to the left
+	 * or if the MessageConstants.MessageType.Typing then the message will be positioned on the left as in You are typing and
+	 * I wait for you to finish
+	 * @param position
+	 * @return
+	 */
+	override
+	fun getItemViewType(position: Int): Int {
+		return dataSet.get(position).messageType;
+	}
 
-
+	override
+	fun getItemCount(): Int {
+		return dataSet.size;
+	}
 }
