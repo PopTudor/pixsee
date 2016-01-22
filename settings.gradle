@@ -1,1 +1,1 @@
-include ':app', ':waitingdots'
+include ':app', ':dotview'
