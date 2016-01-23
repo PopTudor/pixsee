@@ -34,9 +34,9 @@ import com.marked.vifo.fragment.ContactDetailFragment;
 import static android.app.PendingIntent.getActivity;
 import static android.media.RingtoneManager.TYPE_NOTIFICATION;
 import static android.media.RingtoneManager.getDefaultUri;
+import static com.marked.vifo.extra.MessageConstants.DATA_BODY;
 import static com.marked.vifo.extra.MessageConstants.NOTIFICATION_PAYLOAD_BODY;
 import static com.marked.vifo.extra.MessageConstants.NOTIFICATION_PAYLOAD_TITLE;
-import static com.marked.vifo.extra.MessageConstants.DATA_BODY;
 
 /**
  * Receives messages sent by GCM server
@@ -82,7 +82,7 @@ public class GCMListenerService extends GcmListenerService {
 		 */
 
 		/*send notification only if the user is not inside the chatting fragment */
-		if (!ContactDetailFragment.isInForeground())
+		if (!ContactDetailFragment.Static.isInForeground())
 			sendNotification(payload);
 		// [END_EXCLUDE]
 	}
