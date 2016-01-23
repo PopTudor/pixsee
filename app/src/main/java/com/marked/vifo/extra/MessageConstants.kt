@@ -26,7 +26,7 @@ interface MessageConstants {
 		val DRY_RUN_OPTION = "dryRun"
 		val RESTRICTED_PACKAGE_NAME_OPTION = "restrictedPackageName"
 
-		val DATA_BODY = "body"
+		const val DATA_BODY = "body"
 		val DATA_ROOM = "room"
 		val DATA_PAYLOAD = "data"
 		/**This parameter specifies the predefined, user-visible key-value pairs of the notification payload.  */

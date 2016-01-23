@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.os.Handler
-import android.os.Looper
 import android.provider.Settings
 import android.support.v7.app.AlertDialog
 import org.json.JSONObject
@@ -62,6 +60,3 @@ object Utils {
 	}
 }
 
-fun Handler.uiThread(body: () -> Unit) {
-	Handler(Looper.getMainLooper()).post(Runnable(body))
-}

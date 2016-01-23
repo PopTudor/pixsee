@@ -20,7 +20,6 @@ import com.marked.vifo.extra.MessageConstants
 import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.gcm.service.GCMListenerService
 import com.marked.vifo.helper.SpacesItemDecoration
-import com.marked.vifo.helper.uiThread
 import com.marked.vifo.model.Contact
 import com.marked.vifo.model.Message
 import io.socket.client.IO
@@ -221,11 +220,11 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 
 	fun onTyping(): Emitter.Listener {
 		val onTyping = Emitter.Listener { args ->
-			Handler().uiThread({
+			Handler(Looper.getMainLooper()).post(Runnable {
 				val typing = args[0] as Boolean
 				if (typing) {
 					if (!mMessagesDataset.isEmpty() && mMessagesDataset[mMessagesDataset.size - 1].messageType == MessageConstants.MessageType.TYPING)
-						return@uiThread
+						return@Runnable
 					val message = Message.Builder().viewType(MessageConstants.MessageType.TYPING).build()
 					addMessage(message)
 				} else if (!mMessagesDataset.isEmpty())
