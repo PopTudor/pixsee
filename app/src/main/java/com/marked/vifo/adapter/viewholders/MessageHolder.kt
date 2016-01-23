@@ -15,5 +15,5 @@ public class MessageHolder(itemView: View,context: Context) : RecyclerView.ViewH
     private val mMessageTextView = itemView.findViewById(R.id.messageTextView) as BubbleTextVew
     private val mContext = context
 
-    fun bindMessage(message: Message) = mMessageTextView.setText(message.getData().get(MessageConstants.DATA_BODY))
+	fun bindMessage(message: Message) = mMessageTextView.setText(message.data.get(MessageConstants.DATA_BODY))
 }

@@ -33,7 +33,7 @@ interface GCMConstants {
 		val ACTION_SIGNUP = "%s.SIGNUP".format(PACKAGE_NAME)
 		val ACTION_LOGIN = "%s.LOGIN".format(PACKAGE_NAME)
 		val ACTION_RECOVERY = "%s.ACTION_RECOVERY".format(PACKAGE_NAME)
-		val ACTION_ERROR = "%s.ACTION_ERROR".format(PACKAGE_NAME)
+		val ACTION_ERROR = "$PACKAGE_NAME.ACTION_ERROR"
 
 		/* ACTION_LOGIN Constants*/
 		val PASSWORD = "password"
