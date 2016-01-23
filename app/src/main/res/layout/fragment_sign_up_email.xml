@@ -11,14 +11,25 @@
     <!-- TODO: Update blank fragment layout -->
 
     <TextView
+        android:id="@+id/hiUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="28dp"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+        android:textSize="@dimen/abc_text_size_headline_material"/>
+
+    <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="60dp"
-        android:text="What is your email ?"
+        android:layout_below="@+id/hiUser"
+        android:layout_marginTop="2dp"
+        android:text="We need your email to setup your account"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
         android:textSize="@dimen/abc_text_size_headline_material"/>
 
@@ -27,13 +38,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="140dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
         app:met_floatingLabel="highlight"
-        app:met_primaryColor="?colorAccent"
-        android:layout_alignParentTop="true">
+        app:met_primaryColor="?colorAccent">
         <requestFocus/>
     </com.rengwuxian.materialedittext.MaterialEditText>
 
@@ -42,13 +53,13 @@
         style="@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/emailEditText"
         android:layout_marginTop="30dp"
         android:background="@color/primary"
         android:clickable="true"
         android:text="Next"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#ffffff"
-        android:layout_below="@+id/emailEditText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:textColor="#ffffff"/>
 </RelativeLayout>

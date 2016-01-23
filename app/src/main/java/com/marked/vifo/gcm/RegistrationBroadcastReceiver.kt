@@ -11,8 +11,10 @@ import com.marked.vifo.extra.HTTPStatusCodes
 /**
  * Created by Tudor Pop on 28-Nov-15.
  */
-class RegistrationBroadcastReceiver : BroadcastReceiver() {
-	var registrationListener: RegistrationListener? = null;
+class RegistrationBroadcastReceiver(registrationListener: RegistrationListener?) : BroadcastReceiver() {
+	var registrationListener: RegistrationListener? = registrationListener;
+
+	constructor() : this(null)
 
 	override
 	fun onReceive(context: Context, intent: Intent) {

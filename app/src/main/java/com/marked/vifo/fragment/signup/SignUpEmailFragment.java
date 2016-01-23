@@ -7,6 +7,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.marked.vifo.R;
@@ -32,15 +33,20 @@ public class SignUpEmailFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static SignUpEmailFragment newInstance() {
-        return new SignUpEmailFragment();
-    }
+	public static SignUpEmailFragment newInstance(String name) {
+		Bundle bundle = new Bundle();
+		bundle.putString("NAME", name);
+		SignUpEmailFragment fragment = new SignUpEmailFragment();
+		fragment.setArguments(bundle);
+		return fragment;
+	}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sign_up_email, container, false);
         mEmail = (MaterialEditText) rootView.findViewById(R.id.emailEditText);
-        rootView.findViewById(R.id.nextButton).setOnClickListener(new View.OnClickListener() {
+	    ((TextView) rootView.findViewById(R.id.hiUser)).setText("Beautiful name " + getArguments().getString("NAME") + ",");
+	    rootView.findViewById(R.id.nextButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!Utils.isOnline(getActivity())){

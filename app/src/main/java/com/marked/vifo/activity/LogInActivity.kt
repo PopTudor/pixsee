@@ -21,12 +21,7 @@ import kotlinx.android.synthetic.main.activity_log_in.*
 
 class LogInActivity : AppCompatActivity(), View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 	private val mProgressDialog by lazy { ProgressDialog(this) };
-	private val mRegistrationBroadcastReceiver by lazy {
-		// GCM registration
-		val tmp = RegistrationBroadcastReceiver()
-		tmp.registrationListener = DialogRegistration(this, mProgressDialog)
-		tmp
-	};
+	private val mRegistrationBroadcastReceiver by lazy { RegistrationBroadcastReceiver(DialogRegistration(this, mProgressDialog)) }
 	private val mBroadcastManagerastManager by lazy { LocalBroadcastManager.getInstance(this) };
 
 	override
@@ -45,7 +40,7 @@ class LogInActivity : AppCompatActivity(), View.OnClickListener, PopupMenu.OnMen
 
 	override
 	protected fun onPause() {
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+		mBroadcastManagerastManager.unregisterReceiver(mRegistrationBroadcastReceiver);
 		super.onPause();
 	}
 
