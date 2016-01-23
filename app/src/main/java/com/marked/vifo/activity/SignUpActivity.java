@@ -2,10 +2,8 @@ package com.marked.vifo.activity;
 
 import android.app.ProgressDialog;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,16 +23,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.marked.vifo.R;
-import com.marked.vifo.extra.ServerConstants;
-import com.marked.vifo.model.RequestQueue;
+import com.marked.vifo.delegate.DialogRegistration;
+import com.marked.vifo.extra.GCMConstants;
 import com.marked.vifo.extra.HTTPStatusCodes;
+import com.marked.vifo.extra.ServerConstants;
 import com.marked.vifo.fragment.signup.SignUpEmailFragment;
 import com.marked.vifo.fragment.signup.SignUpNameFragment;
 import com.marked.vifo.fragment.signup.SignUpPassFragment;
 import com.marked.vifo.gcm.RegistrationBroadcastReceiver;
-import com.marked.vifo.extra.GCMConstants;
 import com.marked.vifo.gcm.service.LogInRegistrationIntentService;
-import com.marked.vifo.helper.Utils;
+import com.marked.vifo.model.RequestQueue;
 
 import org.json.JSONObject;
 
@@ -64,36 +62,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpNameFragm
         mRequestQueue = RequestQueue.getInstance(this);
         // GCM registration
         mRegistrationBroadcastReceiver = new RegistrationBroadcastReceiver();
-        mRegistrationBroadcastReceiver.setOnRegistrationBroadcastReceiverListener(new RegistrationBroadcastReceiver.RegistrationBroadcastReceiverListener() {
-            @Override
-            public void onDismiss() {
-                mProgressDialog.dismiss();
-            }
-
-            @Override
-            public void onError(int errorStatusCode) {
-                mProgressDialog.dismiss();
-                Snackbar snackbar = null;
-                switch (errorStatusCode) {
-                    case HTTPStatusCodes.REQUEST_CONFLICT:
-                        snackbar = Utils.createWhiteSnackBar(SignUpActivity.this, mContainer, "You already have an account");
-                        break;
-                    case HTTPStatusCodes.REQUEST_TIMEOUT:
-                        snackbar = Utils.createWhiteSnackBar(SignUpActivity.this, mContainer, "Timeout error");
-                        break;
-                    case HTTPStatusCodes.REQUEST_INCORRECT_PASSWORD:
-                        snackbar = Utils.createWhiteSnackBar(SignUpActivity.this, mContainer, "Incorrect password");
-                        break;
-                    case HTTPStatusCodes.NOT_FOUND:
-                        snackbar = Utils.createWhiteSnackBar(SignUpActivity.this, mContainer, "We are sorry, but we did not found you");
-                        break;
-                }
-                if (snackbar != null) {
-                    snackbar.getView().setBackgroundColor(Color.WHITE);
-                    snackbar.show();
-                }
-            }
-        });
+	    mRegistrationBroadcastReceiver.setRegistrationListener(new DialogRegistration(this, mProgressDialog));
 
         mFragmentManager.beginTransaction().add(R.id.fragmentContainer, SignUpNameFragment.newInstance()).commit();
     }

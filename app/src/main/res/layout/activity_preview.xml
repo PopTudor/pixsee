@@ -1,5 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fancy="http://schemas.android.com/apk/res-auto"
+<RelativeLayout android:id="@+id/containerFragment"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -7,7 +7,6 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                android:id="@+id/container_log_in_fragment"
                 tools:context=".PreviewActivity">
     <RelativeLayout
         android:id="@+id/loading_layout"
@@ -33,17 +32,17 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@color/transparent"
+        android:gravity="center"
         android:orientation="horizontal"
         android:visibility="visible"
-        android:weightSum="1"
-        android:gravity="center">
+        android:weightSum="1">
 
         <Button
             android:id="@+id/camera_button"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:onClick="onCameraClick"
             android:alpha="0.8"
-            android:background="@drawable/round_button"/>
+            android:background="@drawable/round_button"
+            android:onClick="onCameraClick"/>
     </LinearLayout>
 </RelativeLayout>

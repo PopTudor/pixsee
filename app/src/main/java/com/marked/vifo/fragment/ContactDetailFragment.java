@@ -27,7 +27,6 @@ import com.marked.vifo.extra.MessageConstants;
 import com.marked.vifo.extra.ServerConstants;
 import com.marked.vifo.gcm.service.GCMListenerService;
 import com.marked.vifo.helper.SpacesItemDecoration;
-import com.marked.vifo.helper.Utils;
 import com.marked.vifo.model.Contact;
 import com.marked.vifo.model.Message;
 
@@ -162,7 +161,11 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 
 		mSocket.connect();
 
-		mSocket.emit(ON_NEW_ROOM, Utils.toJSON(format("{from:%s,to:%s}", mThisUser, mOtherUser.getId())));
+		try {
+			mSocket.emit(ON_NEW_ROOM, new JSONObject(format("{from:%s,to:%s}", mThisUser, mOtherUser.getId())));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		GCMListenerService.setCallbacks(this);
 	}
 
@@ -259,7 +262,11 @@ public class ContactDetailFragment extends Fragment implements GCMListenerServic
 		}
 	}
 	public void onTyping(boolean typing) {
-		mSocket.emit(ON_TYPING, Utils.toJSON(format("{from:%s,to:%s,typing:%s}", mThisUser, mOtherUser.getId(), typing)));
+		try {
+			mSocket.emit(ON_TYPING, new JSONObject(format("{from:%s,to:%s,typing:%s}", mThisUser, mOtherUser.getId(), typing)));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Emitter.Listener onNewMessage() {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-    android:id="@+id/container_log_in_fragment"
+    android:id="@+id/containerFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -34,10 +34,10 @@
                 android:background="@color/transparent"
                 android:enabled="true"
                 android:focusable="true"
+                android:onClick="onClick"
                 android:text="Sign up"
                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
-                android:textColor="@color/primary"
-                android:onClick="onClick"/>
+                android:textColor="@color/primary"/>
 
             <ImageView
                 android:id="@+id/moreImageView"
@@ -62,11 +62,11 @@
             android:enabled="true"
             android:focusable="true"
             android:longClickable="false"
+            android:onClick="onClick"
             android:text="@string/log_in_with_pixy"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
             android:textColor="#ffffff"
-            android:textSize="@dimen/abc_text_size_button_material"
-            android:onClick="onClick"/>
+            android:textSize="@dimen/abc_text_size_button_material"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/emailEditText"
