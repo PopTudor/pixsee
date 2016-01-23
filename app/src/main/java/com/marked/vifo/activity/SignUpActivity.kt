@@ -58,7 +58,7 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
 	override
 	fun onSaveName(name: String) {
 		mName = name
-		mFragmentManager.addToBackStack(R.id.fragmentContainer, SignUpEmailFragment.newInstance(mName))
+		mFragmentManager.addToBackStack(R.id.fragmentContainer, SignUpEmailFragment.newInstance(name))
 	}
 
 	override fun onSaveEmail(email: String) {
@@ -96,6 +96,8 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
 			when (networkResponse?.statusCode) {
 				HTTPStatusCodes.REQUEST_TIMEOUT -> Toast("Timeout")
 				HTTPStatusCodes.REQUEST_CONFLICT -> Toast("You already have an account")
+				else -> {
+				}
 			}
 			Log.e("Volley", "Error. HTTP Status Code:" + networkResponse.statusCode)
 			when (error) {

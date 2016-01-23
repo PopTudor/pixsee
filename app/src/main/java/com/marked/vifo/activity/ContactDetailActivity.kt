@@ -32,7 +32,6 @@ public class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.
 	final val mFragmentManager by lazy { supportFragmentManager };
 	final val mFragment by lazy { ContactDetailFragment.newInstance(intent.getParcelableExtra(EXTRA_CONTACT)) }
 
-
 	override
 	protected fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -43,11 +42,9 @@ public class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.
 		setSupportActionBar(detail_toolbar)
 
         /*send the clicked contact to the fragment*/
-
 		mFragmentManager.add(R.id.fragmentContainer, mFragment, "contactDetailFragment")
         // Show the Up button in the action bar.
         supportActionBar.setDisplayHomeAsUpEnabled(true);
-
 
         var upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
