@@ -10,63 +10,63 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/login_gradient"
+        android:minWidth="88dp"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
 
-        android:background="@drawable/login_gradient"
-        android:minWidth="88dp">
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageView"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal|top"
-            android:background="@drawable/logo"
             android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"/>
+            android:background="@drawable/logo"/>
 
 
         <Button
-            android:id="@+id/logInButton"
+            android:id="@+id/entryLogInButton"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="true"
-            android:focusable="false"
-            android:text="Log in"
-            android:textColor="#ffffff"
             android:layout_above="@+id/signUpButton"
             android:layout_marginBottom="8dp"
-            android:focusableInTouchMode="false"
-            android:longClickable="false"
             android:background="@drawable/transparent_button"
             android:elevation="0dp"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:minWidth="88dp"
-            android:textSize="@dimen/abc_text_size_button_material"
+            android:enabled="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:longClickable="false"
             android:minHeight="48dp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"/>
+            android:minWidth="88dp"
+            android:text="Log in"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/abc_text_size_button_material"/>
 
         <Button
-            android:id="@+id/signUpButton"
+            android:id="@+id/entrySignUpButton"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="true"
-            android:focusable="true"
-            android:text="Sign up"
-            android:textColor="#ffffff"
-            android:background="@drawable/hollow_button"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:longClickable="false"
+            android:background="@drawable/hollow_button"
             android:elevation="0dp"
-            android:minWidth="88dp"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:textSize="@dimen/abc_text_size_button_material"
+            android:enabled="true"
+            android:focusable="true"
+            android:longClickable="false"
             android:minHeight="48dp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"/>
+            android:minWidth="88dp"
+            android:text="Sign up"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/abc_text_size_button_material"/>
 
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
