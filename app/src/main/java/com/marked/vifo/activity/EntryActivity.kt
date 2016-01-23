@@ -13,14 +13,13 @@ import io.fabric.sdk.android.Fabric
 
 class EntryActivity : AppCompatActivity() {
 	private var mUserRegistered: Boolean = false
-	internal val fabric = Fabric.Builder(this)
-			.kits(Crashlytics())
-			.debuggable(true) // TODO: 13-Dec-15 disable this
-			.build()
-
 	override
 	fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		val fabric = Fabric.Builder(this)
+				.kits(Crashlytics())
+				.debuggable(true) // TODO: 13-Dec-15 disable this
+				.build()
 		Fabric.with(fabric)
 
 		mUserRegistered = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, false)
