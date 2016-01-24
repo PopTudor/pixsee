@@ -5,13 +5,16 @@ apply plugin: 'io.fabric'
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
-
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
     defaultConfig {
         applicationId "com.marked.vifo"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -58,6 +61,19 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'com.android.support:support-annotations:23.1.1'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    // Optional -- Hamcrest library
+    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
+    // Optional -- UI testing with Espresso
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'junit:junit:4.12'
+    // Set this dependency if you want to use the Hamcrest matcher library
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
 
 }
 buildscript {
