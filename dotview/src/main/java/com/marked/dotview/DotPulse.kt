@@ -11,8 +11,8 @@ import java.util.*
  * Created by Tudor Pop on 21-Jan-16.
  */
 class DotPulse : BaseDot() {
-	val SCALE = 0.5f
-	private val scaleFloats = floatArrayOf(SCALE, SCALE, SCALE);
+	val SIZE = 0.5f
+	private val scaleFloats = floatArrayOf(SIZE, SIZE, SIZE);
 
 	override
 	public fun draw(canvas: Canvas, paint: Paint) {

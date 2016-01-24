@@ -56,7 +56,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 
 	@Throws(JSONException::class)
 	fun sendMessage(messageText: String) {
-		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).from(mThisUser).to(mThatUser?.id).component1().build()
+		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).from(mThisUser).to(mThatUser.id).build()
 		//		doGcmSendUpstreamMessage(message);
 		val jsonObject = message.toJSON()
 

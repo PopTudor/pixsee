@@ -6,5 +6,16 @@
         </attr>
         <attr name="dotColor" format="color"/>
         <attr name="dotSpeed" format="float"/>
+        <attr name="dotSize" format="float"/>
+
+        <!-- FILL -->
+        <attr name="dotFill" format="enum">
+            <enum name="fill" value="0"/>
+            <enum name="stroke" value="1"/>
+            <enum name="fillAndStroke" value="2"/>
+        </attr>
+        <!-- STROKE -->
+        <attr name="dotStrokeWidth" format="float"/>
+
     </declare-styleable>
 </resources>

@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import com.marked.dotview.R.styleable
+import com.marked.dotview.Utils.toPaintStyle
 
 /**
  * Created by Tudor Pop on 22-Jan-16.
@@ -19,13 +20,17 @@ class DotView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defSty
 	var mBaseDot: BaseDot? = null
 	var mHasAnimation = false
 
+	var mFill = Paint.Style.FILL
+	var mStrokeWidth = 1.0f
+
+	var mDotSize = 45.0f
+
+
+
 
 	companion object Static {
-		val DEFAULT_SIZE = 45
 		val DotPulse = 0
-
 	}
-
 	init {
 		init(attrs, defStyleAttr)
 	}
@@ -43,17 +48,24 @@ class DotView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defSty
 	}
 
 	fun init(attributeSet: AttributeSet?, defStyleAttr: Int) {
-		val a = context.obtainStyledAttributes(attributeSet, styleable.DotView, defStyleAttr, 0);
+		val a = context.obtainStyledAttributes(attributeSet, styleable.DotView, defStyleAttr, 0)
 		try {
-			mId = a.getInt(styleable.DotView_dotType, DotPulse);
-			mColor = a.getColor(styleable.DotView_dotColor, Color.WHITE);
+			mId = a.getInt(styleable.DotView_dotType, DotPulse)
+			mColor = a.getColor(styleable.DotView_dotColor, Color.WHITE)
+			mFill = a.getInt(styleable.DotView_dotFill, 0).toPaintStyle()
+			mStrokeWidth = a.getFloat(styleable.DotView_dotStrokeWidth, 1.0f)
+			mDotSize = a.getFloat(styleable.DotView_dotSize, 45.0f)
 		} finally {
 			a.recycle();
 		}
-		mPaint.setColor(mColor);
-		mPaint.setStyle(Paint.Style.FILL);
+
+		mPaint.color = mColor;
+		mPaint.style = mFill;
+		mPaint.strokeWidth = dp2px(mStrokeWidth).toFloat()
+
 		applyIndicator();
 	}
+
 
 	private fun applyIndicator() {
 		when (mId) {
@@ -64,13 +76,14 @@ class DotView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defSty
 
 	override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-		val width = measureDimension(dp2px(DEFAULT_SIZE), widthMeasureSpec);
-		val height = measureDimension(dp2px(DEFAULT_SIZE), heightMeasureSpec);
+		val dpToPx = dp2px(mDotSize)
+		val width = measureDimension(dpToPx, widthMeasureSpec);
+		val height = measureDimension(dpToPx, heightMeasureSpec);
 		setMeasuredDimension(width, height);
 	}
 
-	private fun dp2px(dpValue: Int): Int {
-		return (getContext().getResources().getDisplayMetrics().density * dpValue).toInt()
+	private fun dp2px(dpValue: Float): Int {
+		return (context.resources.displayMetrics.density * dpValue).toInt()
 	}
 
 	private fun measureDimension(defaultSize: Int, measureSpec: Int): Int {

@@ -7,6 +7,9 @@ import android.view.View
 
 /**
  * Created by Tudor Pop on 21-Jan-16.
+ * All the other views inherit from this view.
+ * Those views will decide for themselves the way they look and what animations they have
+ * Check out Factory Method Pattern
  */
 abstract class BaseDot {
 	var target: View? = null
@@ -38,7 +41,7 @@ abstract class BaseDot {
 		if (count <= 0) ++count
 		for (i in 0..count) {
 			val animator = mAnimators?.get(i);
-			val isRunning = animator?.isRunning() ?: false;
+			val isRunning = animator?.isRunning ?: false;
 			when (animStatus) {
 				AnimStatus.START ->
 					if (!isRunning) animator?.start()
