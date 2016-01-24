@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
 import com.marked.dotview.R.styleable
@@ -24,13 +25,17 @@ class DotView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defSty
 	var mStrokeWidth = 1.0f
 
 	var mDotSize = 45.0f
-
-
+	val mBundle = Bundle()
 
 
 	companion object Static {
 		val DotPulse = 0
+		val DotPulseSync = 1
+		val TAG_DURATION = "TAG_DURATION"
+		val TAG_SPACING = "TAG_SPACING"
+		val TAG_REPEAT_COUNT = "TAG_REPEAT_COUNT"
 	}
+
 	init {
 		init(attrs, defStyleAttr)
 	}
@@ -55,21 +60,26 @@ class DotView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defSty
 			mFill = a.getInt(styleable.DotView_dotFill, 0).toPaintStyle()
 			mStrokeWidth = a.getFloat(styleable.DotView_dotStrokeWidth, 1.0f)
 			mDotSize = a.getFloat(styleable.DotView_dotSize, 45.0f)
+
+			/* FROM HERE WE SET ATTRS TO BE SENT TO DOT CLASSES*/
+			mBundle.putInt(TAG_DURATION, a.getInt(styleable.DotView_dotDuration, 1000))
+			mBundle.putInt(TAG_SPACING, a.getInt(styleable.DotView_dotSpacing, 10))
+			mBundle.putInt(TAG_REPEAT_COUNT, a.getInt(styleable.DotView_dotRepeatCount, -1))
 		} finally {
 			a.recycle();
 		}
-
 		mPaint.color = mColor;
 		mPaint.style = mFill;
 		mPaint.strokeWidth = dp2px(mStrokeWidth).toFloat()
 
-		applyIndicator();
+		selectDotType();
 	}
 
 
-	private fun applyIndicator() {
+	private fun selectDotType() {
 		when (mId) {
-			DotPulse -> mBaseDot = DotPulse()
+			DotPulse -> mBaseDot = DotPulse(mBundle)
+			DotPulseSync -> mBaseDot = DotPulseSync()
 		}
 		mBaseDot?.target = this
 	}

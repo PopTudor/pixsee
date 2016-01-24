@@ -15,8 +15,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:dotColor="@color/accent"
-        app:dotFill="fill"
-        app:dotStrokeWidth="1"
+        app:dotDuration="900"
+        app:dotType="PulseSync"
         />
 
 </LinearLayout>

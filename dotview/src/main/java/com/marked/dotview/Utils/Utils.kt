@@ -7,14 +7,8 @@ import android.graphics.Paint
  */
 fun Int.toPaintStyle(): Paint.Style {
 	when (this) {
-		0 -> {
-			return Paint.Style.FILL
-		}
-		1 -> {
-			return Paint.Style.STROKE
-		}
-		else -> {
-			return Paint.Style.FILL_AND_STROKE
-		}
+		0 -> return Paint.Style.FILL
+		1 -> return Paint.Style.STROKE
+		else -> return Paint.Style.FILL_AND_STROKE
 	}
 }

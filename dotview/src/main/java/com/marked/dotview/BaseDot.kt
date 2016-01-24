@@ -15,6 +15,10 @@ abstract class BaseDot {
 	var target: View? = null
 	private var mAnimators: List<Animator>? = null
 
+	protected var mDuration = 1000
+	protected var mCircleSpacing = 8;
+	protected var mRepeatCount = -1;
+
 	fun getWidth(): Int {
 		return target?.width ?: 0
 	}
