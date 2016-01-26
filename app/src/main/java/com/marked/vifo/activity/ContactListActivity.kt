@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.marked.vifo.R
+import com.marked.vifo.database.database
 import com.marked.vifo.fragment.ContactListFragment
 import com.marked.vifo.helper.add
 import kotlinx.android.synthetic.main.activity_contact_app_bar.*
@@ -45,7 +46,7 @@ class ContactListActivity : AppCompatActivity(), ContactListFragment.Callbacks {
 
 		setSupportActionBar(toolbar)
 		toolbar.title = title
-
+		database.readableDatabase
 		mFragmentManager.add(R.id.fragmentContainer, ContactListFragment.newInstance())
 
 		fab.setOnClickListener { view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show() }

@@ -4,13 +4,12 @@ import android.os.Bundle
 import com.marked.vifo.extra.MessageConstants
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.Serializable
 import java.util.*
 
 /**
  * Created by Tudor Pop on 04-Dec-15.
  */
-data class Message private constructor(val builder: Message.Builder) : Serializable, MessageConstants {
+data class Message private constructor(val builder: Message.Builder) : MessageConstants {
 	/**
 	 * Gets the collapse key.
 	 */
@@ -32,10 +31,6 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 	 */
 	val notificationParams: Map<String, String>
 	/**
-	 * Gets the dryRun flag.
-	 */
-	val isDryRun: Boolean?
-	/**
 	 * Gets the restricted package name.
 	 */
 	val restrictedPackageName: String?
@@ -47,14 +42,15 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 	val messageType: Int
 
 	val date: Date
+	val id: UUID = UUID.randomUUID()
 
 	init {
-		collapseKey = builder.collapseKey
-		isDelayWhileIdle = builder.delayWhileIdle
 		data = Collections.unmodifiableMap(builder.data)
 		notificationParams = Collections.unmodifiableMap(builder.notificationParams)
+
+		collapseKey = builder.collapseKey
+		isDelayWhileIdle = builder.delayWhileIdle
 		timeToLive = builder.timeToLive
-		isDryRun = builder.dryRun
 		restrictedPackageName = builder.restrictedPackageName
 		messageType = builder.viewType
 		to = builder.to
@@ -68,24 +64,22 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 		jsonObject.put(MessageConstants.COLLAPSE_OPTION, collapseKey)
 		jsonObject.put(MessageConstants.DELAY_WHILE_IDLE_OPTION, isDelayWhileIdle)
 		jsonObject.put(MessageConstants.TIME_TO_LIVE_OPTION, timeToLive)
-		jsonObject.put(MessageConstants.DRY_RUN_OPTION, isDryRun)
 		jsonObject.put(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION, restrictedPackageName)
 		jsonObject.put(MessageConstants.MESSAGE_TYPE, messageType)
 		jsonObject.put(MessageConstants.DATA_PAYLOAD, mapToJSON(data))
 		jsonObject.put(MessageConstants.TO_TARGETS, to)
 		jsonObject.put(MessageConstants.FROM_TARGETS, from)
-		jsonObject.put(MessageConstants.FROM_TARGETS, from)
+		jsonObject.put(MessageConstants.DATA_DATE, date)
 
 		return jsonObject
 	}
 
 	@Throws(JSONException::class)
 	private fun mapToJSON(map: Map<String, String>): JSONObject {
-		val `object` = JSONObject()
-		if (!map.isEmpty())
-			for (entry in map.entries)
-				`object`.put(entry.key, entry.value)
-		return `object`
+		val result = JSONObject()
+		for ((key, value) in map)
+			result.put(key, value)
+		return result
 	}
 
 	fun toBundle(): Bundle {
@@ -96,8 +90,6 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 			bundle.putString(MessageConstants.TIME_TO_LIVE_OPTION, data[MessageConstants.TIME_TO_LIVE_OPTION])
 		if (data.containsKey(MessageConstants.DELAY_WHILE_IDLE_OPTION))
 			bundle.putString(MessageConstants.DELAY_WHILE_IDLE_OPTION, data[MessageConstants.DELAY_WHILE_IDLE_OPTION])
-		if (data.containsKey(MessageConstants.DRY_RUN_OPTION))
-			bundle.putString(MessageConstants.DRY_RUN_OPTION, data[MessageConstants.DRY_RUN_OPTION])
 		if (data.containsKey(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION))
 			bundle.putString(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION, data[MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION])
 		if (data.containsKey(MessageConstants.DATA_BODY))
@@ -108,6 +100,8 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 			bundle.putString(MessageConstants.FROM_TARGETS, data[MessageConstants.FROM_TARGETS])
 		if (data.containsKey(MessageConstants.DATA_ROOM))
 			bundle.putString(MessageConstants.DATA_ROOM, data[MessageConstants.DATA_ROOM])
+		if (data.containsKey(MessageConstants.DATA_DATE))
+			bundle.putString(MessageConstants.DATA_DATE, data[MessageConstants.DATA_DATE])
 
 		return bundle
 	}
@@ -122,9 +116,6 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 		}
 		if (isDelayWhileIdle != null) {
 			builder.append(MessageConstants.DELAY_WHILE_IDLE_OPTION + "=").append(isDelayWhileIdle).append(", ")
-		}
-		if (isDryRun != null) {
-			builder.append(MessageConstants.DRY_RUN_OPTION + ":").append(isDryRun).append(", ")
 		}
 		if (restrictedPackageName != null) {
 			builder.append(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION + "=").append(restrictedPackageName).append(", ")
@@ -166,7 +157,6 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 		var collapseKey: String? = null
 		var delayWhileIdle: Boolean? = null
 		var timeToLive: Int? = null
-		var dryRun: Boolean? = null
 		var restrictedPackageName: String? = null
 		var to: String? = null
 		var from: String? = null
@@ -198,8 +188,6 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 				data.put(MessageConstants.TIME_TO_LIVE_OPTION, bundle.getString(MessageConstants.TIME_TO_LIVE_OPTION))
 			if (delayWhileIdle != null)
 				data.put(MessageConstants.DELAY_WHILE_IDLE_OPTION, bundle.getString(MessageConstants.DELAY_WHILE_IDLE_OPTION))
-			if (dryRun != null)
-				data.put(MessageConstants.DRY_RUN_OPTION, bundle.getString(MessageConstants.DRY_RUN_OPTION))
 			if (restrictedPackageName != null)
 				data.put(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION, bundle.getString(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION))
 
@@ -272,15 +260,6 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 		 */
 		fun timeToLive(value: Int): Builder {
 			timeToLive = value
-			return this
-		}
-
-
-		/**
-		 * Sets the dryRun property (default value is false).
-		 */
-		fun dryRun(value: Boolean): Builder {
-			dryRun = value
 			return this
 		}
 

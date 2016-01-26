@@ -23,12 +23,13 @@ interface MessageConstants {
 		const val COLLAPSE_OPTION = "collapse_key"
 		const val TIME_TO_LIVE_OPTION = "timeToLive"
 		const val DELAY_WHILE_IDLE_OPTION = "delayWhileIdle"
-		const val DRY_RUN_OPTION = "dryRun"
 		const val RESTRICTED_PACKAGE_NAME_OPTION = "restrictedPackageName"
 
+		/* This parameter specifies the predefined key-value pairs of the data payload */
+		const val DATA_PAYLOAD = "data"
 		const val DATA_BODY = "body"
 		const val DATA_ROOM = "room"
-		const val DATA_PAYLOAD = "data"
+		const val DATA_DATE = "date"
 		/**This parameter specifies the predefined, user-visible key-value pairs of the notification payload.  */
 		const val NOTIFICATION_PAYLOAD = "gcm.notification"
 		const val NOTIFICATION_PAYLOAD_TITLE = NOTIFICATION_PAYLOAD + ".title"

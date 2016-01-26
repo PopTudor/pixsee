@@ -141,7 +141,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 		val gcm = GoogleCloudMessaging.getInstance(mContext)
 		val senderId = getString(R.string.gcm_defaultSenderId)
 		val msgId = UUID.randomUUID().toString()
-		val token = mThatUser!!.token
+		val token = mThatUser.token
 		val data = message.toBundle()
 		data.putString(GCMConstants.TOKEN, token)
 
