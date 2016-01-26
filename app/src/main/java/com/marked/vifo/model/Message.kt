@@ -46,6 +46,8 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 	 */
 	val messageType: Int
 
+	val date: Date
+
 	init {
 		collapseKey = builder.collapseKey
 		isDelayWhileIdle = builder.delayWhileIdle
@@ -57,6 +59,7 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 		messageType = builder.viewType
 		to = builder.to
 		from = builder.from
+		date = builder.date
 	}
 
 
@@ -70,6 +73,7 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 		jsonObject.put(MessageConstants.MESSAGE_TYPE, messageType)
 		jsonObject.put(MessageConstants.DATA_PAYLOAD, mapToJSON(data))
 		jsonObject.put(MessageConstants.TO_TARGETS, to)
+		jsonObject.put(MessageConstants.FROM_TARGETS, from)
 		jsonObject.put(MessageConstants.FROM_TARGETS, from)
 
 		return jsonObject
@@ -134,7 +138,7 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 		appendMap(builder, "data", data)
 		appendMap(builder, "notificationParams", notificationParams)
 		// Remove trailing ", "
-		if (builder[builder.length - 1] == ' ') {
+		if (builder.last() == ' ') {
 			builder.delete(builder.length - 2, builder.length)
 		}
 		builder.append(")")
@@ -168,7 +172,7 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 		var from: String? = null
 		var room: String? = null
 
-
+		var date: Date = Date()
 		var viewType: Int = 0
 
 		init {
@@ -203,6 +207,12 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 			data.put(MessageConstants.DATA_BODY, bundle.getString(MessageConstants.DATA_BODY))
 			return this
 		}
+
+		fun date(date: Date): Builder {
+			this.date = date
+			return this
+		}
+
 
 		/**
 		 * Sets the collapseKey property.

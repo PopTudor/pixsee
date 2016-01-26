@@ -7,10 +7,22 @@ import android.provider.BaseColumns
  */
 class DatabaseContract private constructor() {
 
-	abstract class Message : BaseColumns {
-		companion object {
+	class Message : BaseColumns {
+
+		companion object : BaseColumns {
+
 			val TABLE_NAME = "message"
-			val COLUMN_ID = "id"
+			val COLUMN_ID = "messageID"
+			val COLUMN_DATA_BODY = "body"
+			val COLUMN_TYPE = "type"
+			val COLUMN_DATE = "date"
+			val COLUMN_TO = "to"
+
+			val CREATE_MESSAGE = """CREATE TABLE $TABLE_NAME
+			(${BaseColumns._ID} INTEGER PRIMARY KEY, $COLUMN_ID
+
+			"""
+
 		}
 	}
 
