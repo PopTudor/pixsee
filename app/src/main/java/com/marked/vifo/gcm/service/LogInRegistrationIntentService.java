@@ -44,7 +44,7 @@ import com.marked.vifo.R;
 import com.marked.vifo.extra.GCMConstants;
 import com.marked.vifo.extra.HTTPStatusCodes;
 import com.marked.vifo.extra.ServerConstants;
-import com.marked.vifo.model.RequestQueue;
+import com.marked.vifo.model.RequestQueueAccess;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,7 +75,7 @@ public class LogInRegistrationIntentService extends IntentService {
     private static final String[] TOPICS = {"global"};
 
     private SharedPreferences mSharedPreferences;
-	private RequestQueue requestQueue;
+	private RequestQueueAccess requestQueue;
 
     /*
     * One time initialization
@@ -132,8 +132,8 @@ public class LogInRegistrationIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        requestQueue = RequestQueue.getInstance(this);
-        try {
+	    requestQueue = RequestQueueAccess.Companion.getInstance(this);
+	    try {
             // [START register_for_gcm]
             // Initially this call goes out to the network to retrieve the token, subsequent calls
             // are local.
@@ -220,7 +220,7 @@ public class LogInRegistrationIntentService extends IntentService {
 	                } catch (JSONException e) {
 		                e.printStackTrace();
 	                }
-                    notifyBroadcastReceiver(GCMConstants.ACTION_LOGIN);
+	                notifyBroadcastReceiver(GCMConstants.Companion.getACTION_LOGIN());
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -267,7 +267,7 @@ public class LogInRegistrationIntentService extends IntentService {
 	                } catch (JSONException e) {
 		                e.printStackTrace();
 	                }
-	                notifyBroadcastReceiver(GCMConstants.ACTION_SIGNUP);
+	                notifyBroadcastReceiver(GCMConstants.Companion.getACTION_SIGNUP());
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -306,7 +306,7 @@ public class LogInRegistrationIntentService extends IntentService {
                     // sent to your server. If the boolean is false, send the token to your server,
                     // otherwise your server should have already received the token.
                     mSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply();
-                    notifyBroadcastReceiver(GCMConstants.ACTION_RECOVERY);
+	                notifyBroadcastReceiver(GCMConstants.Companion.getACTION_RECOVERY());
                 }
             }, new Response.ErrorListener() {
                 @Override

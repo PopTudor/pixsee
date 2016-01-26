@@ -21,7 +21,7 @@ import com.marked.vifo.gcm.service.LogInRegistrationIntentService
 import com.marked.vifo.helper.Toast
 import com.marked.vifo.helper.add
 import com.marked.vifo.helper.addToBackStack
-import com.marked.vifo.model.RequestQueue
+import com.marked.vifo.model.RequestQueueAccess
 import java.net.URLEncoder
 
 class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmentInteraction, SignUpEmailFragment.SignUpEmailFragmentInteraction, SignUpPassFragment.SignUpPassFragmentInteraction {
@@ -29,7 +29,7 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
 	private val mProgressDialog by lazy { ProgressDialog(this) }
 	private val mRegistrationBroadcastReceiver by lazy { RegistrationBroadcastReceiver(DialogRegistration(this, mProgressDialog)) }
 	private val mBroadcastManagerastManager by lazy { LocalBroadcastManager.getInstance(this) }
-	private val mRequestQueue by lazy { RequestQueue.getInstance(this) }
+	private val mRequestQueue by lazy { RequestQueueAccess.getInstance(this) }
 
 	private var mName: String? = null
 	private var mEmail: String? = null
@@ -115,7 +115,7 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
 			}
 		})
 
-		mRequestQueue.add(jsonRequest)
+		mRequestQueue?.add(jsonRequest)
 	}
 
 

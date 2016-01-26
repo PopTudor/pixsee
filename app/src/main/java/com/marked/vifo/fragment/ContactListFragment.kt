@@ -19,7 +19,7 @@ import com.marked.vifo.adapter.ContactsAdapter
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.model.Contacts
-import com.marked.vifo.model.RequestQueue
+import com.marked.vifo.model.RequestQueueAccess
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
 import org.json.JSONObject
 
@@ -41,7 +41,7 @@ class ContactListFragment : Fragment() {
 	private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
 	private var mCallbacks: Callbacks? = null
-	private val mQueue by lazy { RequestQueue.getInstance(mContext) }
+	private val mQueue by lazy { RequestQueueAccess.getInstance(mContext) }
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -79,7 +79,7 @@ class ContactListFragment : Fragment() {
 							Log.d("***", "onResponse ${mContacts}")
 						}
 					}, ErrorListener { })// TODO: 12-Dec-15 add empty view)
-			mQueue.add(request)
+			mQueue?.add(request)
 		}
 	}
 

@@ -40,17 +40,17 @@ object Contacts {
 	fun fromJSONArray(jsonArray: JSONArray): List<Contact> {
 		val contacts = ArrayList<Contact>()
 
-		var `object`: JSONObject
+		var result: JSONObject
 		var id: String
 		var firstName: String
 		var lastName: String
 		var token: String
 		for (i in 0..jsonArray.length() - 1) {
-			`object` = jsonArray.getJSONObject(i)
-			id = `object`.getString(Contact.ID)
-			firstName = `object`.getString(Contact.FIRST_NAME)
-			lastName = `object`.getString(Contact.LAST_NAME)
-			token = `object`.getString(Contact.TOKEN)
+			result = jsonArray.getJSONObject(i)
+			id = result.getString(Contact.ID)
+			firstName = result.getString(Contact.FIRST_NAME)
+			lastName = result.getString(Contact.LAST_NAME)
+			token = result.getString(Contact.TOKEN)
 
 			contacts.add(Contact(id, firstName, lastName, firstName + " " + lastName, token))
 		}

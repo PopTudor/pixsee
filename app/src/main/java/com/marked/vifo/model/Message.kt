@@ -172,8 +172,8 @@ data class Message private constructor(val builder: Message.Builder) : Serializa
 		var viewType: Int = 0
 
 		init {
-			this.data = LinkedHashMap<String, String>()
-			this.notificationParams = LinkedHashMap<String, String>()
+			data = LinkedHashMap<String, String>()
+			notificationParams = LinkedHashMap<String, String>()
 		}
 
 		/**
