@@ -1,7 +1,9 @@
 package com.marked.vifo.model;
 
+import android.content.ContentValues
 import android.os.Parcel
 import android.os.Parcelable
+import com.marked.vifo.extra.UserConstants
 import org.json.JSONObject
 import java.util.*
 
@@ -10,11 +12,6 @@ import java.util.*
  */
 public data class Contact(var id: String, var firstName: String, var lastName: String, var name: String = "$firstName $lastName".trim(), var token: String) : Comparator<Contact>, Comparable<Contact>, Parcelable {
     companion object {
-        public const val ID = "_id";
-        public const val FIRST_NAME = "firstName";
-        public const val LAST_NAME = "lastName";
-        public const val TOKEN = "token";
-
         val CREATOR = object : Parcelable.Creator<Contact> {
             override public fun createFromParcel(parcelIn: Parcel) = Contact.Contact(parcelIn)
             override fun newArray(size: Int): Array<Contact?> = arrayOfNulls(size)
@@ -42,19 +39,28 @@ public data class Contact(var id: String, var firstName: String, var lastName: S
 
     public fun toJSON(): JSONObject {
         val jsonObject = JSONObject();
-        jsonObject.put(ID, id);
-        jsonObject.put(FIRST_NAME, firstName);
-        jsonObject.put(LAST_NAME, lastName);
-        jsonObject.put(TOKEN, token);
+	    jsonObject.put(UserConstants.ID, id);
+	    jsonObject.put(UserConstants.FIRST_NAME, firstName);
+	    jsonObject.put(UserConstants.LAST_NAME, lastName);
+	    jsonObject.put(UserConstants.TOKEN, token);
         return jsonObject;
     }
 
+	public fun toContentValues(): ContentValues {
+		val values = ContentValues();
+		values.put(UserConstants.ID, id);
+		values.put(UserConstants.FIRST_NAME, firstName);
+		values.put(UserConstants.LAST_NAME, lastName);
+		values.put(UserConstants.TOKEN, token);
+		return values;
+	}
+
     public fun fromJSON(json: JSONObject) {
-        id = json.getString(ID);
-        firstName = json.getString(FIRST_NAME);
-        lastName = json.getString(LAST_NAME);
+	    id = json.getString(UserConstants.ID);
+	    firstName = json.getString(UserConstants.FIRST_NAME);
+	    lastName = json.getString(UserConstants.LAST_NAME);
         name = "$firstName $lastName"
-        token = json.getString(TOKEN);
+	    token = json.getString(UserConstants.TOKEN);
     }
 
     override public fun describeContents(): Int {

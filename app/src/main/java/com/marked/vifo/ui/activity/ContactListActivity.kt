@@ -3,8 +3,6 @@ package com.marked.vifo.ui.activity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import com.marked.vifo.R
 import com.marked.vifo.helper.add
 import com.marked.vifo.ui.fragment.ContactListFragment
@@ -52,20 +50,6 @@ class ContactListActivity : AppCompatActivity(), ContactListFragment.Callbacks {
 		// TODO: If exposing deep links into your app, handle intents here.
 	}
 
-	override
-	fun onCreateOptionsMenu(menu: Menu): Boolean {
-		menuInflater.inflate(R.menu.menu_contacts_activity, menu)
-		return true
-	}
-
-	override
-	fun onOptionsItemSelected(item: MenuItem): Boolean {
-		when (item.itemId) {
-			R.id.refreshContacts ->
-				return true
-			else -> return super.onOptionsItemSelected(item)
-		}
-	}
 
 	/**
 	 * Callback method from [ContactListFragment.Callbacks]

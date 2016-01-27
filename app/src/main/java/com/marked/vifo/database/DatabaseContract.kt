@@ -22,15 +22,14 @@ class DatabaseContract private constructor() {
 	class Contact : BaseColumns {
 		companion object Static {
 			const val TABLE_NAME = "contact"
-			const val COLUMN_ID = UserConstants.OBJECT_ID /* id from online stored database */
+			const val COLUMN_ID = UserConstants.ID /* id from online stored database */
 			const val COLUMN_FIRST_NAME = UserConstants.FIRST_NAME
 			const val COLUMN_LAST_NAME = UserConstants.LAST_NAME
 			const val COLUMN_TOKEN = UserConstants.TOKEN
 
 			const val CREATE_TABLE = """
 			CREATE TABLE ${TABLE_NAME}(
-			${BaseColumns._ID} TEXT PRIMARY KEY,
-			${COLUMN_ID} TEXT UNIQUE,
+			${COLUMN_ID} TEXT PRIMARY KEY,
 			${COLUMN_FIRST_NAME} TEXT,
 			${COLUMN_LAST_NAME} TEXT,
 			${COLUMN_TOKEN} TEXT
@@ -44,15 +43,14 @@ class DatabaseContract private constructor() {
 	class User : BaseColumns {
 		companion object Static {
 			const val TABLE_NAME = "user"
-			const val COLUMN_ID = UserConstants.OBJECT_ID
+			const val COLUMN_ID = UserConstants.ID
 			const val COLUMN_FIRST_NAME = UserConstants.FIRST_NAME
 			const val COLUMN_LAST_NAME = UserConstants.LAST_NAME
 			const val COLUMN_TOKEN = UserConstants.TOKEN
 
 			const val CREATE_TABLE = """
 			CREATE TABLE ${TABLE_NAME}(
-			${BaseColumns._ID} INTEGER PRIMARY KEY,
-			${COLUMN_ID} TEXT,
+			${COLUMN_ID} TEXT PRIMARY KEY,
 			${COLUMN_FIRST_NAME} TEXT,
 			${COLUMN_LAST_NAME} TEXT,
 			${COLUMN_TOKEN} TEXT
@@ -68,7 +66,7 @@ class DatabaseContract private constructor() {
 			const val COLUMN_DATA_BODY = MessageConstants.DATA_BODY
 			const val COLUMN_TYPE = MessageConstants.MESSAGE_TYPE
 			const val COLUMN_DATE = MessageConstants.CREATION_DATE
-			const val COLUMN_TO = MessageConstants.TO
+			const val COLUMN_TO = "_" + MessageConstants.TO
 
 			const val CREATE_TABLE = """
 			CREATE TABLE $TABLE_NAME(

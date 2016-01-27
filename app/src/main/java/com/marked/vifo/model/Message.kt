@@ -37,7 +37,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 	 */
 	val restrictedPackageName: String?
 	val to: String?
-	val source: String?
+	val from: String?
 	/**
 	 * Gets the message type.
 	 */
@@ -56,7 +56,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 		restrictedPackageName = builder.restrictedPackageName
 		messageType = builder.viewType
 		to = builder.to
-		source = builder.source
+		from = builder.from
 		date = builder.date
 	}
 
@@ -70,7 +70,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 		jsonObject.put(MessageConstants.MESSAGE_TYPE, messageType)
 		jsonObject.put(MessageConstants.DATA_PAYLOAD, mapToJSON(data))
 		jsonObject.put(MessageConstants.TO, to)
-		jsonObject.put(MessageConstants.SOURCE, source)
+		jsonObject.put(MessageConstants.FROM, from)
 		jsonObject.put(MessageConstants.CREATION_DATE, date)
 
 		return jsonObject
@@ -98,8 +98,8 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 			bundle.putString(MessageConstants.DATA_BODY, data[MessageConstants.DATA_BODY])
 		if (!to.isNullOrBlank())
 			bundle.putString(MessageConstants.TO, to)
-		if (!source.isNullOrBlank())
-			bundle.putString(MessageConstants.SOURCE, source)
+		if (!from.isNullOrBlank())
+			bundle.putString(MessageConstants.FROM, from)
 		bundle.putLong(MessageConstants.CREATION_DATE, date.time)
 
 		return bundle
@@ -144,8 +144,8 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 		if (to != null) {
 			builder.append(MessageConstants.TO + "=").append(to).append(", ")
 		}
-		if (source != null) {
-			builder.append(MessageConstants.SOURCE + "=").append(source).append(", ")
+		if (from != null) {
+			builder.append(MessageConstants.FROM + "=").append(from).append(", ")
 		}
 		appendMap(builder, "data", data)
 		appendMap(builder, "notificationParams", notificationParams)
@@ -180,7 +180,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 		var timeToLive: Int? = null
 		var restrictedPackageName: String? = null
 		var to: String? = null
-		var source: String? = null
+		var from: String? = null
 		var room: String? = null
 
 		var date: Date = Date()
@@ -245,7 +245,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 		 * @param from this user
 		 */
 		fun from(from: String): Builder {
-			this.source = from
+			this.from = from
 			return this
 		}
 

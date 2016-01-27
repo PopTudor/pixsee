@@ -5,9 +5,9 @@ package com.marked.vifo.extra
  */
 interface UserConstants {
 	companion object Static {
-		const val FIRST_NAME = "FIRST_NAME"
-		const val LAST_NAME = "LAST_NAME"
-		const val TOKEN = "TOKEN"
-		const val OBJECT_ID = "OBJECT_ID"
+		const val FIRST_NAME = "firstName"
+		const val LAST_NAME = "lastName"
+		const val TOKEN = "token"
+		const val ID = "_id"
 	}
 }

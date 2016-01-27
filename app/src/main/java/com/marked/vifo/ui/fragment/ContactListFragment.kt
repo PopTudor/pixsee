@@ -1,26 +1,28 @@
 package com.marked.vifo.ui.fragment
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.android.volley.Request
 import com.android.volley.Response.ErrorListener
 import com.android.volley.Response.Listener
 import com.android.volley.toolbox.JsonObjectRequest
 import com.marked.vifo.R
+import com.marked.vifo.database.DatabaseContract
+import com.marked.vifo.database.database
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.model.Contacts
-import com.marked.vifo.model.RequestQueueAccess
+import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.adapter.ContactsAdapter
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
+import org.jetbrains.anko.async
+import org.jetbrains.anko.db.transaction
+import org.jetbrains.anko.support.v4.onUiThread
 import org.json.JSONObject
 
 /**
@@ -41,7 +43,6 @@ class ContactListFragment : Fragment() {
 	private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
 	private var mCallbacks: Callbacks? = null
-	private val mQueue by lazy { RequestQueueAccess.getInstance(mContext) }
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -60,6 +61,21 @@ class ContactListFragment : Fragment() {
 		return rootView
 	}
 
+	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+		super.onCreateOptionsMenu(menu, inflater)
+		inflater?.inflate(R.menu.menu_contacts_activity, menu)
+	}
+
+	override
+	fun onOptionsItemSelected(item: MenuItem): Boolean {
+		when (item.itemId) {
+			R.id.refreshContacts -> {
+				requestListFriends()
+				return false
+			}
+			else -> return super.onOptionsItemSelected(item)
+		}
+	}
 	/**
 	 * Use the token to send a request to the server for an array of friends for the user of the app
 	 */
@@ -70,16 +86,25 @@ class ContactListFragment : Fragment() {
 					"${ServerConstants.SERVER_USER_FRIENDS}?id=$id",
 					Listener<JSONObject> { response ->
 						val friends = response.getJSONArray("friends")
-						if (friends.length() != mContacts.size) {
-							// only add friends
-							Contacts.setFriends(Contacts.fromJSONArray(friends))
-							(mContext as Activity).runOnUiThread { mContactsAdapter.notifyItemRangeInserted(0, mContacts.size - 1) }
+						if (friends.length() > mContacts.size) {
+							val startingIndex = mContacts.size
+							Contacts.addContacts(Contacts.fromJSONArray(friends, startingIndex))
+							onUiThread { mContactsAdapter.notifyItemRangeInserted(startingIndex, mContacts.size - 1) }
+							async() {
+								context.database.use {
+									transaction {
+										for (it in Contacts.contactList)
+											insert(DatabaseContract.Contact.TABLE_NAME, null, it.toContentValues())
+									}
+								}
+							}
+
 						} else {
 							Log.d("***", "onCreateView ${mContacts[0].toString()}")
 							Log.d("***", "onResponse ${mContacts}")
 						}
 					}, ErrorListener { })// TODO: 12-Dec-15 add empty view)
-			mQueue.add(request)
+			mContext.requestQueue.add(request)
 		}
 	}
 

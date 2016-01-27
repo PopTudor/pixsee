@@ -1,5 +1,6 @@
 package com.marked.vifo.model
 
+import com.marked.vifo.extra.UserConstants
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -37,7 +38,7 @@ object Contacts {
 			return null
 	}
 
-	fun fromJSONArray(jsonArray: JSONArray): List<Contact> {
+	fun fromJSONArray(jsonArray: JSONArray, startingIndex: Int = 0): List<Contact> {
 		val contacts = ArrayList<Contact>()
 
 		var result: JSONObject
@@ -45,12 +46,12 @@ object Contacts {
 		var firstName: String
 		var lastName: String
 		var token: String
-		for (i in 0..jsonArray.length() - 1) {
+		for (i in startingIndex..jsonArray.length() - 1) {
 			result = jsonArray.getJSONObject(i)
-			id = result.getString(Contact.ID)
-			firstName = result.getString(Contact.FIRST_NAME)
-			lastName = result.getString(Contact.LAST_NAME)
-			token = result.getString(Contact.TOKEN)
+			id = result.getString(UserConstants.ID)
+			firstName = result.getString(UserConstants.FIRST_NAME)
+			lastName = result.getString(UserConstants.LAST_NAME)
+			token = result.getString(UserConstants.TOKEN)
 
 			contacts.add(Contact(id, firstName, lastName, firstName + " " + lastName, token))
 		}

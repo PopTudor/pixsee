@@ -17,7 +17,7 @@ interface MessageConstants {
 
 	companion object {
 		const val TO = "to" /* message destination, (destination is a better name but GCM uses to)*/
-		const val SOURCE = "source"  /* source of the message (the app's user id)*/
+		const val FROM = "from"  /* source of the message (the app's user id)*/
 		const val REGISTRATION_IDS_TARGETS = "registration_ids"
 		const val PRIORITY_OPTION = "priority"
 		const val COLLAPSE_OPTION = "collapse_key"
