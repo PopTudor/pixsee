@@ -1,23 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
+<LinearLayout style="@style/Base.Widget.AppCompat.ListView"
+              xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="10dp"
-              android:background="?android:attr/selectableItemBackground">
+              android:layout_height="72dp"
+              android:background="?android:attr/selectableItemBackground"
+              android:orientation="horizontal"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp">
 
     <com.android.volley.toolbox.NetworkImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/contactIconImageView"
-        android:src="@android:drawable/btn_star_big_on"/>
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/ic_account_circle_24dp"/>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/contactNameTextView"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        >
+
+        <TextView
+            android:id="@+id/contactNameTextView"
+            style="@style/Base.TextAppearance.AppCompat.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contextClickable="false"
+            android:inputType="textCapWords|textCapSentences|textPersonName"
+            android:longClickable="false"
+            android:singleLine="true"
+            android:text="Medium Text"
+            android:textAllCaps="true"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contextClickable="false"
+            android:longClickable="false"
+            android:text="New Text"/>
+    </LinearLayout>
 
 </LinearLayout>
