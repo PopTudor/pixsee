@@ -14,10 +14,11 @@ import com.android.volley.toolbox.Volley
 class RequestQueueAccess private constructor(val queue: RequestQueue) {
 	companion object {
 		private var sQueue: RequestQueueAccess? = null
-		fun getInstance(context: Context): RequestQueueAccess? {
+
+		fun getInstance(context: Context): RequestQueueAccess {
 			if (sQueue == null)
 				sQueue = RequestQueueAccess(Volley.newRequestQueue(context))
-			return sQueue
+			return sQueue!!
 		}
 	}
 
@@ -33,3 +34,6 @@ class RequestQueueAccess private constructor(val queue: RequestQueue) {
 		queue.add(request)
 	}
 }
+
+val Context.requestQueue: RequestQueueAccess
+	get() = RequestQueueAccess.getInstance(applicationContext)

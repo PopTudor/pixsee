@@ -20,7 +20,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.google.android.gms.iid.InstanceIDListenerService;
-import com.marked.vifo.activity.EntryActivity;
+import com.marked.vifo.ui.activity.EntryActivity;
 
 public class GCMInstanceIDListenerService extends InstanceIDListenerService {
 

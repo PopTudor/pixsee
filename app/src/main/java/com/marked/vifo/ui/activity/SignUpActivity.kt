@@ -1,4 +1,4 @@
-package com.marked.vifo.activity
+package com.marked.vifo.ui.activity
 
 import android.app.ProgressDialog
 import android.content.IntentFilter
@@ -13,15 +13,16 @@ import com.marked.vifo.delegate.DialogRegistration
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.HTTPStatusCodes
 import com.marked.vifo.extra.ServerConstants
-import com.marked.vifo.fragment.signup.SignUpEmailFragment
-import com.marked.vifo.fragment.signup.SignUpNameFragment
-import com.marked.vifo.fragment.signup.SignUpPassFragment
 import com.marked.vifo.gcm.RegistrationBroadcastReceiver
 import com.marked.vifo.gcm.service.LogInRegistrationIntentService
 import com.marked.vifo.helper.Toast
 import com.marked.vifo.helper.add
 import com.marked.vifo.helper.addToBackStack
-import com.marked.vifo.model.RequestQueueAccess
+import com.marked.vifo.model.requestQueue
+import com.marked.vifo.ui.fragment.signup.SignUpEmailFragment
+import com.marked.vifo.ui.fragment.signup.SignUpNameFragment
+import com.marked.vifo.ui.fragment.signup.SignUpPassFragment
+import org.json.JSONObject
 import java.net.URLEncoder
 
 class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmentInteraction, SignUpEmailFragment.SignUpEmailFragmentInteraction, SignUpPassFragment.SignUpPassFragmentInteraction {
@@ -29,7 +30,6 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
 	private val mProgressDialog by lazy { ProgressDialog(this) }
 	private val mRegistrationBroadcastReceiver by lazy { RegistrationBroadcastReceiver(DialogRegistration(this, mProgressDialog)) }
 	private val mBroadcastManagerastManager by lazy { LocalBroadcastManager.getInstance(this) }
-	private val mRequestQueue by lazy { RequestQueueAccess.getInstance(this) }
 
 	private var mName: String? = null
 	private var mEmail: String? = null
@@ -86,7 +86,7 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
 	private fun checkEmail(email: String?) {
 		var verifyUserURL = "${ServerConstants.SERVER_USER_EXISTS}?email=${URLEncoder.encode(email, "UTF-8")}"
 
-		val jsonRequest = JsonObjectRequest(Request.Method.GET, verifyUserURL, Response.Listener<org.json.JSONObject> {
+		val jsonRequest = JsonObjectRequest(Request.Method.GET, verifyUserURL, Response.Listener<JSONObject> {
 			mProgressDialog.dismiss()
 			mFragmentManager.addToBackStack(R.id.fragmentContainer, SignUpPassFragment.newInstance())
 		}, Response.ErrorListener { error ->
@@ -115,7 +115,7 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
 			}
 		})
 
-		mRequestQueue?.add(jsonRequest)
+		requestQueue.add(jsonRequest)
 	}
 
 

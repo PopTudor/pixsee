@@ -1,4 +1,4 @@
-package com.marked.vifo.fragment
+package com.marked.vifo.ui.fragment
 
 import android.content.Context
 import android.os.*
@@ -13,8 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.marked.vifo.R
-import com.marked.vifo.activity.ContactDetailActivity
-import com.marked.vifo.adapter.MessageAdapter
+import com.marked.vifo.database.database
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.MessageConstants
 import com.marked.vifo.extra.ServerConstants
@@ -22,11 +21,14 @@ import com.marked.vifo.gcm.service.GCMListenerService
 import com.marked.vifo.helper.SpacesItemDecoration
 import com.marked.vifo.model.Contact
 import com.marked.vifo.model.Message
+import com.marked.vifo.ui.activity.ContactDetailActivity
+import com.marked.vifo.ui.adapter.MessageAdapter
 import io.socket.client.IO
 import io.socket.emitter.Emitter
 import jp.wasabeef.recyclerview.animators.FadeInAnimator
 import kotlinx.android.synthetic.main.fragment_contact_detail.*
 import kotlinx.android.synthetic.main.fragment_contact_detail.view.*
+import org.jetbrains.anko.async
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -170,6 +172,20 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	override fun onPause() {
 		super.onPause()
 		isInForeground = false
+		saveMessages()
+	}
+
+	fun saveMessages() {
+		if (mMessagesDataset.isEmpty())
+			return
+		async() {
+			context.database.use {
+				beginTransaction()
+				for (it in mMessagesDataset)
+					insert("message", "", it.toContentValues())
+				endTransaction()
+			}
+		}
 	}
 
 	override fun onResume() {

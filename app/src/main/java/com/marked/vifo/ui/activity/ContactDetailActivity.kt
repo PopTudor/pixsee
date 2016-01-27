@@ -1,4 +1,4 @@
-package com.marked.vifo.activity;
+package com.marked.vifo.ui.activity;
 
 import android.graphics.PorterDuff
 import android.os.Build
@@ -11,8 +11,8 @@ import android.view.MenuItem
 import android.view.View
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.marked.vifo.R
-import com.marked.vifo.fragment.ContactDetailFragment
 import com.marked.vifo.helper.add
+import com.marked.vifo.ui.fragment.ContactDetailFragment
 import kotlinx.android.synthetic.main.activity_contact_detail.*
 
 /**
@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_contact_detail.*
  */
 public class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.ContactDetailFragmentInteraction {
     companion object {
-        public const val EXTRA_CONTACT = "com.marked.vifo.activity.EXTRA_CONTACT";
+	    public const val EXTRA_CONTACT = "com.marked.vifo.ui.activity.EXTRA_CONTACT";
     }
 
 	final val mFragmentManager by lazy { supportFragmentManager };

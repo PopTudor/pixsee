@@ -16,8 +16,8 @@ interface MessageConstants {
 	}
 
 	companion object {
-		const val TO_TARGETS = "to"
-		const val FROM_TARGETS = "from"
+		const val TO = "to" /* message destination, (destination is a better name but GCM uses to)*/
+		const val SOURCE = "source"  /* source of the message (the app's user id)*/
 		const val REGISTRATION_IDS_TARGETS = "registration_ids"
 		const val PRIORITY_OPTION = "priority"
 		const val COLLAPSE_OPTION = "collapse_key"
@@ -26,20 +26,21 @@ interface MessageConstants {
 		const val RESTRICTED_PACKAGE_NAME_OPTION = "restrictedPackageName"
 
 		/* This parameter specifies the predefined key-value pairs of the data payload */
-		const val DATA_PAYLOAD = "data"
+		const val DATA_PAYLOAD = "data" /* JSON object that holds the body */
 		const val DATA_BODY = "body"
-		const val DATA_ROOM = "room"
-		const val DATA_DATE = "date"
+		const val CHAT_ROOM = "room"
+		const val CREATION_DATE = "date"
 		/**This parameter specifies the predefined, user-visible key-value pairs of the notification payload.  */
 		const val NOTIFICATION_PAYLOAD = "gcm.notification"
 		const val NOTIFICATION_PAYLOAD_TITLE = NOTIFICATION_PAYLOAD + ".title"
 		const val NOTIFICATION_PAYLOAD_BODY = NOTIFICATION_PAYLOAD + ".body"
-		const val NOTIFICATION_PARAMS_KEY = "notificationParams"
+		const val MESSAGE_TYPE = "type"
 
 		/*
 		* Notification payload support
 		* https://developers.google.com/cloud-messaging/http-server-ref#downstream
 		**/
+		const val NOTIFICATION_PARAMS_KEY = "notificationParams"
 		const val NOTIFICATION_TITLE = "title"
 		const val NOTIFICATION_BODY = "body"
 		const val NOTIFICATION_ICON = "icon"
@@ -50,8 +51,7 @@ interface MessageConstants {
 		const val NOTIFICATION_TITLE_LOCK_KEY = "title_loc_key"
 		const val NOTIFICATION_TITLE_LOCK_ARGS = "title_loc_args"
 		const val NOTIFICATION_BODY_LOCK_KEY = "body_loc_key"
-		const val NOTIFICATION_BODY_LOCK_ARGS = "body_loc_args"
 
-		const val MESSAGE_TYPE = "type"
+		const val NOTIFICATION_BODY_LOCK_ARGS = "body_loc_args"
 	}
 }

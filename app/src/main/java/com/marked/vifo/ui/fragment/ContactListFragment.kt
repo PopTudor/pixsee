@@ -1,4 +1,4 @@
-package com.marked.vifo.fragment
+package com.marked.vifo.ui.fragment
 
 import android.app.Activity
 import android.content.Context
@@ -15,11 +15,11 @@ import com.android.volley.Response.ErrorListener
 import com.android.volley.Response.Listener
 import com.android.volley.toolbox.JsonObjectRequest
 import com.marked.vifo.R
-import com.marked.vifo.adapter.ContactsAdapter
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.model.Contacts
 import com.marked.vifo.model.RequestQueueAccess
+import com.marked.vifo.ui.adapter.ContactsAdapter
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
 import org.json.JSONObject
 
@@ -79,7 +79,7 @@ class ContactListFragment : Fragment() {
 							Log.d("***", "onResponse ${mContacts}")
 						}
 					}, ErrorListener { })// TODO: 12-Dec-15 add empty view)
-			mQueue?.add(request)
+			mQueue.add(request)
 		}
 	}
 

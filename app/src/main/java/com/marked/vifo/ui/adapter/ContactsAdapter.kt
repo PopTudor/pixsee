@@ -1,4 +1,4 @@
-package com.marked.vifo.adapter;
+package com.marked.vifo.ui.adapter;
 
 import android.content.Context
 import android.content.Intent
@@ -7,10 +7,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.marked.vifo.R
-import com.marked.vifo.activity.ContactDetailActivity
-import com.marked.vifo.activity.ContactListActivity
-import com.marked.vifo.adapter.viewholders.ContactHolder
 import com.marked.vifo.model.Contact
+import com.marked.vifo.ui.activity.ContactDetailActivity
+import com.marked.vifo.ui.activity.ContactListActivity
+import com.marked.vifo.ui.adapter.viewholders.ContactHolder
 
 /**
  * Created by Tudor Pop on 30-Nov-15.

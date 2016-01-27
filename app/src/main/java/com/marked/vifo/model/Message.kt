@@ -1,5 +1,6 @@
 package com.marked.vifo.model
 
+import android.content.ContentValues
 import android.os.Bundle
 import com.marked.vifo.extra.MessageConstants
 import org.json.JSONException
@@ -24,6 +25,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 	val timeToLive: Int?
 	/**
 	 * Gets the payload data, which is immutable.
+	 * IN DATA ADD ALL OTHER OPTIONS LIKE to/from/date/messageType
 	 */
 	val data: Map<String, String>
 	/**
@@ -35,7 +37,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 	 */
 	val restrictedPackageName: String?
 	val to: String?
-	val from: String?
+	val source: String?
 	/**
 	 * Gets the message type.
 	 */
@@ -54,7 +56,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 		restrictedPackageName = builder.restrictedPackageName
 		messageType = builder.viewType
 		to = builder.to
-		from = builder.from
+		source = builder.source
 		date = builder.date
 	}
 
@@ -67,9 +69,9 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 		jsonObject.put(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION, restrictedPackageName)
 		jsonObject.put(MessageConstants.MESSAGE_TYPE, messageType)
 		jsonObject.put(MessageConstants.DATA_PAYLOAD, mapToJSON(data))
-		jsonObject.put(MessageConstants.TO_TARGETS, to)
-		jsonObject.put(MessageConstants.FROM_TARGETS, from)
-		jsonObject.put(MessageConstants.DATA_DATE, date)
+		jsonObject.put(MessageConstants.TO, to)
+		jsonObject.put(MessageConstants.SOURCE, source)
+		jsonObject.put(MessageConstants.CREATION_DATE, date)
 
 		return jsonObject
 	}
@@ -84,26 +86,45 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 
 	fun toBundle(): Bundle {
 		val bundle = Bundle()
-		if (data.containsKey(MessageConstants.COLLAPSE_OPTION))
-			bundle.putString(MessageConstants.COLLAPSE_OPTION, data[MessageConstants.COLLAPSE_OPTION])
-		if (data.containsKey(MessageConstants.TIME_TO_LIVE_OPTION))
-			bundle.putString(MessageConstants.TIME_TO_LIVE_OPTION, data[MessageConstants.TIME_TO_LIVE_OPTION])
-		if (data.containsKey(MessageConstants.DELAY_WHILE_IDLE_OPTION))
-			bundle.putString(MessageConstants.DELAY_WHILE_IDLE_OPTION, data[MessageConstants.DELAY_WHILE_IDLE_OPTION])
-		if (data.containsKey(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION))
-			bundle.putString(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION, data[MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION])
+		if (!collapseKey.isNullOrBlank())
+			bundle.putString(MessageConstants.COLLAPSE_OPTION, collapseKey)
+		if (timeToLive != null)
+			bundle.putInt(MessageConstants.TIME_TO_LIVE_OPTION, timeToLive)
+		if (isDelayWhileIdle == true)
+			bundle.putBoolean(MessageConstants.DELAY_WHILE_IDLE_OPTION, isDelayWhileIdle)
+		if (!restrictedPackageName.isNullOrBlank())
+			bundle.putString(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION, restrictedPackageName)
 		if (data.containsKey(MessageConstants.DATA_BODY))
 			bundle.putString(MessageConstants.DATA_BODY, data[MessageConstants.DATA_BODY])
-		if (data.containsKey(MessageConstants.TO_TARGETS))
-			bundle.putString(MessageConstants.TO_TARGETS, data[MessageConstants.TO_TARGETS])
-		if (data.containsKey(MessageConstants.FROM_TARGETS))
-			bundle.putString(MessageConstants.FROM_TARGETS, data[MessageConstants.FROM_TARGETS])
-		if (data.containsKey(MessageConstants.DATA_ROOM))
-			bundle.putString(MessageConstants.DATA_ROOM, data[MessageConstants.DATA_ROOM])
-		if (data.containsKey(MessageConstants.DATA_DATE))
-			bundle.putString(MessageConstants.DATA_DATE, data[MessageConstants.DATA_DATE])
+		if (!to.isNullOrBlank())
+			bundle.putString(MessageConstants.TO, to)
+		if (!source.isNullOrBlank())
+			bundle.putString(MessageConstants.SOURCE, source)
+		bundle.putLong(MessageConstants.CREATION_DATE, date.time)
 
 		return bundle
+	}
+
+	fun toContentValues(): ContentValues {
+		val values = ContentValues()
+		//		if (!collapseKey.isNullOrBlank())
+		//			values.put(MessageConstants.COLLAPSE_OPTION, collapseKey)
+		//		if (timeToLive != null)
+		//			values.put(MessageConstants.TIME_TO_LIVE_OPTION, timeToLive)
+		//		if (isDelayWhileIdle==true)
+		//			values.put(MessageConstants.DELAY_WHILE_IDLE_OPTION, isDelayWhileIdle)
+		//		if (!restrictedPackageName.isNullOrBlank())
+		//			values.put(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION, restrictedPackageName)
+		if (data.containsKey(MessageConstants.DATA_BODY))
+			values.put(MessageConstants.DATA_BODY, data[MessageConstants.DATA_BODY])
+		if (!to.isNullOrBlank())
+			values.put(MessageConstants.TO, to)
+		//		if (!source.isNullOrBlank())
+		//			values.put(MessageConstants.SOURCE, source)
+		values.put(MessageConstants.MESSAGE_TYPE, messageType)
+		values.put(MessageConstants.CREATION_DATE, date.time)
+
+		return values
 	}
 
 	override fun toString(): String {
@@ -121,10 +142,10 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 			builder.append(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION + "=").append(restrictedPackageName).append(", ")
 		}
 		if (to != null) {
-			builder.append(MessageConstants.TO_TARGETS + "=").append(to).append(", ")
+			builder.append(MessageConstants.TO + "=").append(to).append(", ")
 		}
-		if (from != null) {
-			builder.append(MessageConstants.FROM_TARGETS + "=").append(from).append(", ")
+		if (source != null) {
+			builder.append(MessageConstants.SOURCE + "=").append(source).append(", ")
 		}
 		appendMap(builder, "data", data)
 		appendMap(builder, "notificationParams", notificationParams)
@@ -159,7 +180,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 		var timeToLive: Int? = null
 		var restrictedPackageName: String? = null
 		var to: String? = null
-		var from: String? = null
+		var source: String? = null
 		var room: String? = null
 
 		var date: Date = Date()
@@ -224,7 +245,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 		 * @param from this user
 		 */
 		fun from(from: String): Builder {
-			this.from = from
+			this.source = from
 			return this
 		}
 

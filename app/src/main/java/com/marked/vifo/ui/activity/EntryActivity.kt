@@ -1,4 +1,4 @@
-package com.marked.vifo.activity
+package com.marked.vifo.ui.activity
 
 import android.content.Intent
 import android.os.Bundle

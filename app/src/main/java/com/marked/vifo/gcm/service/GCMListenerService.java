@@ -28,8 +28,8 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.marked.vifo.R;
-import com.marked.vifo.activity.EntryActivity;
-import com.marked.vifo.fragment.ContactDetailFragment;
+import com.marked.vifo.ui.activity.EntryActivity;
+import com.marked.vifo.ui.fragment.ContactDetailFragment;
 
 import static android.app.PendingIntent.getActivity;
 import static android.media.RingtoneManager.TYPE_NOTIFICATION;

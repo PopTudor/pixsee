@@ -1,6 +1,8 @@
 package com.marked.vifo.database
 
 import android.provider.BaseColumns
+import com.marked.vifo.extra.MessageConstants
+import com.marked.vifo.extra.UserConstants
 
 /**
  * Created by Tudor Pop on 26-Jan-16.
@@ -10,7 +12,8 @@ class DatabaseContract private constructor() {
 		const val DATABASE_VERSION = 1
 		const val DATABASE_NAME = "pixy.db"
 
-		val CREATE_TABLE_ARRAY = arrayOf(Contact.CREATE_TABLE, User.CREATE_TABLE, Message.CREATE_TABLE)
+		/* Add to CREATE_TABLE_ARRAY all the other tables that get created and to DELETE_TABLE_ARRAY all tables that get deleted*/
+		val CREATE_TABLE_ARRAY = arrayOf(Contact.CREATE_TABLE.trim(), User.CREATE_TABLE.trim(), Message.CREATE_TABLE.trim())
 		val DELETE_TABLE_ARRAY = arrayOf(Contact.DELETE_TABLE, User.DELETE_TABLE, Message.DELETE_TABLE)
 	}
 
@@ -19,10 +22,10 @@ class DatabaseContract private constructor() {
 	class Contact : BaseColumns {
 		companion object Static {
 			const val TABLE_NAME = "contact"
-			const val COLUMN_ID = "objID" /* id from online stored database */
-			const val COLUMN_FIRST_NAME = "firstName"
-			const val COLUMN_LAST_NAME = "lastName"
-			const val COLUMN_TOKEN = "token"
+			const val COLUMN_ID = UserConstants.OBJECT_ID /* id from online stored database */
+			const val COLUMN_FIRST_NAME = UserConstants.FIRST_NAME
+			const val COLUMN_LAST_NAME = UserConstants.LAST_NAME
+			const val COLUMN_TOKEN = UserConstants.TOKEN
 
 			const val CREATE_TABLE = """
 			CREATE TABLE ${TABLE_NAME}(
@@ -41,10 +44,10 @@ class DatabaseContract private constructor() {
 	class User : BaseColumns {
 		companion object Static {
 			const val TABLE_NAME = "user"
-			const val COLUMN_FIRST_NAME = "firstName"
-			const val COLUMN_LAST_NAME = "lastName"
-			const val COLUMN_TOKEN = "token"
-			const val COLUMN_ID = "objID"
+			const val COLUMN_ID = UserConstants.OBJECT_ID
+			const val COLUMN_FIRST_NAME = UserConstants.FIRST_NAME
+			const val COLUMN_LAST_NAME = UserConstants.LAST_NAME
+			const val COLUMN_TOKEN = UserConstants.TOKEN
 
 			const val CREATE_TABLE = """
 			CREATE TABLE ${TABLE_NAME}(
@@ -62,10 +65,10 @@ class DatabaseContract private constructor() {
 	class Message : BaseColumns {
 		companion object Static {
 			const val TABLE_NAME = "message"
-			const val COLUMN_DATA_BODY = "body"
-			const val COLUMN_TYPE = "type"
-			const val COLUMN_DATE = "creationDate"
-			const val COLUMN_TO = "destination"
+			const val COLUMN_DATA_BODY = MessageConstants.DATA_BODY
+			const val COLUMN_TYPE = MessageConstants.MESSAGE_TYPE
+			const val COLUMN_DATE = MessageConstants.CREATION_DATE
+			const val COLUMN_TO = MessageConstants.TO
 
 			const val CREATE_TABLE = """
 			CREATE TABLE $TABLE_NAME(

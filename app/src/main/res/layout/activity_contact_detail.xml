@@ -1,14 +1,14 @@
 <RelativeLayout
+    android:id="@+id/root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.marked.vifo.activity.ContactDetailActivity"
-    tools:ignore="MergeRootFrame"
     android:background="#EEEEEE"
-    android:id="@+id/root">
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.ContactDetailActivity"
+    tools:ignore="MergeRootFrame">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -21,9 +21,9 @@
             android:id="@+id/detail_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_collapseMode="pin"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
 
     </android.support.design.widget.AppBarLayout>
@@ -32,11 +32,12 @@
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/app_bar"
         android:layout_above="@+id/linearLayout"
+        android:layout_below="@+id/app_bar"
         />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -44,22 +45,21 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:orientation="horizontal"
-        android:id="@+id/linearLayout"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/messageEditText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="10"
+            android:background="#ffffff"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:hint="Say hi"
             android:inputType="textMultiLine"
-            android:background="#ffffff"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:paddingLeft="10dp">
 
             <requestFocus/>
@@ -68,14 +68,14 @@
         <android.support.design.widget.FloatingActionButton
             android:layout_width="56dp"
             android:layout_height="56dp"
-            app:fabSize="mini"
+            android:layout_weight="0"
 
+            android:onClick="sendMessage"
+            android:scaleType="center"
             android:src="@drawable/ic_send_24dp"
             android:translationZ="0dp"
             app:elevation="0dp"
-            android:scaleType="center"
-            android:onClick="sendMessage"
-            android:layout_weight="0"
+            app:fabSize="mini"
             />
 
         <!--<com.makeramen.roundedimageview.RoundedImageView-->

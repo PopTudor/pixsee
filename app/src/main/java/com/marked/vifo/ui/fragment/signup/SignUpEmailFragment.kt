@@ -1,4 +1,4 @@
-package com.marked.vifo.fragment.signup
+package com.marked.vifo.ui.fragment.signup
 
 import android.content.Context
 import android.os.Bundle

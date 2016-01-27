@@ -1,12 +1,12 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/contact_detail"
+<RelativeLayout android:id="@+id/contact_detail"
                 style="?android:attr/textAppearanceLarge"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingTop="16dp"
                 android:textIsSelectable="true"
-                tools:context="com.marked.vifo.fragment.ContactDetailFragment"
-                android:paddingTop="16dp">
+                tools:context=".ui.fragment.ContactDetailFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messagesRecyclerView"

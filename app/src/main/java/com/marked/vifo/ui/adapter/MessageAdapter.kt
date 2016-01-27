@@ -1,4 +1,4 @@
-package com.marked.vifo.adapter;
+package com.marked.vifo.ui.adapter;
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.marked.vifo.R
-import com.marked.vifo.adapter.viewholders.MessageHolder
-import com.marked.vifo.adapter.viewholders.TypingHolder
 import com.marked.vifo.extra.MessageConstants
 import com.marked.vifo.model.Message
+import com.marked.vifo.ui.adapter.viewholders.MessageHolder
+import com.marked.vifo.ui.adapter.viewholders.TypingHolder
 
 
 /**

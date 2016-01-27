@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/material_grey_100"
     android:padding="16dp"
-    tools:context=".fragment.signup.SignUpPassFragment">
+    tools:context=".ui.fragment.signup.SignUpPassFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -27,15 +27,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="140dp"
         android:ems="10"
         android:hint="Password"
-        app:met_errorColor="#ff5151"
-        app:met_minCharacters="6"
         android:inputType="textPassword"
+        app:met_errorColor="#ff5151"
         app:met_floatingLabel="highlight"
-        app:met_primaryColor="?colorAccent"
-        android:layout_alignParentTop="true">
+        app:met_minCharacters="6"
+        app:met_primaryColor="?colorAccent">
 
         <requestFocus/>
         </com.rengwuxian.materialedittext.MaterialEditText>
@@ -45,14 +45,14 @@
         style="@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/passwordEditText"
+        android:layout_marginTop="30dp"
         android:background="@color/primary"
         android:clickable="true"
         android:text="Next"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#ffffff"
-        android:layout_below="@+id/passwordEditText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="30dp"/>
+        android:textColor="#ffffff"/>
 
 </RelativeLayout>

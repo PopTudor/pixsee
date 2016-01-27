@@ -1,4 +1,4 @@
-package com.marked.vifo.adapter.viewholders;
+package com.marked.vifo.ui.adapter.viewholders;
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView

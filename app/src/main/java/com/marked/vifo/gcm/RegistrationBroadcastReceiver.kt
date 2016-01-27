@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.support.v4.content.IntentCompat
-import com.marked.vifo.activity.ContactListActivity
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.HTTPStatusCodes
+import com.marked.vifo.ui.activity.ContactListActivity
 
 /**
  * Created by Tudor Pop on 28-Nov-15.

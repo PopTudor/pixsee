@@ -72,16 +72,16 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".activity.EntryAuthActivity"
+            android:name=".ui.activity.EntryAuthActivity"
             android:clearTaskOnLaunch="true"
             android:label="@string/title_activity_login"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".activity.EntryActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name">
+            android:name=".ui.activity.EntryActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -90,18 +90,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ContactListActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_contact_list">
+            android:name=".ui.activity.ContactListActivity"
+            android:label="@string/title_contact_list"
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".activity.ContactDetailActivity"
+            android:name=".ui.activity.ContactDetailActivity"
             android:label="@string/title_contact_detail"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activity.ContactListActivity">
+            android:parentActivityName=".ui.activity.ContactListActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.ContactListActivity"/>
+                android:value=".ui.activity.ContactListActivity"/>
         </activity>
 
         <!-- [START gcm_receiver] -->
@@ -139,12 +139,14 @@
             android:exported="false">
         </service>
 
-        <activity android:name=".activity.SignUpActivity"
-                  android:screenOrientation="portrait"
+        <activity
+            android:name=".ui.activity.SignUpActivity"
+            android:screenOrientation="portrait"
             >
         </activity>
-        <activity android:name=".activity.LogInActivity"
-                  android:screenOrientation="portrait"
+        <activity
+            android:name=".ui.activity.LogInActivity"
+            android:screenOrientation="portrait"
             >
         </activity>
         <meta-data
