@@ -2,7 +2,6 @@ package com.marked.vifo.ui.fragment
 
 import android.content.Context
 import android.os.*
-import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -13,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.marked.vifo.R
+import com.marked.vifo.database.DatabaseContract
 import com.marked.vifo.database.database
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.MessageConstants
@@ -29,6 +29,10 @@ import jp.wasabeef.recyclerview.animators.FadeInAnimator
 import kotlinx.android.synthetic.main.fragment_contact_detail.*
 import kotlinx.android.synthetic.main.fragment_contact_detail.view.*
 import org.jetbrains.anko.async
+import org.jetbrains.anko.db.parseList
+import org.jetbrains.anko.db.rowParser
+import org.jetbrains.anko.db.select
+import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -42,7 +46,7 @@ import java.util.*
  */
 class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	private val mContext by lazy { activity }
-	private val mThisUser by lazy { getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null) }
+	private val mThisUser by lazy { defaultSharedPreferences.getString(GCMConstants.USER_ID, null) }
 
 	private val mMessagesDataset by lazy { ArrayList<Message>() }
 	private val mMessageAdapter by lazy { MessageAdapter(mContext, mMessagesDataset) }
@@ -84,6 +88,11 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 		mMessagesDataset.add(message)
 		mMessageAdapter.notifyItemInserted(mMessagesDataset.size - 1)
 		messagesRecyclerView.scrollToPosition(mMessagesDataset.size - 1)
+		async() {
+			mContext.database.use {
+				insert(DatabaseContract.Message.TABLE_NAME, null, message.toContentValues())
+			}
+		}
 	}
 
 	/**
@@ -106,6 +115,20 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 
 		mSocket.connect()
 
+		async() {
+			mContext.database.use {
+				select(DatabaseContract.Message.TABLE_NAME, DatabaseContract.Message.COLUMN_DATA_BODY, DatabaseContract.Message.COLUMN_TYPE, DatabaseContract.Message.COLUMN_DATE)
+						.exec {
+							parseList(rowParser { t1: String, t2: Int, t3: Long ->
+								val message = Message.Builder().addData(MessageConstants.DATA_BODY, t1).viewType(t2).date(t3).build()
+								mMessagesDataset.add(message)
+							})
+							mMessageAdapter.notifyItemInserted(mMessagesDataset.size - 1)
+							messagesRecyclerView.scrollToPosition(mMessagesDataset.size - 1)
+						}
+			}
+		}
+
 		mSocket.emit(ON_NEW_ROOM, JSONObject("{from:%s,to:%s}".format(mThisUser, mThatUser.id)))
 
 	}
@@ -120,9 +143,11 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val rootView = inflater.inflate(R.layout.fragment_contact_detail, container, false)
 
+		//		mLinearLayoutManager.reverseLayout = true
 		rootView.messagesRecyclerView.layoutManager = mLinearLayoutManager
 		rootView.messagesRecyclerView.addItemDecoration(SpacesItemDecoration(15))
 		rootView.messagesRecyclerView.itemAnimator = FadeInAnimator()
+
 
 		rootView.messagesRecyclerView.adapter = mMessageAdapter
 		rootView.messagesRecyclerView.setOnTouchListener { v, event ->
@@ -172,20 +197,6 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	override fun onPause() {
 		super.onPause()
 		isInForeground = false
-		saveMessages()
-	}
-
-	fun saveMessages() {
-		if (mMessagesDataset.isEmpty())
-			return
-		async() {
-			context.database.use {
-				beginTransaction()
-				for (it in mMessagesDataset)
-					insert("message", "", it.toContentValues())
-				endTransaction()
-			}
-		}
 	}
 
 	override fun onResume() {
@@ -217,15 +228,15 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 		val onMessage = Emitter.Listener { args ->
 			Handler(Looper.getMainLooper()).post {
 				val json = JSONObject(args[0].toString())
-				val data = json.getJSONObject("data")
+				val data = json.getJSONObject(MessageConstants.DATA_PAYLOAD)
 
-				val body = data.getString("body")
-				val type = json.getInt("type") // MessageConstants.MessageType.ME
-				val from = json.getString("from")
+				val body = data.getString(MessageConstants.DATA_BODY)
+				val type = json.getInt(MessageConstants.MESSAGE_TYPE) // MessageConstants.MessageType.ME
+				val from = json.getString(MessageConstants.FROM)
 
 				val bundle = Bundle()
-				bundle.putInt("type", type)
-				bundle.putString("body", body)
+				bundle.putInt(MessageConstants.MESSAGE_TYPE, type)
+				bundle.putString(MessageConstants.DATA_BODY, body)
 
 				receiveMessage(from, bundle)
 			}
@@ -239,7 +250,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 			Handler(Looper.getMainLooper()).post(Runnable {
 				val typing = args[0] as Boolean
 				if (typing) {
-					if (!mMessagesDataset.isEmpty() && mMessagesDataset[mMessagesDataset.size - 1].messageType == MessageConstants.MessageType.TYPING)
+					if (!mMessagesDataset.isEmpty() && mMessagesDataset.last().messageType == MessageConstants.MessageType.TYPING)
 						return@Runnable
 					val message = Message.Builder().viewType(MessageConstants.MessageType.TYPING).build()
 					addMessage(message)

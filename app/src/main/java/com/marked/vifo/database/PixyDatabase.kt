@@ -7,7 +7,7 @@ import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 /**
  * Created by Tudor Pop on 26-Jan-16.
  */
-class PixyDatabase private constructor(context: Context) : ManagedSQLiteOpenHelper(context, DatabaseContract.DATABASE_NAME) {
+class PixyDatabase private constructor(context: Context) : ManagedSQLiteOpenHelper(context, DatabaseContract.DATABASE_NAME, version = DatabaseContract.DATABASE_VERSION) {
 	companion object {
 		private var instance: PixyDatabase? = null
 

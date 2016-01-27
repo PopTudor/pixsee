@@ -31,7 +31,7 @@ public class ContactHolder(itemView: View, context: Context) : RecyclerView.View
         //        itemView.contactNameTextView.text = contact.name
 
         mFriendTextView.setText(contact.name);
-        mFriendIconImageView.setDefaultImageResId(R.drawable.ic_action_refresh_24dp);
+	    mFriendIconImageView.setDefaultImageResId(R.drawable.ic_account_circle_24dp);
     }
 
 }

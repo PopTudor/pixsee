@@ -43,7 +43,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 	 */
 	val messageType: Int
 
-	val date: Date
+	val date: Long
 	val id: UUID = UUID.randomUUID()
 
 	init {
@@ -100,7 +100,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 			bundle.putString(MessageConstants.TO, to)
 		if (!from.isNullOrBlank())
 			bundle.putString(MessageConstants.FROM, from)
-		bundle.putLong(MessageConstants.CREATION_DATE, date.time)
+		bundle.putLong(MessageConstants.CREATION_DATE, date)
 
 		return bundle
 	}
@@ -118,11 +118,11 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 		if (data.containsKey(MessageConstants.DATA_BODY))
 			values.put(MessageConstants.DATA_BODY, data[MessageConstants.DATA_BODY])
 		if (!to.isNullOrBlank())
-			values.put(MessageConstants.TO, to)
+			values.put("_" + MessageConstants.TO, to)
 		//		if (!source.isNullOrBlank())
 		//			values.put(MessageConstants.SOURCE, source)
 		values.put(MessageConstants.MESSAGE_TYPE, messageType)
-		values.put(MessageConstants.CREATION_DATE, date.time)
+		values.put(MessageConstants.CREATION_DATE, date)
 
 		return values
 	}
@@ -183,7 +183,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 		var from: String? = null
 		var room: String? = null
 
-		var date: Date = Date()
+		var date: Long = Date().time
 		var viewType: Int = 0
 
 		init {
@@ -217,7 +217,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 			return this
 		}
 
-		fun date(date: Date): Builder {
+		fun date(date: Long): Builder {
 			this.date = date
 			return this
 		}

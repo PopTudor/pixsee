@@ -16,11 +16,15 @@ import com.marked.vifo.database.DatabaseContract
 import com.marked.vifo.database.database
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.ServerConstants
+import com.marked.vifo.model.Contact
 import com.marked.vifo.model.Contacts
 import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.adapter.ContactsAdapter
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
 import org.jetbrains.anko.async
+import org.jetbrains.anko.db.parseList
+import org.jetbrains.anko.db.rowParser
+import org.jetbrains.anko.db.select
 import org.jetbrains.anko.db.transaction
 import org.jetbrains.anko.support.v4.onUiThread
 import org.json.JSONObject
@@ -46,6 +50,7 @@ class ContactListFragment : Fragment() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+
 		requestListFriends()
 
 		//		attachListeners();
@@ -62,8 +67,8 @@ class ContactListFragment : Fragment() {
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-		super.onCreateOptionsMenu(menu, inflater)
 		inflater?.inflate(R.menu.menu_contacts_activity, menu)
+		super.onCreateOptionsMenu(menu, inflater)
 	}
 
 	override
@@ -71,7 +76,7 @@ class ContactListFragment : Fragment() {
 		when (item.itemId) {
 			R.id.refreshContacts -> {
 				requestListFriends()
-				return false
+				return true
 			}
 			else -> return super.onOptionsItemSelected(item)
 		}
@@ -82,6 +87,15 @@ class ContactListFragment : Fragment() {
 	private fun requestListFriends() {
 		val id = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null)
 		if (id != null) {
+			mContext.database.use {
+				select(DatabaseContract.Contact.TABLE_NAME)
+						.exec {
+							parseList(rowParser { id: String, fname: String, lname: String, token: String ->
+								mContacts.add(Contact(id, fname, lname, token = token))
+							})
+							mContactsAdapter.notifyItemRangeInserted(0, mContacts.size)
+						}
+			}
 			val request = JsonObjectRequest(Request.Method.GET,
 					"${ServerConstants.SERVER_USER_FRIENDS}?id=$id",
 					Listener<JSONObject> { response ->

@@ -9,7 +9,7 @@ import com.marked.vifo.extra.UserConstants
  */
 class DatabaseContract private constructor() {
 	companion object Static {
-		const val DATABASE_VERSION = 1
+		const val DATABASE_VERSION = 3
 		const val DATABASE_NAME = "pixy.db"
 
 		/* Add to CREATE_TABLE_ARRAY all the other tables that get created and to DELETE_TABLE_ARRAY all tables that get deleted*/
@@ -73,8 +73,8 @@ class DatabaseContract private constructor() {
 			${BaseColumns._ID} INTEGER PRIMARY KEY,
 			$COLUMN_DATA_BODY TEXT,
 			$COLUMN_TYPE INTEGER,
-			$COLUMN_DATE DATE,
-			$COLUMN_TO TEXT UNIQUE,
+			$COLUMN_DATE INTEGER,
+			$COLUMN_TO TEXT,
 			FOREIGN KEY($COLUMN_TO) REFERENCES ${Contact.TABLE_NAME}(${Contact.COLUMN_ID})
 			);"""
 
