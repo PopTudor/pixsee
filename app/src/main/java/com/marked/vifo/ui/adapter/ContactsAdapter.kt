@@ -16,13 +16,15 @@ import com.marked.vifo.ui.adapter.viewholders.ContactHolder
  * Created by Tudor Pop on 30-Nov-15.
  */
 public class ContactsAdapter(private val context: Context, var dataSet: MutableList<Contact>) : RecyclerView.Adapter<ContactHolder>() {
-    public override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
+
+	public override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
         // Create a new view.
         val v = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_layout_item, parent, false);
         val holder = ContactHolder(v, context);
         return holder;
     }
-    public override fun onBindViewHolder(holder: ContactHolder, position: Int) {
+
+	public override fun onBindViewHolder(holder: ContactHolder, position: Int) {
         val contact = dataSet.get(position);
         holder.bindContact(contact);
         holder.itemView.setOnClickListener { view ->

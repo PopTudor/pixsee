@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.*
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response.ErrorListener
 import com.android.volley.Response.Listener
@@ -14,6 +16,7 @@ import com.marked.vifo.R
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.model.Contacts
+import com.marked.vifo.model.contactListfromJSONArray
 import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.adapter.ContactsAdapter
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
@@ -83,17 +86,16 @@ class ContactListFragment : Fragment() {
 					"${ServerConstants.SERVER_USER_FRIENDS}?id=$id",
 					Listener<JSONObject> { response ->
 						val friends = response.getJSONArray("friends")
-						val friendsArray = Contacts.getInstance(mContext).fromJSONArray(friends)
+						val friendsArray = friends.contactListfromJSONArray()
 
 						mContactsInstance.addContact(friendsArray)
-						mContactsAdapter.dataSet.clear()
-						mContactsAdapter.dataSet.addAll(friendsArray)
+						onUiThread { mContactsAdapter.notifyDataSetChanged() }
+					}, ErrorListener {
 
-						val count = mContactsAdapter.dataSet.size
-						onUiThread { mContactsAdapter.notifyItemRangeInserted(0, count) }
+				Log.d("***", "Error")
+			})// TODO: 12-Dec-15 add empty view)
+			request.setRetryPolicy(DefaultRetryPolicy(50000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
 
-
-					}, ErrorListener {})// TODO: 12-Dec-15 add empty view)
 			mContext.requestQueue.add(request)
 		}
 	}
