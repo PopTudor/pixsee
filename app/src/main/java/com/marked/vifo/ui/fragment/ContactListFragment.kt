@@ -5,27 +5,18 @@ import android.os.Bundle
 import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.*
 import com.android.volley.Request
 import com.android.volley.Response.ErrorListener
 import com.android.volley.Response.Listener
 import com.android.volley.toolbox.JsonObjectRequest
 import com.marked.vifo.R
-import com.marked.vifo.database.DatabaseContract
-import com.marked.vifo.database.database
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.ServerConstants
-import com.marked.vifo.model.Contact
 import com.marked.vifo.model.Contacts
 import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.adapter.ContactsAdapter
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
-import org.jetbrains.anko.async
-import org.jetbrains.anko.db.parseList
-import org.jetbrains.anko.db.rowParser
-import org.jetbrains.anko.db.select
-import org.jetbrains.anko.db.transaction
 import org.jetbrains.anko.support.v4.onUiThread
 import org.json.JSONObject
 
@@ -42,8 +33,8 @@ import org.json.JSONObject
 class ContactListFragment : Fragment() {
 	private val mContext by lazy { activity }
 
-	private val mContacts by lazy { Contacts.contactList }
-	private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContacts) }
+	private val mContactsInstance by lazy { Contacts.getInstance(mContext) }
+	private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContactsInstance.getContact()) }
 	private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
 	private var mCallbacks: Callbacks? = null
@@ -81,43 +72,28 @@ class ContactListFragment : Fragment() {
 			else -> return super.onOptionsItemSelected(item)
 		}
 	}
+
 	/**
 	 * Use the token to send a request to the server for an array of friends for the user of the app
 	 */
 	private fun requestListFriends() {
 		val id = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null)
 		if (id != null) {
-			mContext.database.use {
-				select(DatabaseContract.Contact.TABLE_NAME)
-						.exec {
-							parseList(rowParser { id: String, fname: String, lname: String, token: String ->
-								mContacts.add(Contact(id, fname, lname, token = token))
-							})
-							mContactsAdapter.notifyItemRangeInserted(0, mContacts.size)
-						}
-			}
 			val request = JsonObjectRequest(Request.Method.GET,
 					"${ServerConstants.SERVER_USER_FRIENDS}?id=$id",
 					Listener<JSONObject> { response ->
 						val friends = response.getJSONArray("friends")
-						if (friends.length() > mContacts.size) {
-							val startingIndex = mContacts.size
-							Contacts.addContacts(Contacts.fromJSONArray(friends, startingIndex))
-							onUiThread { mContactsAdapter.notifyItemRangeInserted(startingIndex, mContacts.size - 1) }
-							async() {
-								context.database.use {
-									transaction {
-										for (it in Contacts.contactList)
-											insert(DatabaseContract.Contact.TABLE_NAME, null, it.toContentValues())
-									}
-								}
-							}
+						val friendsArray = Contacts.getInstance(mContext).fromJSONArray(friends)
 
-						} else {
-							Log.d("***", "onCreateView ${mContacts[0].toString()}")
-							Log.d("***", "onResponse ${mContacts}")
-						}
-					}, ErrorListener { })// TODO: 12-Dec-15 add empty view)
+						mContactsInstance.addContact(friendsArray)
+						mContactsAdapter.dataSet.clear()
+						mContactsAdapter.dataSet.addAll(friendsArray)
+
+						val count = mContactsAdapter.dataSet.size
+						onUiThread { mContactsAdapter.notifyItemRangeInserted(0, count) }
+
+
+					}, ErrorListener {})// TODO: 12-Dec-15 add empty view)
 			mContext.requestQueue.add(request)
 		}
 	}

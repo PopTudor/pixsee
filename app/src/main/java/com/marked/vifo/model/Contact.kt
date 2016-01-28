@@ -74,4 +74,13 @@ public data class Contact(var id: String, var firstName: String, var lastName: S
         dest.writeString(name);
         dest.writeString(token);
     }
+
+	override fun hashCode(): Int {
+		var result = id.hashCode()
+		result += 31 * result + firstName.hashCode()
+		result += 31 * result + lastName.hashCode()
+		result += 31 * result + name.hashCode()
+		result += 31 * result + token.hashCode()
+		return result
+	}
 }
