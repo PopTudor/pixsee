@@ -1,4 +1,4 @@
-package com.marked.vifo.database
+package com.marked.vifo.model.database
 
 import android.provider.BaseColumns
 import com.marked.vifo.extra.MessageConstants

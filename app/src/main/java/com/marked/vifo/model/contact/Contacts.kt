@@ -1,10 +1,10 @@
-package com.marked.vifo.model
+package com.marked.vifo.model.contact
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import com.marked.vifo.database.DatabaseContract
-import com.marked.vifo.database.database
 import com.marked.vifo.extra.UserConstants
+import com.marked.vifo.model.database.DatabaseContract
+import com.marked.vifo.model.database.database
 import org.jetbrains.anko.async
 import org.jetbrains.anko.db.*
 import org.json.JSONArray
@@ -15,7 +15,7 @@ import java.util.*
  * Created by Tudor Pop on 12-Dec-15.
  * Singleton class used to keep all the friends (the list of contacts) of the user
  */
-class Contacts(val mContext: android.content.Context) {
+class Contacts(val mContext: Context) {
 	val mContacts: MutableList<Contact> = arrayListOf()
 
 	//todo create a cache for stored elements inside the database for performance

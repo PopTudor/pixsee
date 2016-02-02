@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.marked.vifo.R
-import com.marked.vifo.model.Contact
+import com.marked.vifo.model.contact.Contact
 import com.marked.vifo.ui.activity.ContactDetailActivity
 import com.marked.vifo.ui.activity.ContactListActivity
 import com.marked.vifo.ui.adapter.viewholders.ContactHolder

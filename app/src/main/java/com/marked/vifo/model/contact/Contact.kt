@@ -1,4 +1,4 @@
-package com.marked.vifo.model;
+package com.marked.vifo.model.contact;
 
 import android.content.ContentValues
 import android.os.Parcel
@@ -13,7 +13,7 @@ import java.util.*
 public data class Contact(var id: String, var firstName: String, var lastName: String, var name: String = "$firstName $lastName".trim(), var token: String) : Comparator<Contact>, Comparable<Contact>, Parcelable {
     companion object {
         val CREATOR = object : Parcelable.Creator<Contact> {
-            override public fun createFromParcel(parcelIn: Parcel) = Contact.Contact(parcelIn)
+	        override public fun createFromParcel(parcelIn: Parcel) = Contact(parcelIn)
             override fun newArray(size: Int): Array<Contact?> = arrayOfNulls(size)
         };
 

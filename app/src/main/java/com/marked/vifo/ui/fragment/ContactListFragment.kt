@@ -15,8 +15,8 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.marked.vifo.R
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.ServerConstants
-import com.marked.vifo.model.Contacts
-import com.marked.vifo.model.contactListfromJSONArray
+import com.marked.vifo.model.contact.Contacts
+import com.marked.vifo.model.contact.contactListfromJSONArray
 import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.adapter.ContactsAdapter
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*

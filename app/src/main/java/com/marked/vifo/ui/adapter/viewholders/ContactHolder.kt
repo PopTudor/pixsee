@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.TextView
 import com.android.volley.toolbox.NetworkImageView
 import com.marked.vifo.R
-import com.marked.vifo.model.Contact
+import com.marked.vifo.model.contact.Contact
 
 /**
  * Created by Tudor Pop on 03-Dec-15.

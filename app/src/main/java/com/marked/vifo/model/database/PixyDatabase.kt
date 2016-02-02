@@ -1,4 +1,4 @@
-package com.marked.vifo.database
+package com.marked.vifo.model.database
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
