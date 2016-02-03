@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import com.android.volley.DefaultRetryPolicy
@@ -37,7 +38,7 @@ class ContactListFragment : Fragment() {
 	private val mContext by lazy { activity }
 
 	private val mContactsInstance by lazy { Contacts.getInstance(mContext) }
-	private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContactsInstance.getContact()) }
+	private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContactsInstance) }
 	private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
 	private var mCallbacks: Callbacks? = null
@@ -53,14 +54,31 @@ class ContactListFragment : Fragment() {
 		//		mSocket.connect();
 	}
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+	override
+	fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val rootView = inflater.inflate(R.layout.fragment_contact_list, container, false)
 		rootView.contactRecyclerView.adapter = mContactsAdapter
 		rootView.contactRecyclerView.layoutManager = mLayoutManager
+		rootView.contactRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+			override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+				if (dy > 0 && recyclerView?.layoutManager is LinearLayoutManager) {
+					val s = recyclerView?.layoutManager?.childCount  as Int
+					val x = (recyclerView?.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+
+					if (x + s >= recyclerView?.layoutManager?.itemCount as Int) {
+						val sizeTmp = mContactsInstance.size
+						mContactsInstance.loadMore()
+						onUiThread { mContactsAdapter.notifyItemRangeInserted(sizeTmp, mContactsInstance.size) }
+					}
+				}
+			}
+		})
+
 		return rootView
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+	override
+	fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
 		inflater?.inflate(R.menu.menu_contacts_activity, menu)
 		super.onCreateOptionsMenu(menu, inflater)
 	}
@@ -76,11 +94,12 @@ class ContactListFragment : Fragment() {
 		}
 	}
 
+
 	/**
 	 * Use the token to send a request to the server for an array of friends for the user of the app
 	 */
 	private fun requestListFriends() {
-		val id = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null)
+		val id: String? = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null)
 		if (id != null) {
 			val request = JsonObjectRequest(Request.Method.GET,
 					"${ServerConstants.SERVER_USER_FRIENDS}?id=$id",
@@ -88,15 +107,15 @@ class ContactListFragment : Fragment() {
 						val friends = response.getJSONArray("friends")
 						val friendsArray = friends.contactListfromJSONArray()
 
-						mContactsInstance.addContact(friendsArray)
+						mContactsInstance.addAll(friendsArray)
 						onUiThread { mContactsAdapter.notifyDataSetChanged() }
 					}, ErrorListener {
 
 				Log.d("***", "Error")
 			})// TODO: 12-Dec-15 add empty view)
-			request.setRetryPolicy(DefaultRetryPolicy(50000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+			request.setRetryPolicy(DefaultRetryPolicy(1000 * 5, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
 
-			mContext.requestQueue.add(request)
+			mContext.requestQueue.queue.add(request)
 		}
 	}
 

@@ -6,7 +6,10 @@ import com.marked.vifo.extra.UserConstants
 import com.marked.vifo.model.database.DatabaseContract
 import com.marked.vifo.model.database.database
 import org.jetbrains.anko.async
-import org.jetbrains.anko.db.*
+import org.jetbrains.anko.db.parseList
+import org.jetbrains.anko.db.rowParser
+import org.jetbrains.anko.db.select
+import org.jetbrains.anko.db.transaction
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -15,123 +18,52 @@ import java.util.*
  * Created by Tudor Pop on 12-Dec-15.
  * Singleton class used to keep all the friends (the list of contacts) of the user
  */
-class Contacts(val mContext: Context) {
-	val mContacts: MutableList<Contact> = arrayListOf()
-
-	//todo create a cache for stored elements inside the database for performance
-	fun addContact(contact: Contact) = mContext.database.use {
-		if (!mContacts.contains(contact)) {
-			mContacts.add(contact)
-			insertWithOnConflict(DatabaseContract.Contact.TABLE_NAME, null, contact.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
-		}
-	}
-
-	fun addContact(contacts: List<Contact>) = async() {
+class Contacts(val mContext: Context) : ArrayList<Contact>() {
+	init {
 		mContext.database.use {
-			transaction {
-				contacts.forEach {
-					addContact(it)
-				}
-			}
-		}
-	}
-
-	fun getCount(): Int {
-		val itemsCounted = mContext.database.use {
-			select(DatabaseContract.Contact.TABLE_NAME).exec {
-				count
-			}
-		}
-		return itemsCounted
-	}
-
-	fun updateContact(contact: Contact) = mContext.database.use {
-		val index = mContacts.indexOf(contact)
-		if (index > -1) {
-			update(DatabaseContract.Contact.TABLE_NAME, contact.toContentValues(), "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(contact.id))
-			mContacts[index] = contact
-		}
-	}
-
-	fun updateContact(contacts: List<Contact>) = async() {
-		mContext.database.use {
-			transaction {
-				contacts.forEach {
-					updateContact(it)
-				}
-			}
-		}
-	}
-
-	fun deleteContact(contact: Contact) = mContext.database.use {
-		val index = mContacts.indexOf(contact)
-		if (index > -1) {
-			delete(DatabaseContract.Contact.TABLE_NAME, "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(contact.id))
-			return@use mContacts.remove(contact)
-		}
-		return@use false
-	}
-
-	fun deleteContact(contacts: List<Contact>) = async() {
-		mContext.database.use {
-			transaction {
-				contacts.forEach {
-					deleteContact(it)
-				}
-			}
-		}
-	}
-
-	fun getContact(contact: Contact): Contact {
-		if (mContacts.contains(contact))
-			return mContacts.get(mContacts.indexOf(contact))
-		else {
-			val result = mContext.database.use {
-				select(DatabaseContract.Contact.TABLE_NAME).where("${DatabaseContract.Contact.COLUMN_ID}={id}", "id" to contact.id).exec {
-					parseSingle(rowParser {
-						id: String, fname: String, lname: String, token: String ->
-						Contact(id, fname, lname, token = token)
-					})
-				}
-			}
-			return result
-		}
-	}
-
-	fun getContact(id: List<String>): MutableList<Contact> {
-		val contacts = arrayListOf<Contact>()
-		mContext.database.use {
-			select(DatabaseContract.Contact.TABLE_NAME).where("${DatabaseContract.Contact.COLUMN_ID} IN ({id})", "id" to id).exec {
+			select(DatabaseContract.Contact.TABLE_NAME).limit(50).exec {
 				parseList(rowParser {
-					id: String, fname: String, lname: String, token: String ->
-					contacts.add(Contact(id, fname, lname, token = token))
+					id: String, fname: String, lname: String, token: String
+					->
+					add(Contact(id, fname, lname, token))
 				})
 			}
 		}
-		if (mContacts.size != contacts.size) {
-			mContacts.clear()
-			mContacts.addAll(contacts)
-		}
-		return mContacts
 	}
 
-	fun getContact(): MutableList<Contact> {
-		val contacts = arrayListOf<Contact>()
+	override fun add(element: Contact): Boolean {
 		mContext.database.use {
-			select(DatabaseContract.Contact.TABLE_NAME).exec {
-				parseList(rowParser {
-					id: String, fname: String, lname: String, token: String ->
-					contacts.add(Contact(id, fname, lname, token = token))
-				})
+			insertWithOnConflict(DatabaseContract.Contact.TABLE_NAME, null, element.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
+		}
+		return super.add(element)
+	}
+
+	override fun addAll(elements: Collection<Contact>): Boolean {
+		async() {
+			mContext.database.use {
+				transaction {
+					elements.forEach {
+						insertWithOnConflict(DatabaseContract.Contact.TABLE_NAME, null, it.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
+					}
+				}
 			}
 		}
-		if (mContacts.size != contacts.size) {
-			mContacts.clear()
-			mContacts.addAll(contacts)
-		}
-		return mContacts
+		return super.addAll(elements)
 	}
 
+	override fun set(index: Int, element: Contact): Contact {
+		mContext.database.use {
+			update(DatabaseContract.Contact.TABLE_NAME, element.toContentValues(), "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(element.id))
+		}
+		return super.set(index, element)
+	}
+
+	override fun remove(element: Contact): Boolean {
+		mContext.database.use {
+			delete(DatabaseContract.Contact.TABLE_NAME, "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(element.id))
+		}
+		return super.remove(element)
+	}
 
 	companion object {
 		val contacts: Contacts? = null
@@ -148,6 +80,19 @@ class Contacts(val mContext: Context) {
 		for (contact in list)
 			jsonArray.put(contact.toJSON())
 		return jsonArray
+	}
+
+	fun loadMore() {
+		mContext.database.use {
+			// TODO: 03-Feb-16 modify to only load 50  rows or load them all and store a cursor, then read from cursor 50 positions
+			select(DatabaseContract.Contact.TABLE_NAME).limit(size, 50).exec {
+				parseList(rowParser {
+					id: String, fname: String, lname: String, token: String
+					->
+					add(Contact(id, fname, lname, token))
+				})
+			}
+		}
 	}
 }
 

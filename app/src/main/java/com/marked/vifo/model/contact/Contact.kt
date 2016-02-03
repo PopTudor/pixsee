@@ -10,7 +10,7 @@ import java.util.*
 /**
  * Created by Tudor Pop on 28-Nov-15.
  */
-public data class Contact(var id: String, var firstName: String, var lastName: String, var name: String = "$firstName $lastName".trim(), var token: String) : Comparator<Contact>, Comparable<Contact>, Parcelable {
+public data class Contact(var id: String, var firstName: String, var lastName: String, var token: String, var name: String = "$firstName $lastName".trim()) : Comparator<Contact>, Comparable<Contact>, Parcelable {
     companion object {
         val CREATOR = object : Parcelable.Creator<Contact> {
 	        override public fun createFromParcel(parcelIn: Parcel) = Contact(parcelIn)
