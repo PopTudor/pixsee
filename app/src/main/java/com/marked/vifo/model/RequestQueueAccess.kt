@@ -13,6 +13,7 @@ import com.android.volley.toolbox.Volley
  */
 class RequestQueueAccess private constructor(val queue: RequestQueue) {
 	companion object {
+		val FRIENDS_TAG = "FRIENDS"
 		private var sQueue: RequestQueueAccess? = null
 
 		fun getInstance(context: Context): RequestQueueAccess {

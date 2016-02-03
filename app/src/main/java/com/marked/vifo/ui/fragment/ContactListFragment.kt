@@ -16,6 +16,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.marked.vifo.R
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.ServerConstants
+import com.marked.vifo.model.RequestQueueAccess
 import com.marked.vifo.model.contact.Contacts
 import com.marked.vifo.model.contact.contactListfromJSONArray
 import com.marked.vifo.model.requestQueue
@@ -62,6 +63,7 @@ class ContactListFragment : Fragment() {
 		rootView.contactRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 			override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
 				if (dy > 0 && recyclerView?.layoutManager is LinearLayoutManager) {
+					/**/
 					val s = recyclerView?.layoutManager?.childCount  as Int
 					val x = (recyclerView?.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
 
@@ -94,6 +96,10 @@ class ContactListFragment : Fragment() {
 		}
 	}
 
+	override fun onStop() {
+		super.onStop()
+		mContext.requestQueue.queue.cancelAll(RequestQueueAccess.FRIENDS_TAG)
+	}
 
 	/**
 	 * Use the token to send a request to the server for an array of friends for the user of the app
@@ -115,7 +121,7 @@ class ContactListFragment : Fragment() {
 			})// TODO: 12-Dec-15 add empty view)
 			request.setRetryPolicy(DefaultRetryPolicy(1000 * 5, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
 
-			mContext.requestQueue.queue.add(request)
+			mContext.requestQueue.queue.add(request).setTag(RequestQueueAccess.FRIENDS_TAG)
 		}
 	}
 
