@@ -1,6 +1,5 @@
 package com.marked.vifo.ui.adapter.viewholders;
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
@@ -11,7 +10,7 @@ import com.marked.vifo.model.contact.Contact
 /**
  * Created by Tudor Pop on 03-Dec-15.
  */
-public class ContactHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
+class ContactHolder(itemView: View/*, context: Context*/) : RecyclerView.ViewHolder(itemView) {
 
     private var mFriendIconImageView = itemView.findViewById(R.id.contactIconImageView) as NetworkImageView ;
     private var mFriendTextView = itemView.findViewById(R.id.contactNameTextView) as TextView;
@@ -30,7 +29,7 @@ public class ContactHolder(itemView: View, context: Context) : RecyclerView.View
         //        itemView.contactIconImageView.setDefaultImageResId(R.drawable.ic_action_refresh_24dp)
         //        itemView.contactNameTextView.text = contact.name
 
-        mFriendTextView.setText(contact.name);
+	    mFriendTextView.text = contact.name;
 	    mFriendIconImageView.setDefaultImageResId(R.drawable.ic_account_circle_24dp);
     }
 

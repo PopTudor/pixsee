@@ -15,3 +15,14 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keep class com.squareup.picasso.** {*;}
+-dontwarn com.squareup.picasso.**
+-keep class com.qualcomm.ar.**{*;}
+-dontwarn com.qualcomm.ar.**
+
+
+-keep class com.makeramen.**{*;}
+-keep class com.ti.**{*;}
+-dontwarn com.ti.**
+-keep class com.osterhoutgroup.**{*;}
+

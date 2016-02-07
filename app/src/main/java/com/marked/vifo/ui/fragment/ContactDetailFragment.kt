@@ -25,7 +25,6 @@ import com.marked.vifo.ui.activity.ContactDetailActivity
 import com.marked.vifo.ui.adapter.MessageAdapter
 import io.socket.client.IO
 import io.socket.emitter.Emitter
-import jp.wasabeef.recyclerview.animators.FadeInAnimator
 import kotlinx.android.synthetic.main.fragment_contact_detail.*
 import kotlinx.android.synthetic.main.fragment_contact_detail.view.*
 import org.jetbrains.anko.async
@@ -146,8 +145,6 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 		//		mLinearLayoutManager.reverseLayout = true
 		rootView.messagesRecyclerView.layoutManager = mLinearLayoutManager
 		rootView.messagesRecyclerView.addItemDecoration(SpacesItemDecoration(15))
-		rootView.messagesRecyclerView.itemAnimator = FadeInAnimator()
-
 
 		rootView.messagesRecyclerView.adapter = mMessageAdapter
 		rootView.messagesRecyclerView.setOnTouchListener { v, event ->

@@ -28,7 +28,7 @@ object Utils {
 		builder.setPositiveButton("Wifi") { dialog, which -> ctx.startActivity(Intent(Settings.ACTION_WIFI_SETTINGS)) }
 		builder.setNegativeButton("Cellular") { dialog, which ->
 			val intent = Intent()
-			intent.setComponent(ComponentName("com.android.settings", "com.android.settings.Settings\$DataUsageSummaryActivity"))
+			intent.component = ComponentName("com.android.settings", "com.android.settings.Settings\$DataUsageSummaryActivity")
 			ctx.startActivity(intent)
 		}
 
@@ -55,8 +55,8 @@ object Utils {
 		return numDigits
 	}
 
-	fun JSONObject.toJSON(string: String?) {
-		val tmp = JSONObject(string)
+	fun JSONObject.toJSON(/*string: String?*/) {
+		//		val tmp = JSONObject(string)
 	}
 }
 

@@ -15,7 +15,7 @@ import com.marked.vifo.ui.adapter.viewholders.TypingHolder
 /**
  * Created by Tudor Pop on 04-Dec-15.
  */
-public class MessageAdapter(context: Context, dataSet: kotlin.List<Message>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(context: Context, dataSet: List<Message>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	val dataSet = dataSet
 	val context = context
 

@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
-import android.view.View
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.marked.vifo.R
 import com.marked.vifo.helper.add
@@ -24,16 +23,15 @@ import kotlinx.android.synthetic.main.activity_contact_detail.*
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link ContactDetailFragment}.
  */
-public class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.ContactDetailFragmentInteraction {
+class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.ContactDetailFragmentInteraction {
     companion object {
-	    public const val EXTRA_CONTACT = "com.marked.vifo.ui.activity.EXTRA_CONTACT";
+	    const val EXTRA_CONTACT = "com.marked.vifo.ui.activity.EXTRA_CONTACT";
     }
 
 	final val mFragmentManager by lazy { supportFragmentManager };
 	final val mFragment by lazy { ContactDetailFragment.newInstance(intent.getParcelableExtra(EXTRA_CONTACT)) }
 
-	override
-	protected fun onCreate(savedInstanceState: Bundle?) {
+	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_contact_detail)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -44,11 +42,11 @@ public class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.
         /*send the clicked contact to the fragment*/
 		mFragmentManager.add(R.id.fragmentContainer, mFragment, "contactDetailFragment")
         // Show the Up button in the action bar.
-        supportActionBar.setDisplayHomeAsUpEnabled(true);
+		supportActionBar?.setDisplayHomeAsUpEnabled(true);
 
         var upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
-        supportActionBar.setHomeAsUpIndicator(upArrow);
+		supportActionBar?.setHomeAsUpIndicator(upArrow);
 
 		messageEditText.addTextChangedListener(object : TextWatcher {
             var mTyping = false;
@@ -67,20 +65,20 @@ public class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.
 
     }
 
-    public fun sendMessage(view: View) {
+	fun sendMessage(/*view: View*/) {
 	    val message = messageEditText.text.toString();
 	    messageEditText.setText("");
 	    if (!message.isNullOrBlank())
 		    mFragment.sendMessage(message);
     }
 
-    override protected fun onStop() {
+	override fun onStop() {
         //		Must be called when your application is done using GCM, to release internal resources.
         GoogleCloudMessaging.getInstance(this).close();
         super.onStop();
     }
 
-    override public fun onOptionsItemSelected(item: MenuItem): Boolean {
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 	    if (item.itemId == android.R.id.home) {
             // This ID represents the Home or Up button. In the case of this
             // activity, the Up button is shown. For

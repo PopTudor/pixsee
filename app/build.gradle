@@ -1,50 +1,69 @@
+buildscript {
+    ext.kotlin_version = '1.0.0-rc-1036'
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+//        classpath 'io.fabric.tools:gradle:1.21.2'
+    }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'io.fabric'
+//apply plugin: 'io.fabric'
+
+repositories {
+    mavenCentral()
+//    maven { url 'https://maven.fabric.io/public' }
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
 
     defaultConfig {
         applicationId "com.marked.vifo"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
         release {
+            useProguard true
             debuggable false
-            shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            shrinkResources true
+            debuggable true
+            useProguard false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+}
 
-}
-repositories {
-    mavenCentral()
-    maven { url 'https://maven.fabric.io/public' }
-}
 dependencies {
     compile project(':dotview')
     compile files('C:/Users/Marked/Documents/git/Vifo/libs/jpct_ae.jar')
     compile files('C:/Users/Marked/Documents/git/Vifo/libs/Vuforia.jar')
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'org.jetbrains.anko:anko-sdk15:0.8' // sdk19, sdk21, sdk23 are also available
-    compile 'org.jetbrains.anko:anko-support-v4:0.8' // In case you need support-v4 bindings
-    compile 'org.jetbrains.anko:anko-appcompat-v7:0.8'
+    compile 'org.jetbrains.anko:anko-sdk15:0.8.2' // sdk19, sdk21, sdk23 are also available
+    compile 'org.jetbrains.anko:anko-support-v4:0.8.2' // In case you need support-v4 bindings
+    compile 'org.jetbrains.anko:anko-appcompat-v7:0.8.2'
+    compile 'org.jetbrains.anko:anko-sqlite:0.8.2'
 
-    compile 'com.google.android.gms:play-services-plus:8.3.0'
-    compile 'com.google.android.gms:play-services-identity:8.3.0'
-    compile 'com.google.android.gms:play-services-auth:8.3.0'
+
     compile 'com.google.android.gms:play-services-gcm:8.3.0'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
@@ -53,25 +72,12 @@ dependencies {
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.makeramen:roundedimageview:2.2.1'
     compile 'com.lguipeng.bubbleview:library:1.0.0'
-    compile 'jp.wasabeef:recyclerview-animators:2.1.0'
     compile('io.socket:socket.io-client:0.6.3') {
         exclude group: 'org.json', module: 'json'
     }
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
-        transitive = true;
-    }
-
-
+//    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+//        transitive = true;
+//    }
 }
-buildscript {
-    ext.kotlin_version = '1.0.0-beta-4589'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
 
-    }
-}
 

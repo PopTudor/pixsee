@@ -14,13 +14,14 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
+
 /**
  * Created by Tudor Pop on 12-Dec-15.
  * Singleton class used to keep all the friends (the list of contacts) of the user
  */
 class Contacts(val mContext: Context) : ArrayList<Contact>() {
 	init {
-		mContext.database.use {
+		mContext.database.use() {
 			select(DatabaseContract.Contact.TABLE_NAME).limit(50).exec {
 				parseList(rowParser {
 					id: String, fname: String, lname: String, token: String

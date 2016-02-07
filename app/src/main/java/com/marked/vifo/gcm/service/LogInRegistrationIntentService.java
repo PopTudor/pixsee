@@ -220,7 +220,7 @@ public class LogInRegistrationIntentService extends IntentService {
 	                } catch (JSONException e) {
 		                e.printStackTrace();
 	                }
-	                notifyBroadcastReceiver(GCMConstants.Companion.getACTION_LOGIN());
+	                notifyBroadcastReceiver(GCMConstants.ACTION_LOGIN);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -267,7 +267,7 @@ public class LogInRegistrationIntentService extends IntentService {
 	                } catch (JSONException e) {
 		                e.printStackTrace();
 	                }
-	                notifyBroadcastReceiver(GCMConstants.Companion.getACTION_SIGNUP());
+	                notifyBroadcastReceiver(GCMConstants.ACTION_SIGNUP);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -306,7 +306,7 @@ public class LogInRegistrationIntentService extends IntentService {
                     // sent to your server. If the boolean is false, send the token to your server,
                     // otherwise your server should have already received the token.
                     mSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply();
-	                notifyBroadcastReceiver(GCMConstants.Companion.getACTION_RECOVERY());
+	                notifyBroadcastReceiver(GCMConstants.ACTION_RECOVERY);
                 }
             }, new Response.ErrorListener() {
                 @Override
