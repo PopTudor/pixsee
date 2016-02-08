@@ -3,6 +3,7 @@ package com.marked.vifo.ui.fragment
 import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager.getDefaultSharedPreferences
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -20,6 +21,7 @@ import com.marked.vifo.model.contact.Contacts
 import com.marked.vifo.model.contact.contactListfromJSONArray
 import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.adapter.ContactsAdapter
+import kotlinx.android.synthetic.main.fragment_contact_list.*
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
 import org.jetbrains.anko.support.v4.onUiThread
 import org.json.JSONObject
@@ -34,7 +36,7 @@ import org.json.JSONObject
  * Activities containing this fragment MUST implement the [Callbacks]
  * interface.
  */
-class ContactListFragment : RecyclerViewFragment() {
+class ContactListFragment : Fragment() {
 	private val mContext by lazy { activity }
 
 	private val mContactsInstance by lazy { Contacts.getInstance(mContext) }
@@ -58,7 +60,7 @@ class ContactListFragment : RecyclerViewFragment() {
 	fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val rootView = super.onCreateView(inflater, container, savedInstanceState)
 
-		recyclerView.apply {
+		contactRecyclerView.apply {
 			adapter = mContactsAdapter
 			contactRecyclerView.layoutManager = mLayoutManager
 			contactRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
