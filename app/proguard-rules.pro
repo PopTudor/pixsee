@@ -20,7 +20,7 @@
 -keep class com.qualcomm.ar.**{*;}
 -dontwarn com.qualcomm.ar.**
 
-
+-keep class com.marked.**
 -keep class com.makeramen.**{*;}
 -keep class com.ti.**{*;}
 -dontwarn com.ti.**

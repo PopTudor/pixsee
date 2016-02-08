@@ -12,18 +12,6 @@ import java.util.*
  */
 data class Message private constructor(val builder: Message.Builder) : MessageConstants {
 	/**
-	 * Gets the collapse key.
-	 */
-	val collapseKey: String?
-	/**
-	 * Gets the delayWhileIdle flag.
-	 */
-	val isDelayWhileIdle: Boolean?
-	/**
-	 * Gets the time to live (in seconds).
-	 */
-	val timeToLive: Int?
-	/**
 	 * Gets the payload data, which is immutable.
 	 * IN DATA ADD ALL OTHER OPTIONS LIKE to/from/date/messageType
 	 */
@@ -32,15 +20,13 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 	 * Gets the notification params, which are immutable.
 	 */
 	val notificationParams: Map<String, String>
-	/**
-	 * Gets the restricted package name.
-	 */
 	val restrictedPackageName: String?
+	val collapseKey: String?
+	val isDelayWhileIdle: Boolean?
+	val timeToLive: Int?
+
 	val to: String?
 	val from: String?
-	/**
-	 * Gets the message type.
-	 */
 	val messageType: Int
 
 	val date: Long
