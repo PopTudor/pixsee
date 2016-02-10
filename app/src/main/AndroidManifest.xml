@@ -76,12 +76,14 @@
             android:clearTaskOnLaunch="true"
             android:label="@string/title_activity_login"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            >
         </activity>
         <activity
             android:name=".ui.activity.EntryActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -141,17 +143,17 @@
 
         <activity
             android:name=".ui.activity.SignUpActivity"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ui.activity.LogInActivity"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
         </activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="578f43a0aa4a22391ecc912451e1514f1af55ce4" />
+            android:value="578f43a0aa4a22391ecc912451e1514f1af55ce4"/>
+
     </application>
 
 </manifest>
