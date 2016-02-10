@@ -60,7 +60,7 @@ class ContactListFragment : Fragment() {
     fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_contact_list, container, false)
 
-        contactRecyclerView.apply {
+        rootView.contactRecyclerView.apply {
             this.adapter = mContactsAdapter
             this.layoutManager = mLayoutManager
             this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
