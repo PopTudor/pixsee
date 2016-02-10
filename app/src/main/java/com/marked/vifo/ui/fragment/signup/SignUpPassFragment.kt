@@ -18,7 +18,7 @@ class SignUpPassFragment : Fragment() {
 		val rootView = inflater.inflate(R.layout.fragment_sign_up_pass, container, false)
 		rootView.findViewById(R.id.nextButton).setOnClickListener {
 			val password = passwordEditText.text.toString().trim { it <= ' ' }
-			if (Utils.isEmpty(password))
+			if (password.isNullOrBlank())
 				activity.Toast("Please enter a password")
 			else if (password.length < 6)
 				activity.Toast("The password must be at least 6 characters long")

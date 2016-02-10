@@ -26,7 +26,7 @@ class SignUpNameFragment : Fragment() {
 		val rootView = inflater!!.inflate(R.layout.fragment_sign_up_name, container, false)
 		rootView.findViewById(R.id.nextButton).setOnClickListener {
 			val name = contactNameTextView.text.toString().trim { it <= ' ' }
-			if (Utils.isEmpty(name))
+			if (name.isNullOrBlank())
 				activity.Toast("Please enter your name")
 			else
 				onNextPressed(name)

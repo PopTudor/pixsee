@@ -39,24 +39,10 @@ object Utils {
 		builder.show()
 	}
 
-	fun isEmpty(string: String?): Boolean {
-		return string.isNullOrBlank()
-	}
 
 	fun getNumberDigits(inString: String): Int {
-		if (isEmpty(inString)) {
-			return 0
-		}
-		var numDigits = 0
-		val length = inString.length
-		for (i in 0..length - 1)
-			if (Character.isDigit(inString[i]))
-				numDigits++
-		return numDigits
-	}
-
-	fun JSONObject.toJSON(/*string: String?*/) {
-		//		val tmp = JSONObject(string)
+		if (inString.isNullOrBlank()) return 0
+		return inString.filter { it.isDigit() }.length
 	}
 }
 

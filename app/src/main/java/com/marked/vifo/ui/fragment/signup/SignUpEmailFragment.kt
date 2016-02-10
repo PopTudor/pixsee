@@ -10,7 +10,10 @@ import android.view.ViewGroup
 import com.marked.vifo.R
 import com.marked.vifo.helper.Toast
 import com.marked.vifo.helper.Utils
+import kotlinx.android.synthetic.main.activity_contact_detail.*
 import kotlinx.android.synthetic.main.fragment_sign_up_email.*
+import kotlinx.android.synthetic.main.fragment_sign_up_email.view.*
+import org.jetbrains.anko.onClick
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
@@ -27,13 +30,13 @@ class SignUpEmailFragment : Fragment() {
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val rootView = inflater.inflate(R.layout.fragment_sign_up_email, container, false)
-		hiUser.text = "Beautiful name ${arguments.getString(NAME_TAG)},"
-		nextButton.setOnClickListener {
+		rootView.hiUser.text = "Beautiful name ${arguments.getString(NAME_TAG)},"
+		rootView.nextButton.onClick {
 			if (!Utils.isOnline(activity)) {
 				Utils.showNoConnectionDialog(activity)
 			} else {
 				val email = emailEditText.text.toString().trim { it <= ' ' }
-				if (Utils.isEmpty(email))
+				if (email.isNullOrBlank())
 					activity.Toast("Please enter an email")
 				else if (Patterns.EMAIL_ADDRESS.matcher(email).matches())
 					onNextPressed(email)
