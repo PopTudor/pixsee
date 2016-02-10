@@ -1,3 +1,8 @@
+/app/fabric.properties
+/gradlew
+/gradlew.bat
+/gradle
+/.idea
 /dotview
 .gradle
 /local.properties
