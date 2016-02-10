@@ -1,4 +1,4 @@
-package com.marked.vifo.ui.fragment
+package com.marked.vifo.ui.fragment.messaging
 
 import android.content.Context
 import android.os.*
@@ -122,9 +122,9 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 				select(DatabaseContract.Message.TABLE_NAME, DatabaseContract.Message.COLUMN_DATA_BODY, DatabaseContract.Message.COLUMN_TYPE, DatabaseContract.Message.COLUMN_DATE)
 						.exec {
 							parseList(rowParser { t1: String, t2: Int, t3: Long ->
-								val message = Message.Builder().addData(MessageConstants.DATA_BODY, t1).viewType(t2).date(t3).build()
-								mMessagesDataset.add(message)
-							})
+                                val message = Message.Builder().addData(MessageConstants.DATA_BODY, t1).viewType(t2).date(t3).build()
+                                mMessagesDataset.add(message)
+                            })
 							mMessageAdapter.notifyItemInserted(mMessagesDataset.size - 1)
 							messagesRecyclerView.scrollToPosition(mMessagesDataset.size - 1)
 						}

@@ -5,7 +5,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import com.marked.vifo.R
 import com.marked.vifo.helper.add
-import com.marked.vifo.ui.fragment.ContactListFragment
+import com.marked.vifo.ui.fragment.messaging.ContactListFragment
 import kotlinx.android.synthetic.main.activity_contact_app_bar.*
 
 

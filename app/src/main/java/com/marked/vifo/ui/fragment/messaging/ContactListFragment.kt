@@ -1,4 +1,4 @@
-package com.marked.vifo.ui.fragment
+package com.marked.vifo.ui.fragment.messaging
 
 import android.content.Context
 import android.os.Bundle

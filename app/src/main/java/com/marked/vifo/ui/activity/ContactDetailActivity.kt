@@ -11,7 +11,7 @@ import android.view.MenuItem
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.marked.vifo.R
 import com.marked.vifo.helper.add
-import com.marked.vifo.ui.fragment.ContactDetailFragment
+import com.marked.vifo.ui.fragment.messaging.ContactDetailFragment
 import kotlinx.android.synthetic.main.activity_contact_detail.*
 
 /**
