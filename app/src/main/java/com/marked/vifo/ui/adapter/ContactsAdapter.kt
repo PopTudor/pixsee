@@ -36,7 +36,8 @@ class ContactsAdapter(private val context: Context, private var dataSet: ArrayLi
 				// send the clicked contact to detail activity
 				val intent = Intent(context, ContactDetailActivity::class.java)
 				intent.putExtra(ContactDetailActivity.EXTRA_CONTACT, contact);
-				context.startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(context as ContactListActivity).toBundle()); // RIGHT !!!
+                context.startActivity(intent)
+//				context.startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(context as ContactListActivity).toBundle()); // RIGHT !!!
 			}
 		};
     }

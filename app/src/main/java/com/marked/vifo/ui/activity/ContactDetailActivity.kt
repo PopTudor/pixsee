@@ -27,9 +27,9 @@ class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.Contact
     companion object {
 	    const val EXTRA_CONTACT = "com.marked.vifo.ui.activity.EXTRA_CONTACT";
     }
-
-	final val mFragmentManager by lazy { supportFragmentManager };
-	final val mFragment by lazy { ContactDetailFragment.newInstance(intent.getParcelableExtra(EXTRA_CONTACT)) }
+	final val mFragment by lazy {
+        ContactDetailFragment.newInstance(intent.getParcelableExtra(EXTRA_CONTACT))
+    }
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -40,7 +40,7 @@ class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.Contact
 		setSupportActionBar(detail_toolbar)
 
         /*send the clicked contact to the fragment*/
-		mFragmentManager.add(R.id.fragmentContainer, mFragment, "contactDetailFragment")
+		supportFragmentManager.add(R.id.fragmentContainer, mFragment, "contactDetailFragment")
         // Show the Up button in the action bar.
 		supportActionBar?.setDisplayHomeAsUpEnabled(true);
 

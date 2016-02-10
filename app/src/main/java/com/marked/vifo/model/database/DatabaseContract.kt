@@ -9,7 +9,7 @@ import com.marked.vifo.extra.UserConstants
  */
 class DatabaseContract private constructor() {
 	companion object Static {
-		const val DATABASE_VERSION = 3
+		const val DATABASE_VERSION = 1
 		const val DATABASE_NAME = "pixy.db"
 
 		/* Add to CREATE_TABLE_ARRAY all the other tables that get created and to DELETE_TABLE_ARRAY all tables that get deleted*/
@@ -24,12 +24,14 @@ class DatabaseContract private constructor() {
 			const val TABLE_NAME = "contact"
 			const val COLUMN_ID = UserConstants.ID /* id from online stored database */
 			const val COLUMN_NAME = UserConstants.NAME
+			const val COLUMN_EMAIL = UserConstants.EMAIL
 			const val COLUMN_TOKEN = UserConstants.TOKEN
 
 			const val CREATE_TABLE = """
 			CREATE TABLE ${TABLE_NAME}(
 			${COLUMN_ID} TEXT PRIMARY KEY,
 			${COLUMN_NAME} TEXT,
+			${COLUMN_EMAIL} TEXT,
 			${COLUMN_TOKEN} TEXT
 			);"""
 
@@ -43,12 +45,14 @@ class DatabaseContract private constructor() {
 			const val TABLE_NAME = "user"
 			const val COLUMN_ID = UserConstants.ID
 			const val COLUMN_NAME = UserConstants.NAME
+			const val COLUMN_EMAIL = UserConstants.EMAIL
 			const val COLUMN_TOKEN = UserConstants.TOKEN
 
 			const val CREATE_TABLE = """
 			CREATE TABLE ${TABLE_NAME}(
 			${COLUMN_ID} TEXT PRIMARY KEY,
 			${COLUMN_NAME} TEXT,
+			${COLUMN_EMAIL} TEXT,
 			${COLUMN_TOKEN} TEXT
 			);"""
 			const val DELETE_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME"

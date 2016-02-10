@@ -20,88 +20,88 @@ import java.util.*
  * Singleton class used to keep all the friends (the list of contacts) of the user
  */
 class Contacts(val mContext: Context) : ArrayList<Contact>() {
-	init {
-		loadMore(50)
-	}
+    init {
+        loadMore(50)
+    }
 
-	override fun add(element: Contact): Boolean {
-		mContext.database.use {
-			insertWithOnConflict(DatabaseContract.Contact.TABLE_NAME, null, element.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
-		}
-		return super.add(element)
-	}
+    override fun add(element: Contact): Boolean {
+        mContext.database.use {
+            insertWithOnConflict(DatabaseContract.Contact.TABLE_NAME, null, element.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
+        }
+        return super.add(element)
+    }
 
-	override fun addAll(elements: Collection<Contact>): Boolean {
-		async() {
-			mContext.database.use {
-				transaction {
-					elements.forEach {
-						insertWithOnConflict(DatabaseContract.Contact.TABLE_NAME, null, it.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
-					}
-				}
-			}
-		}
-		return super.addAll(elements)
-	}
+    override fun addAll(elements: Collection<Contact>): Boolean {
+        async() {
+            mContext.database.use {
+                transaction {
+                    elements.forEach {
+                        insertWithOnConflict(DatabaseContract.Contact.TABLE_NAME, null, it.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
+                    }
+                }
+            }
+        }
+        return super.addAll(elements)
+    }
 
-	override fun set(index: Int, element: Contact): Contact {
-		mContext.database.use {
-			update(DatabaseContract.Contact.TABLE_NAME, element.toContentValues(), "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(element.id))
-		}
-		return super.set(index, element)
-	}
+    override fun set(index: Int, element: Contact): Contact {
+        mContext.database.use {
+            update(DatabaseContract.Contact.TABLE_NAME, element.toContentValues(), "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(element.id))
+        }
+        return super.set(index, element)
+    }
 
-	override fun remove(element: Contact): Boolean {
-		mContext.database.use {
-			delete(DatabaseContract.Contact.TABLE_NAME, "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(element.id))
-		}
-		return super.remove(element)
-	}
+    override fun remove(element: Contact): Boolean {
+        mContext.database.use {
+            delete(DatabaseContract.Contact.TABLE_NAME, "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(element.id))
+        }
+        return super.remove(element)
+    }
 
-	companion object {
-		val contacts: Contacts? = null
-		fun getInstance(context: Context): Contacts {
-			if (contacts == null)
-				return Contacts(context)
-			return contacts
-		}
-	}
+    companion object {
+        val contacts: Contacts? = null
+        fun getInstance(context: Context): Contacts {
+            if (contacts == null)
+                return Contacts(context)
+            return contacts
+        }
+    }
 
-	fun contactListToJSONArray(list: List<Contact>): JSONArray {
-		val jsonArray = JSONArray()
-		for (contact in list)
-			jsonArray.put(contact.toJSON())
-		return jsonArray
-	}
+    fun contactListToJSONArray(list: List<Contact>): JSONArray {
+        val jsonArray = JSONArray()
+        for (contact in list)
+            jsonArray.put(contact.toJSON())
+        return jsonArray
+    }
 
-	fun loadMore(limit:Int) {
-		mContext.database.use {
-			select(DatabaseContract.Contact.TABLE_NAME).limit(size, limit).exec {
-				parseList(rowParser {
-					id: String, name:String, token: String
-					->
-					add(Contact(id, name,token))
-				})
-			}
-		}
-	}
+    fun loadMore(limit: Int) {
+        mContext.database.use {
+            select(DatabaseContract.Contact.TABLE_NAME).limit(size, limit).exec {
+                parseList(rowParser {
+                    id: String, name: String,email:String, token: String
+                    ->
+                    add(Contact(id, name, token))
+                })
+            }
+        }
+    }
 }
 
 fun JSONArray.contactListfromJSONArray(startingIndex: Int = 0): List<Contact> {
-	val contacts = ArrayList<Contact>()
+    val contacts = ArrayList<Contact>()
 
-	var result: JSONObject
-	var id: String
-	var token: String
-	var name: String
-	for (i in startingIndex..length() - 1) {
-		result = getJSONObject(i)
-		id = result.getString(UserConstants.ID)
-		name = result.getString(UserConstants.NAME)
-		token = result.getString(UserConstants.TOKEN)
+    var result: JSONObject
+    var id: String
+    var token: String
+    var name: String
+    for (i in startingIndex..length() - 1) {
+        result = getJSONObject(i)
+        id = result.getString(UserConstants.ID)
+        name = result.getString(UserConstants.NAME)
+        token = result.getString(UserConstants.TOKEN)
 
-		contacts.add(Contact(id, name, token))
-	}
+        contacts.add(Contact(id, name, token))
+    }
 
-	return contacts
+    return contacts
 }
