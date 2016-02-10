@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.fragment_contact_list.*
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
 import org.jetbrains.anko.support.v4.onUiThread
 import org.json.JSONObject
+import java.util.*
 
 /**
  * A list fragment representing a list of Contacts. This fragment
@@ -43,7 +44,6 @@ class ContactListFragment : Fragment() {
 	private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContactsInstance) }
 	private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
-	private var mCallbacks: Callbacks? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -58,12 +58,12 @@ class ContactListFragment : Fragment() {
 
 	override
 	fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		val rootView = super.onCreateView(inflater, container, savedInstanceState)
+		val rootView = inflater.inflate(R.layout.fragment_contact_list,container,false)
 
 		contactRecyclerView.apply {
-			adapter = mContactsAdapter
-			contactRecyclerView.layoutManager = mLayoutManager
-			contactRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+			this.adapter = mContactsAdapter
+			this.layoutManager = mLayoutManager
+			this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 				override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
 					if (dy > 0 && recyclerView?.layoutManager is LinearLayoutManager) {
 						/**/
@@ -129,19 +129,9 @@ class ContactListFragment : Fragment() {
 		}
 	}
 
-	override fun onAttach(activity: Context?) {
-		super.onAttach(activity)
-		// Activities containing this fragment must implement its callbacks.
-		if (activity !is Callbacks) {
-			throw IllegalStateException("Activity must implement fragment's callbacks.")
-		}
-		mCallbacks = activity
-	}
-
 	override fun onDetach() {
 		super.onDetach()
 		// Reset the active callbacks interface to the dummy implementation.
-		mCallbacks = null
 		//		dettachListeners();
 	}
 
@@ -153,14 +143,6 @@ class ContactListFragment : Fragment() {
 	//		for (Contact contact:mContacts.getContacts())
 	//			mSocket.off(contact.getId(), onNewRoom);
 	//	}
-
-
-	interface Callbacks {
-		/**
-		 * Callback for when an item has been selected.
-		 */
-		fun onItemSelected(id: String)
-	}
 
 	companion object {
 

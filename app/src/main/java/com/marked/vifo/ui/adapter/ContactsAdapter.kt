@@ -12,11 +12,12 @@ import com.marked.vifo.ui.activity.ContactDetailActivity
 import com.marked.vifo.ui.activity.ContactListActivity
 import com.marked.vifo.ui.adapter.viewholders.ContactHolder
 import org.jetbrains.anko.onClick
+import java.util.*
 
 /**
  * Created by Tudor Pop on 30-Nov-15.
  */
-class ContactsAdapter(private val context: Context, private var dataSet: MutableList<Contact>) : RecyclerView.Adapter<ContactHolder>() {
+class ContactsAdapter(private val context: Context, private var dataSet: ArrayList<Contact>) : RecyclerView.Adapter<ContactHolder>() {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
         // Create a new view.

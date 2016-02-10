@@ -73,7 +73,6 @@ class Contacts(val mContext: Context) : ArrayList<Contact>() {
 				return Contacts(context)
 			return contacts
 		}
-
 	}
 
 	fun contactListToJSONArray(list: List<Contact>): JSONArray {
@@ -85,7 +84,6 @@ class Contacts(val mContext: Context) : ArrayList<Contact>() {
 
 	fun loadMore() {
 		mContext.database.use {
-			// TODO: 03-Feb-16 modify to only load 50  rows or load them all and store a cursor, then read from cursor 50 positions
 			select(DatabaseContract.Contact.TABLE_NAME).limit(size, 50).exec {
 				parseList(rowParser {
 					id: String, fname: String, lname: String, token: String
