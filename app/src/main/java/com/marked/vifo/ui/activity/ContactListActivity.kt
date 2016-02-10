@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.activity_contact_app_bar.*
  * [ContactListFragment.Callbacks] interface
  * to listen for item selections.
  */
-class ContactListActivity : AppCompatActivity(), ContactListFragment.Callbacks {
+class ContactListActivity : AppCompatActivity() {
 	private val mFragmentManager by lazy { supportFragmentManager }
 
 	/**
@@ -48,31 +48,5 @@ class ContactListActivity : AppCompatActivity(), ContactListFragment.Callbacks {
 
 		fab.setOnClickListener { view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show() }
 		// TODO: If exposing deep links into your app, handle intents here.
-	}
-
-
-	/**
-	 * Callback method from [ContactListFragment.Callbacks]
-	 * indicating that the item with the given ID was selected.
-	 */
-	override
-	fun onItemSelected(id: String) {
-		//        if (mTwoPane) {
-		//            // In two-pane mode, show the detail view in this activity by
-		//            // adding or replacing the detail fragment using a
-		//            // fragment transaction.
-		//            Bundle arguments = new Bundle();
-		//            arguments.putString(ContactDetailFragment.ARG_ITEM_ID, id);
-		//            ContactDetailFragment fragment = new ContactDetailFragment();
-		//            fragment.setArguments(arguments);
-		//            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
-		//
-		//        } else {
-		//            // In single-pane mode, simply start the detail activity
-		//            // for the selected item ID.
-		//            Intent detailIntent = new Intent(this, ContactDetailActivity.class);
-		//            detailIntent.putExtra(ContactDetailFragment.ARG_ITEM_ID, id);
-		//            startActivity(detailIntent);
-		//        }
 	}
 }

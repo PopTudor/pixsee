@@ -21,9 +21,11 @@ import com.marked.vifo.model.contact.Contacts
 import com.marked.vifo.model.contact.contactListfromJSONArray
 import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.adapter.ContactsAdapter
+import kotlinx.android.synthetic.main.fragment_contact_list.*
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
 import org.jetbrains.anko.support.v4.onUiThread
 import org.json.JSONObject
+import java.util.*
 
 /**
  * A list fragment representing a list of Contacts. This fragment
@@ -36,134 +38,118 @@ import org.json.JSONObject
  * interface.
  */
 class ContactListFragment : Fragment() {
-	private val mContext by lazy { activity }
+    private val mContext by lazy { activity }
 
-	private val mContactsInstance by lazy { Contacts.getInstance(mContext) }
-	private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContactsInstance) }
-	private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
-
-	private var mCallbacks: Callbacks? = null
-
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-
-		requestListFriends()
-
-		//		attachListeners();
-		//		mSocket.on("hi", onNewRoom);
-		//		mSocket.emit("room",new JSONObject());
-		//		mSocket.connect();
-	}
-
-	override
-	fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		val rootView = inflater.inflate(R.layout.fragment_contact_list, container, false)
-		rootView.contactRecyclerView.adapter = mContactsAdapter
-		rootView.contactRecyclerView.layoutManager = mLayoutManager
-		rootView.contactRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-			override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-				if (dy > 0 && recyclerView?.layoutManager is LinearLayoutManager) {
-					/**/
-					val s = recyclerView?.layoutManager?.childCount  as Int
-					val x = (recyclerView?.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-
-					if (x + s >= recyclerView?.layoutManager?.itemCount as Int) {
-						val sizeTmp = mContactsInstance.size
-						mContactsInstance.loadMore()
-						onUiThread { mContactsAdapter.notifyItemRangeInserted(sizeTmp, mContactsInstance.size) }
-					}
-				}
-			}
-		})
-
-		return rootView
-	}
-
-	override
-	fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-		inflater?.inflate(R.menu.menu_contacts_activity, menu)
-		super.onCreateOptionsMenu(menu, inflater)
-	}
-
-	override
-	fun onOptionsItemSelected(item: MenuItem): Boolean {
-		when (item.itemId) {
-			R.id.refreshContacts -> {
-				requestListFriends()
-				return true
-			}
-			else -> return super.onOptionsItemSelected(item)
-		}
-	}
-
-	override fun onStop() {
-		super.onStop()
-		mContext.requestQueue.queue.cancelAll(RequestQueueAccess.FRIENDS_TAG)
-	}
-
-	/**
-	 * Use the token to send a request to the server for an array of friends for the user of the app
-	 */
-	private fun requestListFriends() {
-		val id: String? = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null)
-		if (id != null) {
-			val request = JsonObjectRequest(Request.Method.GET,
-					"${ServerConstants.SERVER_USER_FRIENDS}?id=$id",
-					Listener<JSONObject> { response ->
-						val friends = response.getJSONArray("friends")
-						val friendsArray = friends.contactListfromJSONArray()
-
-						mContactsInstance.addAll(friendsArray)
-						onUiThread { mContactsAdapter.notifyDataSetChanged() }
-					}, ErrorListener {
-
-				Log.d("***", "Error")
-			})// TODO: 12-Dec-15 add empty view)
-			request.setRetryPolicy(DefaultRetryPolicy(1000 * 5, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
-
-			mContext.requestQueue.queue.add(request).setTag(RequestQueueAccess.FRIENDS_TAG)
-		}
-	}
-
-	override fun onAttach(activity: Context?) {
-		super.onAttach(activity)
-		// Activities containing this fragment must implement its callbacks.
-		if (activity !is Callbacks) {
-			throw IllegalStateException("Activity must implement fragment's callbacks.")
-		}
-		mCallbacks = activity
-	}
-
-	override fun onDetach() {
-		super.onDetach()
-		// Reset the active callbacks interface to the dummy implementation.
-		mCallbacks = null
-		//		dettachListeners();
-	}
-
-	//	public void attachListeners(){
-	//		for (Contact contact:mContacts.getContacts())
-	//			mSocket.on(contact.getId(), onNewRoom);
-	//	}
-	//	public void dettachListeners(){
-	//		for (Contact contact:mContacts.getContacts())
-	//			mSocket.off(contact.getId(), onNewRoom);
-	//	}
+    private val mContactsInstance by lazy { Contacts.getInstance(mContext) }
+    private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContactsInstance) }
+    private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
 
-	interface Callbacks {
-		/**
-		 * Callback for when an item has been selected.
-		 */
-		fun onItemSelected(id: String)
-	}
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-	companion object {
+        requestListFriends()
 
-		fun newInstance(): ContactListFragment {
-			return ContactListFragment()
-		}
-	}
+        //		attachListeners();
+        //		mSocket.on("hi", onNewRoom);
+        //		mSocket.emit("room",new JSONObject());
+        //		mSocket.connect();
+    }
+
+    override
+    fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.fragment_contact_list, container, false)
+
+        contactRecyclerView.apply {
+            this.adapter = mContactsAdapter
+            this.layoutManager = mLayoutManager
+            this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                    if (dy > 0 && recyclerView?.layoutManager is LinearLayoutManager) {
+                        /**/
+                        val s = mLayoutManager.childCount
+                        val x = mLayoutManager.findFirstVisibleItemPosition()
+
+                        if (x + s >= recyclerView?.layoutManager?.itemCount as Int) {
+                            val sizeTmp = mContactsInstance.size
+                            mContactsInstance.loadMore(50)
+                            onUiThread { mContactsAdapter.notifyItemRangeInserted(sizeTmp, mContactsInstance.size) }
+                        }
+                    }
+                }
+            })
+        }
+
+        return rootView
+    }
+
+    override
+    fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.menu_contacts_activity, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override
+    fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.refreshContacts -> {
+                requestListFriends()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mContext.requestQueue.queue.cancelAll(RequestQueueAccess.FRIENDS_TAG)
+    }
+
+    /**
+     * Use the token to send a request to the server for an array of friends for the user of the app
+     */
+    private fun requestListFriends() {
+        val id: String? = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null)
+        if (id != null) {
+            val request = JsonObjectRequest(Request.Method.GET,
+                    "${ServerConstants.SERVER_USER_FRIENDS}?id=$id",
+                    Listener<JSONObject> { response ->
+                        val friends = response.getJSONArray("friends")
+                        val friendsArray = friends.contactListfromJSONArray()
+
+                        mContactsInstance.addAll(friendsArray)
+                        onUiThread { mContactsAdapter.notifyDataSetChanged() }
+                    }, ErrorListener {
+
+                Log.d("***", "Error")
+            })// TODO: 12-Dec-15 add empty view)
+            request.retryPolicy = DefaultRetryPolicy(1000 * 5, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+
+            mContext.requestQueue.queue.add(request).tag = RequestQueueAccess.FRIENDS_TAG
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        // Reset the active callbacks interface to the dummy implementation.
+        //		dettachListeners();
+    }
+
+    //	public void attachListeners(){
+    //		for (Contact contact:mContacts.getContacts())
+    //			mSocket.on(contact.getId(), onNewRoom);
+    //	}
+    //	public void dettachListeners(){
+    //		for (Contact contact:mContacts.getContacts())
+    //			mSocket.off(contact.getId(), onNewRoom);
+    //	}
+
+    companion object {
+
+        fun newInstance(): ContactListFragment {
+            return ContactListFragment()
+        }
+    }
 }//
 //	private Socket mSocket;
 //	{

@@ -21,6 +21,7 @@ import com.marked.vifo.model.Message
 import com.marked.vifo.model.contact.Contact
 import com.marked.vifo.model.database.DatabaseContract
 import com.marked.vifo.model.database.database
+import com.marked.vifo.model.message
 import com.marked.vifo.ui.activity.ContactDetailActivity
 import com.marked.vifo.ui.adapter.MessageAdapter
 import io.socket.client.IO
@@ -31,6 +32,7 @@ import org.jetbrains.anko.async
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.db.rowParser
 import org.jetbrains.anko.db.select
+import org.jetbrains.anko.onTouch
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.json.JSONException
 import org.json.JSONObject
@@ -67,6 +69,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 
 		mSocket.emit(ON_NEW_MESSAGE, jsonObject)
 		addMessage(message)
+
 	}
 
 	/**
@@ -143,15 +146,16 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 		val rootView = inflater.inflate(R.layout.fragment_contact_detail, container, false)
 
 		//		mLinearLayoutManager.reverseLayout = true
-		rootView.messagesRecyclerView.layoutManager = mLinearLayoutManager
-		rootView.messagesRecyclerView.addItemDecoration(SpacesItemDecoration(15))
-
-		rootView.messagesRecyclerView.adapter = mMessageAdapter
-		rootView.messagesRecyclerView.setOnTouchListener { v, event ->
-			val view = (mContext as AppCompatActivity).currentFocus
-			val imm = mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-			imm.hideSoftInputFromWindow(view.windowToken, 0)
-			false
+		rootView.messagesRecyclerView.apply {
+			layoutManager = mLinearLayoutManager
+			addItemDecoration(SpacesItemDecoration(15))
+			adapter = mMessageAdapter
+			onTouch { view, motionEvent ->
+				val currentFocus = (mContext as AppCompatActivity).currentFocus
+				val imm = mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+				imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+				false
+			}
 		}
 		return rootView
 	}
@@ -262,9 +266,9 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	interface ContactDetailFragmentInteraction
 
 	companion object Static {
-		val ON_NEW_MESSAGE = "onMessage"
-		val ON_NEW_ROOM = "onRoom"
-		val ON_TYPING = "onTyping"
+		const val ON_NEW_MESSAGE = "onMessage"
+		const val ON_NEW_ROOM = "onRoom"
+		const val ON_TYPING = "onTyping"
 		/**
 		 * keep track if the user is interacting with the app. If not, disconnect the socket
 		 */
@@ -276,6 +280,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 		var isInForeground: Boolean = false
 			private set
 
+		@JvmStatic
 		fun newInstance(parcelable: Parcelable): ContactDetailFragment {
 			val bundle = Bundle()
 			bundle.putParcelable(ContactDetailActivity.EXTRA_CONTACT, parcelable)

@@ -15,10 +15,7 @@ import com.marked.vifo.ui.adapter.viewholders.TypingHolder
 /**
  * Created by Tudor Pop on 04-Dec-15.
  */
-class MessageAdapter(context: Context, dataSet: List<Message>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-	val dataSet = dataSet
-	val context = context
-
+class MessageAdapter(private val context: Context, private val dataSet: List<Message>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 	override
 	fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 		// Create a new view.
