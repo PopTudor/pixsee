@@ -7,7 +7,6 @@ import android.util.Patterns
  * Created by Tudor Pop on 23-Jan-16.
  */
 data class DataValidation(val context: Context, val email: String, val password: String) {
-
 	fun validate(): Boolean {
 		if (email.isNullOrBlank()) {
 			context.Toast("The email field is empty")
