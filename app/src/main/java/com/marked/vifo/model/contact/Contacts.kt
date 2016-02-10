@@ -78,9 +78,9 @@ class Contacts(val mContext: Context) : ArrayList<Contact>() {
 		mContext.database.use {
 			select(DatabaseContract.Contact.TABLE_NAME).limit(size, limit).exec {
 				parseList(rowParser {
-					id: String, fname: String, lname: String, token: String
+					id: String, name:String, token: String
 					->
-					add(Contact(id, fname, lname, token))
+					add(Contact(id, name,token))
 				})
 			}
 		}
@@ -92,17 +92,15 @@ fun JSONArray.contactListfromJSONArray(startingIndex: Int = 0): List<Contact> {
 
 	var result: JSONObject
 	var id: String
-	var firstName: String
-	var lastName: String
 	var token: String
+	var name: String
 	for (i in startingIndex..length() - 1) {
 		result = getJSONObject(i)
 		id = result.getString(UserConstants.ID)
-		firstName = result.getString(UserConstants.FIRST_NAME)
-		lastName = result.getString(UserConstants.LAST_NAME)
+		name = result.getString(UserConstants.NAME)
 		token = result.getString(UserConstants.TOKEN)
 
-		contacts.add(Contact(id, firstName, lastName, firstName + " " + lastName, token))
+		contacts.add(Contact(id, name, token))
 	}
 
 	return contacts

@@ -23,15 +23,13 @@ class DatabaseContract private constructor() {
 		companion object Static {
 			const val TABLE_NAME = "contact"
 			const val COLUMN_ID = UserConstants.ID /* id from online stored database */
-			const val COLUMN_FIRST_NAME = UserConstants.FIRST_NAME
-			const val COLUMN_LAST_NAME = UserConstants.LAST_NAME
+			const val COLUMN_NAME = UserConstants.NAME
 			const val COLUMN_TOKEN = UserConstants.TOKEN
 
 			const val CREATE_TABLE = """
 			CREATE TABLE ${TABLE_NAME}(
 			${COLUMN_ID} TEXT PRIMARY KEY,
-			${COLUMN_FIRST_NAME} TEXT,
-			${COLUMN_LAST_NAME} TEXT,
+			${COLUMN_NAME} TEXT,
 			${COLUMN_TOKEN} TEXT
 			);"""
 
@@ -44,15 +42,13 @@ class DatabaseContract private constructor() {
 		companion object Static {
 			const val TABLE_NAME = "user"
 			const val COLUMN_ID = UserConstants.ID
-			const val COLUMN_FIRST_NAME = UserConstants.FIRST_NAME
-			const val COLUMN_LAST_NAME = UserConstants.LAST_NAME
+			const val COLUMN_NAME = UserConstants.NAME
 			const val COLUMN_TOKEN = UserConstants.TOKEN
 
 			const val CREATE_TABLE = """
 			CREATE TABLE ${TABLE_NAME}(
 			${COLUMN_ID} TEXT PRIMARY KEY,
-			${COLUMN_FIRST_NAME} TEXT,
-			${COLUMN_LAST_NAME} TEXT,
+			${COLUMN_NAME} TEXT,
 			${COLUMN_TOKEN} TEXT
 			);"""
 			const val DELETE_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME"
