@@ -21,15 +21,7 @@ import java.util.*
  */
 class Contacts(val mContext: Context) : ArrayList<Contact>() {
 	init {
-		mContext.database.use() {
-			select(DatabaseContract.Contact.TABLE_NAME).limit(50).exec {
-				parseList(rowParser {
-					id: String, fname: String, lname: String, token: String
-					->
-					add(Contact(id, fname, lname, token))
-				})
-			}
-		}
+		loadMore(50)
 	}
 
 	override fun add(element: Contact): Boolean {
@@ -82,9 +74,9 @@ class Contacts(val mContext: Context) : ArrayList<Contact>() {
 		return jsonArray
 	}
 
-	fun loadMore() {
+	fun loadMore(limit:Int) {
 		mContext.database.use {
-			select(DatabaseContract.Contact.TABLE_NAME).limit(size, 50).exec {
+			select(DatabaseContract.Contact.TABLE_NAME).limit(size, limit).exec {
 				parseList(rowParser {
 					id: String, fname: String, lname: String, token: String
 					->

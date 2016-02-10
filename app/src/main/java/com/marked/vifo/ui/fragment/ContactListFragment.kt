@@ -72,7 +72,7 @@ class ContactListFragment : Fragment() {
 
                         if (x + s >= recyclerView?.layoutManager?.itemCount as Int) {
                             val sizeTmp = mContactsInstance.size
-                            mContactsInstance.loadMore()
+                            mContactsInstance.loadMore(50)
                             onUiThread { mContactsAdapter.notifyItemRangeInserted(sizeTmp, mContactsInstance.size) }
                         }
                     }
