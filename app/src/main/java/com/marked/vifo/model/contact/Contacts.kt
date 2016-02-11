@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.marked.vifo.extra.UserConstants
 import com.marked.vifo.model.database.DatabaseContract
+import com.marked.vifo.model.database.DatabaseContract.Contact.Static
 import com.marked.vifo.model.database.database
 import org.jetbrains.anko.async
 import org.jetbrains.anko.db.parseList
@@ -76,9 +77,12 @@ class Contacts(val mContext: Context) : ArrayList<Contact>() {
 
     fun loadMore(limit: Int) {
         mContext.database.use {
-            select(DatabaseContract.Contact.TABLE_NAME).limit(size, limit).exec {
+            select(DatabaseContract.Contact.TABLE_NAME,
+                    DatabaseContract.Contact.COLUMN_ID,
+                    DatabaseContract.Contact.COLUMN_NAME,
+                    DatabaseContract.Contact.COLUMN_TOKEN).limit(size, limit).exec {
                 parseList(rowParser {
-                    id: String, name: String,email:String, token: String
+                    id: String, name: String, token: String
                     ->
                     add(Contact(id, name, token))
                 })
@@ -92,15 +96,17 @@ fun JSONArray.contactListfromJSONArray(startingIndex: Int = 0): List<Contact> {
 
     var result: JSONObject
     var id: String
-    var token: String
     var name: String
+    var email: String
+    var token: String
     for (i in startingIndex..length() - 1) {
         result = getJSONObject(i)
         id = result.getString(UserConstants.ID)
         name = result.getString(UserConstants.NAME)
+        email = result.getString(UserConstants.EMAIL)
         token = result.getString(UserConstants.TOKEN)
 
-        contacts.add(Contact(id, name, token))
+        contacts.add(Contact(id, name, email, token))
     }
 
     return contacts
