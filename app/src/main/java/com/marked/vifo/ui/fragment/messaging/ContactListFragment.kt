@@ -123,7 +123,7 @@ class ContactListFragment : Fragment() {
 
                 Log.d("***", "Error")
             })// TODO: 12-Dec-15 add empty view)
-            request.retryPolicy = DefaultRetryPolicy(1000 * 5, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            request.retryPolicy = DefaultRetryPolicy(1000 * 15, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
 
             mContext.requestQueue.queue.add(request).tag = RequestQueueAccess.FRIENDS_TAG
         }
