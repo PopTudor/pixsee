@@ -10,20 +10,8 @@ import java.util.*
 /**
  * Created by Tudor Pop on 28-Nov-15.
  */
-class Contact(id: String, name: String, email: String, token: String) : Comparator<Contact>, Comparable<Contact>, Parcelable {
+data class Contact(var id: String,var name: String,var email: String,var token: String) : Comparator<Contact>, Comparable<Contact>, Parcelable {
     constructor(id: String, name: String, token: String) : this(id, name, "", token)
-
-    var id: String
-    var name: String
-    var email: String
-    var token: String
-
-    init {
-        this.id = id
-        this.name = name
-        this.email = email
-        this.token = token
-    }
 
     companion object {
         @JvmField @Suppress("unused")
@@ -32,7 +20,7 @@ class Contact(id: String, name: String, email: String, token: String) : Comparat
             override fun newArray(size: Int): Array<Contact?> = arrayOfNulls(size)
         };
 
-        protected fun Contact(parcelIn: Parcel): Contact {
+        private fun Contact(parcelIn: Parcel): Contact {
             var id = parcelIn.readString()
             var name = parcelIn.readString()
             var email = parcelIn.readString()
@@ -60,8 +48,6 @@ class Contact(id: String, name: String, email: String, token: String) : Comparat
         return lhs.id.compareTo(rhs.id);
     }
 
-    override fun equals(other: Any?) = if (other is Contact && id.equals(other.id)) true else false
-
     fun toJSON(): JSONObject {
         val jsonObject = JSONObject();
         jsonObject.put(UserConstants.ID, id);
@@ -85,13 +71,5 @@ class Contact(id: String, name: String, email: String, token: String) : Comparat
         name = json.getString(UserConstants.NAME);
         email = json.getString(UserConstants.EMAIL);
         token = json.getString(UserConstants.TOKEN);
-    }
-
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result += 31 * result + name.hashCode()
-        result += 31 * result + email.hashCode()
-        result += 31 * result + token.hashCode()
-        return result
     }
 }
