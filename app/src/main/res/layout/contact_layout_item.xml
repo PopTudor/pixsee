@@ -29,20 +29,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:contextClickable="false"
             android:inputType="textCapWords|textCapSentences|textPersonName"
-            android:longClickable="false"
             android:singleLine="true"
             android:text="Medium Text"
-            android:textAllCaps="true"
             android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contextClickable="false"
-            android:longClickable="false"
             android:text="New Text"/>
     </LinearLayout>
 
