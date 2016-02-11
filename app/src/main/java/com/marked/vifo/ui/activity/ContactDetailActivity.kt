@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
+import android.view.View
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.marked.vifo.R
 import com.marked.vifo.helper.add
@@ -65,7 +66,7 @@ class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.Contact
 
     }
 
-	fun sendMessage(/*view: View*/) {
+	fun sendMessage(view: View) {
 	    val message = messageEditText.text.toString();
 	    messageEditText.setText("");
 	    if (!message.isNullOrBlank())

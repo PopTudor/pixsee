@@ -35,18 +35,14 @@ android {
     }
     buildTypes {
         release {
-            useProguard true
             debuggable false
+            shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            debuggable true
-            useProguard false
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources true
         }
-
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
