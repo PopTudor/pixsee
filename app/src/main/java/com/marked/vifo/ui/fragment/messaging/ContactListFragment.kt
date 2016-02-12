@@ -1,9 +1,14 @@
 package com.marked.vifo.ui.fragment.messaging
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.os.IBinder
 import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -19,6 +24,7 @@ import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.model.RequestQueueAccess
 import com.marked.vifo.model.contact.Contacts
 import com.marked.vifo.model.contact.contactListfromJSONArray
+import com.marked.vifo.model.database.database
 import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.adapter.ContactsAdapter
 import kotlinx.android.synthetic.main.fragment_contact_list.*
@@ -26,6 +32,7 @@ import kotlinx.android.synthetic.main.fragment_contact_list.view.*
 import org.jetbrains.anko.support.v4.onUiThread
 import org.json.JSONObject
 import java.util.*
+import kotlin.concurrent.fixedRateTimer
 
 /**
  * A list fragment representing a list of Contacts. This fragment
@@ -48,12 +55,20 @@ class ContactListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestListFriends()
-
         //		attachListeners();
         //		mSocket.on("hi", onNewRoom);
         //		mSocket.emit("room",new JSONObject());
         //		mSocket.connect();
+        fixedRateTimer("DATABASE_CHECK",false,500,1500,{
+            /*when first logged in the data comes from the server asynchronously and is inserted
+            * into local database asynchronously. This timer will load the data from database when it's ready.
+            * There should be also a better solution for this but I don't have time now to think about it.
+            * A couple of ideas: broadcast receiver, interface callback, event bus*/
+            if(mContactsInstance.size > 0) {
+                onUiThread {mContactsAdapter.notifyDataSetChanged()}
+                this.cancel()
+            }else mContactsInstance.loadMore()
+        })
     }
 
     override
@@ -93,7 +108,7 @@ class ContactListFragment : Fragment() {
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.refreshContacts -> {
-                requestListFriends()
+//                requestListFriends()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -104,30 +119,31 @@ class ContactListFragment : Fragment() {
         super.onStop()
         mContext.requestQueue.queue.cancelAll(RequestQueueAccess.FRIENDS_TAG)
     }
-
-    /**
-     * Use the token to send a request to the server for an array of friends for the user of the app
-     */
-    private fun requestListFriends() {
-        val id: String? = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null)
-        if (id != null) {
-            val request = JsonObjectRequest(Request.Method.GET,
-                    "${ServerConstants.SERVER_USER_FRIENDS}?id=$id",
-                    Listener<JSONObject> { response ->
-                        val friends = response.getJSONArray("friends")
-                        val friendsArray = friends.contactListfromJSONArray()
-
-                        mContactsInstance.addAll(friendsArray)
-                        onUiThread { mContactsAdapter.notifyDataSetChanged() }
-                    }, ErrorListener {
-
-                Log.d("***", "Error")
-            })// TODO: 12-Dec-15 add empty view)
-            request.retryPolicy = DefaultRetryPolicy(1000 * 15, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
-
-            mContext.requestQueue.queue.add(request).tag = RequestQueueAccess.FRIENDS_TAG
-        }
-    }
+//
+//    /**
+//     * Use the token to send a request to the server for an array of friends for the user of the app
+//     */
+//    private fun requestListFriends() {
+//        val id: String? = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null)
+//        if (id != null) {
+//            val request = JsonObjectRequest(Request.Method.GET,
+//                    "${ServerConstants.SERVER_USER_FRIENDS}?id=$id",
+//                    Listener<JSONObject> { response -> // TODO: 12-Dec-15 add empty view)
+//                        val friends = response.getJSONArray("friends")
+//                        val friendsArray = friends.contactListfromJSONArray()
+//
+//                        mContactsInstance.addAll(friendsArray)
+//                        onUiThread { mContactsAdapter.notifyDataSetChanged() }
+//                    },
+//                    ErrorListener {
+//
+//                        Log.d("***", "Error")
+//                    })
+//            request.retryPolicy = DefaultRetryPolicy(1000 * 15, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+//
+//            mContext.requestQueue.queue.add(request).tag = RequestQueueAccess.FRIENDS_TAG
+//        }
+//    }
 
     override fun onDetach() {
         super.onDetach()
