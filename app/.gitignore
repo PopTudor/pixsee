@@ -1,2 +1,9 @@
 /fabric.properties
 /build
+bin/
+gen/
+local.properties
+*.iml
+.idea
+.gradle
+obj/
