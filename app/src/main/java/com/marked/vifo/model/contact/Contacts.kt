@@ -21,7 +21,7 @@ import java.util.*
  */
 class Contacts(val mContext: Context) : ArrayList<Contact>() {
     init {
-        loadMore(50)
+        loadMore()
     }
 
     override fun add(element: Contact): Boolean {
@@ -32,6 +32,7 @@ class Contacts(val mContext: Context) : ArrayList<Contact>() {
     }
 
     override fun addAll(elements: Collection<Contact>): Boolean {
+        var result = super.addAll(elements)
         async() {
             mContext.database.use {
                 transaction {
@@ -41,7 +42,7 @@ class Contacts(val mContext: Context) : ArrayList<Contact>() {
                 }
             }
         }
-        return super.addAll(elements)
+        return result
     }
 
     override fun set(index: Int, element: Contact): Contact {
@@ -74,13 +75,13 @@ class Contacts(val mContext: Context) : ArrayList<Contact>() {
         return jsonArray
     }
 
-    fun loadMore(limit: Int) {
+    fun loadMore(limit: Int=50) {
         mContext.database.use {
             select(DatabaseContract.Contact.TABLE_NAME).limit(size, limit).exec {
                 parseList(rowParser {
                     id: String, name: String,email:String, token: String
                     ->
-                    add(Contact(id, name, token))
+                    super.add(Contact(id, name, token))
                 })
             }
         }
