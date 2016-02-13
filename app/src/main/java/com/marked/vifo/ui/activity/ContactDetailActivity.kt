@@ -75,7 +75,7 @@ class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.Contact
     }
 
 	fun sendPixsee(view:View){
-
+		mFragment.sendMessage("http://www.ghacks.net/wp-content/themes/magatheme/img/mozilla-firefox.png")
 //		TODO("This operation should launch the camera to take a photo")
 	}
 

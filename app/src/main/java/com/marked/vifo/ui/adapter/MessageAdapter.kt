@@ -22,19 +22,19 @@ class MessageAdapter(private val context: Context, private val dataSet: List<Mes
 		var v: View;
 		when (viewType) {
 			MessageConstants.MessageType.ME -> {
-				v = LayoutInflater.from(parent.context).inflate(R.layout.message_layout_item_right, parent, false);
+				v = LayoutInflater.from(parent.context).inflate(R.layout.item_mine_message, parent, false);
 				return MessageHolder(v, context);
 			}
 			MessageConstants.MessageType.YOU -> {
-				v = LayoutInflater.from(parent.context).inflate(R.layout.message_layout_item_left, parent, false);
+				v = LayoutInflater.from(parent.context).inflate(R.layout.item_other_message, parent, false);
 				return MessageHolder(v, context);
 			}
 			MessageConstants.MessageType.TYPING -> {
-				v = LayoutInflater.from(parent.context).inflate(R.layout.message_layout_typing, parent, false);
+				v = LayoutInflater.from(parent.context).inflate(R.layout.item_typing_message, parent, false);
 				return TypingHolder(v);
 			}
 			else -> {
-				v = LayoutInflater.from(parent.context).inflate(com.marked.vifo.R.layout.message_layout_item_right, parent, false);
+				v = LayoutInflater.from(parent.context).inflate(com.marked.vifo.R.layout.item_other_message, parent, false);
 				return MessageHolder(v, context);
 			}
 		}

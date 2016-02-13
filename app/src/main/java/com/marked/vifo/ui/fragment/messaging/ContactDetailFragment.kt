@@ -21,7 +21,6 @@ import com.marked.vifo.model.Message
 import com.marked.vifo.model.contact.Contact
 import com.marked.vifo.model.database.DatabaseContract
 import com.marked.vifo.model.database.database
-import com.marked.vifo.model.message
 import com.marked.vifo.ui.activity.ContactDetailActivity
 import com.marked.vifo.ui.adapter.MessageAdapter
 import io.socket.client.IO

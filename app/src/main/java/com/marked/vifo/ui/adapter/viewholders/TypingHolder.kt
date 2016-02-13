@@ -10,7 +10,7 @@ import com.marked.vifo.R
  * Created by Tudor Pop on 02-Jan-16.
  * This makes the animation dots happens
  */
-public class TypingHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class TypingHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 	private val dot = itemView.findViewById(R.id.dot) as DotView
 
 	fun start() {
