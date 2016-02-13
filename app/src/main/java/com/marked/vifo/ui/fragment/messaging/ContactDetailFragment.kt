@@ -62,18 +62,19 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 
 	@Throws(JSONException::class)
 	fun sendMessage(messageText: String) {
-		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).from(mThisUser).to(mThatUser.id).build()
+		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).from(mThisUser).to(mThatUser.id).messageType(1).build()
 		//		doGcmSendUpstreamMessage(message);
 		val jsonObject = message.toJSON()
 
 		mSocket.emit(ON_NEW_MESSAGE, jsonObject)
+		message.messageType = 0 /* after the message is sent with message type 1 (to appear on the left for the other user) we want to appear on the right for this user*/
 		addMessage(message)
 
 	}
 
 	@Throws(JSONException::class)
 	fun sendMessage(messageText: String,messageType:Int) {
-		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).from(mThisUser).to(mThatUser.id).viewType(messageType).build()
+		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).from(mThisUser).to(mThatUser.id).messageType(messageType).build()
 		//		doGcmSendUpstreamMessage(message);
 		val jsonObject = message.toJSON()
 
@@ -90,7 +91,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	 */
 	override fun receiveMessage(from: String, data: Bundle) {
 		val messageType:Int = data.getInt("type",MessageConstants.MessageType.YOU_MESSAGE)
-		val message = Message.Builder().addData(data).viewType(messageType).build()
+		val message = Message.Builder().addData(data).messageType(messageType).build()
 		addMessage(message)
 	}
 
@@ -133,9 +134,9 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 				select(DatabaseContract.Message.TABLE_NAME, DatabaseContract.Message.COLUMN_DATA_BODY, DatabaseContract.Message.COLUMN_TYPE, DatabaseContract.Message.COLUMN_DATE)
 						.exec {
 							parseList(rowParser { t1: String, t2: Int, t3: Long ->
-                                val message = Message.Builder().addData(MessageConstants.DATA_BODY, t1).viewType(t2).date(t3).build()
-                                mMessagesDataset.add(message)
-                            })
+								val message = Message.Builder().addData(MessageConstants.DATA_BODY, t1).messageType(t2).date(t3).build()
+								mMessagesDataset.add(message)
+							})
 							mMessageAdapter.notifyItemInserted(mMessagesDataset.size - 1)
 							messagesRecyclerView.scrollToPosition(mMessagesDataset.size - 1)
 						}
@@ -228,12 +229,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	}
 
 	fun onTyping(typing: Boolean) {
-		try {
-			mSocket.emit(ON_TYPING, JSONObject("{from:%s,to:%s,typing:%s}".format(mThisUser, mThatUser.id, typing)))
-		} catch (e: JSONException) {
-			e.printStackTrace()
-		}
-
+		mSocket.emit(ON_TYPING, JSONObject("{from:%s,to:%s,typing:%s}".format(mThisUser, mThatUser.id, typing)))
 	}
 
 	fun onNewMessage(): Emitter.Listener {
@@ -264,7 +260,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 				if (typing) {
 					if (!mMessagesDataset.isEmpty() && mMessagesDataset.last().messageType == MessageConstants.MessageType.TYPING)
 						return@Runnable
-					val message = Message.Builder().viewType(MessageConstants.MessageType.TYPING).build()
+					val message = Message.Builder().messageType(MessageConstants.MessageType.TYPING).build()
 					addMessage(message)
 				} else if (!mMessagesDataset.isEmpty())
 				// !typing

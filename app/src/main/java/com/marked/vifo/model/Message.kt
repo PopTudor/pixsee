@@ -43,7 +43,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
         isDelayWhileIdle = builder.delayWhileIdle
         timeToLive = builder.timeToLive
         restrictedPackageName = builder.restrictedPackageName
-        messageType = builder.viewType
+        messageType = builder.messageType
         to = builder.to
         from = builder.from
         date = builder.date
@@ -173,7 +173,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
         var room: String? = null
 
         var date: Long = Date().time
-        var viewType: Int = 0
+        var messageType: Int = 0
 
         init {
             data = LinkedHashMap<String, String>()
@@ -257,8 +257,8 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
          * Sets the messageType property (default value is 0).
          * MessageType is defined in MessageConstants.MessageType( ME_MESSAGE, YOU_MESSAGE )
          */
-        fun viewType(value: Int): Builder {
-            viewType = value
+        fun messageType(value: Int): Builder {
+            messageType = value
             return this
         }
 
