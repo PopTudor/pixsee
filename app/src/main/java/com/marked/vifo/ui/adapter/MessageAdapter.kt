@@ -65,6 +65,8 @@ class MessageAdapter(private val context: Context, private val dataSet: List<Mes
 		when (holder) {
 			is MessageHolder ->
 				holder.bindMessage(dataSet.get(position));
+			is ImageHolder ->
+				holder.bindMessage(dataSet.get(position))
 			is TypingHolder ->
 				holder.start()
 		}
