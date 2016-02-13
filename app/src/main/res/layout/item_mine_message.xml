@@ -28,7 +28,7 @@
 		android:clickable="true"
 		android:longClickable="true"
 		android:text="Hello"
-		android:textColor="#ffffff"
+		android:textColor="#000000"
 		android:textIsSelectable="true"
 		android:textStyle="normal"/>
 
