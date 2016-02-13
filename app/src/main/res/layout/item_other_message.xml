@@ -8,10 +8,10 @@
 
 	android:maxWidth="200dp"
 
-	app:cmv_arrowPosition="right"
+	app:cmv_arrowPosition="left"
 	app:cmv_arrowGravity="start"
 	app:cmv_arrowMargin="3dp"
-	app:cmv_backgroundColor="#ffffff"
+	app:cmv_backgroundColor="#3baac9"
 	app:cmv_backgroundColorPressed="#dfdfdf"
 	app:cmv_contentPadding="6dp"
 	app:cmv_cornerRadius="3dp"
@@ -29,7 +29,7 @@
 		android:text="Hello"
 		android:textIsSelectable="true"
 		android:textSize="17sp"
-		android:textColor="@color/semi_transparent_black"
+		android:textColor="#fff"
 		android:textStyle="normal"/>
 
 </me.himanshusoni.chatmessageview.ChatMessageView>

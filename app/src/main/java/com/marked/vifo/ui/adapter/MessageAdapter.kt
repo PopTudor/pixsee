@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.marked.vifo.R
 import com.marked.vifo.extra.MessageConstants
 import com.marked.vifo.model.Message
+import com.marked.vifo.ui.adapter.viewholders.ImageHolder
 import com.marked.vifo.ui.adapter.viewholders.MessageHolder
 import com.marked.vifo.ui.adapter.viewholders.TypingHolder
 
@@ -21,17 +22,21 @@ class MessageAdapter(private val context: Context, private val dataSet: List<Mes
 		// Create a new view.
 		var v: View;
 		when (viewType) {
-			MessageConstants.MessageType.ME -> {
+			MessageConstants.MessageType.ME_MESSAGE -> {
 				v = LayoutInflater.from(parent.context).inflate(R.layout.item_mine_message, parent, false);
 				return MessageHolder(v, context);
 			}
-			MessageConstants.MessageType.YOU -> {
+			MessageConstants.MessageType.YOU_MESSAGE -> {
 				v = LayoutInflater.from(parent.context).inflate(R.layout.item_other_message, parent, false);
 				return MessageHolder(v, context);
 			}
-			MessageConstants.MessageType.TYPING -> {
-				v = LayoutInflater.from(parent.context).inflate(R.layout.item_typing_message, parent, false);
-				return TypingHolder(v);
+//			MessageConstants.MessageType.TYPING -> {
+//				v = LayoutInflater.from(parent.context).inflate(R.layout.item_typing_message, parent, false);
+//				return TypingHolder(v);
+//			}
+			MessageConstants.MessageType.YOU_IMAGE ->{
+				v = LayoutInflater.from(parent.context).inflate(R.layout.item_other_image, parent, false)
+				return ImageHolder(v,context)
 			}
 			else -> {
 				v = LayoutInflater.from(parent.context).inflate(com.marked.vifo.R.layout.item_other_message, parent, false);
@@ -43,12 +48,12 @@ class MessageAdapter(private val context: Context, private val dataSet: List<Mes
 	override
 	fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder?) {
 		super.onViewDetachedFromWindow(holder)
-		if (holder is TypingHolder) {
-			/* must call stop and set recyclable to false because else will cache the 'typing animation' and it will not stop or it will block*/
-			holder.stop()
-			holder.setIsRecyclable(false)
-		} else
-			holder?.setIsRecyclable(true)
+//		if (holder is TypingHolder) {
+//			/* must call stop and set recyclable to false because else will cache the 'typing animation' and it will not stop or it will block*/
+//			holder.stop()
+//			holder.setIsRecyclable(false)
+//		} else
+//			holder?.setIsRecyclable(true)
 	}
 
 	override
@@ -61,8 +66,8 @@ class MessageAdapter(private val context: Context, private val dataSet: List<Mes
 		}
 	}
 
-	/** If the message has the flag MessageConstants.MessageType.ME then the message will be printed to the right
-	 * else if the message has the flag MessageConstants.MessageType.YOU then the message will be positioned to the left
+	/** If the message has the flag MessageConstants.MessageType.ME_MESSAGE then the message will be printed to the right
+	 * else if the message has the flag MessageConstants.MessageType.YOU_MESSAGE then the message will be positioned to the left
 	 * or if the MessageConstants.MessageType.Typing then the message will be positioned on the left as in You are typing and
 	 * I wait for you to finish
 	 * @param position

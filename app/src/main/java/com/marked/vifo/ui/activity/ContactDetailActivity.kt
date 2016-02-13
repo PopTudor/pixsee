@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.marked.vifo.R
+import com.marked.vifo.extra.MessageConstants
 import com.marked.vifo.helper.add
 import com.marked.vifo.ui.fragment.messaging.ContactDetailFragment
 import kotlinx.android.synthetic.main.activity_contact_detail.*
@@ -75,7 +76,7 @@ class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.Contact
     }
 
 	fun sendPixsee(view:View){
-		mFragment.sendMessage("http://www.ghacks.net/wp-content/themes/magatheme/img/mozilla-firefox.png")
+		mFragment.sendMessage("http://www.ghacks.net/wp-content/themes/magatheme/img/mozilla-firefox.png",MessageConstants.MessageType.YOU_IMAGE)
 //		TODO("This operation should launch the camera to take a photo")
 	}
 

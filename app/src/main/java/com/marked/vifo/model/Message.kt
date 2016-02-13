@@ -255,7 +255,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
 
         /**
          * Sets the messageType property (default value is 0).
-         * MessageType is defined in MessageConstants.MessageType( ME, YOU )
+         * MessageType is defined in MessageConstants.MessageType( ME_MESSAGE, YOU_MESSAGE )
          */
         fun viewType(value: Int): Builder {
             viewType = value

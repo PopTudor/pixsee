@@ -25,8 +25,6 @@ public interface MessageConstants {
 	String NOTIFICATION_PAYLOAD_TITLE = NOTIFICATION_PAYLOAD + ".title";
 	String NOTIFICATION_PAYLOAD_BODY = NOTIFICATION_PAYLOAD + ".body";
 	String MESSAGE_TYPE = "type";
-	String MESSAGE_IMAGE = "image";
-	String MESSAGE_VIDEO = "video";
 	/*
 	* Notification payload support
 	* https://developers.google.com/cloud-messaging/http-server-ref#downstream
@@ -44,8 +42,10 @@ public interface MessageConstants {
 	String NOTIFICATION_BODY_LOCK_ARGS = "body_loc_args";
 
 	interface MessageType {
-		int ME = 0;
-		int YOU = 1;
-		int TYPING = 2;
+		int ME_MESSAGE = 0;
+		int YOU_MESSAGE = 1;
+		int ME_IMAGE= 2;
+		int YOU_IMAGE = 3;
+		int TYPING = 4;
 	}
 }

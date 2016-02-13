@@ -71,6 +71,17 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 
 	}
 
+	@Throws(JSONException::class)
+	fun sendMessage(messageText: String,messageType:Int) {
+		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).from(mThisUser).to(mThatUser.id).viewType(messageType).build()
+		//		doGcmSendUpstreamMessage(message);
+		val jsonObject = message.toJSON()
+
+		mSocket.emit(ON_NEW_MESSAGE, jsonObject)
+		addMessage(message)
+
+	}
+
 	/**
 	 * This is used to receive messages from socket.io
 
@@ -78,7 +89,8 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	 * @param data
 	 */
 	override fun receiveMessage(from: String, data: Bundle) {
-		val message = Message.Builder().addData(data).viewType(MessageConstants.MessageType.YOU).build()
+		val messageType:Int = data.getInt("type",MessageConstants.MessageType.YOU_MESSAGE)
+		val message = Message.Builder().addData(data).viewType(messageType).build()
 		addMessage(message)
 	}
 
@@ -231,7 +243,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 				val data = json.getJSONObject(MessageConstants.DATA_PAYLOAD)
 
 				val body = data.getString(MessageConstants.DATA_BODY)
-				val type = json.getInt(MessageConstants.MESSAGE_TYPE) // MessageConstants.MessageType.ME
+				val type = json.getInt(MessageConstants.MESSAGE_TYPE) // MessageConstants.MessageType.ME_MESSAGE
 				val from = json.getString(MessageConstants.FROM)
 
 				val bundle = Bundle()
