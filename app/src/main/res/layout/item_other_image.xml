@@ -8,7 +8,7 @@
 
 	android:maxWidth="200dp"
 
-	app:cmv_arrowPosition="right"
+	app:cmv_arrowPosition="left"
 	app:cmv_arrowGravity="start"
 	app:cmv_arrowMargin="3dp"
 	app:cmv_backgroundColor="@color/primary"
