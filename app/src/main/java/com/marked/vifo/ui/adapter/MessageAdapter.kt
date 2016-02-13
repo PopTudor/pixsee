@@ -30,14 +30,18 @@ class MessageAdapter(private val context: Context, private val dataSet: List<Mes
 				v = LayoutInflater.from(parent.context).inflate(R.layout.item_other_message, parent, false);
 				return MessageHolder(v, context);
 			}
-//			MessageConstants.MessageType.TYPING -> {
-//				v = LayoutInflater.from(parent.context).inflate(R.layout.item_typing_message, parent, false);
-//				return TypingHolder(v);
-//			}
+			MessageConstants.MessageType.ME_IMAGE ->{
+				v = LayoutInflater.from(parent.context).inflate(R.layout.item_mine_image, parent, false)
+				return ImageHolder(v,context)
+			}
 			MessageConstants.MessageType.YOU_IMAGE ->{
 				v = LayoutInflater.from(parent.context).inflate(R.layout.item_other_image, parent, false)
 				return ImageHolder(v,context)
 			}
+		//			MessageConstants.MessageType.TYPING -> {
+		//				v = LayoutInflater.from(parent.context).inflate(R.layout.item_typing_message, parent, false);
+		//				return TypingHolder(v);
+		//			}
 			else -> {
 				v = LayoutInflater.from(parent.context).inflate(com.marked.vifo.R.layout.item_other_message, parent, false);
 				return MessageHolder(v, context);
