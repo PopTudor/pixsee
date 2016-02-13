@@ -60,27 +60,27 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	private val onMessage by lazy { onNewMessage() }
 	private val onTyping by lazy { onTyping() }
 
-	@Throws(JSONException::class)
-	fun sendMessage(messageText: String) {
-		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).from(mThisUser).to(mThatUser.id).messageType(1).build()
-		//		doGcmSendUpstreamMessage(message);
-		val jsonObject = message.toJSON()
-
-		mSocket.emit(ON_NEW_MESSAGE, jsonObject)
-		message.messageType = 0 /* after the message is sent with message type 1 (to appear on the left for the other user) we want to appear on the right for this user*/
-		addMessage(message)
-
-	}
 
 	@Throws(JSONException::class)
-	fun sendMessage(messageText: String,messageType:Int) {
+	fun sendMessage(messageText: String, messageType: Int) {
 		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).from(mThisUser).to(mThatUser.id).messageType(messageType).build()
 		//		doGcmSendUpstreamMessage(message);
 		val jsonObject = message.toJSON()
 
 		mSocket.emit(ON_NEW_MESSAGE, jsonObject)
+		message.messageType = reverseMessageType(messageType) /* after the message is sent with message type 1 (to appear on the left for the other user) we want to appear on the right for this user*/
 		addMessage(message)
 
+	}
+
+	fun reverseMessageType(int: Int):Int{
+		when(int){
+			MessageConstants.MessageType.YOU_MESSAGE -> return MessageConstants.MessageType.ME_MESSAGE
+			MessageConstants.MessageType.YOU_IMAGE -> return MessageConstants.MessageType.ME_IMAGE
+			MessageConstants.MessageType.ME_MESSAGE -> return MessageConstants.MessageType.YOU_MESSAGE
+			MessageConstants.MessageType.ME_IMAGE -> return MessageConstants.MessageType.YOU_IMAGE
+			else -> return 0
+		}
 	}
 
 	/**
@@ -90,7 +90,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	 * @param data
 	 */
 	override fun receiveMessage(from: String, data: Bundle) {
-		val messageType:Int = data.getInt("type",MessageConstants.MessageType.YOU_MESSAGE)
+		val messageType: Int = data.getInt("type", MessageConstants.MessageType.YOU_MESSAGE)
 		val message = Message.Builder().addData(data).messageType(messageType).build()
 		addMessage(message)
 	}

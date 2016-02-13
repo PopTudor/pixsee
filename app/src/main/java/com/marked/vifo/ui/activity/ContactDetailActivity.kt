@@ -26,79 +26,80 @@ import kotlinx.android.synthetic.main.activity_contact_detail.*
  * more than a {@link ContactDetailFragment}.
  */
 class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.ContactDetailFragmentInteraction {
-    companion object {
-	    const val EXTRA_CONTACT = "com.marked.vifo.ui.activity.EXTRA_CONTACT";
-    }
+	companion object {
+		const val EXTRA_CONTACT = "com.marked.vifo.ui.activity.EXTRA_CONTACT";
+	}
+
 	final val mFragment by lazy {
-        ContactDetailFragment.newInstance(intent.getParcelableExtra(EXTRA_CONTACT))
-    }
+		ContactDetailFragment.newInstance(intent.getParcelableExtra(EXTRA_CONTACT))
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_contact_detail)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-	        window.allowEnterTransitionOverlap = false
-        }
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			window.allowEnterTransitionOverlap = false
+		}
 		setSupportActionBar(detail_toolbar)
 
 
-        /*send the clicked contact to the fragment*/
+		/*send the clicked contact to the fragment*/
 		supportFragmentManager.add(R.id.fragmentContainer, mFragment, "contactDetailFragment")
-        // Show the Up button in the action bar.
+		// Show the Up button in the action bar.
 		supportActionBar?.setDisplayHomeAsUpEnabled(true);
 
-        var upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
+		var upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+		upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
 		supportActionBar?.setHomeAsUpIndicator(upArrow);
 
 		messageEditText.addTextChangedListener(object : TextWatcher {
-            var mTyping = false;
+			var mTyping = false;
 			override fun afterTextChanged(s: Editable?) {
 			}
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+			}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-	            if (!mTyping && count > 0) mTyping = true
-	            if (mTyping && count == 0) mTyping = false
-	            mFragment.onTyping(mTyping);
-            }
-        });
+			override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+				if (!mTyping && count > 0) mTyping = true
+				if (mTyping && count == 0) mTyping = false
+				mFragment.onTyping(mTyping);
+			}
+		});
 
-    }
+	}
 
 	fun sendMessage(view: View) {
-	    val message = messageEditText.text.toString();
-	    messageEditText.setText("");
-	    if (!message.isNullOrBlank())
-		    mFragment.sendMessage(message);
-    }
+		val message = messageEditText.text.toString();
+		messageEditText.setText("");
+		if (!message.isNullOrBlank())
+			mFragment.sendMessage(message, MessageConstants.MessageType.YOU_MESSAGE);
+	}
 
-	fun sendPixsee(view:View){
-		mFragment.sendMessage("http://www.ghacks.net/wp-content/themes/magatheme/img/mozilla-firefox.png",MessageConstants.MessageType.ME_IMAGE)
-//		TODO("This operation should launch the camera to take a photo")
+	fun sendPixsee(view: View) {
+		mFragment.sendMessage("http://www.ghacks.net/wp-content/themes/magatheme/img/mozilla-firefox.png", MessageConstants.MessageType.YOU_IMAGE)
+		//		TODO("This operation should launch the camera to take a photo")
 	}
 
 	override fun onStop() {
-        //		Must be called when your application is done using GCM, to release internal resources.
-        GoogleCloudMessaging.getInstance(this).close();
-        super.onStop();
-    }
+		//		Must be called when your application is done using GCM, to release internal resources.
+		GoogleCloudMessaging.getInstance(this).close();
+		super.onStop();
+	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-	    if (item.itemId == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                onBackPressed();
-                //		        navigateUpTo(new Intent(this, ContactListActivity.class));
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+		if (item.itemId == android.R.id.home) {
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				onBackPressed();
+				//		        navigateUpTo(new Intent(this, ContactListActivity.class));
+			}
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 }
