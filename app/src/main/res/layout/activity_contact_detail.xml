@@ -49,10 +49,10 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:id="@+id/imageButton" android:layout_gravity="center_vertical" android:src="@drawable/ic_attach_file_black_24dp"
-            android:background="@color/transparent"/>
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:id="@+id/imageButton" android:layout_gravity="center_vertical" android:src="@drawable/ic_camera_24dp"
+			android:background="@color/transparent" android:onClick="sendPixsee"/>
         <EditText
 			android:id="@+id/messageEditText"
 			android:layout_width="0dp"
@@ -71,8 +71,8 @@
         </EditText>
 
         <android.support.design.widget.FloatingActionButton
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_weight="0"
 
             android:onClick="sendMessage"

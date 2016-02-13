@@ -40,6 +40,7 @@ class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.Contact
         }
 		setSupportActionBar(detail_toolbar)
 
+
         /*send the clicked contact to the fragment*/
 		supportFragmentManager.add(R.id.fragmentContainer, mFragment, "contactDetailFragment")
         // Show the Up button in the action bar.
@@ -72,6 +73,11 @@ class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.Contact
 	    if (!message.isNullOrBlank())
 		    mFragment.sendMessage(message);
     }
+
+	fun sendPixsee(view:View){
+
+//		TODO("This operation should launch the camera to take a photo")
+	}
 
 	override fun onStop() {
         //		Must be called when your application is done using GCM, to release internal resources.
