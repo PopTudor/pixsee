@@ -1,40 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="?android:attr/selectableItemBackground"
-              android:gravity="left|center_vertical"
-              android:orientation="horizontal"
-              android:paddingLeft="10dp">
 
-    <com.github.library.bubbleview.BubbleTextVew
-        android:id="@+id/messageTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:autoLink="all"
-        android:clickable="true"
-        android:contextClickable="true"
-        android:elegantTextHeight="true"
 
-        android:gravity="left|center_vertical"
-        android:longClickable="true"
-        android:maxWidth="200dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:text="Large Text"
+<me.himanshusoni.chatmessageview.ChatMessageView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center_horizontal"
+	android:maxWidth="200dp"
 
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white"
-        android:textIsSelectable="true"
-        android:textSize="18sp"
-        android:textStyle="normal"
-        app:angle="1dp"
-        app:arrowHeight="8dp"
-        app:arrowLocation="left"
-        app:arrowPosition="1dp"
-        app:arrowWidth="6dp"
-        app:bubbleColor="@color/primary"/>
+	app:cmv_arrowPosition="left"
+	app:cmv_arrowGravity="start"
+	app:cmv_arrowMargin="3dp"
+	app:cmv_backgroundColor="@color/primary"
+	app:cmv_backgroundColorPressed="@color/primary"
+	app:cmv_contentPadding="6dp"
+	app:cmv_cornerRadius="3dp"
+	app:cmv_showArrow="true"
+>
+	<TextView
+		android:id="@+id/messageTextView"
+		style="@style/Base.TextAppearance.AppCompat.Small.Inverse"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:autoLink="all"
+		android:background="@color/transparent"
+		android:clickable="true"
+		android:longClickable="true"
+		android:text="Hello"
+		android:textColor="#ffffff"
+		android:textIsSelectable="true"
+		android:textStyle="normal"/>
 
-</LinearLayout>
+</me.himanshusoni.chatmessageview.ChatMessageView>

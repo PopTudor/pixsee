@@ -2,7 +2,9 @@ buildscript {
     ext.kotlin_version = '1.0.0-rc-1036'
     repositories {
         mavenCentral()
+
     }
+
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
@@ -16,6 +18,9 @@ apply plugin: 'com.google.gms.google-services'
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://jitpack.io"
+    }
 }
 
 android {
@@ -66,13 +71,14 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.makeramen:roundedimageview:2.2.1'
-    compile 'com.lguipeng.bubbleview:library:1.0.0'
+    compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
     compile('io.socket:socket.io-client:0.6.3') {
         exclude group: 'org.json', module: 'json'
     }
     compile ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.8.6@aar'){
         transitive=true
     }
+    compile 'com.github.zzz40500:AndroidSweetSheet:1.1.0'
 }
 
 

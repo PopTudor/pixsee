@@ -48,19 +48,24 @@
         android:layout_margin="5dp"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/messageEditText"
-            android:layout_width="0dp"
+        <ImageButton
+            android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="10"
-            android:background="#ffffff"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="Say hi"
-            android:inputType="textMultiLine"
-            android:paddingLeft="10dp">
+            android:id="@+id/imageButton" android:layout_gravity="center_vertical" android:src="@drawable/ic_attach_file_black_24dp"
+            android:background="@color/transparent"/>
+        <EditText
+			android:id="@+id/messageEditText"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:layout_weight="10"
+			android:background="#ffffff"
+			android:focusable="true"
+			android:focusableInTouchMode="true"
+			android:hint="Say hi"
+			android:inputType="textMultiLine"
+			android:paddingLeft="10dp" android:capitalize="sentences">
 
             <requestFocus/>
         </EditText>
