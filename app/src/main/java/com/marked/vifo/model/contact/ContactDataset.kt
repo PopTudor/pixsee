@@ -4,7 +4,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.marked.vifo.extra.UserConstants
 import com.marked.vifo.model.database.DatabaseContract
-import com.marked.vifo.model.database.DatabaseContract.Contact.Static
 import com.marked.vifo.model.database.database
 import org.jetbrains.anko.async
 import org.jetbrains.anko.db.parseList
