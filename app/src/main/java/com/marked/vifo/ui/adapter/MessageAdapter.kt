@@ -20,7 +20,7 @@ class MessageAdapter(private val context: Context, private val dataSet: List<Mes
 	override
 	fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 		// Create a new view.
-		var v: View;
+		var v: View
 		when (viewType) {
 			MessageConstants.MessageType.ME_MESSAGE -> {
 				v = LayoutInflater.from(parent.context).inflate(R.layout.item_mine_message, parent, false);

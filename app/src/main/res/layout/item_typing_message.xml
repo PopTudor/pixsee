@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/dotContainer"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
-    android:gravity="center"
-    android:orientation="horizontal"
-    >
+<me.himanshusoni.chatmessageview.ChatMessageView
+	android:id="@+id/typingContainer"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center_horizontal"
+	android:maxWidth="200dp"
+	app:cmv_arrowPosition="left"
+	app:cmv_arrowGravity="center"
+	app:cmv_arrowMargin="3dp"
+	app:cmv_backgroundColor="@color/primary"
+	app:cmv_backgroundColorPressed="@color/primary_dark"
+	app:cmv_contentPadding="10dp"
+	app:cmv_cornerRadius="3dp"
+	app:cmv_showArrow="true"
+>
 
-    <com.marked.dotview.DotView
+    <com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar
         android:id="@+id/dot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:dotColor="@color/accent"
-        app:dotDuration="900"
-        app:dotType="PulseSync"
+		android:radius="4dp"
+		android:color="#fff"
+		app:dd_numDots="3"
+		app:dd_scaleMultiplier="1.9"
+		app:dd_animationDuration="650"
+		app:dd_horizontalSpacing="8dp"
         />
-
-</LinearLayout>
+</me.himanshusoni.chatmessageview.ChatMessageView>

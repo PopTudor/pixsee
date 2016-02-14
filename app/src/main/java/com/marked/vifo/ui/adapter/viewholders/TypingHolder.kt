@@ -2,22 +2,22 @@ package com.marked.vifo.ui.adapter.viewholders
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import com.marked.dotview.BaseDot
-import com.marked.dotview.DotView
-import com.marked.vifo.R
+import kotlinx.android.synthetic.main.item_typing_message.view.*
 
 /**
  * Created by Tudor Pop on 02-Jan-16.
  * This makes the animation dots happens
  */
 class TypingHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-	private val dot = itemView.findViewById(R.id.dot) as DotView
+//	private var dot = itemView.findViewById(R.id.dot) as DilatingDotsProgressBar
 
 	fun start() {
-		dot.mBaseDot?.setAnimationStatus(BaseDot.AnimStatus.START)
+		itemView.dot.showNow()
+//		dot.mBaseDot.setAnimationStatus(BaseDot.AnimStatus.START)
     }
 
 	fun stop() {
-		dot.mBaseDot?.setAnimationStatus(BaseDot.AnimStatus.CANCEL)
+		itemView.dot.hideNow()
+//		dot.mBaseDot.setAnimationStatus(BaseDot.AnimStatus.CANCEL)
 	}
 }

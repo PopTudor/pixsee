@@ -1,1 +1,1 @@
-include ':app', ':dotview'
+include ':app'
