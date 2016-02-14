@@ -9,15 +9,6 @@ import kotlinx.android.synthetic.main.item_typing_message.view.*
  * This makes the animation dots happens
  */
 class TypingHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//	private var dot = itemView.findViewById(R.id.dot) as DilatingDotsProgressBar
-
-	fun start() {
-		itemView.dot.showNow()
-//		dot.mBaseDot.setAnimationStatus(BaseDot.AnimStatus.START)
-    }
-
-	fun stop() {
-		itemView.dot.hideNow()
-//		dot.mBaseDot.setAnimationStatus(BaseDot.AnimStatus.CANCEL)
-	}
+	fun start() = itemView.dot.showNow()
+	fun stop() = itemView.dot.hideNow()
 }
