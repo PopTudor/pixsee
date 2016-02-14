@@ -256,6 +256,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
         /**
          * Sets the messageType property (default value is 0).
          * MessageType is defined in MessageConstants.MessageType( ME_MESSAGE, YOU_MESSAGE )
+         * Todo should this be abstracted away with a Decorator ?
          */
         fun messageType(value: Int): Builder {
             messageType = value

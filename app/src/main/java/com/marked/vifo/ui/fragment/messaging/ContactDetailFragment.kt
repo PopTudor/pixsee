@@ -79,7 +79,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 			MessageConstants.MessageType.YOU_IMAGE -> return MessageConstants.MessageType.ME_IMAGE
 			MessageConstants.MessageType.ME_MESSAGE -> return MessageConstants.MessageType.YOU_MESSAGE
 			MessageConstants.MessageType.ME_IMAGE -> return MessageConstants.MessageType.YOU_IMAGE
-			else -> return 0
+			else -> return MessageConstants.MessageType.TYPING
 		}
 	}
 

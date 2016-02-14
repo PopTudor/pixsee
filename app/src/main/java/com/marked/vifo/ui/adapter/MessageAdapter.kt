@@ -30,18 +30,18 @@ class MessageAdapter(private val context: Context, private val dataSet: List<Mes
 				v = LayoutInflater.from(parent.context).inflate(R.layout.item_other_message, parent, false);
 				return MessageHolder(v, context);
 			}
-			MessageConstants.MessageType.ME_IMAGE ->{
+			MessageConstants.MessageType.ME_IMAGE -> {
 				v = LayoutInflater.from(parent.context).inflate(R.layout.item_mine_image, parent, false)
-				return ImageHolder(v,context)
+				return ImageHolder(v, context)
 			}
-			MessageConstants.MessageType.YOU_IMAGE ->{
+			MessageConstants.MessageType.YOU_IMAGE -> {
 				v = LayoutInflater.from(parent.context).inflate(R.layout.item_other_image, parent, false)
-				return ImageHolder(v,context)
+				return ImageHolder(v, context)
 			}
-		//			MessageConstants.MessageType.TYPING -> {
-		//				v = LayoutInflater.from(parent.context).inflate(R.layout.item_typing_message, parent, false);
-		//				return TypingHolder(v);
-		//			}
+			MessageConstants.MessageType.TYPING -> {
+				v = LayoutInflater.from(parent.context).inflate(R.layout.item_typing_message, parent, false);
+				return TypingHolder(v);
+			}
 			else -> {
 				v = LayoutInflater.from(parent.context).inflate(com.marked.vifo.R.layout.item_other_message, parent, false);
 				return MessageHolder(v, context);
@@ -52,12 +52,12 @@ class MessageAdapter(private val context: Context, private val dataSet: List<Mes
 	override
 	fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder?) {
 		super.onViewDetachedFromWindow(holder)
-//		if (holder is TypingHolder) {
-//			/* must call stop and set recyclable to false because else will cache the 'typing animation' and it will not stop or it will block*/
-//			holder.stop()
-//			holder.setIsRecyclable(false)
-//		} else
-//			holder?.setIsRecyclable(true)
+		if (holder is TypingHolder) {
+			/* must call stop and set recyclable to false because else will cache the 'typing animation' and it will not stop or it will block*/
+			holder.stop()
+			holder.setIsRecyclable(false)
+		} else
+			holder?.setIsRecyclable(true)
 	}
 
 	override
