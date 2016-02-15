@@ -23,27 +23,27 @@ class MessageAdapter(private val context: Context, private val dataSet: List<Mes
 		var v: View
 		when (viewType) {
 			MessageConstants.MessageType.ME_MESSAGE -> {
-				v = LayoutInflater.from(parent.context).inflate(R.layout.item_mine_message, parent, false);
+				v = LayoutInflater.from(parent.context).inflate(R.layout.message_mine_text, parent, false);
 				return MessageHolder(v, context);
 			}
 			MessageConstants.MessageType.YOU_MESSAGE -> {
-				v = LayoutInflater.from(parent.context).inflate(R.layout.item_other_message, parent, false);
+				v = LayoutInflater.from(parent.context).inflate(R.layout.message_other_text, parent, false);
 				return MessageHolder(v, context);
 			}
 			MessageConstants.MessageType.ME_IMAGE -> {
-				v = LayoutInflater.from(parent.context).inflate(R.layout.item_mine_image, parent, false)
+				v = LayoutInflater.from(parent.context).inflate(R.layout.message_mine_image, parent, false)
 				return ImageHolder(v, context)
 			}
 			MessageConstants.MessageType.YOU_IMAGE -> {
-				v = LayoutInflater.from(parent.context).inflate(R.layout.item_other_image, parent, false)
+				v = LayoutInflater.from(parent.context).inflate(R.layout.message_other_image, parent, false)
 				return ImageHolder(v, context)
 			}
 			MessageConstants.MessageType.TYPING -> {
-				v = LayoutInflater.from(parent.context).inflate(R.layout.item_typing_message, parent, false);
+				v = LayoutInflater.from(parent.context).inflate(R.layout.message_typing, parent, false);
 				return TypingHolder(v);
 			}
 			else -> {
-				v = LayoutInflater.from(parent.context).inflate(com.marked.vifo.R.layout.item_other_message, parent, false);
+				v = LayoutInflater.from(parent.context).inflate(com.marked.vifo.R.layout.message_other_text, parent, false);
 				return MessageHolder(v, context);
 			}
 		}

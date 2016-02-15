@@ -21,7 +21,7 @@ class ContactsAdapter(private val context: Context, private var dataSet: ArrayLi
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
         // Create a new view.
-		val v = LayoutInflater.from(parent.context).inflate(R.layout.contact_layout_item, parent, false);
+		val v = LayoutInflater.from(parent.context).inflate(R.layout.contact_item, parent, false);
 		val holder = ContactHolder(v/*, context*/);
         return holder;
     }

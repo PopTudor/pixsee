@@ -2,7 +2,7 @@ package com.marked.vifo.ui.adapter.viewholders
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import kotlinx.android.synthetic.main.item_typing_message.view.*
+import kotlinx.android.synthetic.main.message_typing.view.*
 
 /**
  * Created by Tudor Pop on 02-Jan-16.

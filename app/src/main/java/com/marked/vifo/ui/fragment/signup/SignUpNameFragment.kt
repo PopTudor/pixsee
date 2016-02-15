@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import com.marked.vifo.R
 import com.marked.vifo.helper.Toast
 import com.marked.vifo.helper.Utils
-import kotlinx.android.synthetic.main.contact_layout_item.*
+import kotlinx.android.synthetic.main.fragment_sign_up_name.*
 
 /**
  * A simple [Fragment] subclass.

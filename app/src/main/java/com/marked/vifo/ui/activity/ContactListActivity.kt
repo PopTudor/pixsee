@@ -42,7 +42,7 @@ class ContactListActivity : AppCompatActivity() {
 	override
 	fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_contact_app_bar)
+		setContentView(R.layout.activity_contact_master)
 
 //		val toolbar = find<Toolbar>(R.id.toolbar)
 
