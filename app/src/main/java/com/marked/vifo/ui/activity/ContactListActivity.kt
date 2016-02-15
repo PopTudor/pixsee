@@ -3,10 +3,13 @@ package com.marked.vifo.ui.activity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import com.marked.vifo.R
 import com.marked.vifo.helper.add
 import com.marked.vifo.ui.fragment.messaging.ContactListFragment
 import kotlinx.android.synthetic.main.activity_contact_app_bar.*
+import kotlinx.android.synthetic.main.toolbar.*
+import org.jetbrains.anko.find
 
 
 /**
@@ -40,6 +43,8 @@ class ContactListActivity : AppCompatActivity() {
 	fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_contact_app_bar)
+
+//		val toolbar = find<Toolbar>(R.id.toolbar)
 
 		setSupportActionBar(toolbar)
 		toolbar.title = title

@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
@@ -15,6 +16,8 @@ import com.marked.vifo.extra.MessageConstants
 import com.marked.vifo.helper.add
 import com.marked.vifo.ui.fragment.messaging.ContactDetailFragment
 import kotlinx.android.synthetic.main.activity_contact_detail.*
+import kotlinx.android.synthetic.main.toolbar.*
+import org.jetbrains.anko.find
 
 /**
  * An activity representing a single Contact detail screen. This
@@ -40,7 +43,7 @@ class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.Contact
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			window.allowEnterTransitionOverlap = false
 		}
-		setSupportActionBar(detail_toolbar)
+		setSupportActionBar(toolbar)
 
 
 		/*send the clicked contact to the fragment*/
