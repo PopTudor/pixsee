@@ -19,7 +19,7 @@ import java.util.*
  * Created by Tudor Pop on 12-Dec-15.
  * Singleton class used to keep all the friends (the list of contacts) of the user
  */
-class Contacts(val mContext: Context) : ArrayList<Contact>() {
+class ContactDataset(val mContext: Context) : ArrayList<Contact>() {
     init {
         loadMore()
     }
@@ -60,10 +60,10 @@ class Contacts(val mContext: Context) : ArrayList<Contact>() {
     }
 
     companion object {
-        val contacts: Contacts? = null
-        fun getInstance(context: Context): Contacts {
+        val contacts: ContactDataset? = null
+        fun getInstance(context: Context): ContactDataset {
             if (contacts == null)
-                return Contacts(context)
+                return ContactDataset(context)
             return contacts
         }
     }

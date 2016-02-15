@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.TextView
 import com.marked.vifo.R
 import com.marked.vifo.extra.MessageConstants
-import com.marked.vifo.model.Message
+import com.marked.vifo.model.message.Message
 
 /**
  * Created by Tudor Pop on 04-Dec-15.

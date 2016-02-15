@@ -1,37 +1,27 @@
 package com.marked.vifo.ui.fragment.messaging
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
-import android.os.IBinder
-import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.support.v4.app.Fragment
-import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
-import com.android.volley.Response.ErrorListener
-import com.android.volley.Response.Listener
+import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.marked.vifo.R
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.model.RequestQueueAccess
-import com.marked.vifo.model.contact.Contacts
+import com.marked.vifo.model.contact.ContactDataset
 import com.marked.vifo.model.contact.contactListfromJSONArray
-import com.marked.vifo.model.database.database
 import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.adapter.ContactsAdapter
-import kotlinx.android.synthetic.main.fragment_contact_list.*
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
+import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.jetbrains.anko.support.v4.onUiThread
 import org.json.JSONObject
-import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
 /**
@@ -47,7 +37,7 @@ import kotlin.concurrent.fixedRateTimer
 class ContactListFragment : Fragment() {
     private val mContext by lazy { activity }
 
-    private val mContactsInstance by lazy { Contacts.getInstance(mContext) }
+    private val mContactsInstance by lazy { ContactDataset.getInstance(mContext) }
     private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContactsInstance) }
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
@@ -123,27 +113,27 @@ class ContactListFragment : Fragment() {
 //    /**
 //     * Use the token to send a request to the server for an array of friends for the user of the app
 //     */
-//    private fun requestListFriends() {
-//        val id: String? = getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null)
-//        if (id != null) {
-//            val request = JsonObjectRequest(Request.Method.GET,
-//                    "${ServerConstants.SERVER_USER_FRIENDS}?id=$id",
-//                    Listener<JSONObject> { response -> // TODO: 12-Dec-15 add empty view)
-//                        val friends = response.getJSONArray("friends")
-//                        val friendsArray = friends.contactListfromJSONArray()
-//
-//                        mContactsInstance.addAll(friendsArray)
-//                        onUiThread { mContactsAdapter.notifyDataSetChanged() }
-//                    },
-//                    ErrorListener {
-//
-//                        Log.d("***", "Error")
-//                    })
-//            request.retryPolicy = DefaultRetryPolicy(1000 * 15, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
-//
-//            mContext.requestQueue.queue.add(request).tag = RequestQueueAccess.FRIENDS_TAG
-//        }
-//    }
+    private fun requestListFriends() {
+        val id: String? = defaultSharedPreferences.getString(GCMConstants.USER_ID, null)
+        if (id != null) {
+            val request = JsonObjectRequest(Request.Method.GET,
+		            "${ServerConstants.SERVER_USER_FRIENDS}?id=$id",
+		            Response.Listener<JSONObject> { response -> // TODO: 12-Dec-15 add empty view)
+			            val friends = response.getJSONArray("friends")
+			            val friendsArray = friends.contactListfromJSONArray()
+
+			            mContactsInstance.addAll(friendsArray)
+			            onUiThread { mContactsAdapter.notifyDataSetChanged() }
+		            },
+		            Response.ErrorListener {
+
+			            Log.d("***", "Error")
+		            })
+            request.retryPolicy = DefaultRetryPolicy(1000 * 15, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+
+            mContext.requestQueue.queue.add(request).tag = RequestQueueAccess.FRIENDS_TAG
+        }
+    }
 
     override fun onDetach() {
         super.onDetach()

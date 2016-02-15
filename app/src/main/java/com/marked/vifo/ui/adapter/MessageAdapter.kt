@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.marked.vifo.R
 import com.marked.vifo.extra.MessageConstants
-import com.marked.vifo.model.Message
+import com.marked.vifo.model.message.Message
 import com.marked.vifo.ui.adapter.viewholders.ImageHolder
 import com.marked.vifo.ui.adapter.viewholders.MessageHolder
 import com.marked.vifo.ui.adapter.viewholders.TypingHolder

@@ -7,7 +7,7 @@ import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.NetworkImageView
 import com.marked.vifo.R
 import com.marked.vifo.extra.MessageConstants
-import com.marked.vifo.model.Message
+import com.marked.vifo.model.message.Message
 import com.marked.vifo.model.requestQueue
 
 /**

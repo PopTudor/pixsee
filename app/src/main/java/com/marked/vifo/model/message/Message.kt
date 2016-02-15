@@ -1,4 +1,4 @@
-package com.marked.vifo.model
+package com.marked.vifo.model.message
 
 import android.content.ContentValues
 import android.os.Bundle
@@ -11,7 +11,7 @@ import java.util.*
  * Created by Tudor Pop on 04-Dec-15.
  */
 
-data class Message private constructor(val builder: Message.Builder) : MessageConstants {
+data class Message private constructor(val builder: Builder) : MessageConstants {
     constructor() : this(Builder())
 
     /**
@@ -33,7 +33,7 @@ data class Message private constructor(val builder: Message.Builder) : MessageCo
     var messageType: Int
 
     var date: Long
-    var id: UUID = UUID.randomUUID()
+    var id: String = UUID.randomUUID().toString()
 
     init {
         data = Collections.unmodifiableMap(builder.data)

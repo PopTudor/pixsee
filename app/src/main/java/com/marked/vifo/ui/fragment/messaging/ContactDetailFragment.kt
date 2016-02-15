@@ -17,7 +17,7 @@ import com.marked.vifo.extra.MessageConstants
 import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.gcm.service.GCMListenerService
 import com.marked.vifo.helper.SpacesItemDecoration
-import com.marked.vifo.model.Message
+import com.marked.vifo.model.message.Message
 import com.marked.vifo.model.contact.Contact
 import com.marked.vifo.model.database.DatabaseContract
 import com.marked.vifo.model.database.database

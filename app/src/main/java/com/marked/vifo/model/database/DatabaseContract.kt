@@ -63,6 +63,7 @@ class DatabaseContract private constructor() {
 	class Message : BaseColumns {
 		companion object Static {
 			const val TABLE_NAME = "message"
+			const val COLUMN_ID = BaseColumns._ID
 			const val COLUMN_DATA_BODY = MessageConstants.DATA_BODY
 			const val COLUMN_TYPE = MessageConstants.MESSAGE_TYPE
 			const val COLUMN_DATE = MessageConstants.CREATION_DATE
@@ -70,7 +71,7 @@ class DatabaseContract private constructor() {
 
 			const val CREATE_TABLE = """
 			CREATE TABLE $TABLE_NAME(
-			${BaseColumns._ID} INTEGER PRIMARY KEY,
+			${COLUMN_ID} TEXT PRIMARY KEY,
 			$COLUMN_DATA_BODY TEXT,
 			$COLUMN_TYPE INTEGER,
 			$COLUMN_DATE INTEGER,

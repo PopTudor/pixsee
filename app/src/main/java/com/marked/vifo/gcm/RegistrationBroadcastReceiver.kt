@@ -15,7 +15,6 @@ import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.HTTPStatusCodes
 import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.model.RequestQueueAccess
-import com.marked.vifo.model.contact.Contacts
 import com.marked.vifo.model.contact.contactListfromJSONArray
 import com.marked.vifo.model.database.DatabaseContract
 import com.marked.vifo.model.database.database
