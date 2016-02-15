@@ -1,15 +1,21 @@
 package com.marked.vifo.ui.fragment.messaging
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
+import android.view.animation.OvershootInterpolator
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
+import com.github.clans.fab.FloatingActionMenu
 import com.marked.vifo.R
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.ServerConstants
@@ -20,6 +26,7 @@ import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.adapter.ContactsAdapter
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
+import org.jetbrains.anko.support.v4.find
 import org.jetbrains.anko.support.v4.onUiThread
 import org.json.JSONObject
 import kotlin.concurrent.fixedRateTimer
@@ -84,9 +91,42 @@ class ContactListFragment : Fragment() {
                 }
             })
         }
-
+	    createCustomAnimation(rootView.menu)
+	    rootView.menu.setClosedOnTouchOutside(true)
         return rootView
     }
+	private fun createCustomAnimation(menu:FloatingActionMenu) {
+		val set = AnimatorSet();
+
+		val scaleOutX = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleX", 1.0f, 0.2f);
+		val scaleOutY = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleY", 1.0f, 0.2f);
+
+		val scaleInX = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleX", 0.2f, 1.0f);
+		val scaleInY = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleY", 0.2f, 1.0f);
+
+		scaleOutX.setDuration(50);
+		scaleOutY.setDuration(50);
+
+		scaleInX.setDuration(150);
+		scaleInY.setDuration(150);
+
+
+		scaleInX.addListener(object : AnimatorListenerAdapter() {
+			override
+			fun onAnimationStart(animation: Animator) {
+				if(menu.isOpened)
+					menu.getMenuIconView().setImageResource(R.drawable.ic_group_add_24dp);
+				else
+					menu.getMenuIconView().setImageResource( R.drawable.ic_import_contact_24dp);
+			}
+		});
+
+		set.play(scaleOutX).with(scaleOutY);
+		set.play(scaleInX).with(scaleInY).after(scaleOutX);
+		set.setInterpolator(OvershootInterpolator(2.0f));
+
+		menu.setIconToggleAnimatorSet(set);
+	}
 
     override
     fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

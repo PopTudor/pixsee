@@ -7,7 +7,8 @@ import android.support.v7.widget.Toolbar
 import com.marked.vifo.R
 import com.marked.vifo.helper.add
 import com.marked.vifo.ui.fragment.messaging.ContactListFragment
-import kotlinx.android.synthetic.main.activity_contact_app_bar.*
+import kotlinx.android.synthetic.main.activity_contact_master.*
+import kotlinx.android.synthetic.main.fragment_contact_list.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.jetbrains.anko.find
 
@@ -51,7 +52,6 @@ class ContactListActivity : AppCompatActivity() {
 		mFragmentManager.add(R.id.fragmentContainer, ContactListFragment.newInstance())
 
 
-		fab.setOnClickListener { view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show() }
 		// TODO: If exposing deep links into your app, handle intents here.
 	}
 }

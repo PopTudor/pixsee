@@ -79,6 +79,7 @@ dependencies {
     compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
     compile 'com.github.zzz40500:AndroidSweetSheet:1.1.0'
     compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
+    compile 'com.github.clans:fab:1.6.2'
 }
 
 
