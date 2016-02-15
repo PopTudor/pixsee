@@ -5,6 +5,7 @@ import android.os.*
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import com.marked.vifo.model.contact.Contact
 import com.marked.vifo.model.database.DatabaseContract
 import com.marked.vifo.model.database.database
 import com.marked.vifo.model.message.MessageDataset
+import com.marked.vifo.model.message.message
 import com.marked.vifo.ui.activity.ContactDetailActivity
 import com.marked.vifo.ui.adapter.MessageAdapter
 import io.socket.client.IO
@@ -32,6 +34,7 @@ import org.jetbrains.anko.async
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.db.rowParser
 import org.jetbrains.anko.db.select
+import org.jetbrains.anko.onClick
 import org.jetbrains.anko.onTouch
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.json.JSONException
@@ -139,18 +142,10 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val rootView = inflater.inflate(R.layout.fragment_contact_detail, container, false)
-
-		//		mLinearLayoutManager.reverseLayout = true
 		rootView.messagesRecyclerView.apply {
 			layoutManager = mLinearLayoutManager
 			addItemDecoration(SpacesItemDecoration(15))
 			adapter = mMessageAdapter
-			onTouch { view, motionEvent ->
-				val currentFocus = (mContext as AppCompatActivity).currentFocus
-				val imm = mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-				imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
-				false
-			}
 		}
 		return rootView
 	}
