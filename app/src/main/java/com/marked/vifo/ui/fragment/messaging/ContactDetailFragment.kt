@@ -65,7 +65,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 
 	@Throws(JSONException::class)
 	fun sendMessage(messageText: String, messageType: Int) {
-		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).from(mThisUser).to(mThatUser.id).messageType(messageType).build()
+		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).messageType(messageType).from(mThisUser).to(mThatUser.id).build()
 		//		doGcmSendUpstreamMessage(message);
 		val jsonObject = message.toJSON()
 
@@ -93,7 +93,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	 */
 	override fun receiveMessage(from: String, data: Bundle) {
 		val messageType: Int = data.getInt("type", MessageConstants.MessageType.YOU_MESSAGE)
-		val message = Message.Builder().addData(data).messageType(messageType).build()
+		val message = Message.Builder().addData(data).messageType(messageType).from(mThatUser.id).to(mThatUser.id).build()
 		addMessage(message)
 	}
 
@@ -194,14 +194,12 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 		super.onPause()
 		isInForeground = false
 		mMessagesInstance.clear()
-
 	}
 
 	override fun onResume() {
 		super.onResume()
 		isInForeground = true
 		mMessagesInstance.loadMore(mThatUser)
-
 	}
 
 	override fun onAttach(context: Context?) {

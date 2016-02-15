@@ -20,9 +20,10 @@ import java.util.*
 class MessageDataset(var mContext: Context) : ArrayList<Message>() {
 
 	override fun add(element: Message): Boolean {
-		mContext.database.use {
-			insertWithOnConflict(DatabaseContract.Message.TABLE_NAME, null, element.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
-		}
+		if(element.messageType != MessageConstants.MessageType.TYPING) /* if the message is a 'typing' message, then don't add it to the database */
+			mContext.database.use {
+				insertWithOnConflict(DatabaseContract.Message.TABLE_NAME, null, element.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
+			}
 		return super.add(element)
 	}
 
