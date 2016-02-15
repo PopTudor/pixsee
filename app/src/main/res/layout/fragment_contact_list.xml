@@ -10,7 +10,7 @@
 		android:layout_height="match_parent"
 	/>
 	<com.github.clans.fab.FloatingActionMenu
-		android:id="@+id/menu"
+		android:id="@+id/fabMenu"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_gravity="right|bottom"
@@ -18,7 +18,7 @@
 		android:paddingRight="20dp"
 		fab:menu_colorNormal="@color/primary"
 		fab:menu_colorPressed="@color/primary_dark"
-
+		fab:menu_fab_label="Import Contacts"
 		fab:menu_colorRipple="@color/primary_dark"
 		fab:menu_icon="@drawable/ic_group_add_24dp">
 		<!--**************   BUTTONS   ****************-->
@@ -34,7 +34,7 @@
 			fab:fab_colorNormal="@color/accent"
 			fab:fab_colorPressed="@color/accent_dark"
 			fab:fab_colorRipple="@color/accent_dark"
-			fab:fab_label="ImportContacts"
+
 			fab:fab_size="mini"/>
 
 	</com.github.clans.fab.FloatingActionMenu>

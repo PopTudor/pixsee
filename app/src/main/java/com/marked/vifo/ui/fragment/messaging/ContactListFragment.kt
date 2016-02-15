@@ -24,6 +24,7 @@ import com.marked.vifo.model.contact.ContactDataset
 import com.marked.vifo.model.contact.contactListfromJSONArray
 import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.adapter.ContactsAdapter
+import kotlinx.android.synthetic.main.activity_contact_detail.*
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.jetbrains.anko.support.v4.find
@@ -48,6 +49,8 @@ class ContactListFragment : Fragment() {
     private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContactsInstance) }
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
+	lateinit private var mFabMenu:FloatingActionMenu
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +74,7 @@ class ContactListFragment : Fragment() {
     override
     fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_contact_list, container, false)
+		mFabMenu = rootView.fabMenu
 
         rootView.contactRecyclerView.apply {
             this.adapter = mContactsAdapter
@@ -91,18 +95,18 @@ class ContactListFragment : Fragment() {
                 }
             })
         }
-	    createCustomAnimation(rootView.menu)
-	    rootView.menu.setClosedOnTouchOutside(true)
+	    createCustomAnimation()
+	    mFabMenu.setClosedOnTouchOutside(true)
         return rootView
     }
-	private fun createCustomAnimation(menu:FloatingActionMenu) {
+	private fun createCustomAnimation() {
 		val set = AnimatorSet();
 
-		val scaleOutX = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleX", 1.0f, 0.2f);
-		val scaleOutY = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleY", 1.0f, 0.2f);
+		val scaleOutX = ObjectAnimator.ofFloat(mFabMenu.getMenuIconView(), "scaleX", 1.0f, 0.2f);
+		val scaleOutY = ObjectAnimator.ofFloat(mFabMenu.getMenuIconView(), "scaleY", 1.0f, 0.2f);
 
-		val scaleInX = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleX", 0.2f, 1.0f);
-		val scaleInY = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleY", 0.2f, 1.0f);
+		val scaleInX = ObjectAnimator.ofFloat(mFabMenu.getMenuIconView(), "scaleX", 0.2f, 1.0f);
+		val scaleInY = ObjectAnimator.ofFloat(mFabMenu.getMenuIconView(), "scaleY", 0.2f, 1.0f);
 
 		scaleOutX.setDuration(50);
 		scaleOutY.setDuration(50);
@@ -114,10 +118,10 @@ class ContactListFragment : Fragment() {
 		scaleInX.addListener(object : AnimatorListenerAdapter() {
 			override
 			fun onAnimationStart(animation: Animator) {
-				if(menu.isOpened)
-					menu.getMenuIconView().setImageResource(R.drawable.ic_group_add_24dp);
+				if(mFabMenu.isOpened)
+					mFabMenu.getMenuIconView().setImageResource(R.drawable.ic_group_add_24dp);
 				else
-					menu.getMenuIconView().setImageResource( R.drawable.ic_import_contact_24dp);
+					mFabMenu.getMenuIconView().setImageResource( R.drawable.ic_import_contact_24dp);
 			}
 		});
 
@@ -125,7 +129,15 @@ class ContactListFragment : Fragment() {
 		set.play(scaleInX).with(scaleInY).after(scaleOutX);
 		set.setInterpolator(OvershootInterpolator(2.0f));
 
-		menu.setIconToggleAnimatorSet(set);
+		mFabMenu.setIconToggleAnimatorSet(set);
+	}
+
+	fun isOpened(): Boolean {
+		if(mFabMenu.isOpened) {
+			mFabMenu.close(true)
+			return false
+		}
+		return true
 	}
 
     override
