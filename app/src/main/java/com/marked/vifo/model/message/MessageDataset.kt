@@ -3,6 +3,7 @@ package com.marked.vifo.model.message
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.marked.vifo.extra.MessageConstants
+import com.marked.vifo.model.contact.Contact
 import com.marked.vifo.model.database.DatabaseContract
 import com.marked.vifo.model.database.database
 import org.jetbrains.anko.async
@@ -17,9 +18,6 @@ import java.util.*
  * Created by Tudor Pop on 14-Feb-16.
  */
 class MessageDataset(var mContext: Context) : ArrayList<Message>() {
-	init {
-		loadMore()
-	}
 
 	override fun add(element: Message): Boolean {
 		mContext.database.use {
@@ -71,21 +69,24 @@ class MessageDataset(var mContext: Context) : ArrayList<Message>() {
 			jsonArray.put(Message.toJSON())
 		return jsonArray
 	}
-	fun loadMore(limit: Int=50) {
+
+	fun loadMore(contact: Contact, limit: Int = 50) {
 		mContext.database.use {
 			select(DatabaseContract.Message.TABLE_NAME,
 					DatabaseContract.Message.COLUMN_DATA_BODY,
 					DatabaseContract.Message.COLUMN_TYPE,
 					DatabaseContract.Message.COLUMN_DATE,
 					DatabaseContract.Message.COLUMN_TO
-			).limit(size, limit).exec {
-				parseList(rowParser {
-					body: String, type: Int, date: Int, to: String
-					->
-					val message = Message.Builder().addData(MessageConstants.DATA_BODY, body).messageType(type).date(date.toLong()).to(to).build()
-					super.add(message)
-				})
-			}
+			).where("${DatabaseContract.Message.COLUMN_TO}={to}", "to" to contact.id).limit(size, limit)
+					.exec {
+						parseList(rowParser {
+							body: String, type: Int, date: Int, to: String
+							->
+							val message = Message.Builder().addData(MessageConstants.DATA_BODY, body).messageType(type).date(date.toLong()).to(to).build()
+							super.add(message)
+						})
+						//			}
+					}
 		}
 	}
 }

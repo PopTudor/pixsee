@@ -48,12 +48,13 @@ import java.util.*
 class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	private val mContext by lazy { activity }
 
-	private val mMessagesInstance by lazy { MessageDataset.getInstance(mContext) }
-	private val mMessageAdapter by lazy { MessageAdapter(mContext, mMessagesInstance) }
-	private val mLinearLayoutManager by lazy { LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false) }
-
 	private val mThisUser by lazy { defaultSharedPreferences.getString(GCMConstants.USER_ID, null) }
 	private val mThatUser by lazy { arguments.getParcelable<Contact>(ContactDetailActivity.EXTRA_CONTACT) }
+
+	private val mMessagesInstance by lazy { MessageDataset.getInstance(mContext) }
+	private val mMessageAdapter by lazy { MessageAdapter(mContext, mMessagesInstance) }
+
+	private val mLinearLayoutManager by lazy { LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false) }
 
 	private val mSocket by lazy { IO.socket(ServerConstants.SERVER) }
 	private var mCallback: ContactDetailFragmentInteraction? = null
@@ -103,11 +104,6 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 		mMessagesInstance.add(message)
 		mMessageAdapter.notifyItemInserted(mMessagesInstance.size - 1)
 		messagesRecyclerView.scrollToPosition(mMessagesInstance.size - 1)
-		async() {
-			mContext.database.use {
-				insert(DatabaseContract.Message.TABLE_NAME, null, message.toContentValues())
-			}
-		}
 	}
 
 	/**
@@ -197,11 +193,15 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	override fun onPause() {
 		super.onPause()
 		isInForeground = false
+		mMessagesInstance.clear()
+
 	}
 
 	override fun onResume() {
 		super.onResume()
 		isInForeground = true
+		mMessagesInstance.loadMore(mThatUser)
+
 	}
 
 	override fun onAttach(context: Context?) {
