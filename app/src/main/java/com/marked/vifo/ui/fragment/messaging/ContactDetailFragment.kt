@@ -21,6 +21,7 @@ import com.marked.vifo.model.message.Message
 import com.marked.vifo.model.contact.Contact
 import com.marked.vifo.model.database.DatabaseContract
 import com.marked.vifo.model.database.database
+import com.marked.vifo.model.message.MessageDataset
 import com.marked.vifo.ui.activity.ContactDetailActivity
 import com.marked.vifo.ui.adapter.MessageAdapter
 import io.socket.client.IO
@@ -46,15 +47,15 @@ import java.util.*
  */
 class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	private val mContext by lazy { activity }
-	private val mThisUser by lazy { defaultSharedPreferences.getString(GCMConstants.USER_ID, null) }
 
-	private val mMessagesDataset by lazy { ArrayList<Message>() }
-	private val mMessageAdapter by lazy { MessageAdapter(mContext, mMessagesDataset) }
-
+	private val mMessagesInstance by lazy { MessageDataset.getInstance(mContext) }
+	private val mMessageAdapter by lazy { MessageAdapter(mContext, mMessagesInstance) }
 	private val mLinearLayoutManager by lazy { LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false) }
-	private val mSocket by lazy { IO.socket(ServerConstants.SERVER) }
 
+	private val mThisUser by lazy { defaultSharedPreferences.getString(GCMConstants.USER_ID, null) }
 	private val mThatUser by lazy { arguments.getParcelable<Contact>(ContactDetailActivity.EXTRA_CONTACT) }
+
+	private val mSocket by lazy { IO.socket(ServerConstants.SERVER) }
 	private var mCallback: ContactDetailFragmentInteraction? = null
 
 	private val onMessage by lazy { onNewMessage() }
@@ -99,9 +100,9 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	 * @param message the message to add
 	 */
 	private fun addMessage(message: Message) {
-		mMessagesDataset.add(message)
-		mMessageAdapter.notifyItemInserted(mMessagesDataset.size - 1)
-		messagesRecyclerView.scrollToPosition(mMessagesDataset.size - 1)
+		mMessagesInstance.add(message)
+		mMessageAdapter.notifyItemInserted(mMessagesInstance.size - 1)
+		messagesRecyclerView.scrollToPosition(mMessagesInstance.size - 1)
 		async() {
 			mContext.database.use {
 				insert(DatabaseContract.Message.TABLE_NAME, null, message.toContentValues())
@@ -113,11 +114,11 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	 * Remove message from dataset and notify the adapter
 	 */
 	private fun removeMessage() {
-		if (mMessagesDataset.isEmpty())
+		if (mMessagesInstance.isEmpty())
 			return
-		mMessagesDataset.removeAt(mMessagesDataset.size - 1)
-		mMessageAdapter.notifyItemRemoved(mMessagesDataset.size)
-		messagesRecyclerView.scrollToPosition(mMessagesDataset.size)
+		mMessagesInstance.removeAt(mMessagesInstance.size - 1)
+		mMessageAdapter.notifyItemRemoved(mMessagesInstance.size)
+		messagesRecyclerView.scrollToPosition(mMessagesInstance.size)
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,20 +129,6 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 		mSocket.on(ON_TYPING, onTyping)
 
 		mSocket.connect()
-
-		async() {
-			mContext.database.use {
-				select(DatabaseContract.Message.TABLE_NAME, DatabaseContract.Message.COLUMN_DATA_BODY, DatabaseContract.Message.COLUMN_TYPE, DatabaseContract.Message.COLUMN_DATE)
-						.exec {
-							parseList(rowParser { t1: String, t2: Int, t3: Long ->
-								val message = Message.Builder().addData(MessageConstants.DATA_BODY, t1).messageType(t2).date(t3).build()
-								mMessagesDataset.add(message)
-							})
-							mMessageAdapter.notifyItemInserted(mMessagesDataset.size - 1)
-							messagesRecyclerView.scrollToPosition(mMessagesDataset.size - 1)
-						}
-			}
-		}
 
 		mSocket.emit(ON_NEW_ROOM, JSONObject("{from:%s,to:%s}".format(mThisUser, mThatUser.id)))
 
@@ -258,11 +245,11 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 			Handler(Looper.getMainLooper()).post(Runnable {
 				val typing = args[0] as Boolean
 				if (typing) {
-					if (!mMessagesDataset.isEmpty() && mMessagesDataset.last().messageType == MessageConstants.MessageType.TYPING)
+					if (!mMessagesInstance.isEmpty() && mMessagesInstance.last().messageType == MessageConstants.MessageType.TYPING)
 						return@Runnable
 					val message = Message.Builder().messageType(MessageConstants.MessageType.TYPING).build()
 					addMessage(message)
-				} else if (!mMessagesDataset.isEmpty())
+				} else if (!mMessagesInstance.isEmpty())
 				// !typing
 					removeMessage()
 			})

@@ -1,12 +1,15 @@
 package com.marked.vifo.extra;
 
 
+import android.provider.BaseColumns;
+
 /**
  * Created by Tudor Pop on 06-Dec-15.
  * https://developers.google.com/cloud-messaging/http-server-ref#downstream
  */
 public interface MessageConstants {
 	String TO = "to"; /* message destination, (destination is a better name but GCM uses to)*/
+	String ID = BaseColumns._ID; /* message destination, (destination is a better name but GCM uses to)*/
 	String FROM = "from";  /* source of the message (the app's user id)*/
 	String REGISTRATION_IDS_TARGETS = "registration_ids";
 	String PRIORITY_OPTION = "priority";

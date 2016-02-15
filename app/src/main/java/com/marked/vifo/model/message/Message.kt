@@ -109,6 +109,8 @@ data class Message private constructor(val builder: Builder) : MessageConstants 
             values.put(MessageConstants.DATA_BODY, data[MessageConstants.DATA_BODY])
         if (!to.isNullOrBlank())
             values.put("_" + MessageConstants.TO, to)
+	    if(!id.isNullOrBlank())
+		    values.put(MessageConstants.ID,id)
         //		if (!source.isNullOrBlank())
         //			values.put(MessageConstants.SOURCE, source)
         values.put(MessageConstants.MESSAGE_TYPE, messageType)
