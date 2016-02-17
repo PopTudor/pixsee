@@ -26,9 +26,11 @@ import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.adapter.ContactsAdapter
 import kotlinx.android.synthetic.main.activity_contact_detail.*
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
+import org.jetbrains.anko.onClick
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.jetbrains.anko.support.v4.find
 import org.jetbrains.anko.support.v4.onUiThread
+import org.jetbrains.anko.support.v4.toast
 import org.json.JSONObject
 import kotlin.concurrent.fixedRateTimer
 
@@ -42,7 +44,7 @@ import kotlin.concurrent.fixedRateTimer
  * Activities containing this fragment MUST implement the [Callbacks]
  * interface.
  */
-class ContactListFragment : Fragment() {
+class ContactListFragment : Fragment(),View.OnClickListener {
     private val mContext by lazy { activity }
 
     private val mContactsInstance by lazy { ContactDataset.getInstance(mContext) }
@@ -69,9 +71,19 @@ class ContactListFragment : Fragment() {
                 this.cancel()
             }else mContactsInstance.loadMore()
         })
+
     }
 
-    override
+	override fun onClick(view: View?) {
+		when(view?.id){
+			R.id.fabMenu -> {
+				toast("test")
+			}
+		}
+	}
+
+
+	override
     fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_contact_list, container, false)
 		mFabMenu = rootView.fabMenu
@@ -97,8 +109,14 @@ class ContactListFragment : Fragment() {
         }
 	    createCustomAnimation()
 	    mFabMenu.setClosedOnTouchOutside(true)
-        return rootView
+		mFabMenu.setOnMenuToggleListener {
+			if(it == false)/* handle click when the button goes from opened->closed*/
+				onClick(mFabMenu)
+		}
+
+		return rootView
     }
+
 	private fun createCustomAnimation() {
 		val set = AnimatorSet();
 
