@@ -2,6 +2,7 @@ package com.marked.vifo.helper
 
 import android.content.Context
 import android.util.Patterns
+import org.jetbrains.anko.toast
 
 /**
  * Created by Tudor Pop on 23-Jan-16.
@@ -9,15 +10,15 @@ import android.util.Patterns
 data class DataValidation(val context: Context, val email: String, val password: String) {
 	fun validate(): Boolean {
 		if (email.isNullOrBlank()) {
-			context.Toast("The email field is empty")
+			context.toast("The email field is empty")
 			return false
 		}
 		if (password.isNullOrBlank()) {
-			context.Toast("The password field is empty")
+			context.toast("The password field is empty")
 			return false;
 		}
 		if (!Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()) {
-			context.Toast("You must enter a valid email")
+			context.toast("You must enter a valid email")
 			return false;
 		}
 		return true;

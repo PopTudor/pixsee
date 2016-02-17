@@ -25,4 +25,8 @@
 -keep class com.ti.**{*;}
 -dontwarn com.ti.**
 -keep class com.osterhoutgroup.**{*;}
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
 

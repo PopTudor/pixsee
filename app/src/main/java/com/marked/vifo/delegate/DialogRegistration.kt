@@ -4,7 +4,7 @@ import android.app.ProgressDialog
 import android.content.Context
 import com.marked.vifo.extra.HTTPStatusCodes
 import com.marked.vifo.gcm.RegistrationListener
-import com.marked.vifo.helper.Toast
+import org.jetbrains.anko.toast
 
 /**
  * Created by Tudor Pop on 23-Jan-16.
@@ -19,10 +19,10 @@ class DialogRegistration(context: Context, progressDialog: ProgressDialog) : Reg
 
 	override fun onError(errorStatusCode: Int) {
 		when (errorStatusCode) {
-			HTTPStatusCodes.REQUEST_CONFLICT -> context.Toast("You already have an account")
-			HTTPStatusCodes.REQUEST_TIMEOUT -> context.Toast("Timeout error")
-			HTTPStatusCodes.REQUEST_INCORRECT_PASSWORD -> context.Toast("Incorrect password")
-			HTTPStatusCodes.NOT_FOUND -> context.Toast("We are sorry, but we did not found you")
+			HTTPStatusCodes.REQUEST_CONFLICT -> context.toast("You already have an account")
+			HTTPStatusCodes.REQUEST_TIMEOUT -> context.toast("Timeout error")
+			HTTPStatusCodes.REQUEST_INCORRECT_PASSWORD -> context.toast("Incorrect password")
+			HTTPStatusCodes.NOT_FOUND -> context.toast("We are sorry, but we did not found you")
 		}
 	}
 }

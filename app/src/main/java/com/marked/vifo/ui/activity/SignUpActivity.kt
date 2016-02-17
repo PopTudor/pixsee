@@ -5,25 +5,27 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import com.android.volley.*
-import com.android.volley.toolbox.JsonObjectRequest
+import com.google.gson.JsonObject
 import com.marked.vifo.R
 import com.marked.vifo.delegate.DialogRegistration
 import com.marked.vifo.extra.GCMConstants
-import com.marked.vifo.extra.HTTPStatusCodes
+import com.marked.vifo.extra.HTTPStatusCodes.REQUEST_CONFLICT
+import com.marked.vifo.extra.HTTPStatusCodes.REQUEST_TIMEOUT
 import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.gcm.RegistrationBroadcastReceiver
 import com.marked.vifo.gcm.service.LogInRegistrationIntentService
-import com.marked.vifo.helper.Toast
 import com.marked.vifo.helper.add
 import com.marked.vifo.helper.addToBackStack
-import com.marked.vifo.model.requestQueue
 import com.marked.vifo.ui.fragment.signup.SignUpEmailFragment
 import com.marked.vifo.ui.fragment.signup.SignUpNameFragment
 import com.marked.vifo.ui.fragment.signup.SignUpPassFragment
-import org.json.JSONObject
-import java.net.URLEncoder
+import org.jetbrains.anko.toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.net.SocketTimeoutException
 
 class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmentInteraction, SignUpEmailFragment.SignUpEmailFragmentInteraction, SignUpPassFragment.SignUpPassFragmentInteraction {
 	private val mFragmentManager by lazy { supportFragmentManager }
@@ -80,44 +82,38 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
 	 * Sends a request to the server to check if the email already exists.
 	 * If the server has the email, the user already has an account and we should tell him that
 	 * Else proceed to the next step
-
 	 * @param email the email adress to send to the server
 	 */
 	private fun checkEmail(email: String?) {
-		var verifyUserURL = "${ServerConstants.SERVER_USER_EXISTS}?email=${URLEncoder.encode(email, "UTF-8")}"
-
-		val jsonRequest = JsonObjectRequest(Request.Method.GET, verifyUserURL, Response.Listener<JSONObject> {
-			mProgressDialog.dismiss()
-			mFragmentManager.addToBackStack(R.id.fragmentContainer, SignUpPassFragment.newInstance())
-		}, Response.ErrorListener { error ->
-			mProgressDialog.dismiss()
-			mEmail = null
-			val networkResponse = error.networkResponse
-			when (networkResponse?.statusCode) {
-				HTTPStatusCodes.REQUEST_TIMEOUT -> Toast("Timeout")
-				HTTPStatusCodes.REQUEST_CONFLICT -> Toast("You already have an account")
-				else -> {
-				}
-			}
-			Log.e("Volley", "Error. HTTP Status Code:" + networkResponse.statusCode)
-			when (error) {
-				is TimeoutError ->
-					Log.e("Volley", "TimeoutError")
-				is NoConnectionError ->
-					Log.e("Volley", "NoConnectionError")
-				is AuthFailureError ->
-					Log.e("Volley", "AuthFailureError")
-				is ServerError ->
-					Log.e("Volley", "ServerError")
-				is NetworkError ->
-					Log.e("Volley", "NetworkError")
-				is ParseError -> Log.e("Volley", "ParseError")
-			}
-		})
-
-		requestQueue.add(jsonRequest)
+		Retrofit.Builder()
+				.addConverterFactory(GsonConverterFactory.create())
+				.baseUrl(ServerConstants.SERVER)
+				.build()
+				.create(com.marked.vifo.networking.LoginAPI::class.java)
+				.exists(email)
+				.enqueue(object : Callback<JsonObject> {
+					override fun onResponse(call: Call<JsonObject>?, response: Response<JsonObject>?) {
+						mProgressDialog.dismiss()
+						if (response?.isSuccess == true) {
+							mFragmentManager.addToBackStack(R.id.fragmentContainer, SignUpPassFragment.newInstance())
+						} else
+							errorStatusCode(response?.code())
+					}
+					override fun onFailure(call: Call<JsonObject>?, error: Throwable?) {
+						mProgressDialog.dismiss()
+						when (error) {
+							is SocketTimeoutException -> toast("Timeout Error")
+						}
+						error?.printStackTrace()
+					}
+				})
 	}
 
-
+	fun errorStatusCode(statusCode: Int?): Unit {
+		when (statusCode) {
+			REQUEST_TIMEOUT -> toast("Timeout")
+			REQUEST_CONFLICT -> toast("You already have an account")
+		}
+	}
 }
 

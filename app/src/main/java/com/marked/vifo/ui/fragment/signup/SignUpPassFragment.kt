@@ -7,9 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.marked.vifo.R
-import com.marked.vifo.helper.Toast
-import com.marked.vifo.helper.Utils
 import kotlinx.android.synthetic.main.activity_log_in.*
+import org.jetbrains.anko.toast
 
 class SignUpPassFragment : Fragment() {
 	private var mListener: SignUpPassFragmentInteraction? = null
@@ -19,9 +18,9 @@ class SignUpPassFragment : Fragment() {
 		rootView.findViewById(R.id.nextButton).setOnClickListener {
 			val password = passwordEditText.text.toString().trim { it <= ' ' }
 			if (password.isNullOrBlank())
-				activity.Toast("Please enter a password")
+				activity.toast("Please enter a password")
 			else if (password.length < 6)
-				activity.Toast("The password must be at least 6 characters long")
+				activity.toast("The password must be at least 6 characters long")
 			else
 				onNextPressed(password)
 		}

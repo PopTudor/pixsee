@@ -8,12 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.marked.vifo.R
-import com.marked.vifo.helper.Toast
 import com.marked.vifo.helper.Utils
-import kotlinx.android.synthetic.main.activity_contact_detail.*
 import kotlinx.android.synthetic.main.fragment_sign_up_email.*
 import kotlinx.android.synthetic.main.fragment_sign_up_email.view.*
 import org.jetbrains.anko.onClick
+import org.jetbrains.anko.toast
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
@@ -37,11 +36,11 @@ class SignUpEmailFragment : Fragment() {
 			} else {
 				val email = emailEditText.text.toString().trim { it <= ' ' }
 				if (email.isNullOrBlank())
-					activity.Toast("Please enter an email")
+					activity.toast("Please enter an email")
 				else if (Patterns.EMAIL_ADDRESS.matcher(email).matches())
 					onNextPressed(email)
 				else
-					activity.Toast("Invalid email adress")
+					activity.toast("Invalid email adress")
 			}
 		}
 		// Inflate the layout for this fragment

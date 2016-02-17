@@ -2,14 +2,12 @@ package com.marked.vifo.ui.adapter;
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.marked.vifo.R
 import com.marked.vifo.model.contact.Contact
 import com.marked.vifo.ui.activity.ContactDetailActivity
-import com.marked.vifo.ui.activity.ContactListActivity
 import com.marked.vifo.ui.adapter.viewholders.ContactHolder
 import org.jetbrains.anko.onClick
 import java.util.*
@@ -22,7 +20,7 @@ class ContactsAdapter(private val context: Context, private var dataSet: ArrayLi
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactHolder {
         // Create a new view.
 		val v = LayoutInflater.from(parent.context).inflate(R.layout.contact_item, parent, false);
-		val holder = ContactHolder(v/*, context*/);
+		val holder = ContactHolder(v, context);
         return holder;
     }
 

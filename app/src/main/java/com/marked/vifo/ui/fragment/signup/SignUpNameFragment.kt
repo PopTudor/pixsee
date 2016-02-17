@@ -7,9 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.marked.vifo.R
-import com.marked.vifo.helper.Toast
-import com.marked.vifo.helper.Utils
 import kotlinx.android.synthetic.main.fragment_sign_up_name.*
+import org.jetbrains.anko.toast
 
 /**
  * A simple [Fragment] subclass.
@@ -27,7 +26,7 @@ class SignUpNameFragment : Fragment() {
 		rootView.findViewById(R.id.nextButton).setOnClickListener {
 			val name = contactNameTextView.text.toString().trim { it <= ' ' }
 			if (name.isNullOrBlank())
-				activity.Toast("Please enter your name")
+				activity.toast("Please enter your name")
 			else
 				onNextPressed(name)
 		}

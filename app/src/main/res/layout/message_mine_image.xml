@@ -20,7 +20,7 @@
 		app:cmv_cornerRadius="3dp"
 		app:cmv_showArrow="true"
 	>
-		<com.android.volley.toolbox.NetworkImageView
+		<com.facebook.drawee.view.DraweeView
 			android:id="@+id/imageNetwork"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
