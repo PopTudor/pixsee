@@ -14,8 +14,6 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.google.gms.google-services'
-
 repositories {
     mavenCentral()
     maven {
@@ -43,8 +41,9 @@ android {
         }
         debug {
             debuggable true
-            useProguard false
-            minifyEnabled true
+            useProguard true
+            minifyEnabled false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -69,7 +68,9 @@ dependencies {
     compile 'org.jetbrains.anko:anko-support-v4:0.8.2'
     compile 'org.jetbrains.anko:anko-appcompat-v7:0.8.2'
     compile 'org.jetbrains.anko:anko-sqlite:0.8.2'
-    compile 'com.google.android.gms:play-services-gcm:8.3.0'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.google.android.gms:play-services-appinvite:8.4.0'
+    compile 'com.google.android.gms:play-services-vision:8.4.0'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
@@ -77,9 +78,11 @@ dependencies {
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.makeramen:roundedimageview:2.2.1'
     compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
-    compile 'com.github.zzz40500:AndroidSweetSheet:1.1.0'
     compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
     compile 'com.github.clans:fab:1.6.2'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
 }
 
 
+apply plugin: 'com.google.gms.google-services'
