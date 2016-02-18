@@ -19,14 +19,25 @@
 -dontwarn com.squareup.picasso.**
 -keep class com.qualcomm.ar.**{*;}
 -dontwarn com.qualcomm.ar.**
+# APACHE
+-dontwarn com.apache.**
+-dontwarn org.apache.**
+
 
 -keep class com.marked.**
 -keep class com.makeramen.**{*;}
 -keep class com.ti.**{*;}
 -dontwarn com.ti.**
 -keep class com.osterhoutgroup.**{*;}
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
 -keepattributes Signature
 -keepattributes Exceptions
 
+# LOGS
+-assumenosideeffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int i(...);
+    public static int w(...);
+    public static int d(...);
+    public static int e(...);
+}

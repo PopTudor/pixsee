@@ -38,14 +38,11 @@ android {
             shrinkResources true
             minifyEnabled true
             useProguard true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles(files{file('./proguard').listFiles()})
         }
         debug {
             debuggable true
-            useProguard true
-            minifyEnabled false
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     sourceSets {
@@ -80,10 +77,10 @@ dependencies {
     compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
     compile 'com.github.clans:fab:1.6.2'
     compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.facebook.fresco:fresco:0.9.0'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
 }
 
 
