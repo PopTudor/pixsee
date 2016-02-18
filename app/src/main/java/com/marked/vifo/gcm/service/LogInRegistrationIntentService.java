@@ -40,6 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * To receive GCM messages, this app must register with GCM and get a unique identifier called a registration token.
@@ -182,7 +183,7 @@ public class LogInRegistrationIntentService extends IntentService {
 	 * parameters.
 	 * Persist registration to third-party servers.
 	 * Modify this method to associate the user's GCM registration token with any server-side account
-	 * maintained by your application. If the user already exists, update his registration token in case it's outdated
+	 * maintained by your application. If the user already hasAccount, update his registration token in case it's outdated
 	 *
 	 * @param email    The email of the account.
 	 * @param password The password to login
@@ -234,8 +235,9 @@ public class LogInRegistrationIntentService extends IntentService {
 	private void handleActionSignup(String name, String email, String password, String token) {
 		try {
 		    /* Use URLEncoder to replace spaces with %20 or + and replace invalid URL chars with equivalent in hex*/
-			Retrofit retrofit = new Retrofit.Builder().baseUrl(ServerConstants.SERVER).build();
-			retrofit.create(LoginAPI.class) /* if sent_token_to_server == true, we are registered*/.signUp(token, name, email, password)
+			Retrofit retrofit = new Retrofit.Builder().baseUrl(ServerConstants.SERVER).addConverterFactory(GsonConverterFactory.create()).build();
+			retrofit.create(LoginAPI.class) /* if sent_token_to_server == true, we are registered*/
+                    .signUp(token, name, email, password)
 			        .enqueue(new Callback<JsonObject>() {
 				        @Override
 				        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -244,7 +246,7 @@ public class LogInRegistrationIntentService extends IntentService {
 						        // sent to your server. If the boolean is false, send the token to your server,
 						        // otherwise your server should have already received the token.
 						        mSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply();
-						        mSharedPreferences.edit().putString(GCMConstants.USER_ID, response.body().get(GCMConstants.USER_ID).toString())
+						        mSharedPreferences.edit().putString(GCMConstants.USER_ID, response.body().get(GCMConstants.USER_ID).getAsString())
 						                          .apply();
 						        notifyBroadcastReceiver(GCMConstants.ACTION_SIGNUP);
 					        } else {
@@ -255,6 +257,7 @@ public class LogInRegistrationIntentService extends IntentService {
 
 				        @Override
 				        public void onFailure(Call<JsonObject> call, Throwable t) {
+							t.printStackTrace();
 				        }
 			        });
 
