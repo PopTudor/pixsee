@@ -5,11 +5,9 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
-import com.google.gson.JsonObject
 import com.marked.vifo.R
 import com.marked.vifo.delegate.DialogRegistration
 import com.marked.vifo.extra.GCMConstants
-import com.marked.vifo.extra.HTTPStatusCodes.REQUEST_CONFLICT
 import com.marked.vifo.extra.HTTPStatusCodes.REQUEST_TIMEOUT
 import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.gcm.RegistrationBroadcastReceiver
@@ -89,17 +87,17 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
                 .baseUrl(ServerConstants.SERVER)
                 .build()
         val service = retrofit.create(com.marked.vifo.networking.LoginAPI::class.java)
-        service.read(email)
-                .enqueue(object : Callback<JsonObject> {
-                    override fun onResponse(call: Call<JsonObject>?, response: Response<JsonObject>?) {
+        service.hasAccount(email)
+                .enqueue(object : Callback<Void> {
+                    override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
                         mProgressDialog.dismiss()
-                        if (response?.isSuccess == true) {
+                        if (response?.isSuccess == true) {/* if hasAccount returns 200 -> user registered*/
+                            toast("You already have an account")
+                        } else /* go to next step*/
                             mFragmentManager.addToBackStack(R.id.fragmentContainer, SignUpPassFragment.newInstance())
-                        } else
-                            errorStatusCode(response?.code())
                     }
 
-                    override fun onFailure(call: Call<JsonObject>?, error: Throwable?) {
+                    override fun onFailure(call: Call<Void>?, error: Throwable?) {
                         mProgressDialog.dismiss()
                         when (error) {
                             is SocketTimeoutException -> toast("Timeout Error")
@@ -109,10 +107,9 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
                 })
     }
 
-    fun errorStatusCode(statusCode: Int?): Unit {
+    private fun errorStatusCode(statusCode: Int?): Unit {
         when (statusCode) {
             REQUEST_TIMEOUT -> toast("Timeout")
-            REQUEST_CONFLICT -> toast("You already have an account")
         }
     }
 }
