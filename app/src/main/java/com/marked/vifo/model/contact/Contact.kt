@@ -3,29 +3,23 @@ package com.marked.vifo.model.contact;
 import android.content.ContentValues
 import android.os.Parcel
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
 import com.marked.vifo.extra.UserConstants
 
 /**
  * Created by Tudor Pop on 28-Nov-15.
  */
 data class Contact(
-        @SerializedName("id")
         var id: String?,
-        @SerializedName("name")
         var name: String?,
-        @SerializedName("email")
         var email: String?,
-        @SerializedName("token")
         var token: String?,
-        @SerializedName("password")
-        var password: String? = null
+        var password: String?
 ) : Parcelable {
     constructor(id: String?, name: String?, token: String?) : this(id, name, null, token)
 
     constructor(id: String?, name: String?, email: String?, token: String?) : this(id, name, email, token, null)
 
-    constructor() : this("", "", "")
+    constructor() : this(null, null, null)
 
     companion object {
         @JvmField @Suppress("unused")

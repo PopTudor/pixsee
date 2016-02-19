@@ -31,7 +31,9 @@ import com.google.android.gms.iid.InstanceID;
 import com.google.gson.JsonObject;
 import com.marked.vifo.R;
 import com.marked.vifo.extra.GCMConstants;
+import com.marked.vifo.extra.HTTPStatusCodes;
 import com.marked.vifo.extra.ServerConstants;
+import com.marked.vifo.model.contact.Contact;
 import com.marked.vifo.networking.LoginAPI;
 
 import java.io.IOException;
@@ -186,7 +188,7 @@ public class LogInRegistrationIntentService extends IntentService {
      * parameters.
      * Persist registration to third-party servers.
      * Modify this method to associate the user's GCM registration token with any server-side account
-     * maintained by your application. If the user already hasAccount, update his registration token in case it's outdated
+     * maintained by your application. If the user already has an account, update his registration token in case it's outdated
      *
      * @param email    The email of the account.
      * @param password The password to login
@@ -236,51 +238,40 @@ public class LogInRegistrationIntentService extends IntentService {
      * @param token    The new token.
      */
     private void handleActionSignup(String name, String email, String password, String token) {
-        try {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-// set your desired log level
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        // set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-// add your other interceptors …
-
-// add logging as last interceptor
-            httpClient.addInterceptor(logging);  // <-- this is the important line!
-            /* Use URLEncoder to replace spaces with %20 or + and replace invalid URL chars with equivalent in hex*/
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(ServerConstants.SERVER)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(httpClient.build())
-                    .build();
-            retrofit.create(LoginAPI.class) /* if sent_token_to_server == true, we are registered*/
-                    .signUp(name, email, token, password)
-                    .enqueue(new Callback<JsonObject>() {
-                        @Override
-                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                            if (response.isSuccess()) {
-                                // You should store a boolean that indicates whether the generated token has been
-                                // sent to your server. If the boolean is false, send the token to your server,
-                                // otherwise your server should have already received the token.
-                                mSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply();
-                                mSharedPreferences.edit().putString(GCMConstants.USER_ID, response.body().get(GCMConstants.USER_ID).getAsString())
-                                        .apply();
-                                notifyBroadcastReceiver(GCMConstants.ACTION_SIGNUP);
-                            } else {
-                                mSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, false).apply();
-                                handleVolleyError(response.errorBody());
-                            }
-                            Log.e("***", "onResponse: " + Thread.currentThread().getName());
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder().addInterceptor(logging);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ServerConstants.SERVER)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient.build())
+                .build();
+        retrofit.create(LoginAPI.class) /* if sent_token_to_server == true, we are registered*/
+                .create(new Contact(null, name, email, token, password))
+                .enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        if (response.isSuccess()) {
+                            // You should store a boolean that indicates whether the generated token has been
+                            // sent to your server. If the boolean is false, send the token to your server,
+                            // otherwise your server should have already received the token.
+                            mSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply();
+                            mSharedPreferences.edit().putString(GCMConstants.USER_ID, response.body().get(GCMConstants.USER_ID).getAsString())
+                                    .apply();
+                            notifyBroadcastReceiver(GCMConstants.ACTION_SIGNUP);
+                        } else {
+                            mSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, false).apply();
+                            handleVolleyError(response.errorBody());
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<JsonObject> call, Throwable t) {
-                            t.printStackTrace();
-                        }
-                    });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
     }
 
     /**
@@ -333,25 +324,11 @@ public class LogInRegistrationIntentService extends IntentService {
 
     private void handleVolleyError(ResponseBody error) {
         Intent intent = new Intent(GCMConstants.ACTION_ERROR);
-        error.close();
-        //		if (error != null) {
-        //			Log.e("Volley", "Error. HTTP Status Code:" + error.statusCode);
-        //			intent.putExtra(HTTPStatusCodes.ERROR_RESPONSE_STATUS_CODE, networkResponse.statusCode);
-        //		}
-        //		if (error instanceof TimeoutError) {
-        //			Log.e("Volley", "TimeoutError");
-        //			intent.putExtra(HTTPStatusCodes.ERROR_RESPONSE_STATUS_CODE, HTTPStatusCodes.REQUEST_TIMEOUT);
-        //		} else if (error instanceof NoConnectionError) {
-        //			Log.e("Volley", "NoConnectionError");
-        //		} else if (error instanceof AuthFailureError) {
-        //			Log.e("Volley", "AuthFailureError");
-        //		} else if (error instanceof ServerError) {
-        //			Log.e("Volley", "ServerError");
-        //		} else if (error instanceof NetworkError) {
-        //			Log.e("Volley", "NetworkError");
-        //		} else if (error instanceof ParseError) {
-        //			Log.e("Volley", "ParseError");
-        //		}
+        if (error != null) {
+            Log.e("Volley", "Error. HTTP Status Code:" + error.toString());
+            intent.putExtra(HTTPStatusCodes.ERROR_RESPONSE_STATUS_CODE, error.toString());
+            error.close();
+        }
         LocalBroadcastManager.getInstance(LogInRegistrationIntentService.this).sendBroadcast(intent);
     }
 }

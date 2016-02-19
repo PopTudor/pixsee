@@ -89,7 +89,7 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
                 .baseUrl(ServerConstants.SERVER)
                 .build()
         val service = retrofit.create(com.marked.vifo.networking.LoginAPI::class.java)
-        service.hasAccount(email)
+        service.read(email)
                 .enqueue(object : Callback<JsonObject> {
                     override fun onResponse(call: Call<JsonObject>?, response: Response<JsonObject>?) {
                         mProgressDialog.dismiss()
