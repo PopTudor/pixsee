@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HEAD;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Query;
@@ -27,4 +28,8 @@ public interface LoginAPI {
 
     @DELETE(ServerConstants.USER)
     Call<JsonObject> delete(@Body Contact contact);
+
+    @HEAD(ServerConstants.USER)
+    Call<Void> hasAccount(@Query(value = "email") String email);
+
 }
