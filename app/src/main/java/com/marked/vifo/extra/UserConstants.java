@@ -10,4 +10,5 @@ public interface UserConstants {
 	String NAME = "name";
 	String EMAIL = "email";
 	String TOKEN = "token";
+	String PASSWORD = "password";
 }

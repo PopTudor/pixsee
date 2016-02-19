@@ -39,7 +39,8 @@ class RegistrationBroadcastReceiver(val registrationListener: RegistrationListen
                 toStart.addFlags(IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 context.startActivity(toStart);
                 registrationListener?.onDismiss();
-                requestListFriends(context)
+                if(action != GCMConstants.ACTION_SIGNUP) /* when a new user signs up, he doesn't have any friens so we don't make a useless request*/
+                    requestListFriends(context)
             }
             GCMConstants.ACTION_RECOVERY -> {
 
@@ -54,8 +55,8 @@ class RegistrationBroadcastReceiver(val registrationListener: RegistrationListen
 }
 
 private fun requestListFriends(context: Context) {
-    val id: String? = context.defaultSharedPreferences.getString(GCMConstants.USER_ID, null)
-    if (!id.isNullOrBlank()) {
+    val id = context.defaultSharedPreferences.getString(GCMConstants.USER_ID, "")
+    if (id.isNotBlank()) {
         val retrofitBuilder = retrofit2.Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(ServerConstants.SERVER)
@@ -66,10 +67,10 @@ private fun requestListFriends(context: Context) {
             override fun onResponse(p0: Call<JsonObject>?, response: Response<JsonObject>) {
                 if(response.isSuccess) {
                     val friends = response.body().getAsJsonArray("friends")
-                    val gson = Gson()
                     context.async() {
                         context.database.use {
                             transaction {
+                                val gson = Gson()
                                 friends.forEach {
                                     insertWithOnConflict(DatabaseContract.Contact.TABLE_NAME, null, gson.fromJson(it, Contact::class.java).toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
                                 }

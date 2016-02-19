@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.marked.vifo.R
 import kotlinx.android.synthetic.main.activity_log_in.*
+import kotlinx.android.synthetic.main.fragment_sign_up_pass.view.*
+import org.jetbrains.anko.onClick
 import org.jetbrains.anko.toast
 
 class SignUpPassFragment : Fragment() {
@@ -15,7 +17,7 @@ class SignUpPassFragment : Fragment() {
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val rootView = inflater.inflate(R.layout.fragment_sign_up_pass, container, false)
-		rootView.findViewById(R.id.nextButton).setOnClickListener {
+		rootView.nextButton.onClick {
 			val password = passwordEditText.text.toString().trim { it <= ' ' }
 			if (password.isNullOrBlank())
 				activity.toast("Please enter a password")
@@ -31,7 +33,7 @@ class SignUpPassFragment : Fragment() {
 	// TODO: Rename method, update argument and hook method into UI event
 	fun onNextPressed(password: String) {
 		if (mListener != null) {
-			mListener?.onPasswordSave(password)
+			mListener?.onSavePassword(password)
 		}
 	}
 
@@ -50,7 +52,7 @@ class SignUpPassFragment : Fragment() {
 
 	interface SignUpPassFragmentInteraction {
 		// TODO: Update argument type and name
-		fun onPasswordSave(password: String)
+		fun onSavePassword(password: String)
 	}
 
 	companion object {

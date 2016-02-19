@@ -14,11 +14,11 @@ import retrofit2.http.Query;
  * Created by Tudor Pop on 17-Feb-16.
  */
 public interface LoginAPI {
-	@GET(ServerConstants.SERVER_USER_HAS_ACCOUNT)
-	Call<JsonObject> hasAccount(@Query(value = "email") String email);
+    @GET(ServerConstants.SERVER_USER_HAS_ACCOUNT)
+    Call<JsonObject> hasAccount(@Query(value = "email") String email);
 
 	@FormUrlEncoded
-	@PUT("user")
-	Call<JsonObject> signUp(@Field(value = "token") String token, @Field(value = "name") String name,
-	                        @Field(value = "email") String email, @Field(value = "password") String password);
+	@PUT(ServerConstants.USER)
+	Call<JsonObject> signUp( @Field(value = "name") String name, @Field(value = "email") String email,
+							 @Field(value = "token") String token,@Field(value = "password") String password);
 }

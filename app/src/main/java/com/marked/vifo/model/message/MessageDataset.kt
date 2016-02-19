@@ -78,7 +78,7 @@ class MessageDataset(var mContext: Context) : ArrayList<Message>() {
 					DatabaseContract.Message.COLUMN_TYPE,
 					DatabaseContract.Message.COLUMN_DATE,
 					DatabaseContract.Message.COLUMN_TO
-			).where("${DatabaseContract.Message.COLUMN_TO}={to}", "to" to contact.id).limit(size, limit)
+			).where("${DatabaseContract.Message.COLUMN_TO}={to}", "to" to contact.id.toString()).limit(size, limit)
 					.exec {
 						parseList(rowParser {
 							body: String, type: Int, date: Int, to: String

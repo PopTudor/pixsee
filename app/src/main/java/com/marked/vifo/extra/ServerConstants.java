@@ -12,7 +12,7 @@ public interface ServerConstants {
 	String FRIENDS = "friends";
 	String RECOVERY = "recovery";
 	String LOGIN = "login";
-	String HAS_ACCOUNT = "exists";
+	String HAS_ACCOUNT = "hasAccount";
 
 	String SERVER = BASE_URL + PORT;
 	String SERVER_USER = SERVER + USER;

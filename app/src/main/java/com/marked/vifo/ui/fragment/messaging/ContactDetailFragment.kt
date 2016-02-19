@@ -3,13 +3,10 @@ package com.marked.vifo.ui.fragment.messaging
 import android.content.Context
 import android.os.*
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.marked.vifo.R
@@ -18,24 +15,15 @@ import com.marked.vifo.extra.MessageConstants
 import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.gcm.service.GCMListenerService
 import com.marked.vifo.helper.SpacesItemDecoration
-import com.marked.vifo.model.message.Message
 import com.marked.vifo.model.contact.Contact
-import com.marked.vifo.model.database.DatabaseContract
-import com.marked.vifo.model.database.database
+import com.marked.vifo.model.message.Message
 import com.marked.vifo.model.message.MessageDataset
-import com.marked.vifo.model.message.message
 import com.marked.vifo.ui.activity.ContactDetailActivity
 import com.marked.vifo.ui.adapter.MessageAdapter
 import io.socket.client.IO
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.fragment_contact_detail.*
 import kotlinx.android.synthetic.main.fragment_contact_detail.view.*
-import org.jetbrains.anko.async
-import org.jetbrains.anko.db.parseList
-import org.jetbrains.anko.db.rowParser
-import org.jetbrains.anko.db.select
-import org.jetbrains.anko.onClick
-import org.jetbrains.anko.onTouch
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.json.JSONException
 import org.json.JSONObject
@@ -68,7 +56,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 
 	@Throws(JSONException::class)
 	fun sendMessage(messageText: String, messageType: Int) {
-		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).messageType(messageType).from(mThisUser).to(mThatUser.id).build()
+		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).messageType(messageType).from(mThisUser).to(mThatUser.id.toString()).build()
 		//		doGcmSendUpstreamMessage(message);
 		val jsonObject = message.toJSON()
 
@@ -96,7 +84,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	 */
 	override fun receiveMessage(from: String, data: Bundle) {
 		val messageType: Int = data.getInt("type", MessageConstants.MessageType.YOU_MESSAGE)
-		val message = Message.Builder().addData(data).messageType(messageType).from(mThatUser.id).to(mThatUser.id).build()
+		val message = Message.Builder().addData(data).messageType(messageType).from(mThatUser.id.toString()).to(mThatUser.id.toString()).build()
 		addMessage(message)
 	}
 

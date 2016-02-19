@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.fragment_sign_up_email.view.*
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.toast
 import java.io.UnsupportedEncodingException
-import java.net.URLEncoder
 
 /**
  * A simple [Fragment] subclass.
@@ -51,7 +50,7 @@ class SignUpEmailFragment : Fragment() {
 	fun onNextPressed(email: String) {
 		if (mListener != null) {
 			try {
-				mListener!!.onSaveEmail(URLEncoder.encode(email, "UTF-8"))
+				mListener!!.onSaveEmail(email)
 			} catch (e: UnsupportedEncodingException) {
 				e.printStackTrace()
 			}

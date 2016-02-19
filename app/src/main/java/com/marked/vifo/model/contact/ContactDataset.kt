@@ -68,13 +68,6 @@ class ContactDataset(val mContext: Context) : ArrayList<Contact>() {
         }
     }
 
-    fun contactListToJSONArray(list: List<Contact>): JSONArray {
-        val jsonArray = JSONArray()
-        for (contact in list)
-            jsonArray.put(contact.toJSON())
-        return jsonArray
-    }
-
     fun loadMore(limit: Int=50) {
         mContext.database.use {
             select(DatabaseContract.Contact.TABLE_NAME,

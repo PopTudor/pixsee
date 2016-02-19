@@ -26,7 +26,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.SocketTimeoutException
-import java.net.URLEncoder
 
 class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmentInteraction, SignUpEmailFragment.SignUpEmailFragmentInteraction, SignUpPassFragment.SignUpPassFragmentInteraction {
     private val mFragmentManager by lazy { supportFragmentManager }
@@ -58,20 +57,19 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
         super.onPause()
     }
 
-    override
-    fun onSaveName(name: String) {
-        mName = URLEncoder.encode(name, "UTF-8")
+    override fun onSaveName(name: String) {
+        mName = name
         mFragmentManager.addToBackStack(R.id.fragmentContainer, SignUpEmailFragment.newInstance(name))
     }
 
     override fun onSaveEmail(email: String) {
         mProgressDialog.show()
-        mEmail = URLEncoder.encode(email, "UTF-8")
+        mEmail = email
         checkEmail(mEmail)
     }
 
-    override fun onPasswordSave(password: String) {
-        mPassword = URLEncoder.encode(password, "UTF-8")
+    override fun onSavePassword(password: String) {
+        mPassword = password
         LogInRegistrationIntentService.startActionSignup(this, mName, mEmail, mPassword)
         mProgressDialog.setTitle("Signup")
         mProgressDialog.setMessage("Please wait...")
@@ -80,10 +78,10 @@ class SignUpActivity : AppCompatActivity(), SignUpNameFragment.SignUpNameFragmen
     }
 
     /**
-     * Sends a request to the server to check if the email already hasAccount.
-     * If the server has the email, the user already has an account and we should tell him that
+     * Sends a request to the server to check if the email is already in the database.
+     * If that is true the user already has an account and we should tell him that
      * Else proceed to the next step
-     * @param email the email adress to send to the server
+     * @param email the email adress to verify on the server
      */
     private fun checkEmail(email: String?) {
         val retrofit = Retrofit.Builder()
