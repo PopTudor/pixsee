@@ -22,7 +22,6 @@ package com.marked.vifo.gcm.service
 import android.app.IntentService
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.content.LocalBroadcastManager
@@ -40,6 +39,7 @@ import com.marked.vifo.model.database.DatabaseContract
 import com.marked.vifo.networking.LoginAPI
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.jetbrains.anko.defaultSharedPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -55,10 +55,8 @@ import java.io.IOException
  */
 class LogInRegistrationIntentService : IntentService("RegIntentService") {
 
-    private var mSharedPreferences: SharedPreferences? = null
 
-    override fun onHandleIntent(intent: Intent?) {
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+    override fun onHandleIntent(intent: Intent) {
         try {
             // [START register_for_gcm]
             // Initially this call goes out to the network to retrieve the token, subsequent calls
@@ -73,23 +71,23 @@ class LogInRegistrationIntentService : IntentService("RegIntentService") {
 
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString(GCMConstants.TOKEN, token).apply()
 
-            if (intent != null) {
-                val action = intent.action
-                if (ACTION_LOGIN == action) {
+            when (intent.action) {
+                ACTION_LOGIN -> {
                     val param1 = intent.getStringExtra(EXTRA_PARAM_EMAIL)
                     val param2 = intent.getStringExtra(EXTRA_PARAM_PASSWORD)
                     handleActionLogin(param1, param2, token)
-                } else if (ACTION_SIGNUP == action) {
+                }
+                ACTION_SIGNUP -> {
                     val param1 = intent.getStringExtra(EXTRA_PARAM_NAME)
                     val param2 = intent.getStringExtra(EXTRA_PARAM_EMAIL)
                     val param3 = intent.getStringExtra(EXTRA_PARAM_PASSWORD)
                     handleActionSignup(param1, param2, param3, token)
-                } else if (ACTION_RECOVERY == action) {
+                }
+                ACTION_RECOVERY -> {
                     val param1 = intent.getStringExtra(EXTRA_PARAM_EMAIL)
                     handleActionRecovery(param1, token)
                 }
             }
-
             // Subscribe to topic channels
             subscribeTopics(token)
             // [END register_for_gcm]
@@ -97,7 +95,7 @@ class LogInRegistrationIntentService : IntentService("RegIntentService") {
 
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
-            mSharedPreferences!!.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, false).apply()
+            defaultSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, false).apply()
         }
 
 
@@ -148,10 +146,10 @@ class LogInRegistrationIntentService : IntentService("RegIntentService") {
                              */
                     val userID = response.body().get(GCMConstants.USER_ID).asString
                     val friends: JsonArray = if (response.body().get(GCMConstants.FRIENDS).asJsonArray == null) JsonArray() else response.body().get(GCMConstants.FRIENDS).asJsonArray
-                    mSharedPreferences!!.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply()/* if sent_token_to_server == true, we are registered*/
-                    mSharedPreferences!!.edit().putString(GCMConstants.USER_ID, userID).apply()
+                    defaultSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply()/* if sent_token_to_server == true, we are registered*/
+                    defaultSharedPreferences.edit().putString(GCMConstants.USER_ID, userID).apply()
                     notifyBroadcastReceiver(GCMConstants.ACTION_LOGIN)
-                    getApplicationContext().saveToTable(DatabaseContract.Contact.TABLE_NAME, friends);
+                    saveToTable(DatabaseContract.Contact.TABLE_NAME, friends);
                 } else {
                     handleVolleyError(response.raw().code())
                 }
@@ -169,11 +167,8 @@ class LogInRegistrationIntentService : IntentService("RegIntentService") {
      * Persist registration to third-party servers.
      * Modify this method to associate the user's GCM registration token with any server-side account
      * maintained by your application.
-
      * @param email    The email of the user we want to store.
-     * *
      * @param password The password of the user.
-     * *
      * @param token    The new token.
      */
     private fun handleActionSignup(name: String, email: String, password: String, token: String) {
@@ -189,8 +184,8 @@ class LogInRegistrationIntentService : IntentService("RegIntentService") {
                     // You should store a boolean that indicates whether the generated token has been
                     // sent to your server. If the boolean is false, send the token to your server,
                     // otherwise your server should have already received the token.
-                    mSharedPreferences!!.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply()/* if sent_token_to_server == true, we are registered*/
-                    mSharedPreferences!!.edit().putString(GCMConstants.USER_ID, response.body().get(GCMConstants.USER_ID).asString).apply()
+                    defaultSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply()/* if sent_token_to_server == true, we are registered*/
+                    defaultSharedPreferences.edit().putString(GCMConstants.USER_ID, response.body().get(GCMConstants.USER_ID).asString).apply()
                     notifyBroadcastReceiver(GCMConstants.ACTION_SIGNUP)
                 } else {
                     handleVolleyError(response.raw().code())
@@ -253,7 +248,7 @@ class LogInRegistrationIntentService : IntentService("RegIntentService") {
 
 
     private fun handleVolleyError(error: Int) {
-        mSharedPreferences!!.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, false).apply()
+        defaultSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, false).apply()
         val intent = Intent(GCMConstants.ACTION_ERROR)
         intent.putExtra(HTTPStatusCodes.ERROR_RESPONSE_STATUS_CODE, error)
         LocalBroadcastManager.getInstance(this@LogInRegistrationIntentService).sendBroadcast(intent)
@@ -281,7 +276,7 @@ class LogInRegistrationIntentService : IntentService("RegIntentService") {
          * @see IntentService
          */
         // helper method
-        fun startActionSignup(context: Context, name: String, email: String, password: String) {
+        fun startActionSignup(context: Context, name: String?, email: String?, password: String?) {
             val intent = Intent(context, LogInRegistrationIntentService::class.java)
             intent.action = ACTION_SIGNUP
             intent.putExtra(EXTRA_PARAM_NAME, name)
