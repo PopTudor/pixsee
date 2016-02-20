@@ -21,7 +21,7 @@ class DialogRegistration(context: Context, progressDialog: ProgressDialog) : Reg
 		when (errorStatusCode) {
 			HTTPStatusCodes.REQUEST_CONFLICT -> context.toast("You already have an account")
 			HTTPStatusCodes.REQUEST_TIMEOUT -> context.toast("Timeout error")
-			HTTPStatusCodes.REQUEST_INCORRECT_PASSWORD -> context.toast("Incorrect password")
+			HTTPStatusCodes.UNPROCESSABLE_ENTITY -> context.toast("Incorrect password")
 			HTTPStatusCodes.NOT_FOUND -> context.toast("We are sorry, but we did not found you")
 		}
 	}

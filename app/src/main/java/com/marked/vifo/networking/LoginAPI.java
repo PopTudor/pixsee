@@ -7,6 +7,8 @@ import com.marked.vifo.model.contact.Contact;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HEAD;
 import retrofit2.http.POST;
@@ -21,7 +23,7 @@ public interface LoginAPI {
     Call<JsonObject> create(@Body Contact contact);
 
     @GET(ServerConstants.USER)
-    Call<JsonObject> read(@Query(value = "email") String email);
+    Call<JsonObject> read(@Query("email") String email);
 
     @PUT(ServerConstants.USER)
     Call<JsonObject> update(@Body Contact contact);
@@ -30,6 +32,9 @@ public interface LoginAPI {
     Call<JsonObject> delete(@Body Contact contact);
 
     @HEAD(ServerConstants.USER)
-    Call<Void> hasAccount(@Query(value = "email") String email);
+    Call<Void> hasAccount(@Query("email") String email);
 
+    @FormUrlEncoded
+    @POST(ServerConstants.LOGIN)
+    Call<JsonObject> login(@Field("email")String email,@Field("password")String password,@Field("token")String token);
 }

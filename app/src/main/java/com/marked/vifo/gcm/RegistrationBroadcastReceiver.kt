@@ -39,8 +39,8 @@ class RegistrationBroadcastReceiver(val registrationListener: RegistrationListen
                 toStart.addFlags(IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 context.startActivity(toStart);
                 registrationListener?.onDismiss();
-                if(action != GCMConstants.ACTION_SIGNUP) /* when a new user signs up, he doesn't have any friens so we don't make a useless request*/
-                    requestListFriends(context)
+//                if(action != GCMConstants.ACTION_SIGNUP) /* when a new user signs up, he doesn't have any friens so we don't make a useless request*/
+//                    requestListFriends(context)
             }
             GCMConstants.ACTION_RECOVERY -> {
 

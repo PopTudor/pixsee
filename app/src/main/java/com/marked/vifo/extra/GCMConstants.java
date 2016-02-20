@@ -13,7 +13,7 @@ public interface GCMConstants {
 	String ACTION_SIGNUP = String.format("%s.SIGNUP", PACKAGE_NAME);
 	String ACTION_LOGIN = String.format("%s.LOGIN", PACKAGE_NAME);
 	String ACTION_RECOVERY = String.format("%s.ACTION_RECOVERY", PACKAGE_NAME);
-	String ACTION_ERROR = "$PACKAGE_NAME.ACTION_ERROR";
+	String ACTION_ERROR = PACKAGE_NAME+".ACTION_ERROR";
 
 	/* ACTION_LOGIN Constants*/ String PASSWORD = "password";
 	String EMAIL = "email";
