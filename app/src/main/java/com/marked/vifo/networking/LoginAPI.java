@@ -19,8 +19,9 @@ import retrofit2.http.Query;
  * Created by Tudor Pop on 17-Feb-16.
  */
 public interface LoginAPI {
+    @FormUrlEncoded
     @POST(ServerConstants.USER)
-    Call<JsonObject> create(@Body Contact contact);
+    Call<JsonObject> create(@Field("name") String name, @Field("email") String email, @Field("token") String token, @Field("password") String password);
 
     @GET(ServerConstants.USER)
     Call<JsonObject> read(@Query("email") String email);
@@ -36,5 +37,5 @@ public interface LoginAPI {
 
     @FormUrlEncoded
     @POST(ServerConstants.LOGIN)
-    Call<JsonObject> login(@Field("email")String email,@Field("password")String password,@Field("token")String token);
+    Call<JsonObject> login(@Field("email") String email, @Field("password") String password, @Field("token") String token);
 }

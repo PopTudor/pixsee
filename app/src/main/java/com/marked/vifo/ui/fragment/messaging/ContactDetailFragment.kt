@@ -56,7 +56,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 
 	@Throws(JSONException::class)
 	fun sendMessage(messageText: String, messageType: Int) {
-		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).messageType(messageType).from(mThisUser).to(mThatUser.id.toString()).build()
+		val message = Message.Builder().addData(MessageConstants.DATA_BODY, messageText).messageType(messageType).from(mThisUser).to(mThatUser.userID.toString()).build()
 		//		doGcmSendUpstreamMessage(message);
 		val jsonObject = message.toJSON()
 
@@ -84,7 +84,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	 */
 	override fun receiveMessage(from: String, data: Bundle) {
 		val messageType: Int = data.getInt("type", MessageConstants.MessageType.YOU_MESSAGE)
-		val message = Message.Builder().addData(data).messageType(messageType).from(mThatUser.id.toString()).to(mThatUser.id.toString()).build()
+		val message = Message.Builder().addData(data).messageType(messageType).from(mThatUser.userID.toString()).to(mThatUser.userID.toString()).build()
 		addMessage(message)
 	}
 
@@ -117,7 +117,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 
 		mSocket.connect()
 
-		mSocket.emit(ON_NEW_ROOM, JSONObject("{from:%s,to:%s}".format(mThisUser, mThatUser.id)))
+		mSocket.emit(ON_NEW_ROOM, JSONObject("{from:%s,to:%s}".format(mThisUser, mThatUser.userID)))
 
 	}
 
@@ -197,7 +197,7 @@ class ContactDetailFragment : Fragment(), GCMListenerService.Callbacks {
 	}
 
 	fun onTyping(typing: Boolean) {
-		mSocket.emit(ON_TYPING, JSONObject("{from:%s,to:%s,typing:%s}".format(mThisUser, mThatUser.id, typing)))
+		mSocket.emit(ON_TYPING, JSONObject("{from:%s,to:%s,typing:%s}".format(mThisUser, mThatUser.userID, typing)))
 	}
 
 	fun onNewMessage(): Emitter.Listener {

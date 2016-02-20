@@ -3,23 +3,20 @@ package com.marked.vifo.model.contact;
 import android.content.ContentValues
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import com.marked.vifo.extra.UserConstants
 
 /**
  * Created by Tudor Pop on 28-Nov-15.
  */
 data class Contact(
-        var id: String?,
+        @SerializedName(value = "userID",alternate=arrayOf("_id"))
+        var userID: String?,
         var name: String?,
         var email: String?,
-        var token: String?,
-        var password: String?
+        var token: String?
 ) : Parcelable {
-    constructor(id: String?, name: String?, token: String?) : this(id, name, null, token)
-
-    constructor(id: String?, name: String?, email: String?, token: String?) : this(id, name, email, token, null)
-
-    constructor() : this(null, null, null)
+    constructor() : this(null, null, null, null)
 
     companion object {
         @JvmField @Suppress("unused")
@@ -33,8 +30,7 @@ data class Contact(
             var name = parcelIn.readString()
             var email = parcelIn.readString()
             var token = parcelIn.readString()
-            var password = parcelIn.readString()
-            return Contact(id, name, email, token,password)
+            return Contact(id, name, email, token)
         }
     }
 
@@ -43,20 +39,18 @@ data class Contact(
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(id);
+        dest.writeString(userID);
         dest.writeString(name);
         dest.writeString(email);
         dest.writeString(token);
-        dest.writeString(password);
     }
 
     fun toContentValues(): ContentValues {
         val values = ContentValues();
-        values.put(UserConstants.ID, id);
+        values.put(UserConstants.ID, userID);
         values.put(UserConstants.NAME, name);
         values.put(UserConstants.EMAIL, email);
         values.put(UserConstants.TOKEN, token);
-        values.put(UserConstants.PASSWORD, password);
         return values;
     }
 }

@@ -27,12 +27,13 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.marked.vifo.R;
 import com.marked.vifo.extra.GCMConstants;
 import com.marked.vifo.extra.HTTPStatusCodes;
 import com.marked.vifo.extra.ServerConstants;
-import com.marked.vifo.model.contact.Contact;
+import com.marked.vifo.gcm.RegistrationBroadcastReceiverKt;
 import com.marked.vifo.networking.LoginAPI;
 
 import java.io.IOException;
@@ -212,9 +213,12 @@ public class LogInRegistrationIntentService extends IntentService {
                              sent to your server. If the boolean is false, send the token to your server,
                              otherwise your server should have already received the token.
                              */
+                            String userID = response.body().get(GCMConstants.USER_ID).getAsString();
+                            JsonArray friends = response.body().get(GCMConstants.FRIENDS).getAsJsonArray() == null ? new JsonArray() : response.body().get(GCMConstants.FRIENDS).getAsJsonArray();
                             mSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply();/* if sent_token_to_server == true, we are registered*/
-                            mSharedPreferences.edit().putString(GCMConstants.USER_ID, response.body().get(GCMConstants.USER_ID).getAsString()).apply();
+                            mSharedPreferences.edit().putString(GCMConstants.USER_ID, userID).apply();
                             notifyBroadcastReceiver(GCMConstants.ACTION_LOGIN);
+                            RegistrationBroadcastReceiverKt.requestListFriends(getApplicationContext(), friends);
                         } else {
                             handleVolleyError(response.raw().code());
                         }
@@ -250,7 +254,7 @@ public class LogInRegistrationIntentService extends IntentService {
                 .client(httpClient.build())
                 .build();
         retrofit.create(LoginAPI.class)
-                .create(new Contact(null, name, email, token, password))
+                .create(name, email, token, password)
                 .enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -258,7 +262,8 @@ public class LogInRegistrationIntentService extends IntentService {
                             // You should store a boolean that indicates whether the generated token has been
                             // sent to your server. If the boolean is false, send the token to your server,
                             // otherwise your server should have already received the token.
-                            mSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply();/* if sent_token_to_server == true, we are registered*/
+                            mSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true)
+                                    .apply();/* if sent_token_to_server == true, we are registered*/
                             mSharedPreferences.edit().putString(GCMConstants.USER_ID, response.body().get(GCMConstants.USER_ID).getAsString())
                                     .apply();
                             notifyBroadcastReceiver(GCMConstants.ACTION_SIGNUP);

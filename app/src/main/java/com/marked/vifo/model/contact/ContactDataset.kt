@@ -6,8 +6,6 @@ import com.marked.vifo.extra.UserConstants
 import com.marked.vifo.model.database.DatabaseContract
 import com.marked.vifo.model.database.database
 import org.jetbrains.anko.async
-import org.jetbrains.anko.db.parseList
-import org.jetbrains.anko.db.rowParser
 import org.jetbrains.anko.db.select
 import org.jetbrains.anko.db.transaction
 import org.json.JSONArray
@@ -47,14 +45,14 @@ class ContactDataset(val mContext: Context) : ArrayList<Contact>() {
 
     override fun set(index: Int, element: Contact): Contact {
         mContext.database.use {
-            update(DatabaseContract.Contact.TABLE_NAME, element.toContentValues(), "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(element.id))
+            update(DatabaseContract.Contact.TABLE_NAME, element.toContentValues(), "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(element.userID))
         }
         return super.set(index, element)
     }
 
     override fun remove(element: Contact): Boolean {
         mContext.database.use {
-            delete(DatabaseContract.Contact.TABLE_NAME, "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(element.id))
+            delete(DatabaseContract.Contact.TABLE_NAME, "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(element.userID))
         }
         return super.remove(element)
     }
@@ -68,17 +66,25 @@ class ContactDataset(val mContext: Context) : ArrayList<Contact>() {
         }
     }
 
-    fun loadMore(limit: Int=50) {
+    fun loadMore(limit: Int = 50) {
         mContext.database.use {
+
             select(DatabaseContract.Contact.TABLE_NAME,
                     DatabaseContract.Contact.COLUMN_ID,
                     DatabaseContract.Contact.COLUMN_NAME,
+                    DatabaseContract.Contact.COLUMN_EMAIL,
                     DatabaseContract.Contact.COLUMN_TOKEN).limit(size, limit).exec {
-                parseList(rowParser {
-                    id: String, name: String, token: String
-                    ->
-                    super.add(Contact(id, name, token))
-                })
+                moveToFirst()
+                val id = getColumnIndex(DatabaseContract.Contact.COLUMN_ID)
+                val name = getColumnIndex(DatabaseContract.Contact.COLUMN_NAME)
+                val email = getColumnIndex(DatabaseContract.Contact.COLUMN_EMAIL)
+                val token = getColumnIndex(DatabaseContract.Contact.COLUMN_TOKEN)
+
+                while (!isAfterLast) {
+                    super.add(Contact(getString(id), getString(name), getString(email), getString(token)))
+                    moveToNext()
+                }
+                close()
             }
         }
     }
