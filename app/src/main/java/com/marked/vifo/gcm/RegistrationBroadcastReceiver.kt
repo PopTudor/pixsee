@@ -3,18 +3,10 @@ package com.marked.vifo.gcm;
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.database.sqlite.SQLiteDatabase
 import android.support.v4.content.IntentCompat
-import com.google.gson.Gson
-import com.google.gson.JsonArray
 import com.marked.vifo.extra.GCMConstants
 import com.marked.vifo.extra.HTTPStatusCodes
-import com.marked.vifo.model.contact.Contact
-import com.marked.vifo.model.database.DatabaseContract
-import com.marked.vifo.model.database.database
 import com.marked.vifo.ui.activity.ContactListActivity
-import org.jetbrains.anko.async
-import org.jetbrains.anko.db.transaction
 
 /**
  * Created by Tudor Pop on 28-Nov-15.
@@ -46,20 +38,7 @@ class RegistrationBroadcastReceiver(val registrationListener: RegistrationListen
     }
 }
 
-fun requestListFriends(context: Context,jsonArray: JsonArray) {
-    context.async() {
-        context.database.use {
-            transaction {
-                val gson = Gson()
-                jsonArray.forEach {
-                    insertWithOnConflict(DatabaseContract.Contact.TABLE_NAME, null,
-                            gson.fromJson(it, Contact::class.java).toContentValues(),
-                            SQLiteDatabase.CONFLICT_IGNORE)
-                }
-            }
-        }
-    }
-}
+
 
 /**
  * If we have an indeterminate ProgressDialog loading and we want to dismiss it
