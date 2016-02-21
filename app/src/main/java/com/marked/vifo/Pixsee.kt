@@ -2,13 +2,17 @@ package com.marked.vifo
 
 import android.app.Application
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.imagepipeline.backends.okhttp.OkHttpImagePipelineConfigFactory
+import com.squareup.okhttp.OkHttpClient
 
 /**
  * Created by Tudor Pop on 17-Feb-16.
  */
 class Pixsee : Application() {
+
 	override fun onCreate() {
 		super.onCreate()
-		Fresco.initialize(this)
+		var config = OkHttpImagePipelineConfigFactory.newBuilder(this, OkHttpClient()).build()
+		Fresco.initialize(this,config)
 	}
 }
