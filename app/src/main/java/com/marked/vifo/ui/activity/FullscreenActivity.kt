@@ -5,8 +5,11 @@ import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import com.davemorrissey.labs.subscaleview.ImageSource
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.marked.vifo.R
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 import org.jetbrains.anko.onClick
@@ -21,12 +24,12 @@ class FullscreenActivity : AppCompatActivity() {
         // Note that some of these constants are new as of API 16 (Jelly Bean)
         // and API 19 (KitKat). It is safe to use them, as they are inlined
         // at compile-time and do nothing on earlier devices.
-        fullscreenContent?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        fullscreenContent?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
     private val mShowPart2Runnable = Runnable {
         // Delayed display of UI elements
-        val actionBar = supportActionBar
-        actionBar?.show()
         showAnimation()
     }
     private val mHideRunnable = Runnable { hide() }
@@ -97,19 +100,24 @@ class FullscreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fullscreen)
-
+//        window.statusBarColor = 255
         mVisible = true
-
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        window.statusBarColor = ContextCompat.getColor(this,R.color.semi_transparent_black)
         // Set up the user interaction to manually show or hide the system UI.
-        fullscreenContent?.onClick { toggle() }
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        fullscreenContent.setOnTouchListener(mDelayHideTouchListener)
-
-        fullscreenContent.setImageURI(intent.getParcelableExtra("URI"),this)
-
+        fullscreenContent.apply {
+            onClick { toggle() }
+            setOnTouchListener(mDelayHideTouchListener)
+            setImage(ImageSource.uri(intent.getStringExtra("URI")))
+            setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM)
+            val density = resources.displayMetrics.density.toInt();
+            setMinimumDpi(100)
+            setDoubleTapZoomDpi(100 + 20)
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -125,8 +133,8 @@ class FullscreenActivity : AppCompatActivity() {
 
     private fun hide() {
         // Hide UI first
-        val actionBar = supportActionBar
-        actionBar?.hide()
+//        val actionBar = supportActionBar
+//        actionBar?.hide()
         hideAnimation()
 
         mVisible = false

@@ -5,19 +5,16 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     xmlns:fresco="http://schemas.android.com/tools"
-    android:background="#0099cc"
+    android:background="#212121"
     tools:context="com.marked.vifo.ui.activity.FullscreenActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
         android:id="@+id/fullscreenContent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:keepScreenOn="true"
-        fresco:actualImageScaleType="center" />
+        android:layout_height="match_parent"/>
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->

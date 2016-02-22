@@ -135,14 +135,14 @@
         <!-- [END instanceId_listener] -->
         <service
             android:name=".gcm.service.LogInRegistrationIntentService"
-            android:exported="false"></service>
+            android:exported="false"/>
 
         <activity
             android:name=".ui.activity.SignUpActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.LogInActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -152,7 +152,7 @@
             android:name=".ui.activity.FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme"/>
     </application>
 
 </manifest>

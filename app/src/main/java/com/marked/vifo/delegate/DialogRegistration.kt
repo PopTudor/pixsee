@@ -14,7 +14,8 @@ class DialogRegistration(context: Context, progressDialog: ProgressDialog) : Reg
 	private val context = context
 
 	override fun onDismiss() {
-		progressDialog.dismiss()
+        if(progressDialog.isShowing)
+            progressDialog.dismiss()
 	}
 
 	override fun onError(errorStatusCode: Int) {
