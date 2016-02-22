@@ -100,23 +100,20 @@ class FullscreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fullscreen)
-//        window.statusBarColor = 255
-        mVisible = true
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        window.statusBarColor = ContextCompat.getColor(this,R.color.semi_transparent_black)
-        // Set up the user interaction to manually show or hide the system UI.
+        window.statusBarColor = ContextCompat.getColor(this, R.color.semi_transparent_black)
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
+        mVisible = true
+
         fullscreenContent.apply {
+            // Set up the user interaction to manually show or hide the system UI.
             onClick { toggle() }
             setOnTouchListener(mDelayHideTouchListener)
             setImage(ImageSource.uri(intent.getStringExtra("URI")))
             setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM)
-            val density = resources.displayMetrics.density.toInt();
             setMinimumDpi(100)
             setDoubleTapZoomDpi(100 + 20)
+            setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER)
         }
     }
 
@@ -133,8 +130,8 @@ class FullscreenActivity : AppCompatActivity() {
 
     private fun hide() {
         // Hide UI first
-//        val actionBar = supportActionBar
-//        actionBar?.hide()
+        //        val actionBar = supportActionBar
+        //        actionBar?.hide()
         hideAnimation()
 
         mVisible = false
