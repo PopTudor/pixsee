@@ -103,6 +103,14 @@ class FullscreenActivity : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         window.statusBarColor = ContextCompat.getColor(this, R.color.semi_transparent_black)
 
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+		supportActionBar?.setDisplayShowTitleEnabled(false)
+		toolbar.setNavigationOnClickListener { onBackPressed() }
+
+
         mVisible = true
 
         fullscreenContent.apply {
@@ -130,8 +138,6 @@ class FullscreenActivity : AppCompatActivity() {
 
     private fun hide() {
         // Hide UI first
-        //        val actionBar = supportActionBar
-        //        actionBar?.hide()
         hideAnimation()
 
         mVisible = false
