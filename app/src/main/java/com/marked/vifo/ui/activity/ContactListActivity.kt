@@ -49,7 +49,8 @@ class ContactListActivity : AppCompatActivity() {
 	}
 
 	override fun onBackPressed() {
-		if ((mFragmentManager.findFragmentById(R.id.fragmentContainer) as ContactListFragment).isOpened())
+		if (!((mFragmentManager.findFragmentById(R.id.fragmentContainer) as ContactListFragment)).closeFAM()) // == true if it was already closed
 			super.onBackPressed()
+
 	}
 }
