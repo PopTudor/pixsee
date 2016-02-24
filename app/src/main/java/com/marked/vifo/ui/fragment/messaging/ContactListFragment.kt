@@ -8,24 +8,15 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.*
 import android.view.animation.OvershootInterpolator
 import com.github.clans.fab.FloatingActionMenu
 import com.marked.vifo.R
-import com.marked.vifo.extra.GCMConstants
-import com.marked.vifo.extra.ServerConstants
 import com.marked.vifo.model.contact.ContactDataset
-import com.marked.vifo.model.contact.contactListfromJSONArray
 import com.marked.vifo.ui.adapter.ContactsAdapter
-import kotlinx.android.synthetic.main.activity_contact_detail.*
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
-import org.jetbrains.anko.onClick
-import org.jetbrains.anko.support.v4.defaultSharedPreferences
-import org.jetbrains.anko.support.v4.find
 import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.support.v4.toast
-import org.json.JSONObject
 import kotlin.concurrent.fixedRateTimer
 
 /**
@@ -38,78 +29,70 @@ import kotlin.concurrent.fixedRateTimer
  * Activities containing this fragment MUST implement the [Callbacks]
  * interface.
  */
-class ContactListFragment : Fragment(),View.OnClickListener {
-    private val mContext by lazy { activity }
+class ContactListFragment : Fragment() {
+	private val mContext by lazy { activity }
 
-    private val mContactsInstance by lazy { ContactDataset.getInstance(mContext) }
-    private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContactsInstance) }
-    private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
+	private val mContactsInstance by lazy { ContactDataset.getInstance(mContext) }
+	private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContactsInstance) }
+	private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
-	lateinit private var mFabMenu:FloatingActionMenu
+	lateinit private var mFabMenu: FloatingActionMenu
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
 
-        //		attachListeners();
-        //		mSocket.on("hi", onNewRoom);
-        //		mSocket.emit("room",new JSONObject());
-        //		mSocket.connect();
-        fixedRateTimer("DATABASE_CHECK",false,500,1500,{
-            /*when first logged in the data comes from the server asynchronously and is inserted
-            * into local database asynchronously. This timer will load the data from database when it's ready.
-            * There should be also a better solution for this but I don't have time now to think about it.
-            * A couple of ideas: broadcast receiver, interface callback, event bus*/
-            if(mContactsInstance.size > 0) {
-                onUiThread {mContactsAdapter.notifyDataSetChanged()}
-                this.cancel()
-            }else mContactsInstance.loadMore()
-        })
-
-    }
-
-	override fun onClick(view: View?) {
-		when(view?.id){
-			R.id.fabMenu -> {
-				toast("test")
-			}
-		}
+		//		attachListeners();
+		//		mSocket.on("hi", onNewRoom);
+		//		mSocket.emit("room",new JSONObject());
+		//		mSocket.connect();
+		fixedRateTimer("DATABASE_CHECK", false, 500, 1500, {
+			/*when first logged in the data comes from the server asynchronously and is inserted
+			* into local database asynchronously. This timer will load the data from database when it's ready.
+			* There should be also a better solution for this but I don't have time now to think about it.
+			* A couple of ideas: broadcast receiver, interface callback, event bus*/
+			if (mContactsInstance.size > 0) {
+				onUiThread { mContactsAdapter.notifyDataSetChanged() }
+				this.cancel()
+			} else mContactsInstance.loadMore()
+		})
 	}
 
-
 	override
-    fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_contact_list, container, false)
+	fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		val rootView = inflater.inflate(R.layout.fragment_contact_list, container, false)
 		mFabMenu = rootView.fabMenu
 
-        rootView.contactRecyclerView.apply {
-            this.adapter = mContactsAdapter
-            this.layoutManager = mLayoutManager
-            this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                    if (dy > 0 && recyclerView?.layoutManager is LinearLayoutManager) {
-                        /**/
-                        val s = mLayoutManager.childCount
-                        val x = mLayoutManager.findFirstVisibleItemPosition()
+		rootView.contactRecyclerView.apply {
+			this.adapter = mContactsAdapter
+			this.layoutManager = mLayoutManager
+			this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+				override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+					if (dy > 0 && recyclerView?.layoutManager is LinearLayoutManager) {
+						/**/
+						val s = mLayoutManager.childCount
+						val x = mLayoutManager.findFirstVisibleItemPosition()
 
-                        if (x + s >= recyclerView?.layoutManager?.itemCount as Int) {
-                            val sizeTmp = mContactsInstance.size
-                            mContactsInstance.loadMore(50)
-                            onUiThread { mContactsAdapter.notifyItemRangeInserted(sizeTmp, mContactsInstance.size) }
-                        }
-                    }
-                }
-            })
-        }
-	    createCustomAnimation()
-	    mFabMenu.setClosedOnTouchOutside(true)
-		mFabMenu.setOnMenuToggleListener {
-			if(it == false)/* handle click when the button goes from opened->closed*/
-				onClick(mFabMenu)
+						if (x + s >= recyclerView?.layoutManager?.itemCount as Int) {
+							val sizeTmp = mContactsInstance.size
+							mContactsInstance.loadMore(50)
+							onUiThread { mContactsAdapter.notifyItemRangeInserted(sizeTmp, mContactsInstance.size) }
+						}
+					}
+				}
+			})
+		}
+		createCustomAnimation()
+		mFabMenu.setClosedOnTouchOutside(true)
+		mFabMenu.setOnMenuButtonClickListener {
+			if (mFabMenu.isOpened) {
+				toast("test")
+			}
+			mFabMenu.toggle(true)
 		}
 
 		return rootView
-    }
+	}
 
 	private fun createCustomAnimation() {
 		val set = AnimatorSet();
@@ -130,10 +113,10 @@ class ContactListFragment : Fragment(),View.OnClickListener {
 		scaleInX.addListener(object : AnimatorListenerAdapter() {
 			override
 			fun onAnimationStart(animation: Animator) {
-				if(mFabMenu.isOpened)
+				if (mFabMenu.isOpened)
 					mFabMenu.getMenuIconView().setImageResource(R.drawable.ic_group_add_24dp);
 				else
-					mFabMenu.getMenuIconView().setImageResource( R.drawable.ic_import_contact_24dp);
+					mFabMenu.getMenuIconView().setImageResource(R.drawable.ic_import_contact_24dp);
 			}
 		});
 
@@ -144,52 +127,50 @@ class ContactListFragment : Fragment(),View.OnClickListener {
 		mFabMenu.setIconToggleAnimatorSet(set);
 	}
 
-	fun isOpened(): Boolean {
-		if(mFabMenu.isOpened) {
+	/**
+	 * Closes the Floating Action Button
+	 * @return true if it was closed successfully, false otherwise
+	 * */
+	fun closeFAM(): Boolean {
+		if (mFabMenu.isOpened) {
 			mFabMenu.close(true)
+			return true
+		} else
 			return false
-		}
-		return true
 	}
 
-    override
-    fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_contacts_activity, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
+	override fun onStop() {
+		super.onStop()
+		mFabMenu.close(false)
+	}
 
-    override
-    fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.refreshContacts -> {
-//                requestListFriends()
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
+	override
+	fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+		inflater?.inflate(R.menu.menu_contacts_activity, menu)
+		super.onCreateOptionsMenu(menu, inflater)
+	}
 
-    override fun onDetach() {
-        super.onDetach()
-        // Reset the active callbacks interface to the dummy implementation.
-        //		dettachListeners();
-    }
+	override fun onDetach() {
+		super.onDetach()
+		// Reset the active callbacks interface to the dummy implementation.
+		//		dettachListeners();
+	}
 
-    //	public void attachListeners(){
-    //		for (Contact contact:mContacts.getContacts())
-    //			mSocket.on(contact.getId(), onNewRoom);
-    //	}
-    //	public void dettachListeners(){
-    //		for (Contact contact:mContacts.getContacts())
-    //			mSocket.off(contact.getId(), onNewRoom);
-    //	}
+	//	public void attachListeners(){
+	//		for (Contact contact:mContacts.getContacts())
+	//			mSocket.on(contact.getId(), onNewRoom);
+	//	}
+	//	public void dettachListeners(){
+	//		for (Contact contact:mContacts.getContacts())
+	//			mSocket.off(contact.getId(), onNewRoom);
+	//	}
 
-    companion object {
+	companion object {
 
-        fun newInstance(): ContactListFragment {
-            return ContactListFragment()
-        }
-    }
+		fun newInstance(): ContactListFragment {
+			return ContactListFragment()
+		}
+	}
 }//
 //	private Socket mSocket;
 //	{
