@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
@@ -17,7 +16,6 @@ import com.marked.vifo.helper.add
 import com.marked.vifo.ui.fragment.messaging.ContactDetailFragment
 import kotlinx.android.synthetic.main.activity_contact_detail.*
 import kotlinx.android.synthetic.main.toolbar.*
-import org.jetbrains.anko.find
 
 /**
  * An activity representing a single Contact detail screen. This
@@ -51,7 +49,7 @@ class ContactDetailActivity : AppCompatActivity(), ContactDetailFragment.Contact
 		// Show the Up button in the action bar.
 		supportActionBar?.setDisplayHomeAsUpEnabled(true);
 
-		var upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+		var upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
 		upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
 		supportActionBar?.setHomeAsUpIndicator(upArrow);
 

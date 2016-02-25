@@ -32,7 +32,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -45,6 +45,7 @@ android {
         debug {
             debuggable true
             shrinkResources true
+            useProguard true
         }
     }
     sourceSets {
@@ -70,9 +71,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-appinvite:8.4.0'
     compile 'com.google.android.gms:play-services-vision:8.4.0'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:design:23.2.0'
+    compile 'com.android.support:recyclerview-v7:23.2.0'
+    compile 'com.android.support:support-v4:23.2.0'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
     compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
@@ -84,7 +86,6 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
     compile 'com.squareup.okhttp3:logging-interceptor:3.1.2'
     compile 'com.facebook.fresco:imagepipeline-okhttp:0.9.0'
-    compile 'com.android.support:support-v4:23.1.1'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
 
 }
