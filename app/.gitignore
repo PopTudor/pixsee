@@ -5,5 +5,6 @@ gen/
 local.properties
 *.iml
 .idea
+*.apk
 .gradle
 obj/
