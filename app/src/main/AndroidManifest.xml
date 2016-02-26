@@ -73,7 +73,8 @@
 			android:name=".UserDefinedTargets.ImageTargets"
 			android:configChanges="orientation|keyboardHidden"
 			android:exported="true"
-			android:screenOrientation="portrait"/>
+			android:screenOrientation="portrait"
+		/>
 		<activity
 			android:name=".ui.activity.EntryAuthActivity"
 			android:clearTaskOnLaunch="true"

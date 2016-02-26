@@ -57,7 +57,7 @@ public class ApplicationSession implements UpdateCallbackInterface {
     // and the Android onDestroy() life cycle event. If the application is
     // destroyed while a data set is still being loaded, then we wait for the
     // loading operation to finish before shutting down Vuforia:
-    private Object mShutdownLock = new Object();
+    private final Object mShutdownLock = new Object();
 
     // Holds the camera configuration to use upon resuming
     private int mCamera = CameraDevice.CAMERA.CAMERA_DEFAULT;
@@ -415,7 +415,7 @@ public class ApplicationSession implements UpdateCallbackInterface {
             synchronized (mShutdownLock) {
                 Vuforia.setInitParameters(mActivity,
                         mVuforiaFlags,
-                        "Ad2u637/////AAAAARacQyjHxEGIigVIKjmdwHBUz83hZO9rwWzS3VBwFtf3iJH3WuL3e5H+1YrmxsxGD418H7u/6hA2kfUIZxVx+gmxbutUzdjkOVVCzAFH+Q6szgnVX/fFL/OkhpQFGPZD4Can3j8/nWrRLFAzivUk6zvq5wW7FGXBd1mkL/1AaqGEKmKITaOoGXqfmDVBPkOMd3Hz5szRdAoGghzAOeJV8m0y/oKldL9BIhXdihbckOnUAGamUWgfcoz1bO6bxQuqrSP0rQWneh4Vbf6IXKXt1BGi8CT6kxDczJm+Z2wqO6XEdpFdjsCLsIpVZSchr29KDofFRK6lLIMMuUjgK+ifrp+p5E4ydMq7Joym9wkglbOi");
+                        "AQsjEBX/////AAAAAUyr35KQb0t8turwVKU609mHOdOzD1FeBiNZLIkR75JkW8SPZCTxIPuYtUm3IRDE+EKaCSjS0nwAllncscLAhGx3V8qqRYDiRnPR+TiEMNytnt94dhcTAZcUwZmxU2cPGUHA8e+FBgAfb9FvnTlXh1VNeRGbdF6h5vlopRDPJM6FZDc/i/94ckSvevGLIH088jpNI/7svM9o8woYexX/2M1mBOVr35woVoO4DPtcqQLp3dntjeyakell3C4ywAl9Kxoa4WW6fYChVkct3vLLNnqeOG4Jt5MYyhMsgWNV41cCDsMaDpgTHOQjWNGgpF2E3Sz2JnKV0uvr9WDvytNmlnWSPt6GJCDzp7FIjRKcNR3q");
 
                 do {
                     // Vuforia.init() blocks until an initialization step is

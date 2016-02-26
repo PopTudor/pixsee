@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.*
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.marked.pixsee.R
+import com.marked.pixsee.UserDefinedTargets.ImageTargets
 import com.marked.pixsee.model.contact.ContactDataset
 import com.marked.pixsee.ui.adapter.ContactsAdapter
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
@@ -35,7 +36,7 @@ class ContactListFragment : Fragment() {
 	private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContactsInstance) }
 	private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
-//	lateinit private var mFabMenu: FloatingActionMenu
+	//	lateinit private var mFabMenu: FloatingActionMenu
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +63,7 @@ class ContactListFragment : Fragment() {
 	override
 	fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val rootView = inflater.inflate(R.layout.fragment_contact_list, container, false)
-//		mFabMenu = rootView.fabMenu
+		//		mFabMenu = rootView.fabMenu
 
 		rootView.contactRecyclerView.apply {
 			this.adapter = mContactsAdapter
@@ -94,6 +95,11 @@ class ContactListFragment : Fragment() {
 			startActivityForResult(intent, REQUEST_INVITE);
 		}
 
+		rootView.vuforiaCamera.onClick {
+			val intent = Intent(activity,ImageTargets::class.java)
+			intent.putExtra("ACTIVITY_TO_LAUNCH","app.ImageTargets.ImageTargets")
+			startActivity(intent)
+		}
 		/*
 		createCustomAnimation()
 		mFabMenu.setClosedOnTouchOutside(true)
@@ -128,56 +134,58 @@ class ContactListFragment : Fragment() {
 			}
 		}
 	}
-/* // uncomment this when we are going to add floating action menu
-	private fun createCustomAnimation() {
-		val set = AnimatorSet();
+	/* // uncomment this when we are going to add floating action menu
+		private fun createCustomAnimation() {
+			val set = AnimatorSet();
 
-		val scaleOutX = ObjectAnimator.ofFloat(mFabMenu.getMenuIconView(), "scaleX", 1.0f, 0.2f);
-		val scaleOutY = ObjectAnimator.ofFloat(mFabMenu.getMenuIconView(), "scaleY", 1.0f, 0.2f);
+			val scaleOutX = ObjectAnimator.ofFloat(mFabMenu.getMenuIconView(), "scaleX", 1.0f, 0.2f);
+			val scaleOutY = ObjectAnimator.ofFloat(mFabMenu.getMenuIconView(), "scaleY", 1.0f, 0.2f);
 
-		val scaleInX = ObjectAnimator.ofFloat(mFabMenu.getMenuIconView(), "scaleX", 0.2f, 1.0f);
-		val scaleInY = ObjectAnimator.ofFloat(mFabMenu.getMenuIconView(), "scaleY", 0.2f, 1.0f);
+			val scaleInX = ObjectAnimator.ofFloat(mFabMenu.getMenuIconView(), "scaleX", 0.2f, 1.0f);
+			val scaleInY = ObjectAnimator.ofFloat(mFabMenu.getMenuIconView(), "scaleY", 0.2f, 1.0f);
 
-		scaleOutX.setDuration(50);
-		scaleOutY.setDuration(50);
+			scaleOutX.setDuration(50);
+			scaleOutY.setDuration(50);
 
-		scaleInX.setDuration(150);
-		scaleInY.setDuration(150);
+			scaleInX.setDuration(150);
+			scaleInY.setDuration(150);
 
 
-		scaleInX.addListener(object : AnimatorListenerAdapter() {
-			override
-			fun onAnimationStart(animation: Animator) {
-				if (mFabMenu.isOpened)
-					mFabMenu.getMenuIconView().setImageResource(R.drawable.ic_group_add_24dp);
-				else
-					mFabMenu.getMenuIconView().setImageResource(R.drawable.ic_email_24dp);
-			}
-		});
+			scaleInX.addListener(object : AnimatorListenerAdapter() {
+				override
+				fun onAnimationStart(animation: Animator) {
+					if (mFabMenu.isOpened)
+						mFabMenu.getMenuIconView().setImageResource(R.drawable.ic_group_add_24dp);
+					else
+						mFabMenu.getMenuIconView().setImageResource(R.drawable.ic_email_24dp);
+				}
+			});
 
-		set.play(scaleOutX).with(scaleOutY);
-		set.play(scaleInX).with(scaleInY).after(scaleOutX);
-		set.setInterpolator(OvershootInterpolator(2.0f));
+			set.play(scaleOutX).with(scaleOutY);
+			set.play(scaleInX).with(scaleInY).after(scaleOutX);
+			set.setInterpolator(OvershootInterpolator(2.0f));
 
-		mFabMenu.setIconToggleAnimatorSet(set);
-	}
+			mFabMenu.setIconToggleAnimatorSet(set);
+		}
 
-	*//**
+		*/
+	/**
 	 * Closes the Floating Action Button
 	 * @return true if it was closed successfully, false otherwise
-	 * *//*
-	fun closeFAM(): Boolean {
-		if (mFabMenu.isOpened) {
-			mFabMenu.close(true)
-			return true
-		} else
-			return false
-	}
+	 * */
+	/*
+		fun closeFAM(): Boolean {
+			if (mFabMenu.isOpened) {
+				mFabMenu.close(true)
+				return true
+			} else
+				return false
+		}
 
-	override fun onStop() {
-		super.onStop()
-		mFabMenu.close(false)
-	}*/
+		override fun onStop() {
+			super.onStop()
+			mFabMenu.close(false)
+		}*/
 
 	override
 	fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

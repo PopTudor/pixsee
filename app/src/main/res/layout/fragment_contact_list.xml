@@ -38,6 +38,11 @@
 		android:layout_marginRight="10dp"
 		android:layout_marginLeft="10dp"
 		android:layout_marginBottom="10dp"/>
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Open Camera"
+		android:id="@+id/vuforiaCamera" android:layout_gravity="left|bottom"/>
 
 	<!--</com.github.clans.fab.FloatingActionMenu>-->
 </FrameLayout>
