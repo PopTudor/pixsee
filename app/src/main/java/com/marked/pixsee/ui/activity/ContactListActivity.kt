@@ -47,10 +47,10 @@ class ContactListActivity : AppCompatActivity() {
 
 		// TODO: If exposing deep links into your app, handle intents here.
 	}
-
+/* // uncomment this when you add FloatingActionMenu
 	override fun onBackPressed() {
 		if (!((mFragmentManager.findFragmentById(R.id.fragmentContainer) as ContactListFragment)).closeFAM()) // == true if it was already closed
 			super.onBackPressed()
 
-	}
+	}*/
 }
