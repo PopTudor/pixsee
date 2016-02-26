@@ -27,11 +27,11 @@ android {
     buildToolsVersion '23.0.2'
 
     defaultConfig {
-        applicationId "com.marked.vifo"
-        minSdkVersion 16
+        applicationId 'com.marked.pixsee'
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -54,8 +54,8 @@ android {
 }
 
 dependencies {
-    compile files('C:/Users/Marked/Documents/git/Vifo/libs/jpct_ae.jar')
-    compile files('C:/Users/Marked/Documents/git/Vifo/libs/Vuforia.jar')
+    compile files('C:/Users/Marked/Documents/git/pixsee/libs/jpct_ae.jar')
+    compile files('C:/Users/Marked/Documents/git/pixsee/libs/Vuforia.jar')
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     // sdk19, sdk21, sdk23 are also available
     // In case you need support-v4 bindings

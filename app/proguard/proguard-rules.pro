@@ -24,9 +24,11 @@
 -dontwarn org.apache.**
 
 
--keep class com.marked.**
+-keep class com.marked.**{*;}
 -keep class com.makeramen.**{*;}
 -keep class com.ti.**{*;}
+
+-dontwarn com.marked.**
 -dontwarn com.ti.**
 -keep class com.osterhoutgroup.**{*;}
 -keepattributes Signature
