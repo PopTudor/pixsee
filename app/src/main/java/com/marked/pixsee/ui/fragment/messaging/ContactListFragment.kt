@@ -1,20 +1,19 @@
 package com.marked.pixsee.ui.fragment.messaging
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.*
-import android.view.animation.OvershootInterpolator
-import com.github.clans.fab.FloatingActionMenu
+import com.google.android.gms.appinvite.AppInviteInvitation
 import com.marked.pixsee.R
 import com.marked.pixsee.model.contact.ContactDataset
 import com.marked.pixsee.ui.adapter.ContactsAdapter
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
+import org.jetbrains.anko.onClick
 import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.support.v4.toast
 import kotlin.concurrent.fixedRateTimer
@@ -36,7 +35,7 @@ class ContactListFragment : Fragment() {
 	private val mContactsAdapter by lazy { ContactsAdapter(mContext, mContactsInstance) }
 	private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
-	lateinit private var mFabMenu: FloatingActionMenu
+//	lateinit private var mFabMenu: FloatingActionMenu
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,10 +57,12 @@ class ContactListFragment : Fragment() {
 		})
 	}
 
+	private val REQUEST_INVITE: Int = 11
+
 	override
 	fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val rootView = inflater.inflate(R.layout.fragment_contact_list, container, false)
-		mFabMenu = rootView.fabMenu
+//		mFabMenu = rootView.fabMenu
 
 		rootView.contactRecyclerView.apply {
 			this.adapter = mContactsAdapter
@@ -82,18 +83,52 @@ class ContactListFragment : Fragment() {
 				}
 			})
 		}
+		rootView.fab.onClick {
+			/* Google AppInvites */
+			val intent = AppInviteInvitation.IntentBuilder("Invite more friends")
+					.setMessage("Check out this cool app !")
+					//						.setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+					//						.setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+					//						.setCallToActionText(getString(R.string.invitation_cta))
+					.build();
+			startActivityForResult(intent, REQUEST_INVITE);
+		}
+
+		/*
 		createCustomAnimation()
 		mFabMenu.setClosedOnTouchOutside(true)
 		mFabMenu.setOnMenuButtonClickListener {
 			if (mFabMenu.isOpened) {
-				toast("test")
+
 			}
 			mFabMenu.toggle(true)
 		}
-
+*/
 		return rootView
 	}
 
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		super.onActivityResult(requestCode, resultCode, data)
+		Log.d("TAG", "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+		if (requestCode == REQUEST_INVITE) {
+			if (resultCode == Activity.RESULT_OK) {
+				toast("Hurray \ud83d\ude04")
+				// Check how many invitations were sent and log a message
+				// The ids array contains the unique invitation ids for each invitation sent
+				// (one for each contact select by the user). You can use these for analytics
+				// as the ID will be consistent on the sending and receiving devices.
+				if (data != null) {
+					val ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+					toast("got invitations " + ids.size)
+				}
+			} else {
+				// Sending failed or it was canceled, show failure message to the user
+				toast("Ooh \ud83d\ude14")
+			}
+		}
+	}
+/* // uncomment this when we are going to add floating action menu
 	private fun createCustomAnimation() {
 		val set = AnimatorSet();
 
@@ -116,7 +151,7 @@ class ContactListFragment : Fragment() {
 				if (mFabMenu.isOpened)
 					mFabMenu.getMenuIconView().setImageResource(R.drawable.ic_group_add_24dp);
 				else
-					mFabMenu.getMenuIconView().setImageResource(R.drawable.ic_import_contact_24dp);
+					mFabMenu.getMenuIconView().setImageResource(R.drawable.ic_email_24dp);
 			}
 		});
 
@@ -127,10 +162,10 @@ class ContactListFragment : Fragment() {
 		mFabMenu.setIconToggleAnimatorSet(set);
 	}
 
-	/**
+	*//**
 	 * Closes the Floating Action Button
 	 * @return true if it was closed successfully, false otherwise
-	 * */
+	 * *//*
 	fun closeFAM(): Boolean {
 		if (mFabMenu.isOpened) {
 			mFabMenu.close(true)
@@ -142,7 +177,7 @@ class ContactListFragment : Fragment() {
 	override fun onStop() {
 		super.onStop()
 		mFabMenu.close(false)
-	}
+	}*/
 
 	override
 	fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

@@ -16,7 +16,7 @@
     <string name="title_contact_detail">Contact Detail</string>
 
     <string name="no_connection_message">No internet connection. Please activate wi-fi or cellular network</string>
-
+	<string name="facebook_app_id">1677465395803625</string>
 
     <!-- VUFORIA -->
     <string name="UPDATE_ERROR_AUTHORIZATION_FAILED_TITLE">Authorization Error</string>
