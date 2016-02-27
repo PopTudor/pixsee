@@ -35,8 +35,7 @@ public class RefFreeFrameGL {
 	// Color vector
 	Vec4F color;
 	// Texture names and textures
-	String textureNames[] = {"UserDefinedTargets/viewfinder_crop_marks_portrait.png",
-							 "UserDefinedTargets/viewfinder_crop_marks_landscape.png"};
+	String textureNames[] = {"rock.jpg"};
 	Texture[] textures;
 	// Vertices, texture coordinates and vector indices
 	int   NUM_FRAME_VERTEX_TOTAL     = 4;
@@ -246,7 +245,7 @@ public class RefFreeFrameGL {
 	}
 
 	void getTextures() {
-		for (int i = 0; i < TEXTURE_NAME.TEXTURE_COUNT; i++)
+		for (int i = 0; i < /*TEXTURE_NAME.TEXTURE_COUNT*/textureNames.length; i++)
 			textures[i] = mActivity.createTexture(textureNames[i]);
 	}
 

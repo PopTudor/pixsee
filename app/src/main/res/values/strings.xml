@@ -18,6 +18,8 @@
     <string name="no_connection_message">No internet connection. Please activate wi-fi or cellular network</string>
 	<string name="facebook_app_id">1677465395803625</string>
 
+	<string name="vuforia_API_KEY">AQsjEBX/////AAAAAUyr35KQb0t8turwVKU609mHOdOzD1FeBiNZLIkR75JkW8SPZCTxIPuYtUm3IRDE+EKaCSjS0nwAllncscLAhGx3V8qqRYDiRnPR+TiEMNytnt94dhcTAZcUwZmxU2cPGUHA8e+FBgAfb9FvnTlXh1VNeRGbdF6h5vlopRDPJM6FZDc/i/94ckSvevGLIH088jpNI/7svM9o8woYexX/2M1mBOVr35woVoO4DPtcqQLp3dntjeyakell3C4ywAl9Kxoa4WW6fYChVkct3vLLNnqeOG4Jt5MYyhMsgWNV41cCDsMaDpgTHOQjWNGgpF2E3Sz2JnKV0uvr9WDvytNmlnWSPt6GJCDzp7FIjRKcNR3q</string>
+
     <!-- VUFORIA -->
     <string name="UPDATE_ERROR_AUTHORIZATION_FAILED_TITLE">Authorization Error</string>
     <string name="UPDATE_ERROR_PROJECT_SUSPENDED_TITLE">Authorization Error</string>

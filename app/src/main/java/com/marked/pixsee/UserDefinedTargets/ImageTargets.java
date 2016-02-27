@@ -33,7 +33,6 @@ import com.marked.pixsee.VuforiaApplication.ApplicationControl;
 import com.marked.pixsee.VuforiaApplication.ApplicationException;
 import com.marked.pixsee.VuforiaApplication.ApplicationSession;
 import com.marked.pixsee.VuforiaApplication.utils.GLDrawingSurfaceView;
-import com.marked.pixsee.VuforiaApplication.utils.LoadingDialogHandler;
 import com.marked.pixsee.VuforiaApplication.utils.Texture;
 import com.qualcomm.vuforia.CameraDevice;
 import com.qualcomm.vuforia.DataSet;
@@ -74,7 +73,7 @@ public class ImageTargets extends AppCompatActivity implements ApplicationContro
     //	private SampleAppMenu             mSampleAppMenu;
     private ArrayList<View> mSettingsAdditionalViews;
     private boolean mExtendedTracking = true;
-    private LoadingDialogHandler loadingDialogHandler = new LoadingDialogHandler(this);
+//    private LoadingDialogHandler loadingDialogHandler = new LoadingDialogHandler(this);
     // Alert Dialog used to display SDK errors
     private AlertDialog mErrorDialog;
 
@@ -111,8 +110,8 @@ public class ImageTargets extends AppCompatActivity implements ApplicationContro
         vuforiaAppSession.initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // Load any sample specific textures:
-//        mTextures = new Vector<>();
-//        mTextures.add(Texture.loadTextureFromApk("ro.png", getAssets()));
+        mTextures = new Vector<>();
+        mTextures.add(Texture.loadTextureFromApk("rock.jpg", getAssets()));
 
         mGestureDetector = new GestureDetector(this, new GestureListener());
         mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith("droid");
@@ -279,7 +278,7 @@ public class ImageTargets extends AppCompatActivity implements ApplicationContro
         mCameraButton = mUILayout.findViewById(R.id.camera_button);
 
         // Gets a reference to the loading dialog container
-        loadingDialogHandler.mLoadingDialogContainer = mUILayout.findViewById(R.id.loading_layout);
+//        loadingDialogHandler.mLoadingDialogContainer = mUILayout.findViewById(R.id.loading_layout);
 
         startUserDefinedTargets();
 
@@ -310,7 +309,7 @@ public class ImageTargets extends AppCompatActivity implements ApplicationContro
     public void onCameraClick(View v) {
         if (isUserDefinedTargetsRunning()) {
             // Shows the loading dialog
-            loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.SHOW_LOADING_DIALOG);
+//            loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.SHOW_LOADING_DIALOG);
 
             // Builds the new target
             startBuild();
@@ -351,7 +350,7 @@ public class ImageTargets extends AppCompatActivity implements ApplicationContro
     // Callback function called when the target creation finished
     void targetCreated() {
         // Hides the loading dialog
-        loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
+//        loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
         if (refFreeFrame != null) {
             refFreeFrame.reset();
         }
@@ -520,7 +519,7 @@ public class ImageTargets extends AppCompatActivity implements ApplicationContro
             mUILayout.bringToFront();
 
             // Hides the Loading Dialog
-            loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
+//            loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
 
             // Sets the layout background to transparent
             mUILayout.setBackgroundColor(Color.TRANSPARENT);

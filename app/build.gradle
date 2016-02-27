@@ -15,6 +15,12 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+/* The following should be moved from build ? maybe later */
+def VUFORIA_SDK_DIR = '..'
+def NATIVE_LIB_DIR = 'build/lib'
+def JAR_DIR = 'build/java/vuforia'
+
 repositories {
     mavenCentral()
     maven {
@@ -25,7 +31,10 @@ repositories {
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
-
+    sourceSets.main {
+        jni.srcDirs = []
+        jniLibs.srcDir "$VUFORIA_SDK_DIR/$NATIVE_LIB_DIR/"
+    }
     defaultConfig {
         applicationId 'com.marked.pixsee'
         minSdkVersion 15
@@ -34,6 +43,7 @@ android {
         versionName "0.0.1"
         vectorDrawables.useSupportLibrary = true
     }
+    archivesBaseName = rootProject.projectDir.getName()
     buildTypes {
         release {
             debuggable false
@@ -41,11 +51,17 @@ android {
             minifyEnabled true
             useProguard true
             proguardFiles(files { file('./proguard').listFiles() })
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
         }
         debug {
             debuggable true
             shrinkResources true
             useProguard true
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
         }
     }
     sourceSets {
@@ -55,7 +71,7 @@ android {
 
 dependencies {
     compile files('C:/Users/Marked/Documents/git/pixsee/libs/jpct_ae.jar')
-    compile files('C:/Users/Marked/Documents/git/pixsee/libs/Vuforia.jar')
+    compile files("$VUFORIA_SDK_DIR/$JAR_DIR/Vuforia.jar")
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     // sdk19, sdk21, sdk23 are also available
 
