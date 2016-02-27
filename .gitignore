@@ -9,6 +9,7 @@
 .DS_Store
 /build/generated
 /build/intermediates
+/app/app.iml
 /captures
 bin/
 gen/
