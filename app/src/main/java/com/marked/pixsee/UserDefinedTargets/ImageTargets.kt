@@ -21,13 +21,15 @@ import android.view.*
 import android.view.ViewGroup.LayoutParams
 import android.widget.RelativeLayout
 import com.marked.pixsee.R
-import com.marked.pixsee.views.SampleAppMenu.SampleAppMenuInterface
 import com.marked.pixsee.VuforiaApplication.ApplicationControl
 import com.marked.pixsee.VuforiaApplication.ApplicationException
 import com.marked.pixsee.VuforiaApplication.ApplicationSession
 import com.marked.pixsee.VuforiaApplication.utils.GLDrawingSurfaceView
 import com.marked.pixsee.VuforiaApplication.utils.Texture
+import com.marked.pixsee.views.SampleAppMenu.SampleAppMenuInterface
 import com.qualcomm.vuforia.*
+import kotlinx.android.synthetic.main.activity_preview.*
+import org.jetbrains.anko.onClick
 import java.util.*
 
 // The main activity for the UserDefinedTargets sample.
@@ -36,19 +38,21 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 	var dataSetUserDef: DataSet? = null
 	var refFreeFrame: RefFreeFrame? = null
 	var mIsDroidDevice = false
-	private lateinit var vuforiaAppSession: ApplicationSession
+
+	private val vuforiaAppSession: ApplicationSession by lazy { ApplicationSession(this) }
+	private val mDialog: AlertDialog by lazy { AlertDialog.Builder(this@ImageTargets).create() }
+	private val mTextures: Vector<Texture> by lazy { Vector<Texture>() }
+
 	// Our OpenGL view:
 	private var mGlView: GLDrawingSurfaceView? = null
 	// Our renderer:
 	private var mRenderer: ImageTargetRenderer? = null
 	// The textures we will use for rendering:
-	private var mTextures: Vector<Texture>? = null
 	// View overlays to be displayed in the Augmented View
 	private var mUILayout: RelativeLayout? = null
 	private lateinit var mBottomBar: View
 	private var mCameraButton: View? = null
 	// Alert dialog for displaying SDK errors
-	private var mDialog: AlertDialog? = null
 	private var mGestureDetector: GestureDetector? = null
 	//	private SampleAppMenu             mSampleAppMenu;
 	private var mSettingsAdditionalViews: ArrayList<View>? = null
@@ -56,6 +60,33 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 	//    private LoadingDialogHandler loadingDialogHandler = new LoadingDialogHandler(this);
 	// Alert Dialog used to display SDK errors
 	private var mErrorDialog: AlertDialog? = null
+
+	private var mCameraSwitch = CameraDevice.CAMERA.CAMERA_FRONT
+
+	val isUserDefinedTargetsRunning: Boolean
+		get() {
+			val trackerManager = TrackerManager.getInstance()
+			val objectTracker = trackerManager.getTracker(ObjectTracker.getClassType()) as ObjectTracker
+
+			if (objectTracker != null) {
+				val targetBuilder = objectTracker.imageTargetBuilder
+				if (targetBuilder != null) {
+					Log.e(LOGTAG, "Quality> " + targetBuilder.frameQuality)
+					return if (targetBuilder.frameQuality != ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_NONE)
+						true
+					else
+						false
+				}
+			}
+
+			return false
+		}
+
+	companion object {
+		val CMD_BACK = -1
+		val CMD_EXTENDED_TRACKING = 1
+		private val LOGTAG = "UserDefinedTargets"
+	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -67,10 +98,9 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		val id = item.itemId
 
 		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
+		if (item.itemId == R.id.action_settings) {
 			return true
 		}
 
@@ -79,20 +109,20 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 
 	// Called when the activity first starts or needs to be recreated after
 	// resuming the application or a configuration change.
-	public override fun onCreate(savedInstanceState: Bundle?) {
+	override fun onCreate(savedInstanceState: Bundle?) {
 		Log.d(LOGTAG, "onCreate")
 		super.onCreate(savedInstanceState)
 
-		vuforiaAppSession = ApplicationSession(this)
-		vuforiaAppSession!!.initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+		vuforiaAppSession.initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
 		// Load any sample specific textures:
-		mTextures = Vector<Texture>()
-		mTextures!!.add(Texture.loadTextureFromApk("rock.jpg", assets))
+		mTextures.add(Texture.loadTextureFromApk("rock.jpg", assets))
 
 		mGestureDetector = GestureDetector(this, GestureListener())
 		mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith("droid")
+
 	}
+
 
 	// We want to load specific textures from the APK, which we will later use
 	// for rendering.
@@ -109,7 +139,7 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 		}
 
 		try {
-			vuforiaAppSession!!.resumeAR()
+			vuforiaAppSession.resumeAR()
 		} catch (e: ApplicationException) {
 			Log.e(LOGTAG, e.string)
 		}
@@ -133,7 +163,7 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 		}
 
 		try {
-			vuforiaAppSession!!.pauseAR()
+			vuforiaAppSession.pauseAR()
 		} catch (e: ApplicationException) {
 			Log.e(LOGTAG, e.string)
 		}
@@ -146,15 +176,13 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 		super.onDestroy()
 
 		try {
-			vuforiaAppSession!!.stopAR()
+			vuforiaAppSession.stopAR()
 		} catch (e: ApplicationException) {
 			Log.e(LOGTAG, e.string)
 		}
 
 		// Unload texture:
-		//        mTextures.clear();
-		//        mTextures = null;
-
+		mTextures.clear();
 		System.gc()
 	}
 
@@ -163,7 +191,7 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 		Log.d(LOGTAG, "onConfigurationChanged")
 		super.onConfigurationChanged(config)
 
-		vuforiaAppSession!!.onConfigurationChanged()
+		vuforiaAppSession.onConfigurationChanged()
 
 		// Removes the current layout and inflates a proper layout
 		// for the new screen orientation
@@ -179,21 +207,20 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 
 	// Shows error message in a system dialog box
 	private fun showErrorDialog() {
-		if (mDialog != null && mDialog!!.isShowing)
-			mDialog!!.dismiss()
+		if (mDialog.isShowing)
+			mDialog.dismiss()
 
-		mDialog = AlertDialog.Builder(this@ImageTargets).create()
 		val clickListener = DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() }
 
-		mDialog!!.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.button_OK), clickListener)
+		mDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.button_OK), clickListener)
 
-		mDialog!!.setTitle(getString(R.string.target_quality_error_title))
+		mDialog.setTitle(getString(R.string.target_quality_error_title))
 
 		val message = getString(R.string.target_quality_error_desc)
 
 		// Show dialog box with error message:
-		mDialog!!.setMessage(message)
-		mDialog!!.show()
+		mDialog.setMessage(message)
+		mDialog.show()
 	}
 
 	// Shows error message in a system dialog box on the UI thread
@@ -246,15 +273,15 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 
 		// Gets a reference to the loading dialog container
 		//        loadingDialogHandler.mLoadingDialogContainer = mUILayout.findViewById(R.id.loading_layout);
-
+		switchCamera.onClick {vuforiaAppSession.switchCamera()}
 		startUserDefinedTargets()
 
-		mBottomBar!!.visibility = View.VISIBLE
+		mBottomBar.visibility = View.VISIBLE
 		mCameraButton!!.visibility = View.VISIBLE
 		mUILayout!!.bringToFront()
 	}
 
-	 fun startUserDefinedTargets(): Boolean {
+	fun startUserDefinedTargets(): Boolean {
 		Log.d(LOGTAG, "startUserDefinedTargets")
 		val trackerManager = TrackerManager.getInstance()
 		val objectTracker = trackerManager.getTracker(ObjectTracker.getClassType()) as ObjectTracker
@@ -283,7 +310,7 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 		}
 	}
 
-	 fun startBuild() {
+	fun startBuild() {
 		val trackerManager = TrackerManager.getInstance()
 		val objectTracker = trackerManager.getTracker(ObjectTracker.getClassType()) as ObjectTracker
 
@@ -310,12 +337,12 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 	}
 
 	// Creates a texture given the filename
-	 fun createTexture(nName: String): Texture {
+	fun createTexture(nName: String): Texture {
 		return Texture.loadTextureFromApk(nName, assets)
 	}
 
 	// Callback function called when the target creation finished
-	 fun targetCreated() {
+	fun targetCreated() {
 		// Hides the loading dialog
 		//        loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
 		if (refFreeFrame != null) {
@@ -330,25 +357,6 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 
 		return mGestureDetector!!.onTouchEvent(event)
 	}
-
-	 val isUserDefinedTargetsRunning: Boolean
-		get() {
-			val trackerManager = TrackerManager.getInstance()
-			val objectTracker = trackerManager.getTracker(ObjectTracker.getClassType()) as ObjectTracker
-
-			if (objectTracker != null) {
-				val targetBuilder = objectTracker.imageTargetBuilder
-				if (targetBuilder != null) {
-					Log.e(LOGTAG, "Quality> " + targetBuilder.frameQuality)
-					return if (targetBuilder.frameQuality != ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_NONE)
-						true
-					else
-						false
-				}
-			}
-
-			return false
-		}
 
 	fun updateRendering() {
 		val metrics = DisplayMetrics()
@@ -462,7 +470,6 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 	}
 
 	override fun onInitARDone(exception: ApplicationException?) {
-
 		if (exception == null) {
 			initApplicationAR()
 
@@ -485,7 +492,7 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 			mUILayout!!.setBackgroundColor(Color.TRANSPARENT)
 
 			try {
-				vuforiaAppSession!!.startAR(CameraDevice.CAMERA.CAMERA_DEFAULT)
+				vuforiaAppSession.startAR(mCameraSwitch)
 			} catch (e: ApplicationException) {
 				Log.e(LOGTAG, e.string)
 			}
@@ -641,10 +648,5 @@ class ImageTargets : AppCompatActivity(), ApplicationControl, SampleAppMenuInter
 		}
 	}
 
-	companion object {
-		val CMD_BACK = -1
-		val CMD_EXTENDED_TRACKING = 1
-		private val LOGTAG = "UserDefinedTargets"
-	}
 
 }

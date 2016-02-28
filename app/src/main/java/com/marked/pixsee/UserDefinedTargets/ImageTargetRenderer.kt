@@ -105,7 +105,6 @@ class ImageTargetRenderer(// Reference to main activity
 			mSun.position = sv
 		}
 
-
 		MemoryHelper.compact()
 	}
 

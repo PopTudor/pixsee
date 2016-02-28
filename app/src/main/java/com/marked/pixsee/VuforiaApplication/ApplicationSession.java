@@ -33,7 +33,7 @@ import com.qualcomm.vuforia.Vuforia.UpdateCallbackInterface;
 
 public class ApplicationSession implements UpdateCallbackInterface {
 
-    private static final String LOGTAG = "Sample_Applications";
+    private static final String LOGTAG = "Sample_Applications***";
 
     // Reference to the current activity
     private Activity mActivity;
@@ -60,7 +60,7 @@ public class ApplicationSession implements UpdateCallbackInterface {
     private final Object mShutdownLock = new Object();
 
     // Holds the camera configuration to use upon resuming
-    private int mCamera = CameraDevice.CAMERA.CAMERA_DEFAULT;
+    public int mCamera = CameraDevice.CAMERA.CAMERA_DEFAULT;
 
     // Stores the projection matrix to use for rendering purposes
     private Matrix44F mProjectionMatrix;
@@ -94,8 +94,7 @@ public class ApplicationSession implements UpdateCallbackInterface {
         // As long as this window is visible to the user, keep the device's
         // screen turned on and bright:
         mActivity.getWindow()
-                .setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+				.setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         mVuforiaFlags = Vuforia.GL_20;
 
@@ -405,7 +404,31 @@ public class ApplicationSession implements UpdateCallbackInterface {
         return mStarted;
     }
 
-    // An async task to initialize Vuforia asynchronously.
+	public void switchCamera() {
+		switch (mCamera){
+			case CameraDevice.CAMERA.CAMERA_BACK:
+				try {
+					pauseAR();
+					mCamera = CameraDevice.CAMERA.CAMERA_FRONT;
+					resumeAR();
+				}catch (ApplicationException e) {
+					e.printStackTrace();
+				}
+				break;
+			case CameraDevice.CAMERA.CAMERA_FRONT:
+				try {
+					pauseAR();
+					mCamera = CameraDevice.CAMERA.CAMERA_BACK;
+					resumeAR();
+				} catch (ApplicationException e) {
+					e.printStackTrace();
+				}
+				break;
+
+		}
+	}
+
+	// An async task to initialize Vuforia asynchronously.
     private class InitVuforiaTask extends AsyncTask<Void, Integer, Boolean> {
         // Initialize with invalid value:
         private int mProgressValue = -1;

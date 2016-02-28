@@ -10,7 +10,7 @@ package com.marked.pixsee.VuforiaApplication;
 import com.qualcomm.vuforia.State;
 
 
-//  Interface to be implemented by the activity which uses SampleApplicationSession
+//  Interface to be implemented by the activity which uses ApplicationSession
 public interface ApplicationControl {
 
 	// To be called to initialize the trackers
