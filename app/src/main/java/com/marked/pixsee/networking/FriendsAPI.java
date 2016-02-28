@@ -1,7 +1,6 @@
 package com.marked.pixsee.networking;
 
 import com.google.gson.JsonArray;
-import com.marked.pixsee.extra.ServerConstants;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

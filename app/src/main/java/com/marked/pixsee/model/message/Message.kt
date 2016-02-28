@@ -2,7 +2,7 @@ package com.marked.pixsee.model.message
 
 import android.content.ContentValues
 import android.os.Bundle
-import com.marked.pixsee.extra.MessageConstants
+import com.marked.pixsee.utility.extra.MessageConstants
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*

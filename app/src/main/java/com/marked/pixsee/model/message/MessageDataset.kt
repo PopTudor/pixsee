@@ -2,10 +2,10 @@ package com.marked.pixsee.model.message
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import com.marked.pixsee.extra.MessageConstants
-import com.marked.pixsee.model.contact.Contact
 import com.marked.pixsee.model.database.DatabaseContract
 import com.marked.pixsee.model.database.database
+import com.marked.pixsee.model.friend.Friend
+import com.marked.pixsee.utility.extra.MessageConstants
 import org.jetbrains.anko.async
 import org.jetbrains.anko.db.parseList
 import org.jetbrains.anko.db.rowParser
@@ -71,14 +71,14 @@ class MessageDataset(var mContext: Context) : ArrayList<Message>() {
 		return jsonArray
 	}
 
-	fun loadMore(contact: Contact, limit: Int = 50) {
+	fun loadMore(friend: Friend, limit: Int = 50) {
 		mContext.database.use {
 			select(DatabaseContract.Message.TABLE_NAME,
 					DatabaseContract.Message.COLUMN_DATA_BODY,
 					DatabaseContract.Message.COLUMN_TYPE,
 					DatabaseContract.Message.COLUMN_DATE,
 					DatabaseContract.Message.COLUMN_TO
-			).where("${DatabaseContract.Message.COLUMN_TO}={to}", "to" to contact.userID.toString()).limit(size, limit)
+			).where("${DatabaseContract.Message.COLUMN_TO}={to}", "to" to friend.userID.toString()).limit(size, limit)
 					.exec {
 						parseList(rowParser {
 							body: String, type: Int, date: Int, to: String

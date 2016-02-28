@@ -21,7 +21,7 @@ import android.view.*
 import android.view.ViewGroup.LayoutParams
 import android.widget.RelativeLayout
 import com.marked.pixsee.R
-import com.marked.pixsee.SampleAppMenu.SampleAppMenuInterface
+import com.marked.pixsee.views.SampleAppMenu.SampleAppMenuInterface
 import com.marked.pixsee.VuforiaApplication.ApplicationControl
 import com.marked.pixsee.VuforiaApplication.ApplicationException
 import com.marked.pixsee.VuforiaApplication.ApplicationSession

@@ -1,8 +1,7 @@
 package com.marked.pixsee.networking;
 
 import com.google.gson.JsonObject;
-import com.marked.pixsee.extra.ServerConstants;
-import com.marked.pixsee.model.contact.Contact;
+import com.marked.pixsee.model.friend.Friend;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -27,10 +26,10 @@ public interface LoginAPI {
     Call<JsonObject> read(@Query("email") String email);
 
     @PUT(ServerConstants.USER)
-    Call<JsonObject> update(@Body Contact contact);
+    Call<JsonObject> update(@Body Friend friend);
 
     @DELETE(ServerConstants.USER)
-    Call<JsonObject> delete(@Body Contact contact);
+    Call<JsonObject> delete(@Body Friend friend);
 
     @HEAD(ServerConstants.USER)
     Call<Void> hasAccount(@Query("email") String email);

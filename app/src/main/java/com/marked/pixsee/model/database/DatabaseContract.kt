@@ -1,8 +1,8 @@
 package com.marked.pixsee.model.database
 
 import android.provider.BaseColumns
-import com.marked.pixsee.extra.MessageConstants
-import com.marked.pixsee.extra.UserConstants
+import com.marked.pixsee.utility.extra.MessageConstants
+import com.marked.pixsee.utility.extra.UserConstants
 
 /**
  * Created by Tudor Pop on 26-Jan-16.
