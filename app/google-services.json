@@ -1,29 +1,20 @@
 {
   "project_info": {
-    "project_id": "vifo-1116",
-    "project_number": "515334962063",
-    "name": "vifo"
+    "project_id": "pixsee-1",
+    "project_number": "146881901643",
+    "name": "Pixsee"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:515334962063:android:664010170f122959",
-        "client_id": "android:com.marked.vifo",
+        "mobilesdk_app_id": "1:146881901643:android:a718e712c964e67b",
+        "client_id": "android:com.marked.pixsee",
         "client_type": 1,
         "android_client_info": {
-          "package_name": "com.marked.vifo"
+          "package_name": "com.marked.pixsee"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "515334962063-sfdbdp1qca4dh4emfua4aju28h00efqo.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.marked.vifo",
-            "certificate_hash": "D567B277BED144CEECD6B43760298E8BB664D660"
-          }
-        }
-      ],
+      "oauth_client": [],
       "api_key": [],
       "services": {
         "analytics_service": {
@@ -38,7 +29,7 @@
           "other_platform_oauth_client": []
         },
         "google_signin_service": {
-          "status": 2
+          "status": 1
         },
         "ads_service": {
           "status": 1

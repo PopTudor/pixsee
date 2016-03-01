@@ -7,7 +7,7 @@
 	android:layout_height="match_parent"
 	android:background="#EEEEEE"
 	android:fitsSystemWindows="true"
-	tools:context=".ui.activity.ContactDetailActivity"
+	tools:context=".ui.activity.chat.ChatDetailActivity"
 	tools:ignore="MergeRootFrame">
 
 	<android.support.design.widget.AppBarLayout

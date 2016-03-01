@@ -15,6 +15,12 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+/* The following should be moved from build ? maybe later */
+def VUFORIA_SDK_DIR = '..'
+def NATIVE_LIB_DIR = 'build/lib'
+def JAR_DIR = 'build/java/vuforia'
+
 repositories {
     mavenCentral()
     maven {
@@ -25,15 +31,19 @@ repositories {
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
-
+    sourceSets.main {
+        jni.srcDirs = []
+        jniLibs.srcDir "$VUFORIA_SDK_DIR/$NATIVE_LIB_DIR/"
+    }
     defaultConfig {
-        applicationId "com.marked.vifo"
-        minSdkVersion 16
+        applicationId 'com.marked.pixsee'
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionName "0.0.0"
+        vectorDrawables.useSupportLibrary = true
     }
+    archivesBaseName = rootProject.projectDir.getName()
     buildTypes {
         release {
             debuggable false
@@ -41,10 +51,17 @@ android {
             minifyEnabled true
             useProguard true
             proguardFiles(files { file('./proguard').listFiles() })
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
         }
         debug {
             debuggable true
             shrinkResources true
+            useProguard true
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
         }
     }
     sourceSets {
@@ -53,10 +70,11 @@ android {
 }
 
 dependencies {
-    compile files('C:/Users/Marked/Documents/git/Vifo/libs/jpct_ae.jar')
-    compile files('C:/Users/Marked/Documents/git/Vifo/libs/Vuforia.jar')
+    compile files('C:/Users/Marked/Documents/git/pixsee/libs/jpct_ae.jar')
+    compile files("$VUFORIA_SDK_DIR/$JAR_DIR/Vuforia.jar")
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     // sdk19, sdk21, sdk23 are also available
+
     // In case you need support-v4 bindings
     compile('io.socket:socket.io-client:0.6.3') {
         exclude group: 'org.json', module: 'json'
@@ -70,9 +88,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-appinvite:8.4.0'
     compile 'com.google.android.gms:play-services-vision:8.4.0'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:design:23.2.0'
+    compile 'com.android.support:recyclerview-v7:23.2.0'
+    compile 'com.android.support:support-v4:23.2.0'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
     compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
@@ -84,7 +103,6 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
     compile 'com.squareup.okhttp3:logging-interceptor:3.1.2'
     compile 'com.facebook.fresco:imagepipeline-okhttp:0.9.0'
-    compile 'com.android.support:support-v4:23.1.1'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
 
 
