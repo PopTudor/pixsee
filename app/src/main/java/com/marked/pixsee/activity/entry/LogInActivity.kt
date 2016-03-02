@@ -11,8 +11,8 @@ import android.support.v7.widget.PopupMenu
 import android.view.MenuItem
 import android.view.View
 import com.marked.pixsee.R
-import com.marked.pixsee.service.RegistrationBroadcastReceiver
 import com.marked.pixsee.service.LogInRegistrationIntentService
+import com.marked.pixsee.service.RegistrationBroadcastReceiver
 import com.marked.pixsee.utility.DataValidation
 import com.marked.pixsee.utility.Utils
 import com.marked.pixsee.utility.extra.GCMConstants
@@ -47,7 +47,7 @@ class LogInActivity : AppCompatActivity(), View.OnClickListener, PopupMenu.OnMen
         if (Utils.isOnline(this)) // if we got internet, process the click. else tell them to activate it
             when (v.id) {
                 R.id.logInButtonPixy -> {
-                    if (!DataValidation(this, emailEditText.text.toString(), passwordEditText.text.toString()).validate())
+                    if (!DataValidation(this).validate(emailEditText.text.toString(), passwordEditText.text.toString()))
                         return;
                     LogInRegistrationIntentService.startActionLogin(this, emailEditText.text.toString(), passwordEditText.text.toString());
                     mProgressDialog.setTitle("Login")

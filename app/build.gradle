@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.0.0-rc-1036'
+    ext.kotlin_version = '1.0.0'
     repositories {
         mavenCentral()
 
@@ -42,6 +42,7 @@ android {
         versionCode 1
         versionName "0.0.0"
         vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     archivesBaseName = rootProject.projectDir.getName()
     buildTypes {
@@ -67,6 +68,7 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
 }
 
 dependencies {
