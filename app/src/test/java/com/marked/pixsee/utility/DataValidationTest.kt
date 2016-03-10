@@ -7,9 +7,11 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import org.junit.runner.RunWith
+import org.mockito.Matchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.runners.MockitoJUnitRunner
+import java.util.*
 
 /**
  * Created by Tudor Pop on 02-Mar-16.
@@ -22,8 +24,8 @@ class DataValidationTest {
 
 	@Test
 	fun testValidate() {
+		Mockito.mock(Toast.makeText(mMockContext, "Matchers.anyString()",Toast.LENGTH_SHORT).show().javaClass)
 		Mockito.`when`(Toast.makeText(mMockContext,"",Toast.LENGTH_SHORT)).thenReturn(Mockito.mock(Toast::class.java))
 		Mockito.`when`(mMockContext.toast("")).thenReturn(Unit)
-
 	}
 }

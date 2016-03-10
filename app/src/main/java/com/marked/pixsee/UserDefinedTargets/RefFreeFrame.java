@@ -204,7 +204,7 @@ public class RefFreeFrame {
 	}
 
 	void renderScanningViewfinder(int quality) {
-		frameGL.setModelViewScale(2.0f);
+		frameGL.setModelViewScale(1.0f);
 		frameGL.setColor(colorFrame);
 		frameGL.renderViewfinder();
 	}
