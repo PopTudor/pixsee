@@ -15,6 +15,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.neenbedankt.android-apt'
 
 /* The following should be moved from build ? maybe later */
 def VUFORIA_SDK_DIR = '..'
@@ -105,7 +106,12 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.1.2'
     compile 'com.facebook.fresco:imagepipeline-okhttp:0.9.0'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
+    compile 'com.google.dagger:dagger:2.0.2'
 
+    apt 'com.google.dagger:dagger-compiler:2.0.2'
+
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    provided 'com.google.dagger:dagger-compiler:2.0'
 
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"

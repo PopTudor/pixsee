@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.*
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.marked.pixsee.R
-import com.marked.pixsee.UserDefinedTargets.ImageTargets
+import com.marked.pixsee.face.UserDefinedTargets.ImageTargets
 import com.marked.pixsee.data.friend.ContactDataset
 import com.marked.pixsee.friends.FriendsAdapter
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*

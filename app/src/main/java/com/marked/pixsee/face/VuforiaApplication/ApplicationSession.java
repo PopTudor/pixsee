@@ -6,7 +6,7 @@ and other countries. Trademarks of QUALCOMM Incorporated are used with permissio
 ===============================================================================*/
 
 
-package com.marked.pixsee.VuforiaApplication;
+package com.marked.pixsee.face.VuforiaApplication;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;

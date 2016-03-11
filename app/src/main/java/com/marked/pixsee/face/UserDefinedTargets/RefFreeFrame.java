@@ -5,12 +5,12 @@ Vuforia is a trademark of QUALCOMM Incorporated, registered in the United States
 and other countries. Trademarks of QUALCOMM Incorporated are used with permission.
 ===============================================================================*/
 
-package com.marked.pixsee.UserDefinedTargets;
+package com.marked.pixsee.face.UserDefinedTargets;
 
 import android.util.Log;
 
-import com.marked.pixsee.VuforiaApplication.ApplicationSession;
-import com.marked.pixsee.VuforiaApplication.utils.SampleUtils;
+import com.marked.pixsee.face.VuforiaApplication.ApplicationSession;
+import com.marked.pixsee.face.VuforiaApplication.utils.SampleUtils;
 import com.qualcomm.vuforia.ImageTargetBuilder;
 import com.qualcomm.vuforia.ObjectTracker;
 import com.qualcomm.vuforia.Renderer;

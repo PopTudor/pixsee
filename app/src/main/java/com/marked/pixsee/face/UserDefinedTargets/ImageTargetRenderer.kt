@@ -5,7 +5,7 @@ Vuforia is a trademark of QUALCOMM Incorporated, registered in the United States
 and other countries. Trademarks of QUALCOMM Incorporated are used with permission.
 ===============================================================================*/
 
-package com.marked.pixsee.UserDefinedTargets
+package com.marked.pixsee.face.UserDefinedTargets
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -13,9 +13,9 @@ import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import android.util.Log
-import com.marked.pixsee.VuforiaApplication.ApplicationSession
-import com.marked.pixsee.VuforiaApplication.utils.SampleMath
-import com.marked.pixsee.VuforiaApplication.utils.SampleUtils
+import com.marked.pixsee.face.VuforiaApplication.ApplicationSession
+import com.marked.pixsee.face.VuforiaApplication.utils.SampleMath
+import com.marked.pixsee.face.VuforiaApplication.utils.SampleUtils
 import com.qualcomm.vuforia.Renderer
 import com.qualcomm.vuforia.Tool
 import com.qualcomm.vuforia.VIDEO_BACKGROUND_REFLECTION
@@ -30,7 +30,7 @@ import javax.microedition.khronos.opengles.GL10
 
 // The renderer class for the ImageTargetsBuilder sample.
 class ImageTargetRenderer(// Reference to main activity
-		private val mActivity: ImageTargets, private val mVuforiaAppSession: ApplicationSession) : GLSurfaceView.Renderer {
+        private val mActivity: ImageTargets, private val mVuforiaAppSession: ApplicationSession) : GLSurfaceView.Renderer {
 	var mIsActive = false
 	private var modelViewMat: FloatArray? = null
 
@@ -111,7 +111,7 @@ class ImageTargetRenderer(// Reference to main activity
 	// Called when the surface is created or recreated.
 	@SuppressLint("LongLogTag")
 	override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
-		Log.d(LOGTAG, "GLRenderer.onSurfaceCreated")
+		Log.d(ImageTargetRenderer.Companion.LOGTAG, "GLRenderer.onSurfaceCreated")
 		// Call Vuforia function to (re)initialize rendering after first use
 		// or after OpenGL ES context was lost (e.g. after onPause/onResume):
 		mVuforiaAppSession.onSurfaceCreated()
@@ -130,7 +130,7 @@ class ImageTargetRenderer(// Reference to main activity
 		if (fb != null) {
 			fb!!.dispose()
 		}
-		fb = com.threed.jpct.FrameBuffer(width, height)
+		fb = FrameBuffer(width, height)
 		Config.viewportOffsetAffectsRenderTarget = true
 
 	}
@@ -182,9 +182,9 @@ class ImageTargetRenderer(// Reference to main activity
 
 			val angle = 90f
 			val modelViewProjection = FloatArray(16)
-			Matrix.translateM(modelViewMatrix, 0, 0f, 0f, kObjectScale)
-			Matrix.rotateM(modelViewMatrix, 0, angle, 0f, 0f, kObjectScale)
-			Matrix.scaleM(modelViewMatrix, 0, kObjectScale, kObjectScale, kObjectScale)
+			Matrix.translateM(modelViewMatrix, 0, 0f, 0f, ImageTargetRenderer.Companion.kObjectScale)
+			Matrix.rotateM(modelViewMatrix, 0, angle, 0f, 0f, ImageTargetRenderer.Companion.kObjectScale)
+			Matrix.scaleM(modelViewMatrix, 0, ImageTargetRenderer.Companion.kObjectScale,ImageTargetRenderer.Companion.kObjectScale, ImageTargetRenderer.Companion.kObjectScale)
 			Matrix.multiplyMM(modelViewProjection, 0, mVuforiaAppSession.projectionMatrix.data, 0, modelViewMatrix,
 					0)
 			modelViewMatrix_Vuforia.data = modelViewMatrix

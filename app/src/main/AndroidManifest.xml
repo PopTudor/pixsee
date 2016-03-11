@@ -70,7 +70,7 @@
 				   android:value="@string/facebook_app_id"/>
 
 		<activity
-			android:name=".UserDefinedTargets.ImageTargets"
+			android:name="face.UserDefinedTargets.ImageTargets"
 			android:configChanges="orientation|keyboardHidden"
 			android:exported="true"
 			android:screenOrientation="portrait"
