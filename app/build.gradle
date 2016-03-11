@@ -60,9 +60,9 @@ android {
             debuggable true
             shrinkResources true
             useProguard true
-            ndk {
-                abiFilters "armeabi-v7a"
-            }
+//            ndk {
+//                abiFilters "armeabi-v7a"
+//            }
         }
     }
     sourceSets {

@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.support.v4.content.IntentCompat
-import com.marked.pixsee.activity.chat.ChatListActivity
+import com.marked.pixsee.friends.FriendsActivity
 import com.marked.pixsee.networking.HTTPStatusCodes
-import com.marked.pixsee.utility.extra.GCMConstants
+import com.marked.pixsee.utility.GCMConstants
 
 /**
  * Created by Tudor Pop on 28-Nov-15.
@@ -17,7 +17,7 @@ class RegistrationBroadcastReceiver(val registrationListener: RegistrationListen
 
     override
     fun onReceive(context: Context, intent: Intent) {
-        val toStart = Intent(context, ChatListActivity::class.java);
+        val toStart = Intent(context, FriendsActivity::class.java);
         val action = intent.action;
         when (action) {
             GCMConstants.ACTION_LOGIN, GCMConstants.ACTION_SIGNUP -> {

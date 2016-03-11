@@ -28,15 +28,15 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.marked.pixsee.R;
-import com.marked.pixsee.activity.entry.EntryActivity;
-import com.marked.pixsee.fragment.chat.ChatDetailFragment;
+import com.marked.pixsee.entry.EntryActivity;
+import com.marked.pixsee.frienddetail.FriendDetailFragment;
 
 import static android.app.PendingIntent.getActivity;
 import static android.media.RingtoneManager.TYPE_NOTIFICATION;
 import static android.media.RingtoneManager.getDefaultUri;
-import static com.marked.pixsee.utility.extra.MessageConstants.DATA_BODY;
-import static com.marked.pixsee.utility.extra.MessageConstants.NOTIFICATION_PAYLOAD_BODY;
-import static com.marked.pixsee.utility.extra.MessageConstants.NOTIFICATION_PAYLOAD_TITLE;
+import static com.marked.pixsee.data.message.MessageConstants.DATA_BODY;
+import static com.marked.pixsee.data.message.MessageConstants.NOTIFICATION_PAYLOAD_BODY;
+import static com.marked.pixsee.data.message.MessageConstants.NOTIFICATION_PAYLOAD_TITLE;
 
 /**
  * Receives messages sent by GCM server
@@ -82,7 +82,7 @@ public class GCMListenerService extends GcmListenerService {
 		 */
 
 		/*send notification only if the user is not inside the chatting fragment */
-		if (!ChatDetailFragment.Static.isInForeground())
+		if (!FriendDetailFragment.Static.isInForeground())
 			sendNotification(payload);
 		// [END_EXCLUDE]
 	}

@@ -14,5 +14,10 @@ class Pixsee : Application() {
 		super.onCreate()
 		var config = OkHttpImagePipelineConfigFactory.newBuilder(this, OkHttpClient()).build()
 		Fresco.initialize(this,config)
+        //		val fabric = Fabric.Builder(this)
+        //				.kits(Crashlytics())
+        //				.debuggable(true) // TODO: 13-Dec-15 disable this
+        //				.build()
+        //		Fabric.with(fabric)
 	}
 }

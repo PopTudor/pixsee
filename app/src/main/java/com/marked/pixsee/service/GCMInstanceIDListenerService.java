@@ -20,7 +20,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.google.android.gms.iid.InstanceIDListenerService;
-import com.marked.pixsee.activity.entry.EntryActivity;
+import com.marked.pixsee.entry.EntryActivity;
 
 public class GCMInstanceIDListenerService extends InstanceIDListenerService {
 

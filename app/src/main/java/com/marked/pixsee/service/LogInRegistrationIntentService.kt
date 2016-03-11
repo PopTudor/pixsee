@@ -31,11 +31,11 @@ import com.google.android.gms.iid.InstanceID
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.marked.pixsee.R
-import com.marked.pixsee.model.database.DatabaseContract
-import com.marked.pixsee.networking.LoginAPI
-import com.marked.pixsee.utility.extra.GCMConstants
+import com.marked.pixsee.data.database.DatabaseContract
+import com.marked.pixsee.login.LoginAPI
 import com.marked.pixsee.networking.HTTPStatusCodes
 import com.marked.pixsee.networking.ServerConstants
+import com.marked.pixsee.utility.GCMConstants
 import com.marked.pixsee.utility.saveToTable
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -151,7 +151,7 @@ class LogInRegistrationIntentService : IntentService("RegIntentService") {
                     notifyBroadcastReceiver(GCMConstants.ACTION_LOGIN)
                     saveToTable(DatabaseContract.Contact.TABLE_NAME, friends);
                 } else {
-                    handleVolleyError(response.raw().code())
+                    handleRegistrationError(response.raw().code())
                 }
             }
 
@@ -185,10 +185,10 @@ class LogInRegistrationIntentService : IntentService("RegIntentService") {
                     // sent to your server. If the boolean is false, send the token to your server,
                     // otherwise your server should have already received the token.
                     defaultSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply()/* if sent_token_to_server == true, we are registered*/
-                    defaultSharedPreferences.edit().putString(GCMConstants.USER_ID, response.body().get(GCMConstants.USER_ID).asString).apply()
+                    defaultSharedPreferences.edit().putString(GCMConstants.USER_ID, response.body().get("_id").asString).apply()
                     notifyBroadcastReceiver(GCMConstants.ACTION_SIGNUP)
                 } else {
-                    handleVolleyError(response.raw().code())
+                    handleRegistrationError(response.raw().code())
                 }
             }
 
@@ -247,7 +247,7 @@ class LogInRegistrationIntentService : IntentService("RegIntentService") {
     }
 
 
-    private fun handleVolleyError(error: Int) {
+    private fun handleRegistrationError(error: Int) {
         defaultSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, false).apply()
         val intent = Intent(GCMConstants.ACTION_ERROR)
         intent.putExtra(HTTPStatusCodes.ERROR_RESPONSE_STATUS_CODE, error)
