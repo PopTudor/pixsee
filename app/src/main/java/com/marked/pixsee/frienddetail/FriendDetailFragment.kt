@@ -12,17 +12,17 @@ import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.marked.pixsee.R
 import com.marked.pixsee.data.friend.Friend
 import com.marked.pixsee.data.message.Message
+import com.marked.pixsee.data.message.MessageConstants
 import com.marked.pixsee.data.message.MessageDataset
 import com.marked.pixsee.networking.ServerConstants
 import com.marked.pixsee.service.GCMListenerService
-import com.marked.pixsee.utility.SpacesItemDecoration
 import com.marked.pixsee.utility.GCMConstants
-import com.marked.pixsee.data.message.MessageConstants
+import com.marked.pixsee.utility.SpacesItemDecoration
 import io.socket.client.IO
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.fragment_contact_detail.*
 import kotlinx.android.synthetic.main.fragment_contact_detail.view.*
-import org.jetbrains.anko.support.v4.defaultSharedPreferences
+import org.jetbrains.anko.defaultSharedPreferences
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -37,7 +37,7 @@ import java.util.*
 class FriendDetailFragment : Fragment(), GCMListenerService.Callbacks {
     private val mContext by lazy { activity }
 
-    private val mThisUser by lazy { defaultSharedPreferences.getString(GCMConstants.USER_ID, null) }
+    private val mThisUser by lazy { mContext.defaultSharedPreferences.getString(GCMConstants.USER_ID, null) }
     private val mThatUser by lazy { arguments.getParcelable<Friend>(ChatDetailActivity.EXTRA_CONTACT) }
 
     private val mMessagesInstance by lazy { MessageDataset.getInstance(mContext) }

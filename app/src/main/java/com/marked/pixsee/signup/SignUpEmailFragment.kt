@@ -11,7 +11,6 @@ import com.marked.pixsee.R
 import com.marked.pixsee.utility.Utils
 import kotlinx.android.synthetic.main.fragment_sign_up_email.*
 import kotlinx.android.synthetic.main.fragment_sign_up_email.view.*
-import org.jetbrains.anko.onClick
 import org.jetbrains.anko.toast
 import java.io.UnsupportedEncodingException
 /**
@@ -28,7 +27,7 @@ class SignUpEmailFragment : Fragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val rootView = inflater.inflate(R.layout.fragment_sign_up_email, container, false)
 		rootView.hiUser.text = "Beautiful name ${arguments.getString(Companion.NAME_TAG)},"
-		rootView.nextButton.onClick {
+		rootView.nextButton.setOnClickListener {
 			if (!Utils.isOnline(activity)) {
 				Utils.showNoConnectionDialog(activity)
 			} else {

@@ -6,10 +6,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.marked.pixsee.R
-import com.marked.pixsee.frienddetail.ChatDetailActivity
 import com.marked.pixsee.data.friend.Friend
-import com.marked.pixsee.friends.FriendHolder
-import org.jetbrains.anko.onClick
+import com.marked.pixsee.frienddetail.ChatDetailActivity
 import java.util.*
 
 /**
@@ -28,7 +26,7 @@ class FriendsAdapter(private val context: Context, private var dataSet: ArrayLis
         val contact = dataSet.get(position);
 		holder.apply {
 			bindContact(contact)
-			itemView.onClick { view ->
+			itemView.setOnClickListener { view ->
 				// itemView is a public member that points to the root element of the contactHolder (in the layout)
 				// TODO: 03-Dec-15 send contact detail from here to ContactDetailActivity
 				// send the clicked contact to detail activity

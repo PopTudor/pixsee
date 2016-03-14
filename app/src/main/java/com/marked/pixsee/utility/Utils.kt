@@ -7,13 +7,16 @@ import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.net.ConnectivityManager
 import android.provider.Settings
+import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import com.google.gson.Gson
 import com.google.gson.JsonArray
-import com.marked.pixsee.data.friend.Friend
 import com.marked.pixsee.data.database.database
+import com.marked.pixsee.data.friend.Friend
+import org.jetbrains.anko.AnkoAsyncContext
 import org.jetbrains.anko.async
 import org.jetbrains.anko.db.transaction
+import org.jetbrains.anko.onUiThread
 
 /**
  * Created by Tudor Pop on 15-Nov-15.
@@ -70,4 +73,18 @@ fun Context.saveToTable(table: String, jsonArray: JsonArray) {
             }
         }
     }
+}
+inline fun Fragment.onUiThread(crossinline f: () -> Unit) {
+    activity.onUiThread { f() }
+}
+fun <T: Fragment> AnkoAsyncContext<T>.supportFragmentUiThread(f: (T) -> Unit) {
+    val fragment = weakRef.get() ?: return
+    if (fragment.isDetached) return
+    val activity = fragment.activity ?: return
+    activity.runOnUiThread { f(fragment) }
+}
+
+@Deprecated("Use onUiThread() instead", ReplaceWith("onUiThread(f)"))
+inline fun Fragment.uiThread(crossinline f: () -> Unit) {
+    activity.onUiThread { f() }
 }

@@ -12,7 +12,6 @@ import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.marked.pixsee.R
 import kotlinx.android.synthetic.main.activity_fullscreen.*
-import org.jetbrains.anko.onClick
 
 /**
  * An example full-screen activity that shows and hides the UI with user interaction.
@@ -115,7 +114,7 @@ class ImageFullscreenActivity : AppCompatActivity() {
 
         fullscreenContent.apply {
             // Set up the user interaction to manually show or hide the system UI.
-            onClick { toggle() }
+            setOnClickListener{ toggle() }
             setOnTouchListener(mDelayHideTouchListener)
             setImage(ImageSource.uri(intent.getStringExtra("URI")))
             setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM)

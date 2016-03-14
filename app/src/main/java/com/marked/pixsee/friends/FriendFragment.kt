@@ -10,13 +10,11 @@ import android.util.Log
 import android.view.*
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.marked.pixsee.R
-import com.marked.pixsee.face.UserDefinedTargets.ImageTargets
 import com.marked.pixsee.data.friend.ContactDataset
-import com.marked.pixsee.friends.FriendsAdapter
+import com.marked.pixsee.face.UserDefinedTargets.ImageTargets
+import com.marked.pixsee.utility.onUiThread
+import com.marked.pixsee.utility.toast
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
-import org.jetbrains.anko.onClick
-import org.jetbrains.anko.support.v4.onUiThread
-import org.jetbrains.anko.support.v4.toast
 import kotlin.concurrent.fixedRateTimer
 
 /**
@@ -84,7 +82,7 @@ class FriendFragment : Fragment() {
 				}
 			})
 		}
-		rootView.fab.onClick {
+		rootView.fab.setOnClickListener {
 			/* Google AppInvites */
 			val intent = AppInviteInvitation.IntentBuilder("Invite more friends")
 					.setMessage("Check out this cool app !")
@@ -95,7 +93,7 @@ class FriendFragment : Fragment() {
 			startActivityForResult(intent, REQUEST_INVITE);
 		}
 
-		rootView.vuforiaCamera.onClick {
+		rootView.vuforiaCamera.setOnClickListener {
 			val intent = Intent(activity, ImageTargets::class.java)
 			intent.putExtra("ACTIVITY_TO_LAUNCH","app.ImageTargets.ImageTargets")
 			startActivity(intent)

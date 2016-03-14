@@ -28,8 +28,22 @@ ext {
     buildToolsVersion = '23.0.2'
 
     // App dependencies
-    supportLibraryVersion = '23.2.0'
+    supportLibraryVersion = '24.0.0-alpha1'
+    playServices = '8.4.0'
     kotlin_version = '1.0.0'
+    materialEditText = '2.1.4'
+    chatMessageView = '1.0.3'
+    dilatingDot = '1.0.1'
+    fab = '1.6.2'
+    rxAndroid = '1.1.0'
+    fresco = '0.9.0'
+    retrofit = '2.0.0-beta4'
+    okhttp3 = '3.1.2'
+    scaleImageView = '3.4.1'
+    dagger = '2.0.2'
+    sidemenu = '1.0'
+
+//testing
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'
     powerMockito = '1.6.2'
@@ -37,4 +51,5 @@ ext {
     runnerVersion = '0.4.1'
     rulesVersion = '0.4.1'
     espressoVersion = '2.2.1'
+
 }

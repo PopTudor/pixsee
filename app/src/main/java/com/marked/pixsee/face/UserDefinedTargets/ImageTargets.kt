@@ -26,7 +26,6 @@ import com.marked.pixsee.face.VuforiaApplication.utils.GLDrawingSurfaceView
 import com.marked.pixsee.face.VuforiaApplication.utils.Texture
 import com.qualcomm.vuforia.*
 import kotlinx.android.synthetic.main.activity_preview.*
-import org.jetbrains.anko.onClick
 import java.util.*
 
 // The main activity for the UserDefinedTargets sample.
@@ -270,7 +269,7 @@ class ImageTargets : AppCompatActivity(), com.marked.pixsee.face.VuforiaApplicat
 
         // Gets a reference to the loading dialog container
         //        loadingDialogHandler.mLoadingDialogContainer = mUILayout.findViewById(R.id.loading_layout);
-        switchCamera.onClick { vuforiaAppSession.switchCamera() }
+        switchCamera.setOnClickListener { vuforiaAppSession.switchCamera() }
         startUserDefinedTargets()
 
         mBottomBar.visibility = View.VISIBLE

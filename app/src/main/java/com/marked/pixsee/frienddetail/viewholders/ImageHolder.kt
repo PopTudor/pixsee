@@ -14,7 +14,6 @@ import com.facebook.imagepipeline.request.ImageRequest
 import com.marked.pixsee.R
 import com.marked.pixsee.data.message.Message
 import com.marked.pixsee.frienddetail.ImageFullscreenActivity
-import org.jetbrains.anko.onClick
 
 /**
  * Created by Tudor Pop on 04-Dec-15.
@@ -27,7 +26,7 @@ class ImageHolder(itemView: View, val context: Context) : RecyclerView.ViewHolde
 //		val url = Uri.parse(message.data.get(MessageConstants.DATA_BODY));
 		val url = Uri.parse("http://www.online-image-editor.com//styles/2014/images/example_image.png");
 		mImage.setImageURI(url,context);
-        mImage.onClick { largeImage(url) }
+        mImage.setOnClickListener { largeImage(url) }
 	}
 
     fun largeImage(uri: Uri){

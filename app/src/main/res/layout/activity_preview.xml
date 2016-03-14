@@ -21,14 +21,7 @@
 		android:visibility="visible"
 		android:weightSum="1">
 
-		<Button
-			android:id="@+id/camera_button"
-			android:layout_width="70dp"
-			android:layout_height="70dp"
-			android:alpha="0.8"
-			android:background="@drawable/round_button"
-			android:onClick="onCameraClick"/>
-	</LinearLayout>
+    </LinearLayout>
 	<ImageView
 		android:id="@+id/switchCamera"
 		android:layout_width="wrap_content"
@@ -39,4 +32,15 @@
 		android:contentDescription="Switch camera"
 		android:src="@drawable/ic_camera_rear_24dp"
 	/>
+
+    <Button
+        android:id="@+id/camera_button"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:alpha="0.8"
+        android:background="@drawable/round_button"
+        android:onClick="onCameraClick"
+        android:layout_marginBottom="25dp"
+        android:layout_above="@+id/bottom_bar"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

@@ -2,7 +2,6 @@ package com.marked.pixsee.data.message
 
 import android.content.ContentValues
 import android.os.Bundle
-import com.marked.pixsee.data.message.MessageConstants
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -18,22 +17,22 @@ public data class Message private constructor(val builder: Builder) : MessageCon
      * Gets the payload data, which is immutable.
      * IN DATA ADD ALL OTHER OPTIONS LIKE to/from/date/messageType
      */
-    var data: Map<String, String>
+    private var data: Map<String, String>
     /**
      * Gets the notification params, which are immutable.
      */
-    var notificationParams: Map<String, String>
-    var restrictedPackageName: String?
-    var collapseKey: String?
-    var isDelayWhileIdle: Boolean?
-    var timeToLive: Int?
+    private var notificationParams: Map<String, String>
+    private var restrictedPackageName: String?
+    private var collapseKey: String?
+    private var isDelayWhileIdle: Boolean?
+    private var timeToLive: Int?
 
-    var to: String?
-    var from: String?
-    var messageType: Int
+    private var to: String?
+    private var from: String?
+    private var messageType: Int
 
-    var date: Long
-    var id: String = UUID.randomUUID().toString()
+    private var date: Long
+    private var id: String = UUID.randomUUID().toString()
 
     init {
         data = Collections.unmodifiableMap(builder.data)
