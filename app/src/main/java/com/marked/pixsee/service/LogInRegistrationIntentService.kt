@@ -149,7 +149,7 @@ class LogInRegistrationIntentService : IntentService("RegIntentService") {
                     defaultSharedPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply()/* if sent_token_to_server == true, we are registered*/
                     defaultSharedPreferences.edit().putString(GCMConstants.USER_ID, userID).apply()
                     notifyBroadcastReceiver(GCMConstants.ACTION_LOGIN)
-                    saveToTable(DatabaseContract.Contact.TABLE_NAME, friends);
+                    saveToTable(DatabaseContract.Friend.TABLE_NAME, friends);
                 } else {
                     handleRegistrationError(response.raw().code())
                 }

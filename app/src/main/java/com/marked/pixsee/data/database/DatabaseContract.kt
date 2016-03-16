@@ -2,7 +2,7 @@ package com.marked.pixsee.data.database
 
 import android.provider.BaseColumns
 import com.marked.pixsee.data.message.MessageConstants
-import com.marked.pixsee.data.friend.FriendConstants
+import com.marked.pixsee.friends.data.FriendConstants
 
 /**
  * Created by Tudor Pop on 26-Jan-16.
@@ -13,15 +13,15 @@ class DatabaseContract private constructor() {
 		const val DATABASE_NAME = "pixy.db"
 
 		/* Add to CREATE_TABLE_ARRAY all the other tables that get created and to DELETE_TABLE_ARRAY all tables that get deleted*/
-		val CREATE_TABLE_ARRAY = arrayOf(Contact.CREATE_TABLE.trim(), User.CREATE_TABLE.trim(), Message.CREATE_TABLE.trim())
-		val DELETE_TABLE_ARRAY = arrayOf(Contact.DELETE_TABLE, User.DELETE_TABLE, Message.DELETE_TABLE)
+		val CREATE_TABLE_ARRAY = arrayOf(Friend.CREATE_TABLE.trim(), User.CREATE_TABLE.trim(), Message.CREATE_TABLE.trim())
+		val DELETE_TABLE_ARRAY = arrayOf(Friend.DELETE_TABLE, User.DELETE_TABLE, Message.DELETE_TABLE)
 	}
 
 
-	/* Contact friends */
-	class Contact : BaseColumns {
+	/* Friends */
+	class Friend : BaseColumns {
 		companion object Static {
-			const val TABLE_NAME = "contact"
+			const val TABLE_NAME = "friend"
 			const val COLUMN_ID = FriendConstants.ID /* id from online stored database */
 			const val COLUMN_NAME = FriendConstants.NAME
 			const val COLUMN_EMAIL = FriendConstants.EMAIL
@@ -79,7 +79,7 @@ class DatabaseContract private constructor() {
 			$COLUMN_TYPE INTEGER,
 			$COLUMN_DATE INTEGER,
 			$COLUMN_TO TEXT,
-			FOREIGN KEY($COLUMN_TO) REFERENCES ${Contact.TABLE_NAME}(${Contact.COLUMN_ID})
+			FOREIGN KEY($COLUMN_TO) REFERENCES ${Friend.TABLE_NAME}(${Friend.COLUMN_ID})
 			);"""
 
 			const val DELETE_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME"

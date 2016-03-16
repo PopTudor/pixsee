@@ -23,7 +23,7 @@
         android:textSize="@dimen/abc_text_size_headline_material"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/contactNameTextView"
+        android:id="@+id/friendNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -41,7 +41,7 @@
         style="@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/contactNameTextView"
+        android:layout_below="@+id/friendNameTextView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:background="@color/primary"

@@ -1,21 +1,50 @@
 package com.marked.pixsee.friends;
 
-import com.marked.pixsee.data.friend.Friend;
+import com.marked.pixsee.friends.data.Friend;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * Created by Tudor Pop on 15-Mar-16.
  * This specifies the contract between the view and the presenter.
  */
-interface FriendsContract {
-    interface View {
-        void showFriendDetailUI(Friend friend);
-    }
+public interface FriendsContract {
+	/*Friend views should implement View*/
+	interface View {
 
-    interface UserActionsListener {
-        void loadFriends(boolean forceUpdate);
+		/**
+		 * Open detail view for a {@link Friend}
+		 *
+		 * @param friend The {@link Friend} to show details of
+		 */
+		void showFriendDetailUI(Friend friend);
 
-        void openFriendDetailUI(@NotNull Friend friend);
-    }
+		void onFriendsLoaded(int from, int to);
+	}
+
+	/**
+	 * Presenter will implement this to handle actions on the view
+	 */
+	interface UserActionsListener {
+		void loadFriends(int num);
+
+		void loadFriends(boolean forceUpdate);
+
+		void openFriendDetailUI(@NotNull Friend friend);
+	}
+
+	interface Model {
+		List<Friend> getFriends();
+
+		List<Friend> getFriends(int start);
+
+		List<Friend> getFriends(int start, int end);
+
+		void loadMore(@NotNull int num);
+
+		void clear();
+
+	}
 }

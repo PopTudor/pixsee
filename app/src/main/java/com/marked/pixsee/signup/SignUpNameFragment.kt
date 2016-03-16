@@ -24,7 +24,7 @@ class SignUpNameFragment : Fragment() {
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val rootView = inflater!!.inflate(R.layout.fragment_sign_up_name, container, false)
 		rootView.findViewById(R.id.nextButton).setOnClickListener {
-			val name = contactNameTextView.text.toString().trim { it <= ' ' }
+			val name = friendNameTextView.text.toString().trim { it <= ' ' }
 			if (name.isNullOrBlank())
 				activity.toast("Please enter your name")
 			else

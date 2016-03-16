@@ -6,7 +6,7 @@ import android.app.backup.FileBackupHelper;
 import java.io.File;
 
 
-class TheBackupAgent extends BackupAgentHelper {
+public class TheBackupAgent extends BackupAgentHelper {
 	// TODO: 01-Nov-15 create database
 
 	// Allocate a helper and add it to the backup agent

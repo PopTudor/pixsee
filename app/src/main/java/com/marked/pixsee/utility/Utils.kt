@@ -12,7 +12,7 @@ import android.support.v7.app.AlertDialog
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.marked.pixsee.data.database.database
-import com.marked.pixsee.data.friend.Friend
+import com.marked.pixsee.friends.data.Friend
 import org.jetbrains.anko.AnkoAsyncContext
 import org.jetbrains.anko.async
 import org.jetbrains.anko.db.transaction
@@ -74,6 +74,8 @@ fun Context.saveToTable(table: String, jsonArray: JsonArray) {
         }
     }
 }
+
+
 inline fun Fragment.onUiThread(crossinline f: () -> Unit) {
     activity.onUiThread { f() }
 }

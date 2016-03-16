@@ -1,10 +1,8 @@
-package com.marked.pixsee.data.friend;
-
+package com.marked.pixsee.friends.data
 import android.content.ContentValues
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import com.marked.pixsee.data.friend.FriendConstants
 
 /**
  * Created by Tudor Pop on 28-Nov-15.
@@ -21,7 +19,7 @@ data class Friend(
     companion object {
         @JvmField @Suppress("unused")
         val CREATOR: Parcelable.Creator<Friend> = object : Parcelable.Creator<Friend> {
-            override fun createFromParcel(parcelIn: Parcel) = Contact(parcelIn)
+            override fun createFromParcel(parcelIn: Parcel) = Friend.Companion.Contact(parcelIn)
             override fun newArray(size: Int): Array<Friend?> = arrayOfNulls(size)
         };
 

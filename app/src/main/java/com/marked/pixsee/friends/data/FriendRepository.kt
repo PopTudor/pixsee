@@ -1,8 +1,8 @@
-package com.marked.pixsee.data.friend
+package com.marked.pixsee.friends.data
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import com.marked.pixsee.data.friend.FriendConstants
+import com.marked.pixsee.data.Repository
 import com.marked.pixsee.data.database.DatabaseContract
 import com.marked.pixsee.data.database.database
 import org.jetbrains.anko.async
@@ -15,73 +15,72 @@ import java.util.*
 
 /**
  * Created by Tudor Pop on 12-Dec-15.
- * Singleton class used to keep all the friends (the list of contacts) of the user
+ * Singleton class used to keep all the friends of the user
  */
-class ContactDataset(val mContext: Context) : ArrayList<Friend>() {
+class FriendRepository(val mContext: Context) : ArrayList<Friend>(), Repository {
     init {
         loadMore()
     }
 
     override fun add(element: Friend): Boolean {
         mContext.database.use {
-            insertWithOnConflict(DatabaseContract.Contact.TABLE_NAME, null, element.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
+            insertWithOnConflict(DatabaseContract.Friend.TABLE_NAME, null, element.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
         }
         return super.add(element)
     }
 
     override fun addAll(elements: Collection<Friend>): Boolean {
-        var result = super.addAll(elements)
         async() {
             mContext.database.use {
                 transaction {
                     elements.forEach {
-                        insertWithOnConflict(DatabaseContract.Contact.TABLE_NAME, null, it.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
+                        insertWithOnConflict(DatabaseContract.Friend.TABLE_NAME, null, it.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
                     }
                 }
             }
         }
-        return result
+        return super.addAll(elements)
     }
 
     override fun set(index: Int, element: Friend): Friend {
         mContext.database.use {
-            update(DatabaseContract.Contact.TABLE_NAME, element.toContentValues(), "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(element.userID))
+            update(DatabaseContract.Friend.TABLE_NAME, element.toContentValues(), "${DatabaseContract.Friend.COLUMN_ID} = ?s", arrayOf(element.userID))
         }
         return super.set(index, element)
     }
 
     override fun remove(element: Friend): Boolean {
         mContext.database.use {
-            delete(DatabaseContract.Contact.TABLE_NAME, "${DatabaseContract.Contact.COLUMN_ID} = ?s", arrayOf(element.userID))
+            delete(DatabaseContract.Friend.TABLE_NAME, "${DatabaseContract.Friend.COLUMN_ID} = ?s", arrayOf(element.userID))
         }
         return super.remove(element)
     }
 
     companion object {
-        val contacts: ContactDataset? = null
-        fun getInstance(context: Context): ContactDataset {
-            if (contacts == null)
-                return ContactDataset(context)
-            return contacts
+        val contacts: FriendRepository? = null
+        fun getInstance(context: Context): FriendRepository {
+            if (FriendRepository.Companion.contacts == null)
+                return FriendRepository(context)
+            return FriendRepository.Companion.contacts
         }
     }
 
-    fun loadMore(limit: Int = 50) {
+    fun loadMore(limit: Int = 10) {
         mContext.database.use {
-
-            select(DatabaseContract.Contact.TABLE_NAME,
-                    DatabaseContract.Contact.COLUMN_ID,
-                    DatabaseContract.Contact.COLUMN_NAME,
-                    DatabaseContract.Contact.COLUMN_EMAIL,
-                    DatabaseContract.Contact.COLUMN_TOKEN).limit(size, limit).exec {
+            select(DatabaseContract.Friend.TABLE_NAME,
+                    DatabaseContract.Friend.COLUMN_ID,
+                    DatabaseContract.Friend.COLUMN_NAME,
+                    DatabaseContract.Friend.COLUMN_EMAIL,
+                    DatabaseContract.Friend.COLUMN_TOKEN).limit(size, limit).exec {
                 moveToFirst()
-                val id = getColumnIndex(DatabaseContract.Contact.COLUMN_ID)
-                val name = getColumnIndex(DatabaseContract.Contact.COLUMN_NAME)
-                val email = getColumnIndex(DatabaseContract.Contact.COLUMN_EMAIL)
-                val token = getColumnIndex(DatabaseContract.Contact.COLUMN_TOKEN)
+                val id = getColumnIndex(DatabaseContract.Friend.COLUMN_ID)
+                val name = getColumnIndex(DatabaseContract.Friend.COLUMN_NAME)
+                val email = getColumnIndex(DatabaseContract.Friend.COLUMN_EMAIL)
+                val token = getColumnIndex(DatabaseContract.Friend.COLUMN_TOKEN)
 
                 while (!isAfterLast) {
-                    super.add(Friend(getString(id), getString(name), getString(email), getString(token)))
+                    val friend = Friend(getString(id), getString(name), getString(email), getString(token))
+                    super.add(friend)
                     moveToNext()
                 }
                 close()

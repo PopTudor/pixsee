@@ -10,7 +10,7 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/contactIconImageView"
+        android:id="@+id/friendIconImageView"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_gravity="center_vertical"
@@ -31,7 +31,7 @@
         >
 
         <TextView
-            android:id="@+id/contactNameTextView"
+            android:id="@+id/friendNameTextView"
             style="@style/Base.TextAppearance.AppCompat.Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             android:textSize="16sp"/>
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/friendEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="New Text"/>

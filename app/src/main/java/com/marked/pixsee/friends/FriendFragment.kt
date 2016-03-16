@@ -1,6 +1,7 @@
 package com.marked.pixsee.friends
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -10,14 +11,12 @@ import android.util.Log
 import android.view.*
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.marked.pixsee.R
-import com.marked.pixsee.data.friend.ContactDataset
-import com.marked.pixsee.data.friend.Friend
 import com.marked.pixsee.face.UserDefinedTargets.ImageTargets
 import com.marked.pixsee.frienddetail.ChatDetailActivity
-import com.marked.pixsee.utility.onUiThread
+import com.marked.pixsee.friends.data.Friend
+import com.marked.pixsee.friends.data.FriendRepository
 import com.marked.pixsee.utility.toast
 import kotlinx.android.synthetic.main.fragment_contact_list.view.*
-import kotlin.concurrent.fixedRateTimer
 
 /**
  * A list fragment representing a list of Contacts. This fragment
@@ -30,16 +29,13 @@ import kotlin.concurrent.fixedRateTimer
  * interface.
  */
 class FriendFragment : Fragment(), FriendsContract.View {
-    override fun showFriendDetailUI(friend: Friend) {
-        val intent = Intent(mContext, ChatDetailActivity:: class.java)
-        intent.putExtra(ChatDetailActivity.EXTRA_CONTACT, friend);
-        mContext.startActivity(intent)
-    }
+    private val mRepository by lazy { FriendRepository.getInstance(activity.baseContext) }
+    private val mContactsAdapter by lazy { FriendsAdapter(activity, mRepository, friendItemInteraction) }
+    private val mLayoutManager by lazy { LinearLayoutManager(activity) }
 
-    private val mContext by lazy { activity }
-    var mPresenter: FriendPresenter = FriendPresenter(FriendRepository(), this)
+    //	lateinit private var mFabMenu: FloatingActionMenu
 
-
+    private val mPresenter: FriendPresenter by lazy { FriendPresenter(mRepository, this) }
     private val friendItemInteraction by lazy {
         object : FriendItemListener {
             override fun onFriendClick(friend: Friend) {
@@ -47,13 +43,16 @@ class FriendFragment : Fragment(), FriendsContract.View {
             }
         }
     }
-    private val mContactsInstance by lazy { ContactDataset.getInstance(mContext) }
-    private val mContactsAdapter by lazy { FriendsAdapter(mContext, mContactsInstance, friendItemInteraction) }
-    private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
+    override fun onFriendsLoaded(from: Int, to: Int) {
+        mContactsAdapter.notifyItemRangeChanged(from, to)
+    }
 
-    //	lateinit private var mFabMenu: FloatingActionMenu
-
+    override fun showFriendDetailUI(friend: Friend) {
+        val intent = Intent(activity, ChatDetailActivity:: class.java)
+        intent.putExtra(ChatDetailActivity.EXTRA_CONTACT, friend);
+        activity.startActivity(intent)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,16 +61,12 @@ class FriendFragment : Fragment(), FriendsContract.View {
         //		mSocket.on("hi", onNewRoom);
         //		mSocket.emit("room",new JSONObject());
         //		mSocket.connect();
-        fixedRateTimer("DATABASE_CHECK", false, 500, 1500, {
-            /*when first logged in the data comes from the server asynchronously and is inserted
-            * into local database asynchronously. This timer will load the data from database when it's ready.
-            * There should be also a better solution for this but I don't have time now to think about it.
-            * A couple of ideas: broadcast receiver, interface callback, event bus*/
-            if (mContactsInstance.size > 0) {
-                onUiThread { mContactsAdapter.notifyDataSetChanged() }
-                this.cancel()
-            } else mContactsInstance.loadMore()
-        })
+        //
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        mPresenter.loadFriends(true)
     }
 
     private val REQUEST_INVITE: Int = 11
@@ -80,21 +75,16 @@ class FriendFragment : Fragment(), FriendsContract.View {
     fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_contact_list, container, false)
         //		mFabMenu = rootView.fabMenu
-
         rootView.contactRecyclerView.apply {
             this.adapter = mContactsAdapter
             this.layoutManager = mLayoutManager
             this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                     if (dy > 0 && recyclerView?.layoutManager is LinearLayoutManager) {
-                        /**/
                         val s = mLayoutManager.childCount
                         val x = mLayoutManager.findFirstVisibleItemPosition()
-
                         if (x + s >= recyclerView?.layoutManager?.itemCount as Int) {
-                            val sizeTmp = mContactsInstance.size
-                            mContactsInstance.loadMore(50)
-                            onUiThread { mContactsAdapter.notifyItemRangeInserted(sizeTmp, mContactsInstance.size) }
+                            mPresenter.loadFriends(50)
                         }
                     }
                 }

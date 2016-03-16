@@ -4,7 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.marked.pixsee.data.database.DatabaseContract
 import com.marked.pixsee.data.database.database
-import com.marked.pixsee.data.friend.Friend
+import com.marked.pixsee.friends.data.Friend
 import com.marked.pixsee.data.message.MessageConstants
 import org.jetbrains.anko.async
 import org.jetbrains.anko.db.parseList

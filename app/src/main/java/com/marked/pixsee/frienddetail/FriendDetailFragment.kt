@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.marked.pixsee.R
-import com.marked.pixsee.data.friend.Friend
+import com.marked.pixsee.friends.data.Friend
 import com.marked.pixsee.data.message.Message
 import com.marked.pixsee.data.message.MessageConstants
 import com.marked.pixsee.data.message.MessageDataset

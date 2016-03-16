@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.friend.Friend;
+import com.marked.pixsee.friends.data.Friend;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,13 +17,14 @@ import org.jetbrains.annotations.NotNull;
 class FriendHolder extends RecyclerView.ViewHolder {
     View itemView;
     private SimpleDraweeView mFriendIconImageView ;
-    private TextView mFriendTextView;
+    private TextView mFriendNameTextView, mFriendEmailTextView;
 
     public FriendHolder(@NotNull View itemView, Context context) {
         super(itemView);
         this.itemView = itemView;
-        mFriendIconImageView = (SimpleDraweeView) itemView.findViewById(R.id.contactIconImageView);
-        mFriendTextView = (TextView) itemView.findViewById(R.id.contactNameTextView);
+        mFriendIconImageView = (SimpleDraweeView) itemView.findViewById(R.id.friendIconImageView);
+        mFriendNameTextView = (TextView) itemView.findViewById(R.id.friendNameTextView);
+        mFriendEmailTextView = (TextView) itemView.findViewById(R.id.friendEmail);
     }
 
 
@@ -43,7 +44,8 @@ class FriendHolder extends RecyclerView.ViewHolder {
         //		val uri = Uri.parse(contact);
         //		mFriendIconImageView.setImageURI(uri, context);
         //todo get in parse a contact's profile image
-        mFriendTextView.setText(friend.getName());
+        mFriendNameTextView.setText(friend.getName());
+	    mFriendEmailTextView.setText(friend.getEmail());
     }
 
 }
