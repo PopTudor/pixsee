@@ -17,7 +17,8 @@ public data class Message private constructor(val builder: Builder) : MessageCon
      * Gets the payload data, which is immutable.
      * IN DATA ADD ALL OTHER OPTIONS LIKE to/from/date/messageType
      */
-    private var data: Map<String, String>
+    var data: Map<String, String>
+
     /**
      * Gets the notification params, which are immutable.
      */
@@ -29,10 +30,10 @@ public data class Message private constructor(val builder: Builder) : MessageCon
 
     private var to: String?
     private var from: String?
-    private var messageType: Int
+     var messageType: Int
 
     private var date: Long
-    private var id: String = UUID.randomUUID().toString()
+     var id: String = UUID.randomUUID().toString()
 
     init {
         data = Collections.unmodifiableMap(builder.data)

@@ -74,41 +74,40 @@ android {
 
 dependencies {
     def dependency = rootProject.ext
+    def app = dependency.presentationDependencies
     compile files('C:/Users/Marked/Documents/git/pixsee/libs/jpct_ae.jar')
     compile files("$VUFORIA_SDK_DIR/$JAR_DIR/Vuforia.jar")
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    // In case you need support-v4 bindings
     compile('io.socket:socket.io-client:0.6.3') {
         exclude group: 'org.json', module: 'json'
     }
-    compile "org.jetbrains.anko:anko-sqlite:0.8.2"
-    compile "com.google.android.gms:play-services-gcm:$dependency.playServices"
-    compile "com.google.android.gms:play-services-appinvite:$dependency.playServices"
-    compile "com.google.android.gms:play-services-vision:$dependency.playServices"
-    compile "com.android.support:appcompat-v7:$dependency.supportLibraryVersion"
-    compile "com.android.support:design:$dependency.supportLibraryVersion"
-    compile "com.android.support:recyclerview-v7:$dependency.supportLibraryVersion"
-    compile "com.rengwuxian.materialedittext:library:$dependency.materialEditText"
-    compile "me.himanshusoni.chatmessageview:chat-message-view:$dependency.chatMessageView"
-    compile "com.github.justzak:dilatingdotsprogressbar:$dependency.dilatingDot"
-    compile "com.github.clans:fab:$dependency.fab"
-    compile "com.yalantis:sidemenu:$dependency.sidemenu"
+    compile app.supportAppcompat
+    compile app.ankoSQL
+    compile app.gcmService
+    compile app.appInvitesService
+    compile app.visionService
+    compile app.supportRecyclerView
+    compile app.supportDesign
+    compile app.materialEditText
+    compile app.chatMessageView
+    compile app.dilatingProgressBar
+    compile app.fab
+    compile app.sideMenu
+    compile app.fresco
+    compile app.frescoImgPipeline
+    compile app.rxAndroid
+    compile app.retrofit
+    compile app.retrofitConverterGson
+    compile app.retrofitRX
+    compile app.okHttpLogger
+    compile app.subSamplingScaleImage
+    compile app.dagger
 
-    compile "com.facebook.fresco:fresco:$dependency.fresco"
-    compile "com.facebook.fresco:imagepipeline-okhttp:$dependency.fresco"
-    compile "io.reactivex:rxandroid:$dependency.rxAndroid"
-    compile "com.squareup.retrofit2:retrofit:$dependency.retrofit"
-    compile "com.squareup.retrofit2:converter-gson:$dependency.retrofit"
-    compile "com.squareup.retrofit2:adapter-rxjava:$dependency.retrofit"
-    compile "com.squareup.okhttp3:logging-interceptor:$dependency.okhttp3"
-    compile "com.davemorrissey.labs:subsampling-scale-image-view:$dependency.scaleImageView"
-    compile "com.google.dagger:dagger:$dependency.dagger"
-    apt "com.google.dagger:dagger-compiler:$dependency.dagger"
+    apt app.daggerCompiler
 
-
-    provided "com.google.dagger:dagger-compiler:2.0"
-    provided "org.glassfish:javax.annotation:10.0-b28"
+    provided app.daggerCompiler
+    provided app.glassFishAnnotations
 
     testCompile "junit:junit:$dependency.junitVersion"
     testCompile "org.mockito:mockito-all:$dependency.mockitoVersion"

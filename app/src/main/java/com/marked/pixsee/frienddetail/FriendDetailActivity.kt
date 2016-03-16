@@ -1,6 +1,5 @@
 package com.marked.pixsee.frienddetail;
 
-import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -11,8 +10,8 @@ import android.view.MenuItem
 import android.view.View
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.marked.pixsee.R
-import com.marked.pixsee.utility.add
 import com.marked.pixsee.data.message.MessageConstants
+import com.marked.pixsee.utility.add
 import kotlinx.android.synthetic.main.activity_contact_detail.*
 import kotlinx.android.synthetic.main.toolbar.*
 
@@ -48,8 +47,8 @@ class ChatDetailActivity : AppCompatActivity(), FriendDetailFragment.ContactDeta
 		// Show the Up button in the action bar.
 		supportActionBar?.setDisplayHomeAsUpEnabled(true);
 
-		var upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
-		upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
+		var upArrow = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_24dp);
+//		upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
 		supportActionBar?.setHomeAsUpIndicator(upArrow);
 
 		messageEditText.addTextChangedListener(object : TextWatcher {

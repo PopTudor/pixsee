@@ -10,7 +10,7 @@ import com.squareup.okhttp.OkHttpClient;
 /**
  * Created by Tudor Pop on 17-Feb-16.
  */
-class Pixsee extends Application {
+public class Pixsee extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
