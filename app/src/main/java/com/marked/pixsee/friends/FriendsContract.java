@@ -1,6 +1,6 @@
 package com.marked.pixsee.friends;
 
-import com.marked.pixsee.friends.data.Friend;
+import com.marked.pixsee.data.User;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -15,11 +15,11 @@ public interface FriendsContract {
 	interface View {
 
 		/**
-		 * Open detail view for a {@link Friend}
+		 * Open detail view for a {@link User}
 		 *
-		 * @param friend The {@link Friend} to show details of
+		 * @param friend The {@link User} to show details of
 		 */
-		void showFriendDetailUI(Friend friend);
+		void showFriendDetailUI(User friend);
 
 		void onFriendsLoaded(int from, int to);
 	}
@@ -32,15 +32,15 @@ public interface FriendsContract {
 
 		void loadFriends(boolean forceUpdate);
 
-		void openFriendDetailUI(@NotNull Friend friend);
+		void openFriendDetailUI(@NotNull User friend);
 	}
 
 	interface Model {
-		List<Friend> getFriends();
+		List<User> getFriends();
 
-		List<Friend> getFriends(int start);
+		List<User> getFriends(int start);
 
-		List<Friend> getFriends(int start, int end);
+		List<User> getFriends(int start, int end);
 
 		void loadMore(@NotNull int num);
 

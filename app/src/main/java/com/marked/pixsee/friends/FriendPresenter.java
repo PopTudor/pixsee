@@ -2,7 +2,7 @@ package com.marked.pixsee.friends;
 
 import com.marked.pixsee.data.Repository;
 import com.marked.pixsee.friends.FriendsContract.View;
-import com.marked.pixsee.friends.data.Friend;
+import com.marked.pixsee.data.User;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +39,7 @@ public class FriendPresenter implements FriendsContract.UserActionsListener {
 	}
 
 	@Override
-	public void openFriendDetailUI(@NotNull Friend friend) {
+	public void openFriendDetailUI(@NotNull User friend) {
 		mView.get().showFriendDetailUI(friend);
 	}
 

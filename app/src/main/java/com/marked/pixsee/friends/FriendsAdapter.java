@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.friends.data.Friend;
+import com.marked.pixsee.data.User;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,10 +21,10 @@ import static com.facebook.common.internal.Preconditions.checkNotNull;
  */
 class FriendsAdapter extends RecyclerView.Adapter<FriendHolder> {
 	private Context context;
-	private ArrayList<Friend> mDataSet;
+	private ArrayList<User> mDataSet;
 	private FriendFragment.FriendItemListener friendItemListener;
 
-	FriendsAdapter(@NotNull Context context, @NotNull ArrayList<Friend> dataSetObservable, @NotNull FriendFragment.FriendItemListener friendItemListener) {
+	FriendsAdapter(@NotNull Context context, @NotNull ArrayList<User> dataSetObservable, @NotNull FriendFragment.FriendItemListener friendItemListener) {
 		this.context = checkNotNull(context);
 		this.mDataSet = checkNotNull(dataSetObservable);
 		this.friendItemListener = checkNotNull(friendItemListener);
@@ -39,7 +39,7 @@ class FriendsAdapter extends RecyclerView.Adapter<FriendHolder> {
 
 	@Override
 	public void onBindViewHolder(FriendHolder holder, int position) {
-		final Friend friend = mDataSet.get(position);
+		final User friend = mDataSet.get(position);
 		holder.bindContact(friend);
 		holder.itemView.setOnClickListener(new View.OnClickListener() {
 			@Override

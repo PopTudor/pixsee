@@ -5,7 +5,7 @@ import android.test.mock.MockContext;
 import com.google.common.collect.Lists;
 import com.marked.pixsee.friends.FriendPresenter;
 import com.marked.pixsee.friends.FriendsContract;
-import com.marked.pixsee.friends.data.Friend;
+import com.marked.pixsee.data.User;
 import com.marked.pixsee.friends.data.FriendRepository;
 
 import org.junit.Assert;
@@ -25,10 +25,10 @@ import static org.mockito.Mockito.verify;
  * Unit tests for the implementation of {@link FriendPresenter}
  */
 public class FriendPresenterTest {
-	private static List<Friend> FRIENDS = Lists
-			.newArrayList(new Friend("user", "xyz", "xyz@emai.com", "asd"), new Friend("user1", "zxc", "zxc@emai.com", "zxc"));
+	private static List<User> FRIENDS = Lists
+			.newArrayList(new User("user", "xyz", "xyz@emai.com", "asd"), new User("user1", "zxc", "zxc@emai.com", "zxc"));
 
-	private static List<Friend> EMPTY_NOTES = new ArrayList<>(0);
+	private static List<User> EMPTY_NOTES = new ArrayList<>(0);
 
 	@Mock
 	private FriendRepository mFriendRepository;

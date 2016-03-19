@@ -22,7 +22,7 @@ import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.face.UserDefinedTargets.ImageTargets;
 import com.marked.pixsee.frienddetail.ChatDetailActivity;
-import com.marked.pixsee.friends.data.Friend;
+import com.marked.pixsee.data.User;
 import com.marked.pixsee.friends.data.FriendRepository;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
@@ -51,7 +51,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 
 	public FriendItemListener friendItemInteraction = new FriendItemListener() {
 		@Override
-		public void onFriendClick(Friend friend) {
+		public void onFriendClick(User friend) {
 			mPresenter.openFriendDetailUI(friend);
 		}
 	};
@@ -60,7 +60,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 		mFriendsAdapter.notifyItemRangeChanged(from, to);
 	}
 
-	public void showFriendDetailUI(Friend friend) {
+	public void showFriendDetailUI(User friend) {
 		Intent intent = new Intent(getActivity(), ChatDetailActivity.class);
 		intent.putExtra(ChatDetailActivity.EXTRA_CONTACT, friend);
 		getActivity().startActivity(intent);
@@ -243,7 +243,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 
 
 	interface FriendItemListener {
-		void onFriendClick(Friend friend);
+		void onFriendClick(User friend);
 	}
 }
 

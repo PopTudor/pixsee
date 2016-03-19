@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
-import com.marked.pixsee.friends.data.Friend;
+import com.marked.pixsee.data.User;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +38,7 @@ class FriendHolder extends RecyclerView.ViewHolder {
     //            });
 
 
-    void bindContact(Friend friend) {
+    void bindContact(User friend) {
         //        itemView.contactIconImageView.setDefaultImageResId(R.drawable.ic_action_refresh_24dp)
         //        itemView.contactNameTextView.text = contact.name
         //		val uri = Uri.parse(contact);

@@ -1,13 +1,14 @@
-package com.marked.pixsee.friends.data
+package com.marked.pixsee.data
 import android.content.ContentValues
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import com.marked.pixsee.friends.data.FriendConstants
 
 /**
  * Created by Tudor Pop on 28-Nov-15.
  */
-data class Friend(
+data class User(
         @SerializedName(value = "userID",alternate=arrayOf("_id"))
         var userID: String?,
         var name: String?,
@@ -18,17 +19,17 @@ data class Friend(
 
     companion object {
         @JvmField @Suppress("unused")
-        val CREATOR: Parcelable.Creator<Friend> = object : Parcelable.Creator<Friend> {
-            override fun createFromParcel(parcelIn: Parcel) = Friend.Companion.Contact(parcelIn)
-            override fun newArray(size: Int): Array<Friend?> = arrayOfNulls(size)
+        val CREATOR: Parcelable.Creator<User> = object : Parcelable.Creator<User> {
+            override fun createFromParcel(parcelIn: Parcel) = Contact(parcelIn)
+            override fun newArray(size: Int): Array<User?> = arrayOfNulls(size)
         };
 
-        private fun Contact(parcelIn: Parcel): Friend {
+        private fun Contact(parcelIn: Parcel): User {
             var id = parcelIn.readString()
             var name = parcelIn.readString()
             var email = parcelIn.readString()
             var token = parcelIn.readString()
-            return Friend(id, name, email, token)
+            return User(id, name, email, token)
         }
     }
 

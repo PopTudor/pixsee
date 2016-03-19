@@ -12,7 +12,7 @@ import android.support.v7.app.AlertDialog
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.marked.pixsee.data.database.database
-import com.marked.pixsee.friends.data.Friend
+import com.marked.pixsee.data.User
 import org.jetbrains.anko.AnkoAsyncContext
 import org.jetbrains.anko.async
 import org.jetbrains.anko.db.transaction
@@ -67,7 +67,7 @@ fun Context.saveToTable(table: String, jsonArray: JsonArray) {
                 val gson = Gson()
                 jsonArray.forEach {
                     insertWithOnConflict(table, null,
-                            gson.fromJson(it, Friend::class.java).toContentValues(),
+                            gson.fromJson(it, User::class.java).toContentValues(),
                             SQLiteDatabase.CONFLICT_IGNORE)
                 }
             }

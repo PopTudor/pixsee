@@ -4,7 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.marked.pixsee.data.database.DatabaseContract
 import com.marked.pixsee.data.database.database
-import com.marked.pixsee.friends.data.Friend
+import com.marked.pixsee.data.User
 import com.marked.pixsee.data.message.MessageConstants
 import org.jetbrains.anko.async
 import org.jetbrains.anko.db.parseList
@@ -71,7 +71,7 @@ public class MessageDataset(var mContext: Context) : ArrayList<Message>() {
 		return jsonArray
 	}
 
-	fun loadMore(friend: Friend, limit: Int = 50) {
+	fun loadMore(friend: User, limit: Int = 50) {
 		mContext.database.use {
 			select(DatabaseContract.Message.TABLE_NAME,
 					DatabaseContract.Message.COLUMN_DATA_BODY,

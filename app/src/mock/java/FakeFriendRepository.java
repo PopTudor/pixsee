@@ -1,5 +1,5 @@
 import com.marked.pixsee.data.Repository;
-import com.marked.pixsee.friends.data.Friend;
+import com.marked.pixsee.friends.data.User;
 
 import java.util.ArrayList;
 

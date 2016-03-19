@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.marked.pixsee.R
-import com.marked.pixsee.friends.data.Friend
+import com.marked.pixsee.data.User
 import com.marked.pixsee.data.message.Message
 import com.marked.pixsee.data.message.MessageConstants
 import com.marked.pixsee.data.message.MessageDataset
@@ -38,7 +38,7 @@ class FriendDetailFragment : Fragment(), GCMListenerService.Callbacks {
     private val mContext by lazy { activity }
 
     private val mThisUser by lazy { mContext.defaultSharedPreferences.getString(GCMConstants.USER_ID, null) }
-    private val mThatUser by lazy { arguments.getParcelable<Friend>(ChatDetailActivity.EXTRA_CONTACT) }
+    private val mThatUser by lazy { arguments.getParcelable<User>(ChatDetailActivity.EXTRA_CONTACT) }
 
     private val mMessagesInstance by lazy { MessageDataset.getInstance(mContext) }
     private val mMessageAdapter by lazy { MessageAdapter(mContext, mMessagesInstance) }
