@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
@@ -12,22 +11,27 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
+import com.marked.pixsee.di.components.DaggerActivityComponent;
+import com.marked.pixsee.di.modules.ActivityModule;
 import com.marked.pixsee.service.LogInRegistrationIntentService;
 import com.marked.pixsee.service.RegistrationBroadcastReceiver;
-import com.marked.pixsee.signup.DialogRegistration;
 import com.marked.pixsee.signup.SignUpActivity;
 import com.marked.pixsee.utility.DataValidation;
 import com.marked.pixsee.utility.GCMConstants;
 import com.marked.pixsee.utility.Utils;
 
+import javax.inject.Inject;
+
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
-	private ProgressDialog mProgressDialog;
-	private RegistrationBroadcastReceiver mRegistrationBroadcastReceiver;
-	private LocalBroadcastManager mBroadcastManagerastManager;
+	@Inject
+	ProgressDialog mProgressDialog;
+	@Inject
+	RegistrationBroadcastReceiver mRegistrationBroadcastReceiver;
+	@Inject
+	LocalBroadcastManager mBroadcastManagerastManager;
 
 	EditText emailEditText, passwordEditText;
 
@@ -35,12 +39,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_log_in);
-		mProgressDialog = new ProgressDialog(this);
-		mRegistrationBroadcastReceiver = new RegistrationBroadcastReceiver(new DialogRegistration(this, mProgressDialog));
-		mBroadcastManagerastManager = LocalBroadcastManager.getInstance(this);
+		DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build()
+		                       .inject(this);
 
-		((ImageView) findViewById(R.id.moreImageView))
-				.setColorFilter(ContextCompat.getColor(this, R.color.primary));
 		emailEditText = (EditText) findViewById(R.id.emailEditText);
 		passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 

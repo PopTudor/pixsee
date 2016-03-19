@@ -1,123 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    android:id="@+id/containerFragment"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbarStyle="outsideOverlay"
-    tools:context=".login.LogInActivity"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
     >
 
-    <RelativeLayout
+    <data>
+        <variable
+            name="user"
+            type=""/>
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/containerFragment"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/material_grey_100"
-        android:padding="16dp">
+        android:scrollbarStyle="outsideOverlay"
+        tools:context=".login.LogInActivity"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:orientation="horizontal"
-            >
+            android:layout_height="match_parent"
+            android:background="@color/material_grey_100"
+            android:padding="16dp">
 
-            <TextView
-                android:id="@+id/signUpButton"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_centerVertical="true"
-                android:background="@color/transparent"
+                android:layout_alignParentStart="true"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/signUpButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/transparent"
+                    android:enabled="true"
+                    android:focusable="true"
+                    android:onClick="onClick"
+                    android:text="Sign up"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+                    android:textColor="@color/primary"/>
+
+                <ImageView
+                    android:id="@+id/moreImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:onClick="showPopup"
+                    app:srcCompat="@drawable/ic_more_vert_24dp"/>
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/logInButtonPixy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView2"
+                android:layout_marginTop="29dp"
+                android:background="@color/primary"
+                android:capitalize="words"
                 android:enabled="true"
                 android:focusable="true"
+                android:longClickable="false"
                 android:onClick="onClick"
-                android:text="Sign up"
-                android:textAppearance="@style/TextAppearance.AppCompat.Menu"
-                android:textColor="@color/primary"/>
+                android:text="@string/log_in_with_pixy"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/abc_text_size_button_material"/>
 
-            <ImageView
-                android:id="@+id/moreImageView"
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/emailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="140dp"
+                android:ems="10"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="?colorAccent"
+                />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="false"
+                android:layout_below="@+id/emailEditText"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPassword"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="?colorAccent"
+                />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="60dp"
+                android:text="So, you arrived."
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
+
+            <TextView
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:onClick="showPopup"
-				app:srcCompat="@drawable/ic_more_vert_24dp"/>
+                android:layout_below="@+id/passwordEditText"
+                android:layout_centerHorizontal="true"
+                android:text="Password recovery"
+                android:textAlignment="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                />
         </RelativeLayout>
-
-        <Button
-            android:id="@+id/logInButtonPixy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView2"
-            android:layout_marginTop="29dp"
-            android:background="@color/primary"
-            android:capitalize="words"
-            android:enabled="true"
-            android:focusable="true"
-            android:longClickable="false"
-            android:onClick="onClick"
-            android:text="@string/log_in_with_pixy"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/abc_text_size_button_material"/>
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/emailEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="140dp"
-            android:ems="10"
-            android:hint="Email"
-            android:inputType="textEmailAddress"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="?colorAccent"
-            />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/passwordEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="false"
-            android:layout_below="@+id/emailEditText"
-            android:ems="10"
-            android:hint="Password"
-            android:inputType="textPassword"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="?colorAccent"
-            />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="60dp"
-            android:text="So, you arrived."
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/passwordEditText"
-            android:layout_centerHorizontal="true"
-            android:text="Password recovery"
-            android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-            />
-    </RelativeLayout>
-</android.support.design.widget.CoordinatorLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

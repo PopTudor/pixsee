@@ -7,11 +7,12 @@ import android.support.v4.content.IntentCompat
 import com.marked.pixsee.friends.FriendsActivity
 import com.marked.pixsee.networking.HTTPStatusCodes
 import com.marked.pixsee.utility.GCMConstants
+import javax.inject.Inject
 
 /**
  * Created by Tudor Pop on 28-Nov-15.
  */
-class RegistrationBroadcastReceiver(val registrationListener: RegistrationListener?) : BroadcastReceiver() {
+class RegistrationBroadcastReceiver @Inject constructor(val registrationListener: RegistrationListener?) : BroadcastReceiver() {
 
     constructor() : this(null)
 
