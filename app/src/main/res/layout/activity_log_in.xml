@@ -115,7 +115,7 @@
                     android:ems="10"
                     android:hint="Password"
                     android:inputType="textPassword"
-                    android:text="@{user.email}"
+                    android:text="@{user.password}"
                     />
             </android.support.design.widget.TextInputLayout>
 
