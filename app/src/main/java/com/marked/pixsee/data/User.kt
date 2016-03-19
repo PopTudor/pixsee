@@ -48,13 +48,15 @@ data class User(
         dest.writeString(password);
     }
 
+    /**
+     * The values to be stored in the local database
+     * */
     fun toContentValues(): ContentValues {
         val values = ContentValues();
         values.put(FriendConstants.ID, userID);
         values.put(FriendConstants.NAME, name);
         values.put(FriendConstants.EMAIL, email);
         values.put(FriendConstants.TOKEN, token);
-        values.put(FriendConstants.PASSWORD, password);
         return values;
     }
 }

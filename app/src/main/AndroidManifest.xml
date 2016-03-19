@@ -146,8 +146,7 @@
 			android:screenOrientation="portrait"/>
 		<activity
 			android:name=".login.LogInActivity"
-            />
-			<!--android:screenOrientation="portrait"-->
+			android:screenOrientation="portrait"/>
 
 		<meta-data
 			android:name="io.fabric.ApiKey"
