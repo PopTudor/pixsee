@@ -14,7 +14,7 @@ class PixyDatabase private constructor(context: Context) : ManagedSQLiteOpenHelp
 		@Synchronized
 		fun getInstance(context: Context): PixyDatabase {
 			if (instance == null)
-				instance = PixyDatabase(context.applicationContext)
+				instance = PixyDatabase(context)
 			return instance!!
 		}
 	}
@@ -35,4 +35,4 @@ class PixyDatabase private constructor(context: Context) : ManagedSQLiteOpenHelp
 }
 
 val Context.database: PixyDatabase
-	get() = PixyDatabase.getInstance(applicationContext)
+	get() = PixyDatabase.getInstance(this)

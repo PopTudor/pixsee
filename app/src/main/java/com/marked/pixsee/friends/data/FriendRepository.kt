@@ -1,6 +1,6 @@
 package com.marked.pixsee.friends.data
 
-import android.content.Context
+import android.app.Application
 import android.database.sqlite.SQLiteDatabase
 import com.marked.pixsee.data.Repository
 import com.marked.pixsee.data.database.DatabaseContract
@@ -17,9 +17,13 @@ import java.util.*
  * Created by Tudor Pop on 12-Dec-15.
  * Singleton class used to keep all the friends of the user
  */
-class FriendRepository(val mContext: Context) : ArrayList<Friend>(), Repository {
+open class FriendRepository constructor(val mContext: Application) : ArrayList<Friend>(), Repository {
     init {
-        loadMore()
+        loadMore(10)
+    }
+
+    override fun length(): Int {
+        return size
     }
 
     override fun add(element: Friend): Boolean {
@@ -56,16 +60,8 @@ class FriendRepository(val mContext: Context) : ArrayList<Friend>(), Repository 
         return super.remove(element)
     }
 
-    companion object {
-        val contacts: FriendRepository? = null
-        fun getInstance(context: Context): FriendRepository {
-            if (FriendRepository.Companion.contacts == null)
-                return FriendRepository(context)
-            return FriendRepository.Companion.contacts
-        }
-    }
-
-    fun loadMore(limit: Int = 10) {
+    override
+    fun loadMore(limit: Int) {
         mContext.database.use {
             select(DatabaseContract.Friend.TABLE_NAME,
                     DatabaseContract.Friend.COLUMN_ID,

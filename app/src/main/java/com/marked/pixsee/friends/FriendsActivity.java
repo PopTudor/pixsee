@@ -1,11 +1,12 @@
-package com.marked.pixsee.friends
+package com.marked.pixsee.friends;
 
-import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import com.marked.pixsee.R
-import com.marked.pixsee.friends.FriendFragment
-import com.marked.pixsee.utility.add
-import kotlinx.android.synthetic.main.toolbar.*
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+
+import com.marked.pixsee.R;
+import com.marked.pixsee.utility.UtilsFragmentKt;
 
 
 /**
@@ -15,37 +16,38 @@ import kotlinx.android.synthetic.main.toolbar.*
  * lead to a [ChatDetailActivity] representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
- *
- *
+ * <p/>
+ * <p/>
  * The activity makes heavy use of fragments. The list of items is a
  * [FriendFragment] and the item details
  * (if present) is a [ContactDetailFragment].
- *
- *
+ * <p/>
+ * <p/>
  * This activity also implements the required
  * [FriendFragment.Callbacks] interface
  * to listen for item selections.
  */
-class FriendsActivity : AppCompatActivity() {
-	private val mFragmentManager by lazy { supportFragmentManager }
+public class FriendsActivity extends AppCompatActivity {
+	private FragmentManager mFragmentManager;
 
 	/**
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
 	 * device.
 	 */
-	private val mTwoPane: Boolean = false
-
-	override
-	fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_contact_master)
-
-		setSupportActionBar(toolbar)
-		toolbar.title = title
-		mFragmentManager.add(R.id.fragmentContainer, FriendFragment.newInstance())
+	private boolean mTwoPane = false;
 
 
-		// TODO: If exposing deep links into your app, handle intents here.
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_contact_master);
+		mFragmentManager = getSupportFragmentManager();
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		if (toolbar != null) {
+			toolbar.setTitle(getTitle());
+		}
+		UtilsFragmentKt.add(mFragmentManager, R.id.fragmentContainer, FriendFragment.newInstance());
 	}
 /* // uncomment this when you add FloatingActionMenu
 	override fun onBackPressed() {

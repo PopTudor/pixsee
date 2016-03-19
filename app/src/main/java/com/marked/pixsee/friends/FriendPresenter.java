@@ -1,8 +1,8 @@
 package com.marked.pixsee.friends;
 
+import com.marked.pixsee.data.Repository;
 import com.marked.pixsee.friends.FriendsContract.View;
 import com.marked.pixsee.friends.data.Friend;
-import com.marked.pixsee.friends.data.FriendRepository;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,9 +16,9 @@ import static com.facebook.common.internal.Preconditions.checkNotNull;
  */
 public class FriendPresenter implements FriendsContract.UserActionsListener {
 	private WeakReference<View> mView;
-	private FriendRepository repository;
+	private Repository repository;
 
-	public FriendPresenter(@NotNull FriendRepository repository, @NotNull View view) {
+	public FriendPresenter(@NotNull Repository repository, @NotNull View view) {
 		this.repository = checkNotNull(repository, "Repository must not be null");
 		this.mView = checkNotNull(new WeakReference<>(view),view.getClass().getCanonicalName()+" has not implemented: "+View.class.getCanonicalName());
 	}
@@ -33,9 +33,9 @@ public class FriendPresenter implements FriendsContract.UserActionsListener {
 
 	@Override
 	public void loadFriends(int num) {
-		int size = repository.size();
+		int size = repository.length();
 		repository.loadMore(num);
-		mView.get().onFriendsLoaded(size, repository.size());
+		mView.get().onFriendsLoaded(size, repository.length());
 	}
 
 	@Override
