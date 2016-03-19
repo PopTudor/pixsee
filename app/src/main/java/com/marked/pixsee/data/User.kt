@@ -1,4 +1,5 @@
 package com.marked.pixsee.data
+
 import android.content.ContentValues
 import android.os.Parcel
 import android.os.Parcelable
@@ -9,13 +10,14 @@ import com.marked.pixsee.friends.data.FriendConstants
  * Created by Tudor Pop on 28-Nov-15.
  */
 data class User(
-        @SerializedName(value = "userID",alternate=arrayOf("_id"))
+        @SerializedName(value = "userID", alternate = arrayOf("_id"))
         var userID: String?,
         var name: String?,
         var email: String?,
-        var token: String?
+        var token: String?,
+        var password: String? = null
 ) : Parcelable {
-    constructor() : this(null, null, null, null)
+    constructor() : this(null, null, null, null, null)
 
     companion object {
         @JvmField @Suppress("unused")
@@ -29,7 +31,8 @@ data class User(
             var name = parcelIn.readString()
             var email = parcelIn.readString()
             var token = parcelIn.readString()
-            return User(id, name, email, token)
+            var password = parcelIn.readString()
+            return User(id, name, email, token, password)
         }
     }
 
@@ -42,6 +45,7 @@ data class User(
         dest.writeString(name);
         dest.writeString(email);
         dest.writeString(token);
+        dest.writeString(password);
     }
 
     fun toContentValues(): ContentValues {
@@ -50,6 +54,7 @@ data class User(
         values.put(FriendConstants.NAME, name);
         values.put(FriendConstants.EMAIL, email);
         values.put(FriendConstants.TOKEN, token);
+        values.put(FriendConstants.PASSWORD, password);
         return values;
     }
 }

@@ -22,37 +22,39 @@
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
         android:textSize="@dimen/abc_text_size_headline_material"/>
 
-    <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/passwordEditText"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="140dp"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:met_errorColor="#ff5151"
-        app:met_floatingLabel="highlight"
-        app:met_minCharacters="6"
-        app:met_primaryColor="?colorAccent">
+        android:layout_height="wrap_content">
 
         <requestFocus/>
-        </com.rengwuxian.materialedittext.MaterialEditText>
+    </android.support.design.widget.TextInputLayout>
+
 
     <Button
         android:id="@+id/nextButton"
         style="@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/passwordEditText"
-        android:layout_marginTop="30dp"
         android:background="@color/primary"
         android:clickable="true"
         android:text="Next"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="156dp"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="58dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:layout_below="@+id/textView3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

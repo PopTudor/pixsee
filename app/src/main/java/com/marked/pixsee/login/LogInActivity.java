@@ -3,6 +3,7 @@ package com.marked.pixsee.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,10 +11,11 @@ import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
+import com.marked.pixsee.data.User;
+import com.marked.pixsee.databinding.ActivityLogInBinding;
 import com.marked.pixsee.di.components.DaggerActivityComponent;
 import com.marked.pixsee.di.modules.ActivityModule;
 import com.marked.pixsee.service.LogInRegistrationIntentService;
@@ -33,30 +35,25 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 	@Inject
 	LocalBroadcastManager mBroadcastManagerastManager;
 
-	EditText emailEditText, passwordEditText;
+	private ActivityLogInBinding bind;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_log_in);
+		bind = DataBindingUtil.setContentView(this, R.layout.activity_log_in);
+
 		DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build()
 		                       .inject(this);
-
-		emailEditText = (EditText) findViewById(R.id.emailEditText);
-		passwordEditText = (EditText) findViewById(R.id.passwordEditText);
-
-		if (BuildConfig.DEBUG) {
-			emailEditText.setText("tudor08pop@yahoo.com");
-			passwordEditText.setText("parola");
-		}
+		if (BuildConfig.DEBUG)
+			bind.setUser(new User("", "", "tudor08pop@yahoo.com", "", "parola"));
 	}
 
 	public void onResume() {
 		super.onResume();
-		mBroadcastManagerastManager
-				.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(GCMConstants.ACTION_LOGIN));
-		mBroadcastManagerastManager
-				.registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(GCMConstants.ACTION_ERROR));
+		mBroadcastManagerastManager.registerReceiver(mRegistrationBroadcastReceiver,
+		                                             new IntentFilter(GCMConstants.ACTION_LOGIN));
+		mBroadcastManagerastManager.registerReceiver(mRegistrationBroadcastReceiver,
+		                                             new IntentFilter(GCMConstants.ACTION_ERROR));
 	}
 
 	public void onPause() {
@@ -70,15 +67,12 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 			switch (v.getId()) {
 				case R.id.logInButtonPixy: {
 					if (!new DataValidation(this)
-							.validate(emailEditText.getText().toString(), passwordEditText.getText()
-							                                                              .toString()))
+							.validate(bind.emailEditText.getText().toString(),
+							          bind.passwordEditText.getText().toString()))
 						return;
-					LogInRegistrationIntentService.startActionLogin(this, emailEditText.getText()
-					                                                                   .toString(), passwordEditText
-							.getText().toString());
-					mProgressDialog.setTitle("Login");
-					mProgressDialog.setMessage("Please wait...");
-					mProgressDialog.setIndeterminate(true);
+					LogInRegistrationIntentService
+							.startActionLogin(this, bind.emailEditText.getText().toString(),
+							                  bind.passwordEditText.getText().toString());
 					mProgressDialog.show();
 					break;
 				}
@@ -96,7 +90,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 			case R.id.aboutMenuItem: {
 				// TODO: 30-Nov-15 implement this
 			}
-
 		}
 		return false;
 	}

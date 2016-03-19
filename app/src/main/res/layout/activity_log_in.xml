@@ -5,9 +5,10 @@
     >
 
     <data>
+
         <variable
             name="user"
-            type=""/>
+            type="com.marked.pixsee.data.User"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -62,10 +63,6 @@
                 android:id="@+id/logInButtonPixy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/textView2"
-                android:layout_marginTop="29dp"
                 android:background="@color/primary"
                 android:capitalize="words"
                 android:enabled="true"
@@ -75,37 +72,52 @@
                 android:text="@string/log_in_with_pixy"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
                 android:textColor="#ffffff"
-                android:textSize="@dimen/abc_text_size_button_material"/>
-
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/emailEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:textSize="@dimen/abc_text_size_button_material"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="140dp"
-                android:ems="10"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                app:met_floatingLabel="highlight"
-                app:met_primaryColor="?colorAccent"
-                />
+                android:layout_marginBottom="138dp"/>
 
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/passwordEditText"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
+                android:id="@+id/view"
+                android:layout_below="@+id/textView"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="45dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/emailEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:text="@{user.email}"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="false"
-                android:layout_below="@+id/emailEditText"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword"
-                app:met_floatingLabel="highlight"
-                app:met_primaryColor="?colorAccent"
-                />
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="30dp">
+
+                <EditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/emailEditText"
+                    android:ems="10"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:text="@{user.email}"
+                    />
+            </android.support.design.widget.TextInputLayout>
 
             <TextView
                 android:id="@+id/textView"
@@ -122,12 +134,12 @@
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/passwordEditText"
-                android:layout_centerHorizontal="true"
                 android:text="Password recovery"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                />
+                android:layout_above="@+id/logInButtonPixy"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="35dp"/>
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

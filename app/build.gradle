@@ -118,7 +118,6 @@ dependencies {
     compile app.visionService
     compile app.supportRecyclerView
     compile app.supportDesign
-    compile app.materialEditText
     compile app.chatMessageView
     compile app.dilatingProgressBar
     compile app.fab

@@ -26,7 +26,11 @@ public class ActivityModule {
 	@Provides
 	@PerActivity
 	ProgressDialog provideProgressDialog() {
-		return new ProgressDialog(activity);
+		ProgressDialog dialog = new ProgressDialog(activity);
+		dialog.setTitle("Login");
+		dialog.setMessage("Please wait...");
+		dialog.setIndeterminate(true);
+		return dialog;
 	}
 
 	@Provides

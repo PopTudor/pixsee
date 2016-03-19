@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
  */
 public class FriendPresenterTest {
 	private static List<User> FRIENDS = Lists
-			.newArrayList(new User("user", "xyz", "xyz@emai.com", "asd"), new User("user1", "zxc", "zxc@emai.com", "zxc"));
+			.newArrayList(new User("user", "xyz", "xyz@emai.com", "asd",null), new User("user1", "zxc", "zxc@emai.com", "zxc",null));
 
 	private static List<User> EMPTY_NOTES = new ArrayList<>(0);
 

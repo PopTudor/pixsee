@@ -36,7 +36,6 @@ ext {
     javaxAnnotationVersion = '1.0'
     gsonVersion = '2.6.2'
     okHttpVersion = '3.2.0'
-    materialEditTextVersion = '2.1.4'
     messageViewVersion = '1.0.3'
     dilatingProgressBarVersion = '1.0.1'
     fabVersion = '1.6.2'
@@ -69,7 +68,6 @@ ext {
             dagger               : "com.google.dagger:dagger:${daggerVersion}",
             rxJava               : "io.reactivex:rxjava:${rxJavaVersion}",
             rxAndroid            : "io.reactivex:rxandroid:${rxAndroidVersion}",
-            materialEditText     : "com.rengwuxian.materialedittext:library:${materialEditTextVersion}",
             dilatingProgressBar  : "com.github.justzak:dilatingdotsprogressbar:${dilatingProgressBarVersion}",
             fab                  : "com.github.clans:fab:${fabVersion}",
             fresco               : "com.facebook.fresco:fresco:${frescoVersion}",
