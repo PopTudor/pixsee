@@ -74,9 +74,9 @@ android {
     productFlavors {
         mock {
             applicationIdSuffix = ".mock"
+            minSdkVersion 21
         }
         prod {
-
         }
     }
     // Remove mockRelease as it's not needed.

@@ -1,8 +1,9 @@
 package com.marked.pixsee.friends;
 
 import com.marked.pixsee.data.Repository;
-import com.marked.pixsee.friends.FriendsContract.View;
 import com.marked.pixsee.data.User;
+import com.marked.pixsee.di.scopes.PerFragment;
+import com.marked.pixsee.friends.FriendsContract.View;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -14,8 +15,9 @@ import static com.facebook.common.internal.Preconditions.checkNotNull;
 /**
  * Created by Tudor Pop on 15-Mar-16.
  */
+@PerFragment
 public class FriendPresenter implements FriendsContract.UserActionsListener {
-	private WeakReference<View> mView;
+	private WeakReference<? extends View> mView;
 	private Repository repository;
 
 	public FriendPresenter(@NotNull Repository repository, @NotNull View view) {
