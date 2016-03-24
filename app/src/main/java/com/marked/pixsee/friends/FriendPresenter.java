@@ -1,7 +1,6 @@
 package com.marked.pixsee.friends;
 
 import com.marked.pixsee.data.Repository;
-import com.marked.pixsee.data.User;
 import com.marked.pixsee.di.scopes.PerFragment;
 import com.marked.pixsee.friends.FriendsContract.View;
 
@@ -22,10 +21,10 @@ public class FriendPresenter implements FriendsContract.UserActionsListener {
 
 	public FriendPresenter(@NotNull Repository repository, @NotNull View view) {
 		this.repository = checkNotNull(repository, "Repository must not be null");
-		this.mView = checkNotNull(new WeakReference<>(view),view.getClass().getCanonicalName()+" has not implemented: "+View.class.getCanonicalName());
+		this.mView = checkNotNull(new WeakReference<>(view),
+		                          view.getClass().getCanonicalName() + " has not implemented: " + View.class.getCanonicalName());
 	}
 
-	@Override
 	public void loadFriends(boolean forceUpdate) {
 		if (forceUpdate) {
 			repository.clear();
@@ -34,15 +33,18 @@ public class FriendPresenter implements FriendsContract.UserActionsListener {
 	}
 
 	@Override
+	public void onClickCamera(android.view.View view) {
+
+	}
+
+	@Override
+	public void onClickFab(android.view.View view) {
+
+	}
+
 	public void loadFriends(int num) {
 		int size = repository.length();
 		repository.loadMore(num);
 		mView.get().onFriendsLoaded(size, repository.length());
 	}
-
-	@Override
-	public void openFriendDetailUI(@NotNull User friend) {
-		mView.get().showFriendDetailUI(friend);
-	}
-
 }

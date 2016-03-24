@@ -3,6 +3,7 @@ package com.marked.pixsee.friends;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,16 +17,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.github.clans.fab.FloatingActionButton;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
+import com.marked.pixsee.data.User;
+import com.marked.pixsee.databinding.FragmentFriendBinding;
 import com.marked.pixsee.face.UserDefinedTargets.ImageTargets;
 import com.marked.pixsee.frienddetail.ChatDetailActivity;
-import com.marked.pixsee.data.User;
 import com.marked.pixsee.friends.data.FriendRepository;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -39,11 +42,16 @@ import javax.inject.Inject;
  * Activities containing this fragment MUST implement the [Callbacks]
  * interface.
  */
-public class FriendFragment extends Fragment implements FriendsContract.View {
+public class FriendFragment extends Fragment {
+	private static int REQUEST_INVITE = 11;
+
 	@Inject
 	FriendRepository mRepository;
+
 	@Inject
-	FriendPresenter mPresenter;
+	FriendViewModel mViewModel;
+
+	private FragmentFriendBinding mBinding;
 	private FriendsAdapter mFriendsAdapter;
 	private LinearLayoutManager mLayoutManager;
 
@@ -52,7 +60,9 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 	public FriendItemListener friendItemInteraction = new FriendItemListener() {
 		@Override
 		public void onFriendClick(User friend) {
-			mPresenter.openFriendDetailUI(friend);
+			Intent intent = new Intent(getActivity(), ChatDetailActivity.class);
+			intent.putExtra(ChatDetailActivity.EXTRA_CONTACT, friend);
+			getActivity().startActivity(intent);
 		}
 	};
 
@@ -60,17 +70,12 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 		mFriendsAdapter.notifyItemRangeChanged(from, to);
 	}
 
-	public void showFriendDetailUI(User friend) {
-		Intent intent = new Intent(getActivity(), ChatDetailActivity.class);
-		intent.putExtra(ChatDetailActivity.EXTRA_CONTACT, friend);
-		getActivity().startActivity(intent);
-	}
 
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		DaggerFriendsComponent.builder().appComponent(((Pixsee) getActivity().getApplication())
-				.getAppComponent()).friendModule(new FriendModule(this)).build().inject(this);
+		DaggerFriendsComponent.builder().appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
+		                      .friendModule(new FriendModule(this)).build().inject(this);
 	}
 
 	@Override
@@ -78,16 +83,48 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 		super.onCreate(savedInstanceState);
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mFriendsAdapter = new FriendsAdapter(getActivity(), mRepository, friendItemInteraction);
-		mPresenter.loadFriends(true);
+		mViewModel.loadFriends(true);
 	}
 
-	private int REQUEST_INVITE = 11;
 
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_contact_list, container, false);
-		//		mFabMenu = rootView.fabMenu
-		RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.contactRecyclerView);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend, container, false);
+		mBinding.setViewModel(mViewModel);
+		mViewModel.setClickCallback(new UserActions(getActivity()));
+		setUpRecyclerView();
+		//		setUpFab();
+
+		return mBinding.getRoot();
+	}
+
+	private static class UserActions implements FriendsContract.UserActionsListener {
+		Context mContext;
+
+		public UserActions(Context context) {
+			mContext = context;
+		}
+
+		@Override
+		public void onClickCamera(@NotNull View view) {
+				/* Google AppInvites */
+			Intent intent = new AppInviteInvitation.IntentBuilder("Invite more friends").setMessage("Check out this cool app !")
+			                                                                            //.setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+			                                                                            //.setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+			                                                                            //.setCallToActionText(getString(R.string.invitation_cta))
+			                                                                            .build();
+			((Activity) mContext).startActivityForResult(intent, REQUEST_INVITE);
+		}
+
+		@Override
+		public void onClickFab(@NotNull View view) {
+			Intent intent = new Intent(mContext, ImageTargets.class);
+			intent.putExtra("ACTIVITY_TO_LAUNCH", "app.ImageTargets.ImageTargets");
+			mContext.startActivity(intent);
+		}
+	}
+
+	void setUpRecyclerView() {
+		RecyclerView recyclerView = mBinding.friendsRecyclerview;
 		recyclerView.setAdapter(mFriendsAdapter);
 		recyclerView.setLayoutManager(mLayoutManager);
 		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -98,46 +135,24 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 					int s = mLayoutManager.getChildCount();
 					int x = mLayoutManager.findFirstVisibleItemPosition();
 					if (x + s >= recyclerView.getLayoutManager().getItemCount()) {
-						mPresenter.loadFriends(50);
+						mViewModel.loadFriends(50);
 					}
 				}
 			}
 		});
-		FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-			/* Google AppInvites */
-				Intent intent = new AppInviteInvitation.IntentBuilder("Invite more friends")
-						.setMessage("Check out this cool app !")
-						//						.setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
-						//						.setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
-						//						.setCallToActionText(getString(R.string.invitation_cta))
-						.build();
-				startActivityForResult(intent, REQUEST_INVITE);
-			}
-		});
-
-		rootView.findViewById(R.id.vuforiaCamera).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), ImageTargets.class);
-				intent.putExtra("ACTIVITY_TO_LAUNCH", "app.ImageTargets.ImageTargets");
-				startActivity(intent);
-			}
-		});
-		/*
-		createCustomAnimation()
-        mFabMenu.setClosedOnTouchOutside(true)
-        mFabMenu.setOnMenuButtonClickListener {
-            if (mFabMenu.isOpened) {
-
-            }
-            mFabMenu.toggle(true)
-        }
-*/
-		return rootView;
 	}
+
+	//	void setUpFab() {
+	//		mFabMenu = mBinding.fabMenu;
+	//		createCustomAnimation();
+	//        mFabMenu.setClosedOnTouchOutside(true);
+	//        mFabMenu.setOnMenuButtonClickListener {
+	//            if (mFabMenu.isOpened) {
+	//
+	//            }
+	//            mFabMenu.toggle(true);
+	//        }
+	//	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -153,8 +168,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 				// as the ID will be consistent on the sending and receiving devices.
 				if (data != null) {
 					String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-					Toast.makeText(getActivity(),
-							"got invitations " + ids.length, Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), "got invitations " + ids.length, Toast.LENGTH_SHORT).show();
 				}
 			} else {
 				// Sending failed or it was canceled, show failure message to the user
@@ -204,7 +218,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 	 * @return true if it was closed successfully, false otherwise
 	 */
 	/*
-        fun closeFAM(): Boolean {
+	    fun closeFAM(): Boolean {
             if (mFabMenu.isOpened) {
                 mFabMenu.close(true)
                 return true

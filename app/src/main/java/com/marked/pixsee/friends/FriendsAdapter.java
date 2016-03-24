@@ -1,6 +1,7 @@
 package com.marked.pixsee.friends;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.User;
+import com.marked.pixsee.databinding.ItemFriendBinding;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +26,8 @@ class FriendsAdapter extends RecyclerView.Adapter<FriendHolder> {
 	private ArrayList<User> mDataSet;
 	private FriendFragment.FriendItemListener friendItemListener;
 
-	FriendsAdapter(@NotNull Context context, @NotNull ArrayList<User> dataSetObservable, @NotNull FriendFragment.FriendItemListener friendItemListener) {
+	FriendsAdapter(@NotNull Context context, @NotNull ArrayList<User> dataSetObservable,
+	               @NotNull FriendFragment.FriendItemListener friendItemListener) {
 		this.context = checkNotNull(context);
 		this.mDataSet = checkNotNull(dataSetObservable);
 		this.friendItemListener = checkNotNull(friendItemListener);
@@ -32,9 +35,8 @@ class FriendsAdapter extends RecyclerView.Adapter<FriendHolder> {
 
 	@Override
 	public FriendHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext())
-				.inflate(R.layout.contact_item, parent, false);
-		return new FriendHolder(v, context);
+		ItemFriendBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_friend, parent, false);
+		return new FriendHolder(binding);
 	}
 
 	@Override

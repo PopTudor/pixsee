@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.data;
+package com.marked.pixsee.friends.data.network;
 
 import com.google.gson.JsonArray;
 import com.marked.pixsee.networking.ServerConstants;

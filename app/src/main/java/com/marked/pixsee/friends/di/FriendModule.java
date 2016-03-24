@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.marked.pixsee.di.scopes.PerFragment;
 import com.marked.pixsee.friends.FriendFragment;
-import com.marked.pixsee.friends.FriendPresenter;
+import com.marked.pixsee.friends.FriendViewModel;
 import com.marked.pixsee.friends.data.FriendRepository;
 
 import dagger.Module;
@@ -29,7 +29,7 @@ public class FriendModule {
 
 	@Provides
 	@PerFragment
-	FriendPresenter provideFriendPresenter(FriendRepository repository) {
-		return new FriendPresenter(repository, friendFragment);
+	FriendViewModel provideFriendViewModel(FriendRepository repository) {
+		return new FriendViewModel(repository);
 	}
 }

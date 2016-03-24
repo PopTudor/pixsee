@@ -28,11 +28,9 @@ public interface FriendsContract {
 	 * Presenter will implement this to handle actions on the view
 	 */
 	interface UserActionsListener {
-		void loadFriends(int num);
+		void onClickCamera(android.view.View view);
 
-		void loadFriends(boolean forceUpdate);
-
-		void openFriendDetailUI(@NotNull User friend);
+		void onClickFab(android.view.View view);
 	}
 
 	interface Model {

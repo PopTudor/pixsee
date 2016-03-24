@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
  * Created by Tudor Pop on 16-Mar-16.
  * Unit tests for the implementation of {@link FriendPresenter}
  */
-public class FriendPresenterTest {
+public class FriendViewModelTest {
 	private static List<User> FRIENDS = Lists
 			.newArrayList(new User("user", "xyz", "xyz@emai.com", "asd",null), new User("user1", "zxc", "zxc@emai.com", "zxc",null));
 

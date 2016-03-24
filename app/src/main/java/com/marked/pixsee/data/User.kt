@@ -11,11 +11,11 @@ import com.marked.pixsee.friends.data.FriendConstants
  */
 data class User(
         @SerializedName(value = "userID", alternate = arrayOf("_id"))
-        var userID: String?,
-        var name: String?,
-        var email: String?,
-        var token: String?,
-        var password: String? = null
+        val userID: String?,
+        val name: String?,
+        val email: String?,
+        val token: String?,
+        val password: String? = null
 ) : Parcelable {
     constructor() : this(null, null, null, null, null)
 
