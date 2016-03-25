@@ -17,8 +17,6 @@
             android:scrollbars="vertical"
             android:clipToPadding="false"
             android:visibility="@{viewModel.recyclerViewVisibility}"
-            app:items="@{viewModel.friends}"
-            app:itemViewBinder="@{viewModel.itemViewBinder}"
 
             tools:listitem="@layout/item_friend"/>
         <!--<com.github.clans.fab.FloatingActionMenu-->

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * Created by Tudor Pop on 03-Dec-15.
  */
 class FriendHolder extends RecyclerView.ViewHolder {
-	ItemFriendBinding mBinding;
+	public ItemFriendBinding mBinding;
 
 	public FriendHolder(@NotNull ItemFriendBinding binding) {
 		super(binding.rootItemFriend);
