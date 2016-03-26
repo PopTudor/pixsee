@@ -3,7 +3,6 @@ package friends;
 import android.test.mock.MockContext;
 
 import com.google.common.collect.Lists;
-import com.marked.pixsee.friends.FriendPresenter;
 import com.marked.pixsee.friends.FriendsContract;
 import com.marked.pixsee.data.User;
 import com.marked.pixsee.friends.data.FriendRepository;
@@ -33,11 +32,8 @@ public class FriendViewModelTest {
 	@Mock
 	private FriendRepository mFriendRepository;
 
-	@Mock
-	private FriendsContract.View mFriendView;
 
 
-	private FriendPresenter mFriendPresenter;
 	MockContext context = new MockContext();
 	@Before
 	public void setupNotesPresenter() {
@@ -48,16 +44,13 @@ public class FriendViewModelTest {
 
 //		mFriendRepository = ;
 		// Get a reference to the class under test
-		mFriendPresenter = new FriendPresenter(mFriendRepository, mFriendView);
 	}
 
 	@Test
 	public void testLoadFriends() throws Exception {
 
-		mFriendPresenter.loadFriends(false);
 		verify(mFriendRepository).loadMore(FRIENDS.size());
 		Assert.assertEquals(mFriendRepository.size(), FRIENDS.size());
-		verify(mFriendView).onFriendsLoaded(anyInt(), anyInt());
 	}
 
 	@Test

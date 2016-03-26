@@ -1,6 +1,6 @@
 package com.marked.pixsee.friends.data
 
-import android.app.Application
+import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.marked.pixsee.data.Repository
 import com.marked.pixsee.data.User
@@ -18,7 +18,7 @@ import java.util.*
  * Created by Tudor Pop on 12-Dec-15.
  * Singleton class used to keep all the friends of the user
  */
-open class FriendRepository constructor(val mContext: Application) : ArrayList<User>(), Repository {
+open class FriendRepository constructor(val mContext: Context) : ArrayList<User>(), Repository {
     init {
         loadMore(10)
     }

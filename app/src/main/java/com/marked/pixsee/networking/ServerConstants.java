@@ -5,7 +5,7 @@ package com.marked.pixsee.networking;
  */
 public interface ServerConstants {
 	String PORT = ":3000/";
-	String BASE_URL = "http://192.168.0.105";
+	String BASE_URL = "http://192.168.0.101";
 	//			"http://46.101.168.55"; /* DIGITAL-OCEAN */
 	/* ENDPOINTS */
 	String USER = "user";

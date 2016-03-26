@@ -18,17 +18,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
-import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.User;
 import com.marked.pixsee.databinding.FragmentFriendBinding;
-import com.marked.pixsee.face.UserDefinedTargets.ImageTargets;
 import com.marked.pixsee.frienddetail.ChatDetailActivity;
 import com.marked.pixsee.friends.data.FriendRepository;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
-
-import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -43,7 +39,7 @@ import javax.inject.Inject;
  * interface.
  */
 public class FriendFragment extends Fragment {
-	private static int REQUEST_INVITE = 11;
+	public static int REQUEST_INVITE = 11;
 
 	@Inject
 	FriendRepository mRepository;
@@ -74,8 +70,10 @@ public class FriendFragment extends Fragment {
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		DaggerFriendsComponent.builder().appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
-		                      .friendModule(new FriendModule(this)).build().inject(this);
+		DaggerFriendsComponent.builder()
+		                      .activityComponent(((FriendsActivity)getActivity()).getComponent())
+		                      .friendModule(new FriendModule(this))
+		                      .build().inject(this);
 	}
 
 	@Override
@@ -83,45 +81,33 @@ public class FriendFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mFriendsAdapter = new FriendsAdapter(getActivity(), mRepository, friendItemInteraction);
-		mViewModel.loadFriends(true);
+		mViewModel.onFriendsLoaded(true);
+	}
+	public void setupListeners(){
+		mBinding.vuforiaCamera.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mViewModel.getOpenCamera().execute();
+			}
+		});
+		mBinding.fab.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mViewModel.getFabCommand().execute();
+			}
+		});
 	}
 
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend, container, false);
 		mBinding.setViewModel(mViewModel);
-		mViewModel.setClickCallback(new UserActions(getActivity()));
 		setUpRecyclerView();
 		//		setUpFab();
-
+		setupListeners();
 		return mBinding.getRoot();
 	}
 
-	private static class UserActions implements FriendsContract.UserActionsListener {
-		Context mContext;
-
-		public UserActions(Context context) {
-			mContext = context;
-		}
-
-		@Override
-		public void onClickCamera(@NotNull View view) {
-				/* Google AppInvites */
-			Intent intent = new AppInviteInvitation.IntentBuilder("Invite more friends").setMessage("Check out this cool app !")
-			                                                                            //.setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
-			                                                                            //.setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
-			                                                                            //.setCallToActionText(getString(R.string.invitation_cta))
-			                                                                            .build();
-			((Activity) mContext).startActivityForResult(intent, REQUEST_INVITE);
-		}
-
-		@Override
-		public void onClickFab(@NotNull View view) {
-			Intent intent = new Intent(mContext, ImageTargets.class);
-			intent.putExtra("ACTIVITY_TO_LAUNCH", "app.ImageTargets.ImageTargets");
-			mContext.startActivity(intent);
-		}
-	}
 
 	void setUpRecyclerView() {
 		RecyclerView recyclerView = mBinding.friendsRecyclerview;
@@ -135,7 +121,7 @@ public class FriendFragment extends Fragment {
 					int s = mLayoutManager.getChildCount();
 					int x = mLayoutManager.findFirstVisibleItemPosition();
 					if (x + s >= recyclerView.getLayoutManager().getItemCount()) {
-						mViewModel.loadFriends(50);
+						mViewModel.onFriendsLoaded(50);
 					}
 				}
 			}

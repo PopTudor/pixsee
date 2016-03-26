@@ -1,6 +1,7 @@
 package com.marked.pixsee.di.modules;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
@@ -43,5 +44,17 @@ public class ActivityModule {
 	@PerActivity
 	LocalBroadcastManager provideLocalBroadcastManager() {
 		return LocalBroadcastManager.getInstance(activity);
+	}
+
+	@Provides
+	@PerActivity
+	AppCompatActivity provideActivity() {
+		return activity;
+	}
+
+	@Provides
+	@PerActivity
+	Context provideContext() {
+		return activity;
 	}
 }

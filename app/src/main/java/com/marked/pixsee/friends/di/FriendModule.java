@@ -1,10 +1,12 @@
 package com.marked.pixsee.friends.di;
 
-import android.app.Application;
+import android.content.Context;
 
 import com.marked.pixsee.di.scopes.PerFragment;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.friends.FriendViewModel;
+import com.marked.pixsee.friends.commands.FabCommand;
+import com.marked.pixsee.friends.commands.OpenCameraCommand;
 import com.marked.pixsee.friends.data.FriendRepository;
 
 import dagger.Module;
@@ -23,13 +25,16 @@ public class FriendModule {
 
 	@Provides
 	@PerFragment
-	FriendRepository provideFriendRepository(Application application){
+	FriendRepository provideFriendRepository(Context application){
 		return new FriendRepository(application);
 	}
 
 	@Provides
 	@PerFragment
-	FriendViewModel provideFriendViewModel(FriendRepository repository) {
-		return new FriendViewModel(repository);
+	FriendViewModel provideFriendViewModel(FriendRepository repository,FabCommand fabCommand,OpenCameraCommand cameraCommand) {
+		FriendViewModel friendViewModel = new FriendViewModel(repository);
+		friendViewModel.setFabCommand(fabCommand);
+		friendViewModel.setOpenCamera(cameraCommand);
+		return friendViewModel;
 	}
 }

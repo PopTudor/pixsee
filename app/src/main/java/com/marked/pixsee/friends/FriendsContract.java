@@ -11,28 +11,6 @@ import java.util.List;
  * This specifies the contract between the view and the presenter.
  */
 public interface FriendsContract {
-	/*Friend views should implement View*/
-	interface View {
-
-		/**
-		 * Open detail view for a {@link User}
-		 *
-		 * @param friend The {@link User} to show details of
-		 */
-		void showFriendDetailUI(User friend);
-
-		void onFriendsLoaded(int from, int to);
-	}
-
-	/**
-	 * Presenter will implement this to handle actions on the view
-	 */
-	interface UserActionsListener {
-		void onClickCamera(android.view.View view);
-
-		void onClickFab(android.view.View view);
-	}
-
 	interface Model {
 		List<User> getFriends();
 

@@ -42,7 +42,6 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:onClick="@{viewModel.onClickFab}"
             android:src="@drawable/ic_group_add_24dp"
             app:srcCompat="@drawable/ic_group_add_24dp"
             fab:fab_colorNormal="@color/primary"
@@ -55,7 +54,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|bottom"
-            android:onClick="@{viewModel.onClickCamera}"
             android:text="Open Camera"/>
 
         <ProgressBar

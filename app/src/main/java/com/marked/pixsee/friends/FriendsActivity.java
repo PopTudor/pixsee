@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.marked.pixsee.R;
+import com.marked.pixsee.di.components.ActivityComponent;
+import com.marked.pixsee.di.components.DaggerActivityComponent;
+import com.marked.pixsee.di.modules.ActivityModule;
 import com.marked.pixsee.utility.UtilsFragmentKt;
 
 
@@ -36,11 +39,12 @@ public class FriendsActivity extends AppCompatActivity {
 	 */
 	private boolean mTwoPane = false;
 
-
+	private ActivityComponent mComponent;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contact_master);
 		mFragmentManager = getSupportFragmentManager();
+		mComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
@@ -49,7 +53,11 @@ public class FriendsActivity extends AppCompatActivity {
 		}
 		UtilsFragmentKt.add(mFragmentManager, R.id.fragmentContainer, FriendFragment.newInstance());
 	}
-/* // uncomment this when you add FloatingActionMenu
+
+	public ActivityComponent getComponent() {
+		return mComponent;
+	}
+	/* // uncomment this when you add FloatingActionMenu
 	override fun onBackPressed() {
 		if (!((mFragmentManager.findFragmentById(R.id.fragmentContainer) as ContactListFragment)).closeFAM()) // == true if it was already closed
 			super.onBackPressed()

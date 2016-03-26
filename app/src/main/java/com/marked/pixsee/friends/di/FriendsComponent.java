@@ -1,8 +1,10 @@
 package com.marked.pixsee.friends.di;
 
-import com.marked.pixsee.di.components.AppComponent;
+import com.marked.pixsee.di.components.ActivityComponent;
 import com.marked.pixsee.di.scopes.PerFragment;
 import com.marked.pixsee.friends.FriendFragment;
+import com.marked.pixsee.friends.FriendViewModel;
+import com.marked.pixsee.friends.FriendsActivity;
 
 import dagger.Component;
 
@@ -12,7 +14,8 @@ import dagger.Component;
  * DaggerFriendsComponent.builder().appComponent(appcomponent).friendModule(new FriendModule(this)).build().inject(this);
  */
 @PerFragment
-@Component(modules = {FriendModule.class}, dependencies = {AppComponent.class})
+@Component(modules = {FriendModule.class}, dependencies = {ActivityComponent.class})
 public interface FriendsComponent {
 	void inject(FriendFragment fragment);
+	void inject(FriendsActivity friendsActivity);
 }
