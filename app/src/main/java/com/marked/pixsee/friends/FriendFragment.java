@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,11 @@ import com.marked.pixsee.frienddetail.ChatDetailActivity;
 import com.marked.pixsee.friends.data.FriendRepository;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
+import com.marked.pixsee.friends.di.FriendsComponent;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -38,7 +44,7 @@ import javax.inject.Inject;
  * Activities containing this fragment MUST implement the [Callbacks]
  * interface.
  */
-public class FriendFragment extends Fragment {
+public class FriendFragment extends Fragment implements FriendViewModel.DataListener {
 	public static int REQUEST_INVITE = 11;
 
 	@Inject
@@ -62,27 +68,35 @@ public class FriendFragment extends Fragment {
 		}
 	};
 
-	public void onFriendsLoaded(int from, int to) {
+	@Override
+	public void onFriendsLoaded(@NonNull List<User> friends, int from, int to) {
+		mFriendsAdapter.setDataSet(friends);
 		mFriendsAdapter.notifyItemRangeChanged(from, to);
 	}
 
+	@Override
+	public void showFriendDetailUI(@NotNull User friend) {
+
+	}
 
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		DaggerFriendsComponent.builder()
-		                      .activityComponent(((FriendsActivity)getActivity()).getComponent())
-		                      .friendModule(new FriendModule(this))
-		                      .build().inject(this);
+		FriendsComponent component = DaggerFriendsComponent.builder().activityComponent(((FriendsActivity) getActivity()).getComponent()).friendModule(new FriendModule(this))
+		                                                   .build();
+		component.inject(this);
+		component.inject(mViewModel);
 	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mLayoutManager = new LinearLayoutManager(getActivity());
-		mFriendsAdapter = new FriendsAdapter(getActivity(), mRepository, friendItemInteraction);
-		mViewModel.onFriendsLoaded(true);
+		mFriendsAdapter = new FriendsAdapter(friendItemInteraction);
+		mViewModel.setDataListener(this);
+		mViewModel.loadData(true, 50);
 	}
+
 	public void setupListeners(){
 		mBinding.vuforiaCamera.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -121,7 +135,7 @@ public class FriendFragment extends Fragment {
 					int s = mLayoutManager.getChildCount();
 					int x = mLayoutManager.findFirstVisibleItemPosition();
 					if (x + s >= recyclerView.getLayoutManager().getItemCount()) {
-						mViewModel.onFriendsLoaded(50);
+						mViewModel.loadData(50);
 					}
 				}
 			}

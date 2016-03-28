@@ -17,5 +17,8 @@ import dagger.Component;
 @Component(modules = {FriendModule.class}, dependencies = {ActivityComponent.class})
 public interface FriendsComponent {
 	void inject(FriendFragment fragment);
+
 	void inject(FriendsActivity friendsActivity);
+
+	void inject(FriendViewModel viewModel);
 }

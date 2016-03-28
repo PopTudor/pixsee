@@ -1,5 +1,8 @@
 package com.marked.pixsee.utility
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.widget.Toast
@@ -22,3 +25,8 @@ fun FragmentManager.addToBackStack(containerId: Int, fragment: Fragment) {
 fun Fragment.toast(message: String) {
     Toast.makeText(activity,message, Toast.LENGTH_SHORT)
 }
+val Context.defaultSharedPreferences: SharedPreferences
+    get() = PreferenceManager.getDefaultSharedPreferences(this)
+
+val android.app.Fragment.defaultSharedPreferences: SharedPreferences
+    get() = PreferenceManager.getDefaultSharedPreferences(activity)
