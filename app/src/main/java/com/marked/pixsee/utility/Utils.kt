@@ -1,9 +1,7 @@
 package com.marked.pixsee.utility
 
-import android.content.ComponentName
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.net.ConnectivityManager
 import android.provider.Settings
@@ -13,6 +11,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.marked.pixsee.data.User
 import com.marked.pixsee.data.database.database
+import com.marked.pixsee.data.mapper.Mapper
+import com.marked.pixsee.data.mapper.UserToCvMapper
 import org.jetbrains.anko.AnkoAsyncContext
 import org.jetbrains.anko.async
 import org.jetbrains.anko.db.transaction
@@ -54,6 +54,7 @@ object Utils {
         return inString.filter { it.isDigit() }.length
     }
 }
+private val userToCv: Mapper<User, ContentValues> by lazy { UserToCvMapper() }
 /**
  * Save the specified JsonArray to the specified table string
  * It has to be a Contact array for now
@@ -66,7 +67,7 @@ fun Context.saveToTable(table: String, jsonArray: JsonArray) {
             transaction {
                 val gson = Gson()
                 jsonArray.forEach {
-                    insertWithOnConflict(table, null,gson.fromJson(it, User::class.java).toContentValues(),SQLiteDatabase.CONFLICT_IGNORE)
+                    insertWithOnConflict(table, null, userToCv.map(gson.fromJson(it, User::class.java)), SQLiteDatabase.CONFLICT_IGNORE)
                 }
             }
         }
@@ -77,7 +78,8 @@ fun Context.saveToTable(table: String, jsonArray: JsonArray) {
 inline fun Fragment.onUiThread(crossinline f: () -> Unit) {
     activity.onUiThread { f() }
 }
-fun <T: Fragment> AnkoAsyncContext<T>.supportFragmentUiThread(f: (T) -> Unit) {
+
+fun <T : Fragment> AnkoAsyncContext<T>.supportFragmentUiThread(f: (T) -> Unit) {
     val fragment = weakRef.get() ?: return
     if (fragment.isDetached) return
     val activity = fragment.activity ?: return
@@ -87,4 +89,11 @@ fun <T: Fragment> AnkoAsyncContext<T>.supportFragmentUiThread(f: (T) -> Unit) {
 @Deprecated("Use onUiThread() instead", ReplaceWith("onUiThread(f)"))
 inline fun Fragment.uiThread(crossinline f: () -> Unit) {
     activity.onUiThread { f() }
+}
+
+inline fun Cursor.apply(block: Cursor.() -> kotlin.Unit): Cursor {
+    moveToFirst()
+    block()
+    close()
+    return this
 }

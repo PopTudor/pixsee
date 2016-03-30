@@ -141,6 +141,8 @@ dependencies {
     testCompile "org.mockito:mockito-all:$dependency.mockitoVersion"
     testCompile "org.hamcrest:hamcrest-all:$dependency.hamcrestVersion"
 
+    androidTestCompile "org.mockito:mockito-all:$dependency.mockitoVersion"
+    androidTestCompile "org.hamcrest:hamcrest-all:$dependency.hamcrestVersion"
     androidTestCompile "com.android.support:support-annotations:$dependency.supportLibraryVersion"
     androidTestCompile "com.android.support.test:runner:$dependency.runnerVersion"
     androidTestCompile "com.android.support.test:rules:$dependency.runnerVersion"

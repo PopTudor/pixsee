@@ -94,7 +94,7 @@ public class FriendFragment extends Fragment implements FriendViewModel.DataList
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mFriendsAdapter = new FriendsAdapter(friendItemInteraction);
 		mViewModel.setDataListener(this);
-		mViewModel.loadData(true, 50);
+		mViewModel.loadFriends(true, 50);
 	}
 
 	public void setupListeners(){
@@ -135,7 +135,7 @@ public class FriendFragment extends Fragment implements FriendViewModel.DataList
 					int s = mLayoutManager.getChildCount();
 					int x = mLayoutManager.findFirstVisibleItemPosition();
 					if (x + s >= recyclerView.getLayoutManager().getItemCount()) {
-						mViewModel.loadData(50);
+						mViewModel.loadFriends(50);
 					}
 				}
 			}
@@ -256,7 +256,7 @@ public class FriendFragment extends Fragment implements FriendViewModel.DataList
 	}
 
 
-	interface FriendItemListener {
+	public interface FriendItemListener {
 		void onFriendClick(User friend);
 	}
 }

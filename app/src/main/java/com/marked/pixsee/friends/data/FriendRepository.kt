@@ -1,16 +1,25 @@
 package com.marked.pixsee.friends.data
 
-import android.content.Context
+import android.content.ContentValues
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.marked.pixsee.data.Repository
 import com.marked.pixsee.data.User
 import com.marked.pixsee.data.database.DatabaseContract
-import com.marked.pixsee.data.database.database
+import com.marked.pixsee.data.database.DatabaseContract.Friend.Static.TABLE_NAME
+import com.marked.pixsee.data.database.PixyDatabase
+import com.marked.pixsee.data.mapper.CursorToUserMapper
+import com.marked.pixsee.data.mapper.Mapper
+import com.marked.pixsee.data.mapper.UserToCvMapper
+import com.marked.pixsee.data.repository.Repository
+import com.marked.pixsee.data.repository.SQLSpecification
+import com.marked.pixsee.data.repository.Specification
+import com.marked.pixsee.utility.apply
 import org.jetbrains.anko.async
 import org.jetbrains.anko.db.select
 import org.jetbrains.anko.db.transaction
 import org.json.JSONArray
 import org.json.JSONObject
+import rx.Observable
 import java.util.*
 
 
@@ -18,71 +27,71 @@ import java.util.*
  * Created by Tudor Pop on 12-Dec-15.
  * Singleton class used to keep all the friends of the user
  */
-open class FriendRepository constructor(val mContext: Context) : ArrayList<User>(), Repository {
-    init {
-        loadMore(10)
+class FriendRepository constructor(val db: PixyDatabase) : Repository<User> {
+    private val cache: MutableList<User> by lazy { mutableListOf<User>() }
+    private val cursorToUserMapper: Mapper<Cursor, User> by lazy { CursorToUserMapper() }
+    private val UserToCvMapper: Mapper<User, ContentValues> by lazy { UserToCvMapper() }
+
+    fun length(): Int {
+        var size = cache.size
+        if (size == 0)
+            db.readableDatabase.select(TABLE_NAME).exec { size = count }
+        return size;
     }
 
-    override fun length(): Int {
-        return size
-    }
-
-    override fun add(element: User): Boolean {
-        mContext.database.use {
-            insertWithOnConflict(DatabaseContract.Friend.TABLE_NAME, null, element.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
+    override fun update(item: User) {
+        db.use {
+            update(TABLE_NAME, UserToCvMapper.map(item), "${DatabaseContract.Friend.COLUMN_ID} = ?s", arrayOf(item.userID))
         }
-        return super.add(element)
+        cache.set(cache.indexOf(item), item)
     }
 
-    override fun addAll(elements: Collection<User>): Boolean {
-        async() {
-            mContext.database.use {
-                transaction {
-                    elements.forEach {
-                        insertWithOnConflict(DatabaseContract.Friend.TABLE_NAME, null, it.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE)
+    override fun remove(specification: Specification?) {
+        throw UnsupportedOperationException()
+    }
+
+    override fun query(specification: Specification?): Observable<MutableList<User>>? {
+        db.use {
+            if (specification is SQLSpecification) {
+                rawQuery(specification.createQuery(), null).apply {
+                    (cursorToUserMapper as CursorToUserMapper).readColumnIndex(this)
+                    while (!isAfterLast) {
+                        val friend = cursorToUserMapper.map(this)
+                        cache.add(friend)
+                        moveToNext()
                     }
                 }
             }
         }
-        return super.addAll(elements)
-    }
-
-    override fun set(index: Int, element: User): User {
-        mContext.database.use {
-            update(DatabaseContract.Friend.TABLE_NAME, element.toContentValues(), "${DatabaseContract.Friend.COLUMN_ID} = ?s", arrayOf(element.userID))
-        }
-        return super.set(index, element)
-    }
-
-    override fun remove(element: User): Boolean {
-        mContext.database.use {
-            delete(DatabaseContract.Friend.TABLE_NAME, "${DatabaseContract.Friend.COLUMN_ID} = ?s", arrayOf(element.userID))
-        }
-        return super.remove(element)
+        return Observable.just(cache)
     }
 
     override
-    fun loadMore(limit: Int) {
-        mContext.database.use {
-            select(DatabaseContract.Friend.TABLE_NAME,
-                    DatabaseContract.Friend.COLUMN_ID,
-                    DatabaseContract.Friend.COLUMN_NAME,
-                    DatabaseContract.Friend.COLUMN_EMAIL,
-                    DatabaseContract.Friend.COLUMN_TOKEN).limit(size, limit).exec {
-                moveToFirst()
-                val id = getColumnIndex(DatabaseContract.Friend.COLUMN_ID)
-                val name = getColumnIndex(DatabaseContract.Friend.COLUMN_NAME)
-                val email = getColumnIndex(DatabaseContract.Friend.COLUMN_EMAIL)
-                val token = getColumnIndex(DatabaseContract.Friend.COLUMN_TOKEN)
-
-                while (!isAfterLast) {
-                    val friend = User(getString(id), getString(name), getString(email), getString(token))
-                    super.add(friend)
-                    moveToNext()
-                }
-                close()
-            }
+    fun add(element: User) {
+        db.use {
+            insertWithOnConflict(TABLE_NAME, null, UserToCvMapper.map(element), SQLiteDatabase.CONFLICT_IGNORE)
         }
+        cache.add(element)
+    }
+
+    override
+    fun add(elements: List<User>) {
+        async() {
+            db.writableDatabase.transaction {
+                elements.forEach {
+                    insertWithOnConflict(TABLE_NAME, null, UserToCvMapper.map(it), SQLiteDatabase.CONFLICT_IGNORE)
+                }
+            }
+            cache.addAll(elements)
+        }
+    }
+
+    override
+    fun remove(element: User) {
+        db.use {
+            delete(TABLE_NAME, "${DatabaseContract.Friend.COLUMN_ID} = ?s", arrayOf(element.userID))
+        }
+        cache.remove(element)
     }
 }
 

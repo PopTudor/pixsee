@@ -30,10 +30,7 @@ public class FriendModule {
 
 	@Provides
 	@PerFragment
-	FriendViewModel provideFriendViewModel(FriendRepository repository/*,FabCommand fabCommand,OpenCameraCommand cameraCommand*/) {
-		FriendViewModel friendViewModel = new FriendViewModel(repository);
-//		friendViewModel.setFabCommand(fabCommand);
-//		friendViewModel.setOpenCamera(cameraCommand);
-		return friendViewModel;
+	FriendViewModel provideFriendViewModel(FriendRepository repository) {
+		return new FriendViewModel(repository);
 	}
 }

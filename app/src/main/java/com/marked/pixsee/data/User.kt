@@ -1,23 +1,25 @@
 package com.marked.pixsee.data
 
-import android.content.ContentValues
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import com.marked.pixsee.friends.data.FriendConstants
 
 /**
  * Created by Tudor Pop on 28-Nov-15.
  */
 data class User(
         @SerializedName(value = "userID", alternate = arrayOf("_id"))
-        val userID: String?,
-        val name: String?,
-        val email: String?,
-        val token: String?,
-        val password: String? = null
+        val userID: String,
+        val name: String,
+        val email: String,
+        val token: String
 ) : Parcelable {
-    constructor() : this(null, null, null, null, null)
+    var password: String? = null
+
+    constructor(userID: String, name: String, email: String,token: String,password: String? = null)
+    : this(userID, name, email, token) {
+        this.password = password
+    }
 
     companion object {
         @JvmField @Suppress("unused")
@@ -46,17 +48,5 @@ data class User(
         dest.writeString(email);
         dest.writeString(token);
         dest.writeString(password);
-    }
-
-    /**
-     * The values to be stored in the local database
-     * */
-    fun toContentValues(): ContentValues {
-        val values = ContentValues();
-        values.put(FriendConstants.ID, userID);
-        values.put(FriendConstants.NAME, name);
-        values.put(FriendConstants.EMAIL, email);
-        values.put(FriendConstants.TOKEN, token);
-        return values;
     }
 }

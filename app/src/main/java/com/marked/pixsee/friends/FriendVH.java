@@ -10,10 +10,10 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Created by Tudor Pop on 03-Dec-15.
  */
-class FriendHolder extends RecyclerView.ViewHolder {
-	public ItemFriendBinding mBinding;
+class FriendVH extends RecyclerView.ViewHolder {
+	private ItemFriendBinding mBinding;
 
-	public FriendHolder(@NotNull ItemFriendBinding binding) {
+	public FriendVH(@NotNull ItemFriendBinding binding) {
 		super(binding.rootItemFriend);
 		this.mBinding = binding;
 	}
@@ -29,7 +29,7 @@ class FriendHolder extends RecyclerView.ViewHolder {
 	//            });
 
 
-	void bindContact(User friend) {
+	public void bindContact(User friend) {
 		//		val uri = Uri.parse(contact);
 		//		mFriendIconImageView.setImageURI(uri, context);
 		//todo get in parse a contact's profile image

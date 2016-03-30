@@ -21,7 +21,7 @@ import static com.facebook.common.internal.Preconditions.checkNotNull;
 /**
  * Created by Tudor Pop on 30-Nov-15.
  */
-class FriendsAdapter extends RecyclerView.Adapter<FriendHolder> {
+class FriendsAdapter extends RecyclerView.Adapter<FriendVH> {
 	private List<User> mDataSet;
 	private FriendFragment.FriendItemListener friendItemListener;
 
@@ -31,9 +31,9 @@ class FriendsAdapter extends RecyclerView.Adapter<FriendHolder> {
 	}
 
 	@Override
-	public FriendHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public FriendVH onCreateViewHolder(ViewGroup parent, int viewType) {
 		ItemFriendBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_friend, parent, false);
-		return new FriendHolder(binding);
+		return new FriendVH(binding);
 	}
 
 	public void setDataSet(List<User> dataSet) {
@@ -41,7 +41,7 @@ class FriendsAdapter extends RecyclerView.Adapter<FriendHolder> {
 	}
 
 	@Override
-	public void onBindViewHolder(FriendHolder holder, int position) {
+	public void onBindViewHolder(FriendVH holder, int position) {
 		final User friend = mDataSet.get(position);
 		holder.bindContact(friend);
 		holder.itemView.setOnClickListener(new View.OnClickListener() {
