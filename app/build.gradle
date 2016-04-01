@@ -131,6 +131,7 @@ dependencies {
     compile app.retrofitRX
     compile app.okHttpLogger
     compile app.subSamplingScaleImage
+    compile app.visionService
     compile app.dagger
 
     apt app.daggerCompiler
