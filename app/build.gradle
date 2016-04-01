@@ -103,7 +103,8 @@ android {
 
 dependencies {
     def dependency = rootProject.ext
-    def app = dependency.presentationDependencies
+    def app = dependency.dependencies
+    def test = dependency.testDependencies
     compile files('C:/Users/Marked/Documents/git/pixsee/libs/jpct_ae.jar')
     compile files("$VUFORIA_SDK_DIR/$JAR_DIR/Vuforia.jar")
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -137,23 +138,20 @@ dependencies {
     provided app.daggerCompiler
     provided app.glassFishAnnotations
 
-    testCompile "junit:junit:$dependency.junitVersion"
-    testCompile "org.mockito:mockito-all:$dependency.mockitoVersion"
-    testCompile "org.hamcrest:hamcrest-all:$dependency.hamcrestVersion"
+    testCompile test.jUnit
+    testCompile test.mockito
+    testCompile test.hamcrest
 
-    androidTestCompile "org.mockito:mockito-all:$dependency.mockitoVersion"
-    androidTestCompile "org.hamcrest:hamcrest-all:$dependency.hamcrestVersion"
-    androidTestCompile "com.android.support:support-annotations:$dependency.supportLibraryVersion"
-    androidTestCompile "com.android.support.test:runner:$dependency.runnerVersion"
-    androidTestCompile "com.android.support.test:rules:$dependency.runnerVersion"
-
-// Espresso UI Testing
     // Espresso UI Testing dependencies.
-    androidTestCompile "com.android.support.test.espresso:espresso-intents:$dependency.espressoVersion"
-    androidTestCompile "com.android.support.test.espresso:espresso-core:$dependency.espressoVersion"
-    androidTestCompile ("com.android.support.test.espresso:espresso-contrib:$dependency.espressoVersion") {
-        exclude module: 'recyclerview-v7'
-    }
+    androidTestCompile test.espressoCore
+    androidTestCompile test.espressoIntents
+    androidTestCompile test.espressoContrib
+
+    androidTestCompile test.mockito
+    androidTestCompile test.supportAnnotation
+    androidTestCompile test.runner
+    androidTestCompile test.rules
+
 }
 
 
@@ -165,9 +163,9 @@ excluded from the test APK! This is necessary because both APKs will contain the
 excluding these dependencies from your test configuration will result in an dex pre-verifier error
 at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
 */
-configurations.compile.dependencies.each { compileDependency ->
-    println "Excluding compile dependency: ${compileDependency.getName()}"
-    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
-        configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
-    }
-}
+//configurations.compile.dependencies.each { compileDependency ->
+//    println "Excluding compile dependency: ${compileDependency.getName()}"
+//    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+//        configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+//    }
+//}

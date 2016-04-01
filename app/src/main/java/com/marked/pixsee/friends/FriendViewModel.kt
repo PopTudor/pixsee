@@ -10,7 +10,6 @@ import com.marked.pixsee.di.scopes.PerFragment
 import com.marked.pixsee.friends.commands.FabCommand
 import com.marked.pixsee.friends.commands.OpenCameraCommand
 import com.marked.pixsee.friends.data.specifications.GetFriendsSpecification
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -37,21 +36,23 @@ class FriendViewModel(private val repository: Repository<User>) {
 
     var size = 0;
 
-    fun loadFriends(forceUpdate: Boolean, num: Int) {
+    fun loadFriends(forceUpdate: Boolean, limit: Int) {
         if (forceUpdate) {
-            repository.query(GetFriendsSpecification())
+            repository.query(GetFriendsSpecification(0, limit))
                     .subscribe { users: List<User> ->
+                        if (users.size > 0)
+                            recyclerViewVisibility.set(View.VISIBLE)
                         dataListener.onFriendsLoaded(users, 0, users.size)
                         size = users.size
                     }.unsubscribe()
         } else {
-            repository.query(GetFriendsSpecification())
-                    .flatMap { Observable.from(it) }
-                    .skip(size)
-                    .take(num) /* take unsubscribes automatically */
-                    .toList()
+            repository.query(GetFriendsSpecification(size, limit))
+                    //                    .flatMap { Observable.from(it) }
+                    //                    .skip(size)
+                    //                    .take(limit) /* take unsubscribes automatically */
+                    //                    .toList()
                     .subscribe { users: List<User> ->
-                        dataListener.onFriendsLoaded(users, size, users.size)
+                        dataListener.onFriendsLoaded(users, size, limit)
                         size += users.size
                     }
         }

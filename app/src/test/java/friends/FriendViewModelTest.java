@@ -15,7 +15,9 @@ import java.util.List;
 
 import rx.Observable;
 
+import static android.view.View.VISIBLE;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,9 +27,10 @@ import static org.mockito.Mockito.when;
  * Unit tests for the implementation of {@link com.marked.pixsee.friends.FriendViewModel}
  */
 public class FriendViewModelTest {
-	private static List<User> FRIENDS = Lists
-			.newArrayList(new User("user1", "xyz", "xyz@emai.com", "asd"), new User("user2", "zxc", "zxc@emai.com", "zxc"),
-			              new User("user3", "zxc", "zxc@emai.com", "zxc"), new User("user4", "zxc", "zxc@emai.com", "zxc"));
+	private static List<User> FRIENDS = Lists.newArrayList(new User("user1", "xyz", "xyz@emai.com", "asd"),
+	                                                       new User("user2", "zxc", "zxc@emai.com", "zxc"),
+	                                                       new User("user3", "zxc", "zxc@emai.com", "zxc"),
+	                                                       new User("user4", "zxc", "zxc@emai.com", "zxc"));
 
 
 	@Mock
@@ -55,8 +58,7 @@ public class FriendViewModelTest {
 
 	@Test
 	public void testLoadFriendsShouldAppend() throws Exception {
-		when(mRepository.query(any(SQLSpecification.class))).thenReturn(Observable.just(FRIENDS.subList(0, 2)))
-		                                                    .thenReturn(Observable.just(FRIENDS));
+		when(mRepository.query(any(SQLSpecification.class))).thenReturn(Observable.just(FRIENDS.subList(0, 2))).thenReturn(Observable.just(FRIENDS));
 		mViewModel.loadFriends(true, 2);
 		
 		verify(mDataListener).onFriendsLoaded(FRIENDS.subList(0, 2), 0, 2); /* load only 2 items */
@@ -64,7 +66,9 @@ public class FriendViewModelTest {
 		/* add friends to the already loaded list */
 		mViewModel.loadFriends(false, 2);
 		// load another 2 items, starting with an offset of 2
-		verify(mDataListener).onFriendsLoaded(FRIENDS.subList(2, 4), 2, 2);
-		assertEquals(4, mViewModel.getSize());
+		//		verify(mDataListener).onFriendsLoaded(FRIENDS.subList(2, 4), 2, 2);
+		verify(mDataListener).onFriendsLoaded(FRIENDS, 2, 2);
+		assertEquals(6, mViewModel.getSize());
+		assertTrue(mViewModel.recyclerViewVisibility.get() == VISIBLE);
 	}
 }
