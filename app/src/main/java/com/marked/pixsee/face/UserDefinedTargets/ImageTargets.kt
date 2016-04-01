@@ -276,7 +276,7 @@ class ImageTargets : AppCompatActivity(), com.marked.pixsee.face.VuforiaApplicat
         mCameraButton!!.visibility = View.VISIBLE
         mUILayout!!.bringToFront()
     }
-
+/* NOT USEFUL */
     fun startUserDefinedTargets(): Boolean {
         Log.d(ImageTargets.Companion.LOGTAG, "startUserDefinedTargets")
         val trackerManager = TrackerManager.getInstance()

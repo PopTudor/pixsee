@@ -1,19 +1,14 @@
-/*===============================================================================
-Copyright (c) 2012-2014 Qualcomm Connected Experiences, Inc. All Rights Reserved.
-
-Vuforia is a trademark of QUALCOMM Incorporated, registered in the United States 
-and other countries. Trademarks of QUALCOMM Incorporated are used with permission.
-===============================================================================*/
-
-package com.marked.pixsee.face.UserDefinedTargets
+package com.marked.pixsee.face
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import android.support.v7.app.AppCompatActivity
+import android.util.DisplayMetrics
 import android.util.Log
-import com.marked.pixsee.face.VuforiaApplication.ApplicationSession
+import com.marked.pixsee.face.UserDefinedTargets.ImageTargetRenderer
 import com.marked.pixsee.face.VuforiaApplication.utils.SampleMath
 import com.marked.pixsee.face.VuforiaApplication.utils.SampleUtils
 import com.qualcomm.vuforia.Renderer
@@ -28,10 +23,14 @@ import java.io.InputStream
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
+/**
+ * Created by Tudor Pop on 01-Apr-16.
+ */
+
 // The renderer class for the ImageTargetsBuilder sample.
-class ImageTargetRenderer(private val mActivity: ImageTargets, private val mVuforiaAppSession: ApplicationSession)
+class AugRenderer(private val mActivity: AppCompatActivity)
 : GLSurfaceView.Renderer {
-    var mIsActive = false
+    var isActive = false
     private var modelViewMat: FloatArray? = null
 
     private val mTextureManager: TextureManager
@@ -111,10 +110,9 @@ class ImageTargetRenderer(private val mActivity: ImageTargets, private val mVufo
     // Called when the surface is created or recreated.
     @SuppressLint("LongLogTag")
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
-        Log.d(ImageTargetRenderer.Companion.LOGTAG, "GLRenderer.onSurfaceCreated")
         // Call Vuforia function to (re)initialize rendering after first use
         // or after OpenGL ES context was lost (e.g. after onPause/onResume):
-        mVuforiaAppSession.onSurfaceCreated()
+        //        mVuforiaAppSession.onSurfaceCreated()
     }
 
     // Called when the surface changed size.
@@ -124,8 +122,10 @@ class ImageTargetRenderer(private val mActivity: ImageTargets, private val mVufo
         // parameters have changed:
 
         // Call Vuforia function to handle render surface size changes:
-        mActivity.updateRendering()
-        mVuforiaAppSession.onSurfaceChanged(width, height)
+        val metrics = DisplayMetrics()
+        mActivity.windowManager.defaultDisplay.getMetrics(metrics)
+        //                refFreeFrame!!.initGL(metrics.widthPixels, metrics.heightPixels)
+        //        mVuforiaAppSession.onSurfaceChanged(width, height)
 
         if (fb != null) {
             fb!!.dispose()
@@ -137,7 +137,7 @@ class ImageTargetRenderer(private val mActivity: ImageTargets, private val mVufo
 
     // Called to draw the current frame.
     override fun onDrawFrame(gl: GL10) {
-        if (!mIsActive)
+        if (!isActive)
             return
         // Call our function to render content
         renderFrame()
@@ -172,7 +172,7 @@ class ImageTargetRenderer(private val mActivity: ImageTargets, private val mVufo
             GLES20.glFrontFace(GLES20.GL_CCW) // Back camera
 
         // Render the RefFree UI elements depending on the current state
-        mActivity.refFreeFrame!!.render()
+        //        mActivity.refFreeFrame!!.render()
         // Did we find any trackables this frame?
         for (tIdx in 0..state.numTrackableResults - 1) {
             // Get the trackable:
@@ -185,8 +185,7 @@ class ImageTargetRenderer(private val mActivity: ImageTargets, private val mVufo
             Matrix.translateM(modelViewMatrix, 0, 0f, 0f, ImageTargetRenderer.Companion.kObjectScale)
             Matrix.rotateM(modelViewMatrix, 0, angle, 0f, 0f, ImageTargetRenderer.Companion.kObjectScale)
             Matrix.scaleM(modelViewMatrix, 0, ImageTargetRenderer.Companion.kObjectScale, ImageTargetRenderer.Companion.kObjectScale, ImageTargetRenderer.Companion.kObjectScale)
-            Matrix.multiplyMM(modelViewProjection, 0, mVuforiaAppSession.projectionMatrix.data, 0, modelViewMatrix,
-                    0)
+            //            Matrix.multiplyMM(modelViewProjection, 0, mVuforiaAppSession.projectionMatrix.data, 0, modelViewMatrix,0)
             modelViewMatrix_Vuforia.data = modelViewMatrix
 
             val inverseMV = SampleMath.Matrix44FInverse(modelViewMatrix_Vuforia)

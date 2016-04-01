@@ -95,7 +95,9 @@ public class Selfie extends AppCompatActivity {
 		                                                                             .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
 		                                                                             .setLandmarkType(0)
 		                                                                             .build();
-		FaceTracker faceTracker = new FaceTracker(mGraphicOverlay);
+//		FaceTrackerSquare faceTracker = new FaceTrackerSquare(mGraphicOverlay);
+
+		FaceTrackerAR faceTracker = new FaceTrackerAR();
 		faceDetector.setProcessor(new LargestFaceFocusingProcessor.Builder(faceDetector, faceTracker).build());
 
 		if (!faceDetector.isOperational()) {
@@ -131,6 +133,7 @@ public class Selfie extends AppCompatActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		mPreview.pause();
 		mPreview.stop();
 	}
 
@@ -215,7 +218,8 @@ public class Selfie extends AppCompatActivity {
 
 		if (mCameraSource != null) {
 			try {
-				mPreview.start(mCameraSource, mGraphicOverlay);
+				mPreview.resume();
+				mPreview.start(mCameraSource);
 			} catch (IOException e) {
 				Log.e(TAG, "Unable to start camera source.", e);
 				mCameraSource.release();
@@ -224,11 +228,38 @@ public class Selfie extends AppCompatActivity {
 		}
 	}
 
-	static class FaceTracker extends Tracker<Face> {
+	class FaceTrackerAR extends Tracker<Face>{
+		@Override
+		public void onNewItem(int id, Face item) {
+			super.onNewItem(id, item);
+			Log.i(TAG, "Awesome person detected.  Hello!");
+		}
+
+		@Override
+		public void onUpdate(Detector.Detections<Face> detections, Face item) {
+			super.onUpdate(detections, item);
+			if (item.getIsSmilingProbability() > 0.75) {
+				Log.i(TAG, "I see a smile.  They must really enjoy your app.");
+			}
+		}
+
+		@Override
+		public void onMissing(Detector.Detections<Face> detections) {
+			super.onMissing(detections);
+		}
+
+		@Override
+		public void onDone() {
+			super.onDone();
+			Log.i(TAG, "Elvis has left the building.");
+		}
+	}
+
+	static class FaceTrackerSquare extends Tracker<Face> {
 		private GraphicOverlay mOverlay;
 		private FaceGraphic mFaceGraphic;
 
-		public FaceTracker(GraphicOverlay overlay) {
+		public FaceTrackerSquare(GraphicOverlay overlay) {
 			mOverlay = overlay;
 			mFaceGraphic = new FaceGraphic(overlay);
 		}
