@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.marked.pixsee.face.Selfie;
-import com.marked.pixsee.friends.FriendsActivity;
 import com.marked.pixsee.utility.GCMConstants;
 
 
@@ -23,12 +22,13 @@ public class EntryActivity extends AppCompatActivity {
 		super.onResume();
 		Intent intent = new Intent(this, Selfie.class);
 		startActivity(intent);
-		if (mUserRegistered) {
-			intent = new Intent(this, FriendsActivity.class);
-		} else {
-			intent = new Intent(this, AuthActivity.class);
-		}
-		startActivity(intent);
 		finish();
+//		if (mUserRegistered) {
+//			intent = new Intent(this, FriendsActivity.class);
+//		} else {
+//			intent = new Intent(this, AuthActivity.class);
+//		}
+//		startActivity(intent);
+//		finish();
 	}
 }
