@@ -54,7 +54,6 @@ class FriendRepository constructor(val db: PixyDatabase) : Repository<User> {
         db.use {
             if (specification is SQLSpecification) {
                 rawQuery(specification.createQuery(), null).apply {
-                    (cursorToUserMapper as CursorToUserMapper).readColumnIndex(this)
                     while (!isAfterLast) {
                         val friend = cursorToUserMapper.map(this)
                         cache.add(friend)

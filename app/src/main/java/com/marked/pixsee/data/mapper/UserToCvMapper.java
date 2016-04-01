@@ -12,10 +12,10 @@ public class UserToCvMapper implements Mapper<User,ContentValues> {
 	@Override
 	public ContentValues map(User user) {
 		ContentValues values = new ContentValues();
-		values.put(FriendConstants.ID, user.getEmail());
-		values.put(FriendConstants.NAME, user.getEmail());
+		values.put(FriendConstants.ID, user.getUserID());
+		values.put(FriendConstants.NAME, user.getName());
 		values.put(FriendConstants.EMAIL, user.getEmail());
-		values.put(FriendConstants.TOKEN, user.getEmail());
+		values.put(FriendConstants.TOKEN, user.getToken());
 		return values;
 	}
 }
