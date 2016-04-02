@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
 import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.face.Face;
 
 import java.io.IOException;
 
@@ -25,12 +24,10 @@ public class CameraSourcePreview extends ViewGroup {
 
 	private Context      mContext;
 	private SurfaceView  mSurfaceView;
-//	private FaceRenderer mFaceRenderer;
 
 	private boolean       mStartRequested;
 	private boolean       mSurfaceAvailable;
 	private CameraSource  mCameraSource;
-	private Face mFace;
 
 	public CameraSourcePreview(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -38,7 +35,6 @@ public class CameraSourcePreview extends ViewGroup {
 		mStartRequested = false;
 		mSurfaceAvailable = false;
 
-//		mFaceRenderer = new FaceRenderer((AppCompatActivity) mContext);
 		mSurfaceView = new SurfaceView(context);
 
 		mSurfaceView.getHolder().addCallback(new SurfaceCallback());
@@ -71,7 +67,6 @@ public class CameraSourcePreview extends ViewGroup {
 				// for ActivityCompat#requestPermissions for more details.
 				return;
 			}
-//			mFaceRenderer.setActive(true);
 			mCameraSource.start(mSurfaceView.getHolder());
 			mStartRequested = false;
 		}
@@ -88,23 +83,6 @@ public class CameraSourcePreview extends ViewGroup {
 			mCameraSource.release();
 			mCameraSource = null;
 		}
-	}
-
-	public void pause() {
-		if (mSurfaceView != null) {
-//			mSurfaceView.onPause();
-		}
-	}
-
-	public void resume() {
-		if (mSurfaceView != null) {
-//			mSurfaceView.onResume();
-		}
-	}
-
-	public void setFace(Face face) {
-		mFace = face;
-//		mFaceRenderer.setFace(mFace);
 	}
 
 	private class SurfaceCallback implements SurfaceHolder.Callback {

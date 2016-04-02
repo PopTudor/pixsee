@@ -2,6 +2,10 @@ package com.marked.pixsee.face
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Point
+import android.graphics.PointF
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
@@ -20,9 +24,10 @@ import javax.microedition.khronos.opengles.GL10
  */
 
 // The renderer class for the ImageTargetsBuilder sample.
-class FaceRenderer(private val mActivity: AppCompatActivity) : GLSurfaceView.Renderer {
+class FaceRenderer(private val mActivity: AppCompatActivity, graphicOverlay: GraphicOverlay) :
+        GraphicOverlay.Graphic(graphicOverlay), GLSurfaceView.Renderer {
     var isActive = false
-    var face: Face? = null
+    var mFace: Face? = null
     var triangle: Triangle? = null
     private var modelViewMat: FloatArray? = null
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
@@ -30,8 +35,14 @@ class FaceRenderer(private val mActivity: AppCompatActivity) : GLSurfaceView.Ren
     private final val mProjectionMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
     private final val mViewMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
     private final val mRotationMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
+    private final val mTranslationMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
 
-
+    private val FACE_POSITION_RADIUS = 10.0f
+    private val ID_TEXT_SIZE = 40.0f
+    private val ID_Y_OFFSET = 50.0f
+    private val ID_X_OFFSET = -50.0f
+    private val mFaceHappiness: Float = 0.toFloat()
+    val pointScreen = Point()
     private val mTextureManager by lazy { TextureManager.getInstance() }
     private val mWorld by lazy {
         val tmp = World()
@@ -48,8 +59,13 @@ class FaceRenderer(private val mActivity: AppCompatActivity) : GLSurfaceView.Ren
     private var cam: Camera? = null
     private val fov = 0.0f
     private val fovy = 0.0f
+    private val mFacePositionPaint: Paint
 
     init {
+
+        mFacePositionPaint = Paint()
+        mActivity.windowManager.defaultDisplay.getSize(pointScreen)
+
         //        try {
         //            // keep the texture small(ideal under 1mb; if it's too big won't keep up with the program because the texture is loaded
         //            // on an background thread so it must be easy to load the texture) or compress any texture online
@@ -109,6 +125,15 @@ class FaceRenderer(private val mActivity: AppCompatActivity) : GLSurfaceView.Ren
         //        MemoryHelper.compact()
     }
 
+    /**
+     * Updates the face instance from the detection of the most recent frame.  Invalidates the
+     * relevant portions of the overlay to trigger a redraw.
+     */
+    fun updateFace(face: Face) {
+        mFace = face
+        postInvalidate()
+    }
+
     // Called when the surface is created or recreated.
     @SuppressLint("LongLogTag")
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
@@ -136,28 +161,69 @@ class FaceRenderer(private val mActivity: AppCompatActivity) : GLSurfaceView.Ren
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1f, 1f, 3f, 7f);
     }
 
-    private val mAngle: Float = 45f
+    private val mAngle: Float = 90f
 
     // Called to draw the current frame.
     override fun onDrawFrame(gl: GL10) {
         val scratch = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT or  GL10.GL_DEPTH_BUFFER_BIT);
         // Set the camera position (View matrix)
-        android.opengl.Matrix.setLookAtM(mViewMatrix, 0, 0f, 0f, -3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(mViewMatrix, 0, 0f, 0f, -3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
         // Calculate the projection and view transformation
-        android.opengl.Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
         Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0f, 0f, 1.0f);
 
-        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0);
+        var point = mFace?.position
+        //        var width = mFace?.width
+        //        var height = mFace?.height
+        if (point === null) {
+            point = PointF(0f, 0f)
+        }
+        //        if(height === null || width === null){
+        //            height=0f
+        //            width = 0f
+        //        }
+        //        val x = translateX(point.x + width / 2)
+        //        val y = translateY(point.y + height / 2)
+        //        val xOffset = scaleX(width / 2.0f)
+        //        val yOffset = scaleY(height / 2.0f)
+        //        val left = x - xOffset
+        //        val top = y - yOffset
+        //        val right = x + xOffset
+        //        val bottom = y + yOffset
+        Matrix.translateM(mTranslationMatrix, 0, mRotationMatrix, 0, point.x / pointScreen.x, point.y / pointScreen.y, 0f)
+
+
+        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mTranslationMatrix, 0);
+
         // Draw triangle
-
-
         triangle?.draw(scratch);
-
         //        renderFrame()
         //        updateCamera()
+    }
+
+    override fun draw(canvas: Canvas?) {
+        //        val face = mFace ?: return
+        // Draws a circle at the position of the detected face, with the face's track id below.
+        //        val x = translateX(face.getPosition().x + face.getWidth() / 2)
+        //        val y = translateY(face.getPosition().y + face.getHeight() / 2)
+        //        canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint)
+        //        canvas.drawText("id: " , x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint)
+        //        canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint)
+        //        canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint)
+        //        canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET * 2, y - ID_Y_OFFSET * 2, mIdPaint)
+
+        // Draws a bounding box around the face.
+        //        val xOffset = scaleX(face.getWidth() / 2.0f)
+        //        val yOffset = scaleY(face.getHeight() / 2.0f)
+        //        val left = x - xOffset
+        //        val top = y - yOffset
+        //        val right = x + xOffset
+        //        val bottom = y + yOffset
+        //        canvas.drawRect(left, top, right, bottom, mBoxPaint)
+        //        throw UnsupportedOperationException()
     }
 
     fun drawWorld() {
@@ -168,22 +234,21 @@ class FaceRenderer(private val mActivity: AppCompatActivity) : GLSurfaceView.Ren
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     private fun renderFrame() {
         // Clear color and depth buffer
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
 
-        val vuforiaMatrix = floatArrayOf(0.0f, 1.69032f, 0.0f, 0.0f, -3.0050135f, 0.0f, 0.0f, 0.0f, 0.0f, -0.0015625f, 1.004008f, 1.0f, 0.0f, 0.0f, -20.040081f, 0.0f)
-        val modelViewMatrix = floatArrayOf(0.9999714f, 0.007403262f, 0.0015381078f, 0.0f, 0.0074077616f, -0.9999683f, -0.002941356f, 0.0f, 0.0015162831f, 0.002952666f, -0.9999945f, 0.0f, 2.1681705f, 4.7709565f, 264.3288f, 1.0f)
+        //        val vuforiaMatrix = floatArrayOf(0.0f, 1.69032f, 0.0f, 0.0f, -3.0050135f, 0.0f, 0.0f, 0.0f, 0.0f, -0.0015625f, 1.004008f, 1.0f, 0.0f, 0.0f, -20.040081f, 0.0f)
+        //        val modelViewMatrix = floatArrayOf(0.9999714f, 0.007403262f, 0.0015381078f, 0.0f, 0.0074077616f, -0.9999683f, -0.002941356f, 0.0f, 0.0015162831f, 0.002952666f, -0.9999945f, 0.0f, 2.1681705f, 4.7709565f, 264.3288f, 1.0f)
 
         val angle = 90f
         val modelViewProjection = FloatArray(16)
-        //            Matrix.translateM(modelViewMatrix, 0, 0f, 0f, ImageTargetRenderer.Companion.kObjectScale)
-        //            Matrix.rotateM(modelViewMatrix, 0, angle, 0f, 0f, ImageTargetRenderer.Companion.kObjectScale)
-        //            Matrix.scaleM(modelViewMatrix, 0, ImageTargetRenderer.Companion.kObjectScale, ImageTargetRenderer.Companion.kObjectScale, ImageTargetRenderer.Companion.kObjectScale)
-        //            Matrix.multiplyMM(modelViewProjection, 0, mVuforiaAppSession.projectionMatrix.data, 0, modelViewMatrix,0)
+        Matrix.translateM(mMVPMatrix, 0, 0f, 0f, kObjectScale)
+        Matrix.rotateM(mMVPMatrix, 0, angle, 0f, 0f, kObjectScale)
+        Matrix.scaleM(mMVPMatrix, 0, kObjectScale, kObjectScale, kObjectScale)
+        Matrix.multiplyMM(modelViewProjection, 0, mProjectionMatrix, 0, mMVPMatrix, 0)
         //            modelViewMatrix_Vuforia.data = modelViewMatrix
 
         //            val inverseMV = SampleMath.Matrix44FInverse(modelViewMatrix_Vuforia)
@@ -247,7 +312,7 @@ class FaceRenderer(private val mActivity: AppCompatActivity) : GLSurfaceView.Ren
 
     companion object {
         // Constants:
-        internal val kObjectScale = 2.0f
+        internal val kObjectScale = 0.5f
         private val LOGTAG = "ImageTargetRenderer"
         fun loadShader(type: Int, shaderCode: String): Int {
 
