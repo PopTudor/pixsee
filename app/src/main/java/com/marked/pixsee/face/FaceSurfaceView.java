@@ -1,6 +1,7 @@
 package com.marked.pixsee.face;
 
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
@@ -22,7 +23,8 @@ public class FaceSurfaceView extends GLSurfaceView {
 	void init(){
 		// Create an OpenGL ES 2.0 context
 		setEGLContextClientVersion(2);
-//		setEGLConfigChooser(8, 8, 8, 8, 16, 0);
-//		getHolder().setFormat(PixelFormat.TRANSLUCENT);
+		setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+		getHolder().setFormat(PixelFormat.RGBA_8888);
+//		getHolder().setFormat(PixelFormat.TRANSPARENT);
 	}
 }

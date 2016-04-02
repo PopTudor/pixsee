@@ -23,13 +23,13 @@ import javax.microedition.khronos.opengles.GL10
 class FaceRenderer(private val mActivity: AppCompatActivity) : GLSurfaceView.Renderer {
     var isActive = false
     var face: Face? = null
-    var triangle :Triangle?= null
+    var triangle: Triangle? = null
     private var modelViewMat: FloatArray? = null
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
-    private final val mMVPMatrix = floatArrayOf(0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)
-    private final val mProjectionMatrix = floatArrayOf(0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)
-    private final val mViewMatrix = floatArrayOf(0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)
-    private final val mRotationMatrix = floatArrayOf(0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)
+    private final val mMVPMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
+    private final val mProjectionMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
+    private final val mViewMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
+    private final val mRotationMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
 
 
     private val mTextureManager by lazy { TextureManager.getInstance() }
@@ -112,35 +112,35 @@ class FaceRenderer(private val mActivity: AppCompatActivity) : GLSurfaceView.Ren
     // Called when the surface is created or recreated.
     @SuppressLint("LongLogTag")
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
-//        gl.glDisable(GL10.GL_DITHER);
-//        gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
-
-        gl.glClearColor(0f, 0f, 0f, 0f);
+        run { // state configuration
+            gl.glDisable(GL10.GL_DITHER);
+            gl.glEnable(GL10.GL_CULL_FACE);
+            gl.glEnable(GL10.GL_DEPTH_TEST);
+        }
         triangle = Triangle()
-//        gl.glShadeModel(GL10.GL_SMOOTH);
-        //        gl.glEnable(GL10.GL_CULL_FACE);
-        //        gl.glEnable(GL10.GL_DEPTH_TEST);
-//        GLES20.glFrontFace(GLES20.GL_CW)
-//        gl.glClearDepthf(1.0f);
-//        gl.glDepthFunc(GL10.GL_LEQUAL);
-//        gl.glTranslatef(0.0f, 0.0f, -5.0f);
+        gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
+        gl.glClearColor(0f, 0f, 0f, 0f);
+        gl.glShadeModel(GL10.GL_SMOOTH);
         //GLES20.glFrontFace(GLES20.GL_CCW) // Back camera
-
+        GLES20.glFrontFace(GLES20.GL_CW) // Front camera
+        gl.glClearDepthf(1.0f);
+        gl.glDepthFunc(GL10.GL_LEQUAL);
+        gl.glTranslatef(0.0f, 0.0f, -5.0f);
     }
 
     // Called when the surface changed size.
     @SuppressLint("LongLogTag")
     override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
-                GLES20.glViewport(0, 0, width, height);
-        val ratio =  width.toFloat() / height.toFloat();
+        GLES20.glViewport(0, 0, width, height);
+        val ratio = width.toFloat() / height.toFloat();
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1f, 1f, 3f, 7f);
     }
 
-    private val mAngle: Float=45f
+    private val mAngle: Float = 45f
 
     // Called to draw the current frame.
     override fun onDrawFrame(gl: GL10) {
-        val scratch =  floatArrayOf(0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f);
+        val scratch = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT or  GL10.GL_DEPTH_BUFFER_BIT);
         // Set the camera position (View matrix)
         android.opengl.Matrix.setLookAtM(mViewMatrix, 0, 0f, 0f, -3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
@@ -156,9 +156,6 @@ class FaceRenderer(private val mActivity: AppCompatActivity) : GLSurfaceView.Ren
 
         triangle?.draw(scratch);
 
-        //        if (!isActive)
-        //            return
-        // Call our function to render content
         //        renderFrame()
         //        updateCamera()
     }
@@ -264,8 +261,9 @@ class FaceRenderer(private val mActivity: AppCompatActivity) : GLSurfaceView.Ren
 
             return shader;
         }
-        fun  checkGlError( glOperation:String) {
-            var error=0;
+
+        fun checkGlError(glOperation: String) {
+            var error = 0;
             while (error != GLES20.GL_NO_ERROR) {
                 error = GLES20.glGetError()
                 Log.e("TAG", glOperation + ": glError " + error);
