@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.activity_preview.*
 import java.util.*
 
 // The main activity for the UserDefinedTargets sample.
-class ImageTargets : AppCompatActivity(), com.marked.pixsee.face.VuforiaApplication.ApplicationControl, com.marked.pixsee.SampleAppMenu.SampleAppMenuInterface {
+class ImageTargets : AppCompatActivity(), com.marked.pixsee.face.VuforiaApplication.ApplicationControl, com.marked.pixsee.face.SampleAppMenu.SampleAppMenuInterface {
     var targetBuilderCounter = 1
     var dataSetUserDef: DataSet? = null
     var refFreeFrame: RefFreeFrame? = null
@@ -341,9 +341,9 @@ class ImageTargets : AppCompatActivity(), com.marked.pixsee.face.VuforiaApplicat
     fun targetCreated() {
         // Hides the loading dialog
         //        loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
-        if (refFreeFrame != null) {
-            refFreeFrame!!.reset()
-        }
+//        if (refFreeFrame != null) {
+//            refFreeFrame!!.reset()
+//        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -357,7 +357,7 @@ class ImageTargets : AppCompatActivity(), com.marked.pixsee.face.VuforiaApplicat
     fun updateRendering() {
         val metrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metrics)
-        refFreeFrame!!.initGL(metrics.widthPixels, metrics.heightPixels)
+//        refFreeFrame!!.initGL(metrics.widthPixels, metrics.heightPixels)
     }
 
     override fun doInitTrackers(): Boolean {
@@ -456,8 +456,8 @@ class ImageTargets : AppCompatActivity(), com.marked.pixsee.face.VuforiaApplicat
         // Indicate if the trackers were deinitialized correctly
         val result = true
 
-        if (refFreeFrame != null)
-            refFreeFrame!!.deInit()
+//        if (refFreeFrame != null)
+//            refFreeFrame!!.deInit()
 
         val tManager = TrackerManager.getInstance()
         tManager.deinitTracker(ObjectTracker.getClassType())
@@ -550,14 +550,15 @@ class ImageTargets : AppCompatActivity(), com.marked.pixsee.face.VuforiaApplicat
                 dataSetUserDef!!.getTrackable(previousCreatedTrackableIndex).stopExtendedTracking()
             }
 
-            // Add new trackable source
+            // Add new trackable source.
+            /* HERE *** WITHOUT THIS IT DOES NOT RENDER ANYTHING*/
             val trackable = dataSetUserDef!!.createTrackable(refFreeFrame!!.newTrackableSource)
 
             // Reactivate current dataset
             objectTracker.activateDataSet(dataSetUserDef)
 
             if (mExtendedTracking) {
-                trackable.startExtendedTracking()
+//                trackable.startExtendedTracking()
             }
 
         }

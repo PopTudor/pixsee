@@ -1,54 +1,63 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				xmlns:tool="http://schemas.android.com/tools"
-				android:id="@+id/containerFragment"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
+<RelativeLayout android:id="@+id/containerFragment"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tool="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 tool:background="#00ffffff"
->
+    >
+
+    <com.marked.pixsee.face.FaceSurfaceView
+        android:id="@+id/faceSurfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/camera_button"/>
+
     <com.marked.pixsee.face.CameraSourcePreview
         android:id="@+id/preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
 
-        <com.marked.pixsee.face.GraphicOverlay
-            android:id="@+id/faceOverlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <!--<com.marked.pixsee.face.GraphicOverlay-->
+            <!--android:id="@+id/faceOverlay"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"/>-->
 
     </com.marked.pixsee.face.CameraSourcePreview>
-	<LinearLayout
-		android:id="@+id/bottom_bar"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"
-		android:layout_centerHorizontal="true"
-		android:background="@color/transparent"
-		android:gravity="center"
-		android:orientation="horizontal"
-		android:visibility="visible"
-		android:weightSum="1">
+
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/transparent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:weightSum="1">
 
     </LinearLayout>
-	<ImageView
-		android:id="@+id/switchCamera"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentEnd="true"
-		android:layout_alignParentRight="true"
-		android:layout_alignParentTop="true"
-		android:contentDescription="Switch camera"
-		android:src="@drawable/ic_camera_rear_24dp"
-	/>
+
+    <ImageView
+        android:id="@+id/switchCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="Switch camera"
+        android:src="@drawable/ic_camera_rear_24dp"
+        />
 
     <Button
         android:id="@+id/camera_button"
         android:layout_width="70dp"
         android:layout_height="70dp"
+        android:layout_above="@+id/bottom_bar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp"
         android:alpha="0.8"
         android:background="@drawable/round_button"
-        android:onClick="onCameraClick"
-        android:layout_marginBottom="25dp"
-        android:layout_above="@+id/bottom_bar"
-        android:layout_centerHorizontal="true"/>
+        android:onClick="onCameraClick"/>
 </RelativeLayout>

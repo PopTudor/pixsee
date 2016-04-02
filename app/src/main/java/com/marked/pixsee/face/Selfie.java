@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -29,7 +30,7 @@ public class Selfie extends AppCompatActivity {
 	private static final String TAG = Selfie.class + "***";
 
 	private CameraSource        mCameraSource;
-	private CameraSourcePreview mPreview;
+	private CameraSourcePreview mCameraSourcePreview;
 	private GraphicOverlay      mGraphicOverlay;
 
 	private static final int RC_HANDLE_GMS         = 9001;
@@ -40,9 +41,11 @@ public class Selfie extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_preview);
-		mPreview = (CameraSourcePreview) findViewById(R.id.preview);
-		mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
-
+		mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
+//		mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
+		FaceSurfaceView faceSurfaceView = (FaceSurfaceView) findViewById(R.id.faceSurfaceView);
+		faceSurfaceView.setRenderer(new FaceRenderer(this));
+		faceSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
 		// Check for the camera permission before accessing the camera.  If the
 		// permission is not granted yet, request permission.
@@ -96,8 +99,7 @@ public class Selfie extends AppCompatActivity {
 		                                                                             .setLandmarkType(0)
 		                                                                             .build();
 //		FaceTrackerSquare faceTracker = new FaceTrackerSquare(mGraphicOverlay);
-
-		FaceTrackerAR faceTracker = new FaceTrackerAR();
+		FaceTrackerAR faceTracker = new FaceTrackerAR(mCameraSourcePreview);
 		faceDetector.setProcessor(new LargestFaceFocusingProcessor.Builder(faceDetector, faceTracker).build());
 
 		if (!faceDetector.isOperational()) {
@@ -125,6 +127,7 @@ public class Selfie extends AppCompatActivity {
 		super.onResume();
 
 		startCameraSource();
+		mCameraSourcePreview.resume();
 	}
 
 	/**
@@ -133,8 +136,8 @@ public class Selfie extends AppCompatActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mPreview.pause();
-		mPreview.stop();
+		mCameraSourcePreview.pause();
+		mCameraSourcePreview.stop();
 	}
 
 	/**
@@ -218,8 +221,7 @@ public class Selfie extends AppCompatActivity {
 
 		if (mCameraSource != null) {
 			try {
-				mPreview.resume();
-				mPreview.start(mCameraSource);
+				mCameraSourcePreview.start(mCameraSource);
 			} catch (IOException e) {
 				Log.e(TAG, "Unable to start camera source.", e);
 				mCameraSource.release();
@@ -229,9 +231,16 @@ public class Selfie extends AppCompatActivity {
 	}
 
 	class FaceTrackerAR extends Tracker<Face>{
+		private CameraSourcePreview mCameraSourcePreview;
+
+		public FaceTrackerAR(CameraSourcePreview cameraSourcePreview) {
+			mCameraSourcePreview = cameraSourcePreview;
+		}
+
 		@Override
 		public void onNewItem(int id, Face item) {
 			super.onNewItem(id, item);
+			mCameraSourcePreview.setFace(item);
 			Log.i(TAG, "Awesome person detected.  Hello!");
 		}
 

@@ -11,14 +11,9 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
-import android.opengl.Matrix
 import android.util.Log
 import com.marked.pixsee.face.VuforiaApplication.ApplicationSession
-import com.marked.pixsee.face.VuforiaApplication.utils.SampleMath
-import com.marked.pixsee.face.VuforiaApplication.utils.SampleUtils
 import com.qualcomm.vuforia.Renderer
-import com.qualcomm.vuforia.Tool
-import com.qualcomm.vuforia.VIDEO_BACKGROUND_REFLECTION
 import com.threed.jpct.*
 import com.threed.jpct.util.MemoryHelper
 import java.io.BufferedInputStream
@@ -111,7 +106,7 @@ class ImageTargetRenderer(private val mActivity: ImageTargets, private val mVufo
     // Called when the surface is created or recreated.
     @SuppressLint("LongLogTag")
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
-        Log.d(ImageTargetRenderer.Companion.LOGTAG, "GLRenderer.onSurfaceCreated")
+        Log.d(Companion.LOGTAG, "GLRenderer.onSurfaceCreated")
         // Call Vuforia function to (re)initialize rendering after first use
         // or after OpenGL ES context was lost (e.g. after onPause/onResume):
         mVuforiaAppSession.onSurfaceCreated()
@@ -166,42 +161,42 @@ class ImageTargetRenderer(private val mActivity: ImageTargets, private val mVufo
         Renderer.getInstance().drawVideoBackground()
         GLES20.glEnable(GLES20.GL_DEPTH_TEST)
         GLES20.glEnable(GLES20.GL_CULL_FACE)
-        if (Renderer.getInstance().videoBackgroundConfig.reflection == VIDEO_BACKGROUND_REFLECTION.VIDEO_BACKGROUND_REFLECTION_ON)
-            GLES20.glFrontFace(GLES20.GL_CW) // Front camera
-        else
-            GLES20.glFrontFace(GLES20.GL_CCW) // Back camera
+        //        if (Renderer.getInstance().videoBackgroundConfig.reflection == VIDEO_BACKGROUND_REFLECTION.VIDEO_BACKGROUND_REFLECTION_ON)
+        GLES20.glFrontFace(GLES20.GL_CW) // Front camera
+        //        else
+        //            GLES20.glFrontFace(GLES20.GL_CCW) // Back camera
 
         // Render the RefFree UI elements depending on the current state
-        mActivity.refFreeFrame!!.render()
-        // Did we find any trackables this frame?
-        for (tIdx in 0..state.numTrackableResults - 1) {
-            // Get the trackable:
-            val trackableResult = state.getTrackableResult(tIdx)
-            val modelViewMatrix_Vuforia = Tool.convertPose2GLMatrix(trackableResult.pose)
-            val modelViewMatrix = modelViewMatrix_Vuforia.data
+//        mActivity.refFreeFrame!!.render()
+//        for (tIdx in 0..state.numTrackableResults - 1) {
+//            val trackableResult = state.getTrackableResult(tIdx)
+//            val modelViewMatrix_Vuforia = Tool.convertPose2GLMatrix(trackableResult.pose)
+//            val modelViewMatrix = modelViewMatrix_Vuforia.data
+//
+        val vuforiaMatrix = floatArrayOf(0.0f, 1.69032f, 0.0f, 0.0f, -3.0050135f, 0.0f, 0.0f, 0.0f, 0.0f, -0.0015625f, 1.004008f, 1.0f, 0.0f, 0.0f, -20.040081f, 0.0f)
+        val modelViewMatrix = floatArrayOf(0.9999714f, 0.007403262f, 0.0015381078f, 0.0f, 0.0074077616f, -0.9999683f, -0.002941356f, 0.0f, 0.0015162831f, 0.002952666f, -0.9999945f, 0.0f, 2.1681705f, 4.7709565f, 264.3288f, 1.0f)
 
-            val angle = 90f
-            val modelViewProjection = FloatArray(16)
-            Matrix.translateM(modelViewMatrix, 0, 0f, 0f, ImageTargetRenderer.Companion.kObjectScale)
-            Matrix.rotateM(modelViewMatrix, 0, angle, 0f, 0f, ImageTargetRenderer.Companion.kObjectScale)
-            Matrix.scaleM(modelViewMatrix, 0, ImageTargetRenderer.Companion.kObjectScale, ImageTargetRenderer.Companion.kObjectScale, ImageTargetRenderer.Companion.kObjectScale)
-            Matrix.multiplyMM(modelViewProjection, 0, mVuforiaAppSession.projectionMatrix.data, 0, modelViewMatrix,
-                    0)
-            modelViewMatrix_Vuforia.data = modelViewMatrix
+        val angle = 90f
+//            val modelViewProjection = FloatArray(16)
+//            android.opengl.Matrix.translateM(modelViewMatrix, 0, 0f, 0f, kObjectScale)
+//            android.opengl.Matrix.rotateM(modelViewMatrix, 0, angle, 0f, 0f, kObjectScale)
+//            android.opengl.Matrix.scaleM(modelViewMatrix, 0, kObjectScale, kObjectScale, kObjectScale)
+//            android.opengl.Matrix.multiplyMM(modelViewProjection, 0, vuforiaMatrix, 0, modelViewMatrix, 0)
+//            modelViewMatrix_Vuforia.data = modelViewMatrix
 
-            val inverseMV = SampleMath.Matrix44FInverse(modelViewMatrix_Vuforia)
-            val invTranspMV = SampleMath.Matrix44FTranspose(inverseMV)
-            updateModelviewMatrix(invTranspMV.data)
+//            val inverseMV = SampleMath.Matrix44FInverse(modelViewMatrix_Vuforia)
+//            val invTranspMV = SampleMath.Matrix44FTranspose(inverseMV)
+//            updateModelviewMatrix(invTranspMV.data)
 
             // hide the objects when the targets are not detected
-            if (state.numTrackableResults == 0) {
-                val m = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, -10000f, 1f)
-                updateModelviewMatrix(m)
-            }
+//            if (state.numTrackableResults == 0) {
+//                val m = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, -10000f, 1f)
+//                updateModelviewMatrix(m)
+//            }
 
             drawWorld()
-            SampleUtils.checkGLError("UserDefinedTargets renderFrame")
-        }
+//        }
+//       updateModelviewMatrix(modelViewMatrix)
 
         GLES20.glDisable(GLES20.GL_DEPTH_TEST)
         Renderer.getInstance().end()
@@ -240,9 +235,10 @@ class ImageTargetRenderer(private val mActivity: ImageTargets, private val mVufo
         for (i in model.indices) {
             temp = model[i]
             temp!!.center = SimpleVector.ORIGIN
-            temp.rotateX((.4 * Math.PI).toFloat())
-            temp.rotateY((.1 * Math.PI).toFloat())
-            temp.rotateMesh()
+
+//            temp.rotateX((.4 * Math.PI).toFloat())
+//            temp.rotateY((.1 * Math.PI).toFloat())
+//            temp.rotateMesh()
             temp.rotationMatrix = com.threed.jpct.Matrix()
             o3d = Object3D.mergeObjects(o3d, temp)
             o3d.build()

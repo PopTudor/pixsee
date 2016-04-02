@@ -13,11 +13,9 @@ import com.marked.pixsee.face.VuforiaApplication.ApplicationSession;
 import com.marked.pixsee.face.VuforiaApplication.utils.SampleUtils;
 import com.qualcomm.vuforia.ImageTargetBuilder;
 import com.qualcomm.vuforia.ObjectTracker;
-import com.qualcomm.vuforia.Renderer;
 import com.qualcomm.vuforia.TrackableSource;
 import com.qualcomm.vuforia.TrackerManager;
 import com.qualcomm.vuforia.Vec2F;
-import com.qualcomm.vuforia.VideoBackgroundConfig;
 
 
 public class RefFreeFrame {
@@ -34,10 +32,10 @@ public class RefFreeFrame {
 	long               lastSuccessTime;
 	// All rendering methods are contained in this class for easy
 	// extraction/abstraction
-	RefFreeFrameGL     frameGL;
+//	RefFreeFrameGL     frameGL;
 	// The latest trackable source to be extracted from the Target Builder
 	TrackableSource    trackableSource;
-	ImageTargets mActivity;
+	ImageTargets       mActivity;
 	ApplicationSession vuforiaAppSession;
 
 	public RefFreeFrame(ImageTargets activity, ApplicationSession session) {
@@ -52,14 +50,14 @@ public class RefFreeFrame {
 		colorFrame[2] = 0.0f;
 		colorFrame[3] = 0.75f;
 
-		frameGL = new RefFreeFrameGL(mActivity, vuforiaAppSession);
+//		frameGL = new RefFreeFrameGL(mActivity, vuforiaAppSession);
 		halfScreenSize = new Vec2F();
 	}
 
 	// Function used to transition in the range [0, 1]
 	float transition(float v0, float inc, float a, float b) {
 		float vOut = v0 + inc;
-		return (vOut < a ? a : (vOut > b ? b : vOut));
+		return (vOut < a ? a :(vOut > b ? b :vOut));
 	}
 
 
@@ -69,39 +67,38 @@ public class RefFreeFrame {
 
 	void init() {
 		// load the frame texture
-		frameGL.getTextures();
+//		frameGL.getTextures();
 
 		trackableSource = null;
 	}
 
 	void deInit() {
 		TrackerManager trackerManager = TrackerManager.getInstance();
-		ObjectTracker  objectTracker  = (ObjectTracker) (trackerManager.getTracker(ObjectTracker.getClassType()));
+		ObjectTracker objectTracker = (ObjectTracker) (trackerManager.getTracker(ObjectTracker.getClassType()));
 		if (objectTracker != null) {
 			ImageTargetBuilder targetBuilder = objectTracker.getImageTargetBuilder();
-			if (targetBuilder != null &&
-				(targetBuilder.getFrameQuality() != ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_NONE)) {
+			if (targetBuilder != null && (targetBuilder.getFrameQuality() != ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_NONE)) {
 				targetBuilder.stopScan();
 			}
 		}
 	}
 
 	void initGL(int screenWidth, int screenHeight) {
-		frameGL.init(screenWidth, screenHeight);
 
-		Renderer              renderer                  = Renderer.getInstance();
-		VideoBackgroundConfig vc                        = renderer.getVideoBackgroundConfig();
-		int                   temp[]                    = vc.getSize().getData();
-		float[]               videoBackgroundConfigSize = new float[2];
-		videoBackgroundConfigSize[0] = temp[0] * 0.5f;
-		videoBackgroundConfigSize[1] = temp[1] * 0.5f;
-
-		halfScreenSize.setData(videoBackgroundConfigSize);
+//		Renderer renderer = Renderer.getInstance();
+//		VideoBackgroundConfig vc = renderer.getVideoBackgroundConfig();
+//		int temp[] = vc.getSize()
+//		               .getData();
+//		float[] videoBackgroundConfigSize = new float[2];
+//		videoBackgroundConfigSize[0] = temp[0] * 0.5f;
+//		videoBackgroundConfigSize[1] = temp[1] * 0.5f;
+//
+//		halfScreenSize.setData(videoBackgroundConfigSize);
 
 		// sets last frame timer
-		lastFrameTime = System.currentTimeMillis();
+//		lastFrameTime = System.currentTimeMillis();
 
-		reset();
+//		reset();
 	}
 
 	void reset() {
@@ -178,7 +175,7 @@ public class RefFreeFrame {
 
 		// Get the frame quality from the target builder
 		ImageTargetBuilder targetBuilder = objectTracker.getImageTargetBuilder();
-		int                frameQuality  = targetBuilder.getFrameQuality();
+		int frameQuality = targetBuilder.getFrameQuality();
 
 		// Update the UI internal state variables
 		updateUIState(targetBuilder, frameQuality);
@@ -187,26 +184,9 @@ public class RefFreeFrame {
 			curStatus = STATUS.STATUS_IDLE;
 
 			Log.d(LOGTAG, "Built target, reactivating dataset with new target");
-			mActivity.doStartTrackers();
+//			mActivity.doStartTrackers();
 		}
-
-		// Renders the hints
-		switch (curStatus) {
-			case STATUS_SCANNING:
-				renderScanningViewfinder(frameQuality);
-				break;
-			default:
-				break;
-
-		}
-
 		SampleUtils.checkGLError("RefFreeFrame render");
-	}
-
-	void renderScanningViewfinder(int quality) {
-		frameGL.setModelViewScale(1.0f);
-		frameGL.setColor(colorFrame);
-		frameGL.renderViewfinder();
 	}
 
 	boolean hasNewTrackableSource() {

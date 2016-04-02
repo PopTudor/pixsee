@@ -4,16 +4,16 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.opengl.GLSurfaceView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
 import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.face.Face;
 
 import java.io.IOException;
 
@@ -23,13 +23,14 @@ import java.io.IOException;
 public class CameraSourcePreview extends ViewGroup {
 	private static final String TAG = "CameraSourcePreview";
 
-	private Context       mContext;
-	private GLSurfaceView mSurfaceView;
-	private AugRenderer   mAugRenderer;
+	private Context      mContext;
+	private SurfaceView  mSurfaceView;
+//	private FaceRenderer mFaceRenderer;
 
 	private boolean       mStartRequested;
 	private boolean       mSurfaceAvailable;
 	private CameraSource  mCameraSource;
+	private Face mFace;
 
 	public CameraSourcePreview(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -37,11 +38,11 @@ public class CameraSourcePreview extends ViewGroup {
 		mStartRequested = false;
 		mSurfaceAvailable = false;
 
-		mSurfaceView = new GLSurfaceView(context);
-		mAugRenderer = new AugRenderer((AppCompatActivity) mContext);
-		mSurfaceView.setRenderer(mAugRenderer);
+//		mFaceRenderer = new FaceRenderer((AppCompatActivity) mContext);
+		mSurfaceView = new SurfaceView(context);
+
 		mSurfaceView.getHolder().addCallback(new SurfaceCallback());
-		mAugRenderer.setActive(true);
+
 		addView(mSurfaceView);
 	}
 
@@ -70,6 +71,7 @@ public class CameraSourcePreview extends ViewGroup {
 				// for ActivityCompat#requestPermissions for more details.
 				return;
 			}
+//			mFaceRenderer.setActive(true);
 			mCameraSource.start(mSurfaceView.getHolder());
 			mStartRequested = false;
 		}
@@ -90,14 +92,19 @@ public class CameraSourcePreview extends ViewGroup {
 
 	public void pause() {
 		if (mSurfaceView != null) {
-			mSurfaceView.onPause();
+//			mSurfaceView.onPause();
 		}
 	}
 
 	public void resume() {
 		if (mSurfaceView != null) {
-			mSurfaceView.onResume();
+//			mSurfaceView.onResume();
 		}
+	}
+
+	public void setFace(Face face) {
+		mFace = face;
+//		mFaceRenderer.setFace(mFace);
 	}
 
 	private class SurfaceCallback implements SurfaceHolder.Callback {
