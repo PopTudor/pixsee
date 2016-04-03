@@ -29,11 +29,21 @@ class FaceRenderer(private val mActivity: AppCompatActivity, graphicOverlay: Gra
     var isActive = false
     var mFace: Face? = null
     var triangle: Triangle? = null
-    private var modelViewMat: FloatArray? = null
-    // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
-    private final val mMVPMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
+    /* mModelMatrix is an abbreviation for "Model View Projection Matrix"
+    * The model matrix. This matrix is used to place a model somewhere in the “world”. For example,
+    * if you have a model of a car and you want it located 1000 meters to the east, you will use the model matrix to do this.
+    * */
+    private final var mModelMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
+    /*
+    * The projection matrix. Since our screens are flat, we need to do a final transformation to “project” our
+    * view onto our screen and get that nice 3D perspective. This is what the projection matrix is used for.
+    * */
     private final val mProjectionMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
-    private final val mViewMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
+    /**
+     * Store the view matrix. This can be thought of as our camera. This matrix transforms world space to eye space;
+     * it positions things relative to our eye.
+     */
+    private final val mCameraViewMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
     private final val mRotationMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
     private final val mTranslationMatrix = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
 
@@ -138,17 +148,33 @@ class FaceRenderer(private val mActivity: AppCompatActivity, graphicOverlay: Gra
     @SuppressLint("LongLogTag")
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
         run { // state configuration
+            gl.glClearColor(0f, 0f, 0f, 0f); /* screen black when cleared*/
             gl.glDisable(GL10.GL_DITHER);
-            gl.glEnable(GL10.GL_CULL_FACE);
+            gl.glDisable(GL10.GL_CULL_FACE);
             gl.glEnable(GL10.GL_DEPTH_TEST);
+        }
+        run { // setup CameraViewMatrix
+            // Position the eye behind the origin.
+            val eyeX = 0.0f;
+            val eyeY = 0.0f;
+            val eyeZ = 1.0f;
+            // We are looking toward the distance
+            val lookX = 0.0f;
+            val lookY = 0.0f;
+            val lookZ = -5.0f;
+            // Set our up vector. This is where our head would be pointing were we holding the camera.
+            val upX = 0.0f;
+            val upY = 1.0f;
+            val upZ = 0.0f;
+            // Set the view matrix. This matrix can be said to represent the camera position.
+            // NOTE: In OpenGL 1, a ModelView matrix is used, which is a combination of a model and
+            // view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
+            Matrix.setLookAtM(mCameraViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
         }
         triangle = Triangle()
         gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
-        gl.glClearColor(0f, 0f, 0f, 0f);
         gl.glShadeModel(GL10.GL_SMOOTH);
-        //GLES20.glFrontFace(GLES20.GL_CCW) // Back camera
-        GLES20.glFrontFace(GLES20.GL_CW) // Front camera
-        gl.glClearDepthf(1.0f);
+        //        GLES20.glFrontFace(GLES20.GL_CW)
         gl.glDepthFunc(GL10.GL_LEQUAL);
         gl.glTranslatef(0.0f, 0.0f, -5.0f);
     }
@@ -156,24 +182,22 @@ class FaceRenderer(private val mActivity: AppCompatActivity, graphicOverlay: Gra
     // Called when the surface changed size.
     @SuppressLint("LongLogTag")
     override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
-        GLES20.glViewport(0, 0, width, height);
+        GLES20.glViewport(0, 0, width, height); /* This tells OpenGL the size of the surface it has available for rendering. */
         val ratio = width.toFloat() / height.toFloat();
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1f, 1f, 3f, 7f);
     }
 
-    private val mAngle: Float = 90f
+    private val mAngle: Float = 0f
 
     // Called to draw the current frame.
     override fun onDrawFrame(gl: GL10) {
         val scratch = floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f);
-        gl.glClear(GL10.GL_COLOR_BUFFER_BIT or  GL10.GL_DEPTH_BUFFER_BIT);
-        // Set the camera position (View matrix)
-        Matrix.setLookAtM(mViewMatrix, 0, 0f, 0f, -3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        run { //clear
+            gl.glClear(GL10.GL_COLOR_BUFFER_BIT or  GL10.GL_DEPTH_BUFFER_BIT);// Clear the rendering surface.
+        }
 
         // Calculate the projection and view transformation
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-
-        Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0f, 0f, 1.0f);
+        Matrix.multiplyMM(mModelMatrix, 0, mProjectionMatrix, 0, mCameraViewMatrix, 0);
 
         var point = mFace?.position
         //        var width = mFace?.width
@@ -181,6 +205,7 @@ class FaceRenderer(private val mActivity: AppCompatActivity, graphicOverlay: Gra
         if (point === null) {
             point = PointF(0f, 0f)
         }
+        Matrix.translateM(mTranslationMatrix, 0, point.x / pointScreen.x, point.y / pointScreen.y, 0f)
         //        if(height === null || width === null){
         //            height=0f
         //            width = 0f
@@ -193,10 +218,10 @@ class FaceRenderer(private val mActivity: AppCompatActivity, graphicOverlay: Gra
         //        val top = y - yOffset
         //        val right = x + xOffset
         //        val bottom = y + yOffset
-        Matrix.translateM(mTranslationMatrix, 0, mRotationMatrix, 0, point.x / pointScreen.x, point.y / pointScreen.y, 0f)
 
+        Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0f, 0f, 1.0f);
 
-        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mTranslationMatrix, 0);
+        Matrix.multiplyMM(scratch, 0, mModelMatrix, 0, mTranslationMatrix, 0);
 
         // Draw triangle
         triangle?.draw(scratch);
@@ -242,13 +267,12 @@ class FaceRenderer(private val mActivity: AppCompatActivity, graphicOverlay: Gra
 
         //        val vuforiaMatrix = floatArrayOf(0.0f, 1.69032f, 0.0f, 0.0f, -3.0050135f, 0.0f, 0.0f, 0.0f, 0.0f, -0.0015625f, 1.004008f, 1.0f, 0.0f, 0.0f, -20.040081f, 0.0f)
         //        val modelViewMatrix = floatArrayOf(0.9999714f, 0.007403262f, 0.0015381078f, 0.0f, 0.0074077616f, -0.9999683f, -0.002941356f, 0.0f, 0.0015162831f, 0.002952666f, -0.9999945f, 0.0f, 2.1681705f, 4.7709565f, 264.3288f, 1.0f)
-
         val angle = 90f
         val modelViewProjection = FloatArray(16)
-        Matrix.translateM(mMVPMatrix, 0, 0f, 0f, kObjectScale)
-        Matrix.rotateM(mMVPMatrix, 0, angle, 0f, 0f, kObjectScale)
-        Matrix.scaleM(mMVPMatrix, 0, kObjectScale, kObjectScale, kObjectScale)
-        Matrix.multiplyMM(modelViewProjection, 0, mProjectionMatrix, 0, mMVPMatrix, 0)
+        Matrix.translateM(mModelMatrix, 0, 0f, 0f, kObjectScale)
+        Matrix.rotateM(mModelMatrix, 0, angle, 0f, 0f, kObjectScale)
+        Matrix.scaleM(mModelMatrix, 0, kObjectScale, kObjectScale, kObjectScale)
+        Matrix.multiplyMM(modelViewProjection, 0, mProjectionMatrix, 0, mModelMatrix, 0)
         //            modelViewMatrix_Vuforia.data = modelViewMatrix
 
         //            val inverseMV = SampleMath.Matrix44FInverse(modelViewMatrix_Vuforia)
@@ -267,29 +291,26 @@ class FaceRenderer(private val mActivity: AppCompatActivity, graphicOverlay: Gra
     }
 
     fun updateCamera() {
-        if (modelViewMat != null) {
-            val m = modelViewMat!!
-            val camUp: SimpleVector
+        val m = mModelMatrix
+        val camUp: SimpleVector
 
-            if (mActivity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
-                camUp = SimpleVector(-m[0], -m[1], -m[2])
-            else
-                camUp = SimpleVector(-m[4], -m[5], -m[6])
+        if (mActivity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+            camUp = SimpleVector(-m[0], -m[1], -m[2])
+        else
+            camUp = SimpleVector(-m[4], -m[5], -m[6])
 
-            val camDirection = SimpleVector(m[8], m[9], m[10])
-            val camPosition = SimpleVector(m[12], m[13], m[14])
+        val camDirection = SimpleVector(m[8], m[9], m[10])
+        val camPosition = SimpleVector(m[12], m[13], m[14])
 
-            cam!!.setOrientation(camDirection, camUp)
-            cam!!.position = camPosition
+        cam!!.setOrientation(camDirection, camUp)
+        cam!!.position = camPosition
 
-            cam!!.fov = fov
-            cam!!.yfov = fovy
-        } else
-            updateModelviewMatrix(floatArrayOf(0.9999714f, 0.007403262f, 0.0015381078f, 0.0f, 0.0074077616f, -0.9999683f, -0.002941356f, 0.0f, 0.0015162831f, 0.002952666f, -0.9999945f, 0.0f, 2.1681705f, 4.7709565f, 264.3288f, 1.0f))
+        cam!!.fov = fov
+        cam!!.yfov = fovy
     }
 
     fun updateModelviewMatrix(mat: FloatArray) {
-        modelViewMat = mat
+        mModelMatrix = mat
     }
 
     @Throws(FileNotFoundException::class)
