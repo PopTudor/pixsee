@@ -16,18 +16,16 @@ import com.google.android.gms.vision.CameraSource;
 
 import java.io.IOException;
 
-/**
- * Created by Tudor Pop on 01-Apr-16.
- */
 public class CameraSourcePreview extends ViewGroup {
 	private static final String TAG = "CameraSourcePreview";
 
 	private Context      mContext;
 	private SurfaceView  mSurfaceView;
+	private boolean      mStartRequested;
+	private boolean      mSurfaceAvailable;
+	private CameraSource mCameraSource;
 
-	private boolean       mStartRequested;
-	private boolean       mSurfaceAvailable;
-	private CameraSource  mCameraSource;
+	private GraphicOverlay mOverlay;
 
 	public CameraSourcePreview(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -36,9 +34,8 @@ public class CameraSourcePreview extends ViewGroup {
 		mSurfaceAvailable = false;
 
 		mSurfaceView = new SurfaceView(context);
-
-		mSurfaceView.getHolder().addCallback(new SurfaceCallback());
-
+		mSurfaceView.getHolder()
+		            .addCallback(new SurfaceCallback());
 		addView(mSurfaceView);
 	}
 
@@ -55,6 +52,24 @@ public class CameraSourcePreview extends ViewGroup {
 		}
 	}
 
+	public void start(CameraSource cameraSource, GraphicOverlay overlay) throws IOException {
+		mOverlay = overlay;
+		start(cameraSource);
+	}
+
+	public void stop() {
+		if (mCameraSource != null) {
+			mCameraSource.stop();
+		}
+	}
+
+	public void release() {
+		if (mCameraSource != null) {
+			mCameraSource.release();
+			mCameraSource = null;
+		}
+	}
+
 	private void startIfReady() throws IOException {
 		if (mStartRequested && mSurfaceAvailable) {
 			if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -68,20 +83,20 @@ public class CameraSourcePreview extends ViewGroup {
 				return;
 			}
 			mCameraSource.start(mSurfaceView.getHolder());
+			if (mOverlay != null) {
+				Size size = mCameraSource.getPreviewSize();
+				int min = Math.min(size.getWidth(), size.getHeight());
+				int max = Math.max(size.getWidth(), size.getHeight());
+				if (isPortraitMode()) {
+					// Swap width and height sizes when in portrait, since it will be rotated by
+					// 90 degrees
+					mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
+				} else {
+					mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
+				}
+				mOverlay.clear();
+			}
 			mStartRequested = false;
-		}
-	}
-
-	public void stop() {
-		if (mCameraSource != null) {
-			mCameraSource.stop();
-		}
-	}
-
-	public void release() {
-		if (mCameraSource != null) {
-			mCameraSource.release();
-			mCameraSource = null;
 		}
 	}
 
@@ -130,12 +145,12 @@ public class CameraSourcePreview extends ViewGroup {
 
 		// Computes height and width for potentially doing fit width.
 		int childWidth = layoutWidth;
-		int childHeight = (int) (((float) layoutWidth / (float) width) * height);
+		int childHeight = (int)(((float) layoutWidth / (float) width) * height);
 
 		// If height is too tall using fit width, does fit height instead.
 		if (childHeight > layoutHeight) {
 			childHeight = layoutHeight;
-			childWidth = (int) (((float) layoutHeight / (float) height) * width);
+			childWidth = (int)(((float) layoutHeight / (float) height) * width);
 		}
 
 		for (int i = 0; i < getChildCount(); ++i) {
@@ -150,8 +165,7 @@ public class CameraSourcePreview extends ViewGroup {
 	}
 
 	private boolean isPortraitMode() {
-		int orientation = mContext.getResources()
-		                          .getConfiguration().orientation;
+		int orientation = mContext.getResources().getConfiguration().orientation;
 		if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			return false;
 		}

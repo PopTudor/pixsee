@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +29,7 @@ public class Selfie extends AppCompatActivity {
 
 	private CameraSource        mCameraSource;
 	private CameraSourcePreview mCameraSourcePreview;
-	private GraphicOverlay      mGraphicOverlay;
+//	private GraphicOverlay      mGraphicOverlay;
 	private FaceRenderer        mFaceRenderer;
 
 	private static final int RC_HANDLE_GMS         = 9001;
@@ -43,10 +42,10 @@ public class Selfie extends AppCompatActivity {
 		setContentView(R.layout.activity_preview);
 
 		mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
-		mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
+//		mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
 		FaceSurfaceView faceSurfaceView = (FaceSurfaceView) findViewById(R.id.faceSurfaceView);
 
-		mFaceRenderer = new FaceRenderer(this, mGraphicOverlay);
+		mFaceRenderer = new FaceRenderer(this);
 		faceSurfaceView.setRenderer(mFaceRenderer);
 		//		faceSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
@@ -85,9 +84,9 @@ public class Selfie extends AppCompatActivity {
 			}
 		};
 
-		Snackbar.make(mGraphicOverlay, "We need camera permission in order to take cool selfies !", Snackbar.LENGTH_INDEFINITE)
-		        .setAction("OK", listener)
-		        .show();
+//		Snackbar.make(mGraphicOverlay, "We need camera permission in order to take cool selfies !", Snackbar.LENGTH_INDEFINITE)
+//		        .setAction("OK", listener)
+//		        .show();
 	}
 
 	/**
@@ -101,7 +100,7 @@ public class Selfie extends AppCompatActivity {
 		                                                                             .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
 		                                                                             .setLandmarkType(0)
 		                                                                             .build();
-		//		FaceTrackerSquare faceTracker = new FaceTrackerSquare(mGraphicOverlay);
+//				FaceTrackerSquare faceTracker = new FaceTrackerSquare(mGraphicOverlay);
 		FaceTrackerAR faceTracker = new FaceTrackerAR(mFaceRenderer);
 		faceDetector.setProcessor(new LargestFaceFocusingProcessor.Builder(faceDetector, faceTracker).build());
 
@@ -249,7 +248,6 @@ public class Selfie extends AppCompatActivity {
 		@Override
 		public void onUpdate(Detector.Detections<Face> detections, Face item) {
 			super.onUpdate(detections, item);
-//				mGraphicOverlay.add(mFaceRenderer);
 			if (item.getIsSmilingProbability() > 0.75) {
 				Log.i(TAG, "I see a smile.  They must really enjoy your app.");
 			}
@@ -259,48 +257,61 @@ public class Selfie extends AppCompatActivity {
 		@Override
 		public void onMissing(Detector.Detections<Face> detections) {
 			super.onMissing(detections);
-			mGraphicOverlay.remove(mFaceRenderer);
 		}
 
 		@Override
 		public void onDone() {
 			super.onDone();
 			Log.i(TAG, "Elvis has left the building.");
-			mGraphicOverlay.remove(mFaceRenderer);
 		}
 	}
 
-	static class FaceTrackerSquare extends Tracker<Face> {
+	/**
+	 * Face tracker for each detected individual. This maintains a face graphic within the app's
+	 * associated face overlay.
+	 */
+	private class FaceTrackerSquare extends Tracker<Face> {
 		private GraphicOverlay mOverlay;
-		private FaceGraphic    mFaceGraphic;
+		private FaceGraphic mFaceGraphic;
 
-		public FaceTrackerSquare(GraphicOverlay overlay) {
+		FaceTrackerSquare(GraphicOverlay overlay) {
 			mOverlay = overlay;
 			mFaceGraphic = new FaceGraphic(overlay);
 		}
 
-		public void onNewItem(int id, Face face) {
-			Log.i(TAG, "Awesome person detected.  Hello!");
-			mFaceGraphic.setId(id);
-
+		/**
+		 * Start tracking the detected face instance within the face overlay.
+		 */
+		@Override
+		public void onNewItem(int faceId, Face item) {
+			mFaceGraphic.setId(faceId);
 		}
 
-		public void onUpdate(Detector.Detections<Face> detections, Face face) {
-			if (face.getIsSmilingProbability() > 0.75) {
-				Log.i(TAG, "I see a smile.  They must really enjoy your app.");
-			}
+		/**
+		 * Update the position/characteristics of the face within the overlay.
+		 */
+		@Override
+		public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
 			mOverlay.add(mFaceGraphic);
 			mFaceGraphic.updateFace(face);
 		}
 
-		public void onDone() {
-			Log.i(TAG, "Elvis has left the building.");
+		/**
+		 * Hide the graphic when the corresponding face was not detected.  This can happen for
+		 * intermediate frames temporarily (e.g., if the face was momentarily blocked from
+		 * view).
+		 */
+		@Override
+		public void onMissing(FaceDetector.Detections<Face> detectionResults) {
 			mOverlay.remove(mFaceGraphic);
 		}
 
+		/**
+		 * Called when the face is assumed to be gone for good. Remove the graphic annotation from
+		 * the overlay.
+		 */
 		@Override
-		public void onMissing(Detector.Detections<Face> detections) {
-			super.onMissing(detections);
+		public void onDone() {
 			mOverlay.remove(mFaceGraphic);
 		}
 	}

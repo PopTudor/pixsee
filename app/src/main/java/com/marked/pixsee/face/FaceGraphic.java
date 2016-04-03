@@ -1,5 +1,4 @@
 package com.marked.pixsee.face;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -7,25 +6,34 @@ import android.graphics.Paint;
 import com.google.android.gms.vision.face.Face;
 
 /**
- * Created by Tudor Pop on 01-Apr-16.
+ * Graphic instance for rendering face position, orientation, and landmarks within an associated
+ * graphic overlay view.
  */
 class FaceGraphic extends GraphicOverlay.Graphic {
 	private static final float FACE_POSITION_RADIUS = 10.0f;
-	private static final float ID_TEXT_SIZE         = 40.0f;
-	private static final float ID_Y_OFFSET          = 50.0f;
-	private static final float ID_X_OFFSET          = -50.0f;
-	private static final float BOX_STROKE_WIDTH     = 5.0f;
+	private static final float ID_TEXT_SIZE = 40.0f;
+	private static final float ID_Y_OFFSET = 50.0f;
+	private static final float ID_X_OFFSET = -50.0f;
+	private static final float BOX_STROKE_WIDTH = 5.0f;
 
-	private static final int COLOR_CHOICES[]    = {Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.RED, Color.WHITE, Color.YELLOW};
-	private static       int mCurrentColorIndex = 0;
+	private static final int COLOR_CHOICES[] = {
+			Color.BLUE,
+			Color.CYAN,
+			Color.GREEN,
+			Color.MAGENTA,
+			Color.RED,
+			Color.WHITE,
+			Color.YELLOW
+	};
+	private static int mCurrentColorIndex = 0;
 
 	private Paint mFacePositionPaint;
 	private Paint mIdPaint;
 	private Paint mBoxPaint;
 
-	private volatile Face  mFace;
-	private          int   mFaceId;
-	private          float mFaceHappiness;
+	private volatile Face mFace;
+	private int mFaceId;
+	private float mFaceHappiness;
 
 	FaceGraphic(GraphicOverlay overlay) {
 		super(overlay);
@@ -77,7 +85,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
 		canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
 		canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
 		canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
-		canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET * 2, y - ID_Y_OFFSET * 2, mIdPaint);
+		canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
 
 		// Draws a bounding box around the face.
 		float xOffset = scaleX(face.getWidth() / 2.0f);
