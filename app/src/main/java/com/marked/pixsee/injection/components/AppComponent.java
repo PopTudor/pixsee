@@ -1,8 +1,8 @@
-package com.marked.pixsee.di.components;
+package com.marked.pixsee.injection.components;
 
 import android.app.Application;
 
-import com.marked.pixsee.di.modules.AppModule;
+import com.marked.pixsee.injection.modules.AppModule;
 
 import javax.inject.Singleton;
 

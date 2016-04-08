@@ -1,11 +1,11 @@
-package com.marked.pixsee.di.modules;
+package com.marked.pixsee.injection.modules;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.marked.pixsee.di.scopes.PerActivity;
+import com.marked.pixsee.injection.scopes.PerActivity;
 import com.marked.pixsee.service.RegistrationListener;
 import com.marked.pixsee.signup.DialogRegistration;
 

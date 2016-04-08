@@ -106,9 +106,7 @@ dependencies {
     def app = dependency.dependencies
     def test = dependency.testDependencies
     compile files('C:/Users/Marked/Documents/git/pixsee/libs/jpct_ae.jar')
-    compile files("$VUFORIA_SDK_DIR/$JAR_DIR/Vuforia.jar")
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
     compile('io.socket:socket.io-client:0.6.3') {
         exclude group: 'org.json', module: 'json'
     }
@@ -133,26 +131,21 @@ dependencies {
     compile app.subSamplingScaleImage
     compile app.visionService
     compile app.dagger
-
     apt app.daggerCompiler
-
     provided app.daggerCompiler
     provided app.glassFishAnnotations
-
     testCompile test.jUnit
     testCompile test.mockito
     testCompile test.hamcrest
-
     // Espresso UI Testing dependencies.
     androidTestCompile test.espressoCore
     androidTestCompile test.espressoIntents
     androidTestCompile test.espressoContrib
-
     androidTestCompile test.mockito
     androidTestCompile test.supportAnnotation
     androidTestCompile test.runner
     androidTestCompile test.rules
-
+    compile files('C:/Users/Tudor/Documents/git/Pixsee/libs/jpct_ae.jar')
 }
 
 

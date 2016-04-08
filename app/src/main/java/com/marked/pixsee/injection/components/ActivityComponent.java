@@ -1,10 +1,10 @@
-package com.marked.pixsee.di.components;
+package com.marked.pixsee.injection.components;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
-import com.marked.pixsee.di.modules.ActivityModule;
-import com.marked.pixsee.di.scopes.PerActivity;
+import com.marked.pixsee.injection.modules.ActivityModule;
+import com.marked.pixsee.injection.scopes.PerActivity;
 import com.marked.pixsee.login.LogInActivity;
 
 import dagger.Component;

@@ -6,7 +6,7 @@ import android.databinding.ObservableInt
 import android.view.View
 import com.marked.pixsee.data.User
 import com.marked.pixsee.data.repository.Repository
-import com.marked.pixsee.di.scopes.PerFragment
+import com.marked.pixsee.injection.scopes.PerFragment
 import com.marked.pixsee.friends.commands.FabCommand
 import com.marked.pixsee.friends.commands.OpenCameraCommand
 import com.marked.pixsee.friends.data.specifications.GetFriendsSpecification

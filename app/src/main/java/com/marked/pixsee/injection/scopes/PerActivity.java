@@ -1,4 +1,4 @@
-package com.marked.pixsee.di.scopes;
+package com.marked.pixsee.injection.scopes;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

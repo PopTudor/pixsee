@@ -1,9 +1,6 @@
 package com.marked.pixsee.friends.commands;
 
 import android.content.Context;
-import android.content.Intent;
-
-import com.marked.pixsee.face.UserDefinedTargets.ImageTargets;
 
 import javax.inject.Inject;
 
@@ -18,8 +15,8 @@ public class OpenCameraCommand extends ClickCommand implements Command {
 
 	@Override
 	public void execute() {
-		Intent intent = new Intent(mContext, ImageTargets.class);
-		intent.putExtra("ACTIVITY_TO_LAUNCH", "app.ImageTargets.ImageTargets");
-		mContext.startActivity(intent);
+//		Intent intent = new Intent(mContext, ImageTargets.class);
+//		intent.putExtra("ACTIVITY_TO_LAUNCH", "app.ImageTargets.ImageTargets");
+//		mContext.startActivity(intent);
 	}
 }

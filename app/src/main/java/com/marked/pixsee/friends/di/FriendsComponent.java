@@ -1,7 +1,7 @@
 package com.marked.pixsee.friends.di;
 
-import com.marked.pixsee.di.components.ActivityComponent;
-import com.marked.pixsee.di.scopes.PerFragment;
+import com.marked.pixsee.injection.components.ActivityComponent;
+import com.marked.pixsee.injection.scopes.PerFragment;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.friends.FriendViewModel;
 import com.marked.pixsee.friends.FriendsActivity;

@@ -5,9 +5,9 @@ import android.app.Application;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.marked.pixsee.di.components.AppComponent;
-import com.marked.pixsee.di.components.DaggerAppComponent;
-import com.marked.pixsee.di.modules.AppModule;
+import com.marked.pixsee.injection.components.AppComponent;
+import com.marked.pixsee.injection.components.DaggerAppComponent;
+import com.marked.pixsee.injection.modules.AppModule;
 import com.squareup.okhttp.OkHttpClient;
 
 /**

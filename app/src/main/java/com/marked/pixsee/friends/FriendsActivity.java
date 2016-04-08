@@ -6,9 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.di.components.ActivityComponent;
-import com.marked.pixsee.di.components.DaggerActivityComponent;
-import com.marked.pixsee.di.modules.ActivityModule;
+import com.marked.pixsee.injection.components.ActivityComponent;
+import com.marked.pixsee.injection.components.DaggerActivityComponent;
+import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.utility.UtilsFragmentKt;
 
 
