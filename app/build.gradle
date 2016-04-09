@@ -24,9 +24,7 @@ def JAR_DIR = 'build/java/vuforia'
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://jitpack.io"
-    }
+    maven {url "https://jitpack.io"}
 }
 // Manifest version information!
 def versionMajor = 1
@@ -81,7 +79,7 @@ android {
     }
     // Remove mockRelease as it's not needed.
     android.variantFilter { variant ->
-        if(variant.buildType.name.equals('release')
+        if (variant.buildType.name.equals('release')
                 && variant.getFlavors().get(0).name.equals('mock')) {
             variant.setIgnore(true);
         }
@@ -134,6 +132,10 @@ dependencies {
     apt app.daggerCompiler
     provided app.daggerCompiler
     provided app.glassFishAnnotations
+
+    compile 'org.rajawali3d:rajawali:1.0.325@aar'
+    compile 'com.getwandup:rxsensor:1.0.0'
+    //testing
     testCompile test.jUnit
     testCompile test.mockito
     testCompile test.hamcrest

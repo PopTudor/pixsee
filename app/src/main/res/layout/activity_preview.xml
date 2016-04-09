@@ -6,17 +6,17 @@
                 tool:background="#00ffffff"
     >
 
-    <com.marked.pixsee.face.FaceSurfaceView
-        android:id="@+id/faceSurfaceView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
 
     <com.marked.pixsee.face.CameraSourcePreview
         android:id="@+id/preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+    <org.rajawali3d.surface.RajawaliSurfaceView
+        android:id="@+id/faceSurfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
         <!--<com.marked.pixsee.face.GraphicOverlay-->
             <!--android:id="@+id/faceOverlay"-->

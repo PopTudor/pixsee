@@ -22,15 +22,17 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.R;
 
+import org.rajawali3d.surface.IRajawaliSurface;
+import org.rajawali3d.surface.RajawaliSurfaceView;
+
 import java.io.IOException;
 
-public class Selfie extends AppCompatActivity {
-	private static final String TAG = Selfie.class + "***";
+public class SelfieActivity extends AppCompatActivity {
+	private static final String TAG = SelfieActivity.class + "***";
 
 	private CameraSource        mCameraSource;
 	private CameraSourcePreview mCameraSourcePreview;
-//	private GraphicOverlay      mGraphicOverlay;
-	private FaceRenderer        mFaceRenderer;
+	private FaceRenderer mFaceRenderer;
 
 	private static final int RC_HANDLE_GMS         = 9001;
 	// permission request codes need to be < 256
@@ -42,12 +44,12 @@ public class Selfie extends AppCompatActivity {
 		setContentView(R.layout.activity_preview);
 
 		mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
-//		mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
-		FaceSurfaceView faceSurfaceView = (FaceSurfaceView) findViewById(R.id.faceSurfaceView);
+		RajawaliSurfaceView faceSurfaceView = (RajawaliSurfaceView) findViewById(R.id.faceSurfaceView);
+		faceSurfaceView.setRenderMode(IRajawaliSurface.RENDERMODE_WHEN_DIRTY);
+        faceSurfaceView.setTransparent(true);
 
 		mFaceRenderer = new FaceRenderer(this);
-		faceSurfaceView.setRenderer(mFaceRenderer);
-		//		faceSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+		faceSurfaceView.setSurfaceRenderer(mFaceRenderer);
 
 		// Check for the camera permission before accessing the camera.  If the
 		// permission is not granted yet, request permission.

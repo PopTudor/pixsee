@@ -162,7 +162,7 @@
             android:label="@string/title_activity_fullscreen"
             android:theme="@style/FullscreenTheme"/>
         <activity
-            android:name=".face.Selfie"
+            android:name=".face.SelfieActivity"
             android:screenOrientation="portrait"
             >
         </activity>
