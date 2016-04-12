@@ -22,8 +22,8 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.R;
 
-import org.rajawali3d.surface.IRajawaliSurface;
-import org.rajawali3d.surface.RajawaliSurfaceView;
+
+import org.rajawali3d.view.SurfaceView;
 
 import java.io.IOException;
 
@@ -44,8 +44,7 @@ public class SelfieActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_preview);
 
 		mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
-		RajawaliSurfaceView faceSurfaceView = (RajawaliSurfaceView) findViewById(R.id.faceSurfaceView);
-		faceSurfaceView.setRenderMode(IRajawaliSurface.RENDERMODE_WHEN_DIRTY);
+		SurfaceView faceSurfaceView = (SurfaceView) findViewById(R.id.faceSurfaceView);
         faceSurfaceView.setTransparent(true);
 
 		mFaceRenderer = new FaceRenderer(this);
