@@ -142,9 +142,15 @@ public class FaceRenderer extends Renderer {
 //            secondAttempt();
 //            third();
             forth();
+//            fifth();
         }
     }
 
+    private void fifth() {
+        float x = mFace.getPosition().x + mFace.getWidth() ;
+        float y = mFace.getPosition().y + mFace.getHeight();
+        earthSphere.setScreenCoordinates(viewportWidth-x,viewportHeight- y, viewportWidth, viewportHeight, 4);
+    }
     private void forth() {
         float x = mFace.getPosition().x + mFace.getWidth() ;
         float y = mFace.getPosition().y + mFace.getHeight();
