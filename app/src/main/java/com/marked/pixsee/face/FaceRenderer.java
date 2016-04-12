@@ -15,7 +15,6 @@ import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.Matrix4;
 import org.rajawali3d.math.vector.Vector3;
-import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.primitives.Sphere;
 import org.rajawali3d.renderer.Renderer;
 import org.rajawali3d.util.GLU;
@@ -43,7 +42,6 @@ public class FaceRenderer extends Renderer {
     private Matrix4 mViewMatrix;
     private Matrix4 mProjectionMatrix;
 
-    Cube cube;
     private Face mFace;
     int viewportWidth, viewportHeight;
 
@@ -121,14 +119,9 @@ public class FaceRenderer extends Renderer {
         earthSphere = new Sphere(0.5f, 24, 24);
         earthSphere.setMaterial(material);
 //        earthSphere.setVisible();
-        cube = new Cube(0.6f);
-        cube.setMaterial(material);
-        cube.setPosition(0, 0, 0);
 
-//        getCurrentScene().addChild(earthSphere);
-        getCurrentScene().addChild(cube);
+        getCurrentScene().addChild(earthSphere);
         getCurrentCamera().setPosition(0, 0, 5);
-        getCurrentCamera().setLookAt(0, 0, 0);
     }
 
     @Override
@@ -143,8 +136,7 @@ public class FaceRenderer extends Renderer {
     @Override
     protected void onRender(long ellapsedRealtime, double deltaTime) {
         super.onRender(ellapsedRealtime, deltaTime);
-//        earthSphere.rotate(Vector3.Axis.Y, 1.0);
-        cube.rotate(Vector3.Y, 1.0);
+        earthSphere.rotate(Vector3.Axis.Y, 1.0);
         if (mFace != null) {
 //            firstAttempt();
 //            secondAttempt();
@@ -154,25 +146,21 @@ public class FaceRenderer extends Renderer {
     }
 
     private void forth() {
-        float x = mFace.getPosition().x + mFace.getWidth() / 2;
-        float y = mFace.getPosition().y + mFace.getHeight() / 2;
-        moveSelectedObject(viewportWidth-x, y);
+        float x = mFace.getPosition().x + mFace.getWidth() ;
+        float y = mFace.getPosition().y + mFace.getHeight();
+        moveSelectedObject(viewportWidth - x, viewportHeight - y);
     }
 
     public void moveSelectedObject(float x, float y) {
-
-        //
         // -- unproject the screen coordinate (2D) to the camera's near plane
-        //
-
-        GLU.gluUnProject(x, getViewportHeight() - y, 0, mViewMatrix.getDoubleValues(), 0,
+        GLU.gluUnProject(x, y, 0, mViewMatrix.getDoubleValues(), 0,
                 mProjectionMatrix.getDoubleValues(), 0, mViewport, 0, mNearPos4, 0);
 
         //
         // -- unproject the screen coordinate (2D) to the camera's far plane
         //
 
-        GLU.gluUnProject(x, getViewportHeight() - y, 1.f, mViewMatrix.getDoubleValues(), 0,
+        GLU.gluUnProject(x, y, 1.f, mViewMatrix.getDoubleValues(), 0,
                 mProjectionMatrix.getDoubleValues(), 0, mViewport, 0, mFarPos4, 0);
 
         //
@@ -187,7 +175,7 @@ public class FaceRenderer extends Renderer {
         // -- now get the coordinates for the selected object
         //
 
-        double factor = (Math.abs(cube.getZ()) + mNearPos.z) / (getCurrentCamera().getFarPlane() - getCurrentCamera()
+        double factor = (Math.abs(earthSphere.getZ()) + mNearPos.z) / (getCurrentCamera().getFarPlane() - getCurrentCamera()
                 .getNearPlane());
 
         mNewObjPos.setAll(mFarPos);
@@ -195,8 +183,8 @@ public class FaceRenderer extends Renderer {
         mNewObjPos.multiply(factor);
         mNewObjPos.add(mNearPos);
 
-        cube.setX(mNewObjPos.x);
-        cube.setY(mNewObjPos.y);
+       earthSphere.setX(mNewObjPos.x);
+       earthSphere.setY(mNewObjPos.y);
     }
 
 
@@ -243,7 +231,7 @@ public class FaceRenderer extends Renderer {
 
         Vector3 vector3 = unProject(x, y, 0);
 //        cube.setPosition(unProject(x, y, 0));
-        cube.setScreenCoordinates(viewportWidth - vector3.x, viewportHeight - vector3.y, (int) viewportWidth, (int) viewportHeight, 5);
+        earthSphere.setScreenCoordinates(viewportWidth - vector3.x, viewportHeight - vector3.y, (int) viewportWidth, (int) viewportHeight, 5);
 //        double objCoords[] = new double[4];
 //        int viewCoord[] = {0, 0, (int) viewportWidth, (int) viewportHeight};
 //        GLU.gluUnProject(x,  y, 0,
