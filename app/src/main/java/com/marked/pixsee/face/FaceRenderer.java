@@ -1,13 +1,13 @@
 package com.marked.pixsee.face;
 
 import android.content.Context;
-import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.google.android.gms.vision.face.Face;
 import com.marked.pixsee.R;
 
+import org.rajawali3d.debug.DebugBoundingBox;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
@@ -15,13 +15,12 @@ import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.Matrix4;
 import org.rajawali3d.math.vector.Vector3;
+import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.primitives.Sphere;
 import org.rajawali3d.renderer.Renderer;
 import org.rajawali3d.util.GLU;
 
 import javax.microedition.khronos.opengles.GL10;
-
-import rx.Subscription;
 
 /**
  * Created by Tudor on 4/8/2016.
@@ -45,19 +44,24 @@ public class FaceRenderer extends Renderer {
     private Face mFace;
     int viewportWidth, viewportHeight;
 
-    float zAcc, yAcc, xAcc;
-    Subscription subscription;
-
     public FaceRenderer(Context context) {
         super(context);
         this.context = context;
         setFrameRate(30);
     }
 
-
     public void setMFace(Face mFace) {
         this.mFace = mFace;
     }
+
+    /************************************ DEBUGGING  VARIABLES ******************************/
+    /* These sphere are used to see where are they mapped on coordinates xy, widthHeight,width/2Height/2 */
+    Plane xy = new Plane(0.5f, 0.5f, 1,1);
+    Plane wh = new Plane(0.5f, 0.5f, 1,1);
+    Plane wh2 = new Plane(0.5f, 0.5f,1,1);
+
+    DebugBoundingBox debugBoundingBox = new DebugBoundingBox(); // I don't know how to use this to replace the above spheres
+    /******************************************************************************************/
 
     @Override
     protected void initScene() {
@@ -74,31 +78,6 @@ public class FaceRenderer extends Renderer {
             mProjectionMatrix = getCurrentCamera().getProjectionMatrix();
         }
 
-
-//        final RxSensor rxSensor = new RxSensor(mContext);
-//        subscription = rxSensor.observe(Sensor.TYPE_ACCELEROMETER, SensorManager.SENSOR_DELAY_NORMAL)
-//                .subscribe(new Subscriber<RxSensorEvent>() {
-//                    @Override
-//                    public void onCompleted() {
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                    }
-//
-//                    @Override
-//                    public void onNext(RxSensorEvent sensorEvent) {
-//                        xAcc = sensorEvent.getValues()[0];
-//                        yAcc = sensorEvent.getValues()[1];
-//                        zAcc = sensorEvent.getValues()[2];
-////                        float norm_Of_g = (float) Math.sqrt(xAcc * xAcc + yAcc * yAcc + zAcc * zAcc); /*normalize the values*/
-////                        xAcc /= norm_Of_g;
-////                        yAcc /= norm_Of_g;
-////                        zAcc /= norm_Of_g;
-//
-//                    }
-//                });
-
         directionalLight = new DirectionalLight(1f, .2f, -1.0f);
         directionalLight.setColor(1.0f, 1.0f, 1.0f);
         directionalLight.setPower(2);
@@ -112,16 +91,23 @@ public class FaceRenderer extends Renderer {
         Texture earthTexture = new Texture("Earth", R.drawable.earth);
         try {
             material.addTexture(earthTexture);
-
         } catch (ATexture.TextureException error) {
             Log.d("DEBUG", "TEXTURE ERROR");
         }
-        earthSphere = new Sphere(0.5f, 24, 24);
+        earthSphere = new Sphere(0.5f, 16, 16);
         earthSphere.setMaterial(material);
-//        earthSphere.setVisible();
+
+        /* every object needs a material else an exception is thrown*/
+        xy.setMaterial(material);
+        wh.setMaterial(material);
+        wh2.setMaterial(material);
 
         getCurrentScene().addChild(earthSphere);
-        getCurrentCamera().setPosition(0, 0, 5);
+        getCurrentScene().addChild(xy);
+        getCurrentScene().addChild(wh);
+        getCurrentScene().addChild(wh2);
+
+        getCurrentCamera().setPosition(0, 0, 10);
     }
 
     @Override
@@ -138,23 +124,47 @@ public class FaceRenderer extends Renderer {
         super.onRender(ellapsedRealtime, deltaTime);
         earthSphere.rotate(Vector3.Axis.Y, 1.0);
         if (mFace != null) {
-//            firstAttempt();
-//            secondAttempt();
-//            third();
-            forth();
-//            fifth();
+//            first();
+            second();
         }
     }
-
-    private void fifth() {
-        float x = mFace.getPosition().x + mFace.getWidth() ;
+    /**
+     * Second attempt to keep the mapped object on the face when tilting the phone
+     * */
+    private void second() {
+        float x = mFace.getPosition().x + mFace.getWidth();
         float y = mFace.getPosition().y + mFace.getHeight();
-        earthSphere.setScreenCoordinates(viewportWidth-x,viewportHeight- y, viewportWidth, viewportHeight, 4);
+        earthSphere.setScreenCoordinates(viewportWidth - x, viewportHeight - y, viewportWidth, viewportHeight, 10);
     }
-    private void forth() {
-        float x = mFace.getPosition().x + mFace.getWidth() ;
-        float y = mFace.getPosition().y + mFace.getHeight();
+
+
+    /**
+     * First attempt to keep the mapped object on the face when tilting the phone
+     * */
+    private void first() {
+        float x = mFace.getPosition().x + mFace.getWidth() /2;
+        float y = mFace.getPosition().y + mFace.getHeight()/2;
+
+        float xOffset = mFace.getWidth() / 2.0f;
+        float yOffset = mFace.getHeight() / 2.0f;
+        float left = x - xOffset;
+        float top = y - yOffset;
+        float right = x + xOffset;
+        float bottom = y + yOffset;
+
         moveSelectedObject(viewportWidth - x, viewportHeight - y);
+        xy.setScreenCoordinates(
+                viewportWidth - mFace.getPosition().x ,
+                viewportHeight - mFace.getPosition().y,
+                viewportWidth, viewportHeight, 10);
+        wh2.setScreenCoordinates(
+                viewportWidth - mFace.getWidth() /2,
+                viewportHeight -  mFace.getHeight()/2 ,
+                viewportWidth, viewportHeight, 10);
+        wh.setScreenCoordinates(
+                viewportWidth - mFace.getWidth(),
+                viewportHeight - mFace.getHeight(),
+                viewportWidth, viewportHeight, 10);
     }
 
     public void moveSelectedObject(float x, float y) {
@@ -189,79 +199,8 @@ public class FaceRenderer extends Renderer {
         mNewObjPos.multiply(factor);
         mNewObjPos.add(mNearPos);
 
-       earthSphere.setX(mNewObjPos.x);
-       earthSphere.setY(mNewObjPos.y);
-    }
-
-
-    private void firstAttempt() {
-        PointF point = mFace.getPosition();
-        double widthNormalized = mFace.getWidth() / 2 / viewportWidth;
-        double heightNormalized = mFace.getHeight() / 2 / viewportHeight;
-        double xNormalized = point.x / viewportWidth;
-        double yNormalized = point.y / viewportHeight;
-
-        double x = -xAcc * xNormalized + widthNormalized;
-        double y = -yAcc * yNormalized + heightNormalized;
-
-        Log.d(TAG, "onRender: " + x + "/" + y);
-        earthSphere.setPosition(x, y, 0);
-    }
-
-    private void secondAttempt() {
-        PointF point = mFace.getPosition();
-        double xNormalized = (mFace.getWidth() / 2) / viewportWidth;
-        double yNormalized = (mFace.getHeight() / 2) / viewportHeight;
-
-        double x = xNormalized - xAcc;
-        double y = yNormalized - yAcc;
-
-        Log.d(TAG, "onRender: " + xNormalized + "/" + yNormalized);
-        earthSphere.setPosition(x, y, 0);
-    }
-
-    private void third() {
-        float x = mFace.getPosition().x + mFace.getWidth() / 2;
-        float y = mFace.getPosition().y + mFace.getHeight() / 2;
-        float xOffset = mFace.getWidth() / 2.0f;
-        float yOffset = mFace.getHeight() / 2.0f;
-        float left = x - xOffset;
-        float top = y - yOffset;
-        float right = x + xOffset;
-        float bottom = y + yOffset;
-
-
-//        cube.setPosition(x /viewportWidth, y/viewportHeight, 0);
-//        cube.setScreenCoordinates(x, y,(int) viewportWidth,(int) viewportHeight, -2f);
-//        cube.setScreenCoordinates(viewportWidth - x, viewportHeight- y, (int) viewportWidth, (int) viewportHeight, getCurrentCamera().getZ()/2);
-
-        Vector3 vector3 = unProject(x, y, 0);
-//        cube.setPosition(unProject(x, y, 0));
-        earthSphere.setScreenCoordinates(viewportWidth - vector3.x, viewportHeight - vector3.y, (int) viewportWidth, (int) viewportHeight, 5);
-//        double objCoords[] = new double[4];
-//        int viewCoord[] = {0, 0, (int) viewportWidth, (int) viewportHeight};
-//        GLU.gluUnProject(x,  y, 0,
-//                cube.getModelMatrix().getDoubleValues(), 0,
-//                getCurrentCamera().getProjectionMatrix().getDoubleValues(), 0,
-//                viewCoord, 0,
-//                objCoords, 0
-//        );
-//        GLU.gluUnProject(x, y, 1,
-//                cube.getModelMatrix().getDoubleValues(), 0,
-//                getCurrentCamera().getProjectionMatrix().getDoubleValues(), 0,
-//                viewCoord, 0,
-//                objCoords, 0
-//        );
-//        cube.setPosition(objCoords[0], objCoords[1], objCoords[2]);
-    }
-
-
-    int[] floatToInt(float[] array) {
-        int tmp[] = new int[array.length];
-        for (int it = 0; it < array.length; ++it) {
-            tmp[it] = (int) array[it];
-        }
-        return tmp;
+        earthSphere.setX(mNewObjPos.x);
+        earthSphere.setY(mNewObjPos.y);
     }
 
     @Override
