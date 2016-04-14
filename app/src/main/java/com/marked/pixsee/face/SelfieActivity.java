@@ -223,7 +223,7 @@ public class SelfieActivity extends AppCompatActivity {
 
 		if (mCameraSource != null) {
 			try {
-				mCameraSourcePreview.start(mCameraSource);
+				mCameraSourcePreview.start(mCameraSource,mFaceRenderer);
 			} catch (IOException e) {
 				Log.e(TAG, "Unable to start camera source.", e);
 				mCameraSource.release();

@@ -25,7 +25,7 @@ public class CameraSourcePreview extends ViewGroup {
 	private boolean      mSurfaceAvailable;
 	private CameraSource mCameraSource;
 
-	private GraphicOverlay mOverlay;
+	private FaceRenderer mOverlay;
 
 	public CameraSourcePreview(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -52,7 +52,7 @@ public class CameraSourcePreview extends ViewGroup {
 		}
 	}
 
-	public void start(CameraSource cameraSource, GraphicOverlay overlay) throws IOException {
+	public void start(CameraSource cameraSource, FaceRenderer overlay) throws IOException {
 		mOverlay = overlay;
 		start(cameraSource);
 	}
@@ -94,7 +94,7 @@ public class CameraSourcePreview extends ViewGroup {
 				} else {
 					mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
 				}
-				mOverlay.clear();
+//				mOverlay.clear();
 			}
 			mStartRequested = false;
 		}

@@ -4,18 +4,19 @@ import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.face.Face;
 import com.marked.pixsee.R;
 
-import org.rajawali3d.debug.DebugBoundingBox;
+import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
 import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.Matrix4;
+import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
-import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.primitives.Sphere;
 import org.rajawali3d.renderer.Renderer;
 import org.rajawali3d.util.GLU;
@@ -29,9 +30,9 @@ public class FaceRenderer extends Renderer {
     private static final String TAG = "***********";
     private Context context;
     private DirectionalLight directionalLight;
-    private Sphere earthSphere;
+    private Sphere sphereEarth;
 
-
+    private int mFacing = CameraSource.CAMERA_FACING_BACK;
     private int[] mViewport;
     private double[] mNearPos4;
     private double[] mFarPos4;
@@ -40,6 +41,11 @@ public class FaceRenderer extends Renderer {
     private Vector3 mNewObjPos;
     private Matrix4 mViewMatrix;
     private Matrix4 mProjectionMatrix;
+
+    private int mPreviewWidth;
+    private int mPreviewHeight;
+    private float mWidthScaleFactor = 1.0f;
+    private float mHeightScaleFactor = 1.0f;
 
     private Face mFace;
     int viewportWidth, viewportHeight;
@@ -50,18 +56,70 @@ public class FaceRenderer extends Renderer {
         setFrameRate(30);
     }
 
+    public void setmPreviewWidth(int mPreviewWidth) {
+        this.mPreviewWidth = mPreviewWidth;
+    }
+
+    public void setmPreviewHeight(int mPreviewHeight) {
+        this.mPreviewHeight = mPreviewHeight;
+    }
+
+    private final Object mLock = new Object();
+
     public void setMFace(Face mFace) {
         this.mFace = mFace;
     }
 
-    /************************************ DEBUGGING  VARIABLES ******************************/
-    /* These sphere are used to see where are they mapped on coordinates xy, widthHeight,width/2Height/2 */
-    Plane xy = new Plane(0.5f, 0.5f, 1,1);
-    Plane wh = new Plane(0.5f, 0.5f, 1,1);
-    Plane wh2 = new Plane(0.5f, 0.5f,1,1);
 
-    DebugBoundingBox debugBoundingBox = new DebugBoundingBox(); // I don't know how to use this to replace the above spheres
-    /******************************************************************************************/
+    /**
+     * Adjusts a horizontal value of the supplied value from the preview scale to the view
+     * scale.
+     */
+    public float scaleX(float horizontal) {
+        return horizontal * mWidthScaleFactor;
+    }
+
+    /**
+     * Adjusts a vertical value of the supplied value from the preview scale to the view scale.
+     */
+    public float scaleY(float vertical) {
+        return vertical * mHeightScaleFactor;
+    }
+
+    /**
+     * Adjusts the x coordinate from the preview's coordinate system to the view coordinate
+     * system.
+     */
+    public float translateX(float x) {
+        if (mFacing == CameraSource.CAMERA_FACING_FRONT) {
+            return viewportWidth - scaleX(x);
+        } else {
+            return scaleX(x);
+        }
+    }
+
+    /**
+     * Sets the camera attributes for size and facing direction, which informs how to transform
+     * image coordinates later.
+     */
+    public void setCameraInfo(int previewWidth, int previewHeight, int facing) {
+        synchronized (mLock) {
+            mPreviewWidth = previewWidth;
+            mPreviewHeight = previewHeight;
+            mFacing = facing;
+        }
+    }
+
+    /**
+     * Adjusts the y coordinate from the preview's coordinate system to the view coordinate
+     * system.
+     */
+    public float translateY(float y) {
+        if (mFacing == CameraSource.CAMERA_FACING_FRONT)
+            return viewportHeight - scaleY(y);
+        else
+            return scaleY(y);
+    }
 
     @Override
     protected void initScene() {
@@ -94,80 +152,48 @@ public class FaceRenderer extends Renderer {
         } catch (ATexture.TextureException error) {
             Log.d("DEBUG", "TEXTURE ERROR");
         }
-        earthSphere = new Sphere(0.5f, 16, 16);
-        earthSphere.setMaterial(material);
-
-        /* every object needs a material else an exception is thrown*/
-        xy.setMaterial(material);
-        wh.setMaterial(material);
-        wh2.setMaterial(material);
-
-        getCurrentScene().addChild(earthSphere);
-        getCurrentScene().addChild(xy);
-        getCurrentScene().addChild(wh);
-        getCurrentScene().addChild(wh2);
-
+        sphereEarth = new Sphere(0.5f, 16, 16);
+        sphereEarth.setMaterial(material);
+        Quaternion quaternion = new Quaternion().fromAngleAxis(Vector3.Axis.X, 90.0);
+        sphereEarth.setOrientation(quaternion);
+        getCurrentScene().addChild(sphereEarth);
         getCurrentCamera().setPosition(0, 0, 10);
-    }
-
-    @Override
-    public void onRenderSurfaceSizeChanged(GL10 gl, int width, int height) {
-        super.onRenderSurfaceSizeChanged(gl, width, height);
-        mViewport[2] = getViewportWidth();
-        mViewport[3] = getViewportHeight();
-        mViewMatrix = getCurrentCamera().getViewMatrix();
-        mProjectionMatrix = getCurrentCamera().getProjectionMatrix();
     }
 
     @Override
     protected void onRender(long ellapsedRealtime, double deltaTime) {
         super.onRender(ellapsedRealtime, deltaTime);
-        earthSphere.rotate(Vector3.Axis.Y, 1.0);
+//        sphereEarth.rotate(Vector3.Axis.Y, 1.0);
         if (mFace != null) {
+            if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
+                mWidthScaleFactor = (float) viewportWidth / (float) mPreviewWidth;
+                mHeightScaleFactor = (float) viewportHeight / (float) mPreviewHeight;
+            }
 //            first();
             second();
         }
     }
+
     /**
      * Second attempt to keep the mapped object on the face when tilting the phone
-     * */
+     */
     private void second() {
-        float x = mFace.getPosition().x + mFace.getWidth();
-        float y = mFace.getPosition().y + mFace.getHeight();
-        earthSphere.setScreenCoordinates(viewportWidth - x, viewportHeight - y, viewportWidth, viewportHeight, 10);
-    }
+        float x = translateX(mFace.getPosition().x + mFace.getWidth() / 2);
+        float y = translateY(mFace.getPosition().y + mFace.getHeight() / 2);
 
+        sphereEarth.setScreenCoordinates(x, y, viewportWidth, viewportHeight, 10);
+    }
 
     /**
      * First attempt to keep the mapped object on the face when tilting the phone
-     * */
+     */
     private void first() {
-        float x = mFace.getPosition().x + mFace.getWidth() /2;
-        float y = mFace.getPosition().y + mFace.getHeight()/2;
+        float x = translateX(mFace.getPosition().x + mFace.getWidth() / 2);
+        float y = translateY(mFace.getPosition().y + mFace.getHeight() / 2);
 
-        float xOffset = mFace.getWidth() / 2.0f;
-        float yOffset = mFace.getHeight() / 2.0f;
-        float left = x - xOffset;
-        float top = y - yOffset;
-        float right = x + xOffset;
-        float bottom = y + yOffset;
-
-        moveSelectedObject(viewportWidth - x, viewportHeight - y);
-        xy.setScreenCoordinates(
-                viewportWidth - mFace.getPosition().x ,
-                viewportHeight - mFace.getPosition().y,
-                viewportWidth, viewportHeight, 10);
-        wh2.setScreenCoordinates(
-                viewportWidth - mFace.getWidth() /2,
-                viewportHeight -  mFace.getHeight()/2 ,
-                viewportWidth, viewportHeight, 10);
-        wh.setScreenCoordinates(
-                viewportWidth - mFace.getWidth(),
-                viewportHeight - mFace.getHeight(),
-                viewportWidth, viewportHeight, 10);
+        moveSelectedObject(sphereEarth, x, y);
     }
-
-    public void moveSelectedObject(float x, float y) {
+    private void moveSelectedObject(Object3D object3D, float x, float y) {
         // -- unproject the screen coordinate (2D) to the camera's near plane
         GLU.gluUnProject(x, y, 0, mViewMatrix.getDoubleValues(), 0,
                 mProjectionMatrix.getDoubleValues(), 0, mViewport, 0, mNearPos4, 0);
@@ -191,16 +217,26 @@ public class FaceRenderer extends Renderer {
         // -- now get the coordinates for the selected object
         //
 
-        double factor = (Math.abs(earthSphere.getZ()) + mNearPos.z) / (getCurrentCamera().getFarPlane() - getCurrentCamera()
-                .getNearPlane());
+        double factor = (Math.abs(sphereEarth.getZ()) + mNearPos.z) /
+                (getCurrentCamera().getFarPlane() - getCurrentCamera().getNearPlane());
 
         mNewObjPos.setAll(mFarPos);
         mNewObjPos.subtract(mNearPos);
         mNewObjPos.multiply(factor);
+        mNewObjPos.multiply(-1);
         mNewObjPos.add(mNearPos);
 
-        earthSphere.setX(mNewObjPos.x);
-        earthSphere.setY(mNewObjPos.y);
+        object3D.setX(mNewObjPos.x);
+        object3D.setY(mNewObjPos.y);
+    }
+
+    @Override
+    public void onRenderSurfaceSizeChanged(GL10 gl, int width, int height) {
+        super.onRenderSurfaceSizeChanged(gl, width, height);
+        mViewport[2] = getViewportWidth();
+        mViewport[3] = getViewportHeight();
+        mViewMatrix = getCurrentCamera().getViewMatrix();
+        mProjectionMatrix = getCurrentCamera().getProjectionMatrix();
     }
 
     @Override
