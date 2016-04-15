@@ -49,6 +49,8 @@ public class SelfieActivity extends AppCompatActivity {
 
 		mFaceRenderer = new FaceRenderer(this);
 		faceSurfaceView.setSurfaceRenderer(mFaceRenderer);
+		mFaceRenderer.addObject(new FaceObject(0));
+
 
 		// Check for the camera permission before accessing the camera.  If the
 		// permission is not granted yet, request permission.

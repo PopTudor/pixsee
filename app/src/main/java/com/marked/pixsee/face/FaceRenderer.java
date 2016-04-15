@@ -10,21 +10,23 @@ import com.marked.pixsee.R;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
-import org.rajawali3d.materials.Material;
-import org.rajawali3d.materials.methods.DiffuseMethod;
-import org.rajawali3d.materials.textures.ATexture;
-import org.rajawali3d.materials.textures.Texture;
-import org.rajawali3d.primitives.Plane;
+import org.rajawali3d.loader.ALoader;
+import org.rajawali3d.loader.LoaderOBJ;
+import org.rajawali3d.loader.async.IAsyncLoaderCallback;
+import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.renderer.Renderer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Tudor on 4/8/2016.
  */
-public class FaceRenderer extends Renderer {
+public class FaceRenderer extends Renderer implements IAsyncLoaderCallback {
     private static final String TAG = "***********";
     private Context context;
     private DirectionalLight directionalLight;
-    private Object3D loadedObject;
+    private List<FaceObject> mObjectList = new ArrayList<>(1);
 
     private int mFacing = CameraSource.CAMERA_FACING_BACK;
 
@@ -34,7 +36,6 @@ public class FaceRenderer extends Renderer {
     private float mHeightScaleFactor = 1.0f;
 
     private Face mFace;
-    private int viewportWidth, viewportHeight;
 
     public FaceRenderer(Context context) {
         super(context);
@@ -44,10 +45,67 @@ public class FaceRenderer extends Renderer {
 
     private final Object mLock = new Object();
 
+
+    @Override
+    protected void initScene() {
+        directionalLight = new DirectionalLight(0f, 0f, -1.0f);
+        directionalLight.setColor(1.0f, 1.0f, 1.0f);
+        directionalLight.setPower(2);
+
+        getCurrentScene().addLight(directionalLight);
+        getCurrentCamera().setPosition(0, 0, 10);
+            final LoaderOBJ loaderOBJ = new LoaderOBJ(mContext.getResources(), mTextureManager, R.raw.rock);
+            loadModel(loaderOBJ,this,R.raw.rock);
+    }
+
+    void addObject(FaceObject object3D) {
+        synchronized (mLock) {
+            mObjectList.add(object3D);
+        }
+    }
+
+    void removeObject(Object3D object3D) {
+        synchronized (mLock) {
+            if (mObjectList.contains(object3D)) {
+                mObjectList.remove(object3D);
+            }
+        }
+    }
+
+    @Override
+    protected void onRender(long ellapsedRealtime, double deltaTime) {
+        super.onRender(ellapsedRealtime, deltaTime);
+        if (mFace != null) {
+            if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
+                mWidthScaleFactor = (float) mCurrentViewportWidth / (float) mPreviewWidth;
+                mHeightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
+            }
+//            for (FaceObject object : mObjectList) {
+//                switch (object.getDrawingPosition()){
+//                    case Landmark.NOSE_BASE:
+//
+//                }
+            if (mObjectList.size()>0){
+                getCurrentScene().addChild(mObjectList.get(mObjectList.size() - 1).getObject3D());
+            }
+                translation(mObjectList.get(0).getObject3D());
+//            }
+        }
+    }
+
+    /**
+     * Second attempt to keep the mapped object on the face when tilting the phone
+     */
+    private void translation(Object3D object) {
+        if (object==null)
+            return;
+        float x = translateX(mFace.getPosition().x + mFace.getWidth() / 2);
+        float y = translateY(mFace.getPosition().y + mFace.getHeight() / 2);
+        object.setScreenCoordinates(x, y, mCurrentViewportWidth, mCurrentViewportHeight, 10);
+    }
     public void setMFace(Face mFace) {
         this.mFace = mFace;
     }
-
 
     /**
      * Adjusts a horizontal value of the supplied value from the preview scale to the view
@@ -70,7 +128,7 @@ public class FaceRenderer extends Renderer {
      */
     public float translateX(float x) {
         if (mFacing == CameraSource.CAMERA_FACING_FRONT) {
-            return viewportWidth - scaleX(x);
+            return mCurrentViewportWidth - scaleX(x);
         } else {
             return scaleX(x);
         }
@@ -94,64 +152,9 @@ public class FaceRenderer extends Renderer {
      */
     public float translateY(float y) {
         if (mFacing == CameraSource.CAMERA_FACING_FRONT)
-            return viewportHeight - scaleY(y);
+            return mCurrentViewportHeight - scaleY(y);
         else
             return scaleY(y);
-    }
-
-    @Override
-    protected void initScene() {
-        viewportWidth = getViewportWidth();
-        viewportHeight = getViewportHeight();
-
-        directionalLight = new DirectionalLight(0f, 0f, -1.0f);
-        directionalLight.setColor(1.0f, 1.0f, 1.0f);
-        directionalLight.setPower(2);
-        getCurrentScene().addLight(directionalLight);
-
-        Material material = new Material();
-        material.enableLighting(true);
-        material.setDiffuseMethod(new DiffuseMethod.Lambert());
-        material.setColor(0);
-
-        { // load custom object
-            Texture mlgTexture = new Texture("mlg", R.drawable.mlg);
-
-            try {
-                material.addTexture(mlgTexture);
-//                loadedObject = new Loader3DSMax(this,R.raw.mlg).parse().getParsedObject();
-                loadedObject = new Plane(4f, 4f, 1, 1);
-
-                loadedObject.setTransparent(true);
-                loadedObject.setMaterial(material);
-            } catch (ATexture.TextureException error) {
-                Log.d("DEBUG", "TEXTURE ERROR");
-            }
-        }
-        getCurrentScene().addChild(loadedObject);
-        getCurrentCamera().setPosition(0, 0, 10);
-    }
-
-    @Override
-    protected void onRender(long ellapsedRealtime, double deltaTime) {
-        super.onRender(ellapsedRealtime, deltaTime);
-        if (mFace != null) {
-            if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
-                mWidthScaleFactor = (float) viewportWidth / (float) mPreviewWidth;
-                mHeightScaleFactor = (float) viewportHeight / (float) mPreviewHeight;
-            }
-            translation();
-        }
-    }
-
-    /**
-     * Second attempt to keep the mapped object on the face when tilting the phone
-     */
-    private void translation() {
-        float x = translateX(mFace.getPosition().x + mFace.getWidth() / 2);
-        float y = translateY(mFace.getPosition().y + mFace.getHeight() / 2);
-
-        loadedObject.setScreenCoordinates(x, y, viewportWidth, viewportHeight, 10);
     }
 
     @Override
@@ -161,6 +164,28 @@ public class FaceRenderer extends Renderer {
 
     @Override
     public void onOffsetsChanged(float xOffset, float yOffset, float xOffsetStep, float yOffsetStep, int xPixelOffset, int yPixelOffset) {
+
+    }
+
+    @Override
+    public void onModelLoadComplete(ALoader loader) {
+        Log.d(TAG, "onModelLoadComplete: ");
+        final LoaderOBJ obj = (LoaderOBJ) loader;
+        final Object3D parsedObject = obj.getParsedObject();
+        parsedObject.setPosition(Vector3.ZERO);
+//        Material material = new Material();
+//        material.enableLighting(true);
+//        material.setColor(Color.RED);
+//        material.setDiffuseMethod(new DiffuseMethod.Lambert());
+//
+//        Plane plane = new Plane();
+//        plane.setMaterial(material);
+
+        getCurrentScene().addChild(parsedObject);
+    }
+
+    @Override
+    public void onModelLoadFailed(ALoader loader) {
 
     }
 }
