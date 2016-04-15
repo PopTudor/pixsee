@@ -8,12 +8,13 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.face.Face;
 import com.marked.pixsee.R;
 
+import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
 import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.Texture;
-import org.rajawali3d.primitives.Sphere;
+import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.renderer.Renderer;
 
 /**
@@ -23,7 +24,7 @@ public class FaceRenderer extends Renderer {
     private static final String TAG = "***********";
     private Context context;
     private DirectionalLight directionalLight;
-    private Sphere sphereEarth;
+    private Object3D loadedObject;
 
     private int mFacing = CameraSource.CAMERA_FACING_BACK;
 
@@ -103,7 +104,7 @@ public class FaceRenderer extends Renderer {
         viewportWidth = getViewportWidth();
         viewportHeight = getViewportHeight();
 
-        directionalLight = new DirectionalLight(1f, .2f, -1.0f);
+        directionalLight = new DirectionalLight(0f, 0f, -1.0f);
         directionalLight.setColor(1.0f, 1.0f, 1.0f);
         directionalLight.setPower(2);
         getCurrentScene().addLight(directionalLight);
@@ -113,39 +114,44 @@ public class FaceRenderer extends Renderer {
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
         material.setColor(0);
 
-        Texture earthTexture = new Texture("Earth", R.drawable.earth);
-        try {
-            material.addTexture(earthTexture);
-        } catch (ATexture.TextureException error) {
-            Log.d("DEBUG", "TEXTURE ERROR");
+        { // load custom object
+            Texture mlgTexture = new Texture("mlg", R.drawable.mlg);
+
+            try {
+                material.addTexture(mlgTexture);
+//                loadedObject = new Loader3DSMax(this,R.raw.mlg).parse().getParsedObject();
+                loadedObject = new Plane(4f, 4f, 1, 1);
+
+                loadedObject.setTransparent(true);
+                loadedObject.setMaterial(material);
+            } catch (ATexture.TextureException error) {
+                Log.d("DEBUG", "TEXTURE ERROR");
+            }
         }
-        sphereEarth = new Sphere(1f, 16, 16);
-        sphereEarth.setMaterial(material);
-        getCurrentScene().addChild(sphereEarth);
+        getCurrentScene().addChild(loadedObject);
         getCurrentCamera().setPosition(0, 0, 10);
     }
 
     @Override
     protected void onRender(long ellapsedRealtime, double deltaTime) {
         super.onRender(ellapsedRealtime, deltaTime);
-//        sphereEarth.rotate(Vector3.Axis.Y, 1.0);
         if (mFace != null) {
             if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
                 mWidthScaleFactor = (float) viewportWidth / (float) mPreviewWidth;
                 mHeightScaleFactor = (float) viewportHeight / (float) mPreviewHeight;
             }
-            second();
+            translation();
         }
     }
 
     /**
      * Second attempt to keep the mapped object on the face when tilting the phone
      */
-    private void second() {
+    private void translation() {
         float x = translateX(mFace.getPosition().x + mFace.getWidth() / 2);
         float y = translateY(mFace.getPosition().y + mFace.getHeight() / 2);
 
-        sphereEarth.setScreenCoordinates(x, y, viewportWidth, viewportHeight, 10);
+        loadedObject.setScreenCoordinates(x, y, viewportWidth, viewportHeight, 10);
     }
 
     @Override
