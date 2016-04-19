@@ -103,7 +103,6 @@ dependencies {
     def dependency = rootProject.ext
     def app = dependency.dependencies
     def test = dependency.testDependencies
-    compile files('C:/Users/Marked/Documents/git/pixsee/libs/jpct_ae.jar')
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile('io.socket:socket.io-client:0.6.3') {
         exclude group: 'org.json', module: 'json'
@@ -129,11 +128,12 @@ dependencies {
     compile app.subSamplingScaleImage
     compile app.visionService
     compile app.dagger
+    compile app.rajawali
+
     apt app.daggerCompiler
     provided app.daggerCompiler
     provided app.glassFishAnnotations
 
-    compile 'org.rajawali3d:rajawali:1.1.337'
     //testing
     testCompile test.jUnit
     testCompile test.mockito

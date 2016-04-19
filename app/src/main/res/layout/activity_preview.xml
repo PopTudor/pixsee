@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+    <!--<android.opengl.GLSurfaceView-->
     <org.rajawali3d.view.SurfaceView
         android:id="@+id/faceSurfaceView"
         android:layout_width="match_parent"
@@ -29,14 +30,22 @@
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/transparent"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="visible"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/camera_button">
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton2"
+            android:src="@drawable/mlg_48"
+            android:maxHeight="32dp"
+            android:maxWidth="32dp"
+            android:layout_gravity="center"
+            android:backgroundTint="#daffffff" />
     </LinearLayout>
 
     <ImageView
@@ -48,16 +57,16 @@
         android:layout_alignParentTop="true"
         android:contentDescription="Switch camera"
         android:src="@drawable/ic_camera_rear_24dp"
-        />
+        android:layout_margin="10dp" />
 
     <Button
         android:id="@+id/camera_button"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_above="@+id/bottom_bar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp"
         android:alpha="0.8"
         android:background="@drawable/round_button"
-        android:onClick="onCameraClick"/>
+        android:onClick="onCameraClick"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp" />
 </RelativeLayout>
