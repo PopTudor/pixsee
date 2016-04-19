@@ -22,7 +22,6 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.R;
 
-
 import org.rajawali3d.view.SurfaceView;
 
 import java.io.IOException;
@@ -30,13 +29,17 @@ import java.io.IOException;
 public class SelfieActivity extends AppCompatActivity {
 	private static final String TAG = SelfieActivity.class + "***";
 
-	private CameraSource        mCameraSource;
+	private CameraSource mCameraSource;
 	private CameraSourcePreview mCameraSourcePreview;
 	private FaceRenderer mFaceRenderer;
 
-	private static final int RC_HANDLE_GMS         = 9001;
+	private static final int RC_HANDLE_GMS = 9001;
 	// permission request codes need to be < 256
 	private static final int RC_HANDLE_CAMERA_PERM = 2;
+
+	interface OnFavoritesListener {
+		void onFavoriteClicked(FaceObject object);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +48,27 @@ public class SelfieActivity extends AppCompatActivity {
 
 		mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
 		SurfaceView faceSurfaceView = (SurfaceView) findViewById(R.id.faceSurfaceView);
-        faceSurfaceView.setTransparent(true);
+		faceSurfaceView.setTransparent(true);
+		faceSurfaceView.setEGLContextClientVersion(2);
 
 		mFaceRenderer = new FaceRenderer(this);
 		faceSurfaceView.setSurfaceRenderer(mFaceRenderer);
-		mFaceRenderer.addObject(new FaceObject(0));
+		findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				FaceObject faceObject = new FaceObject(mFaceRenderer);
+				faceObject.setTexture(R.drawable.mlg);
+				mFaceRenderer.onFavoriteClicked(faceObject);
+			}
+		});
+		findViewById(R.id.favorite2).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				FaceObject faceObject = new FaceObject(mFaceRenderer);
+				faceObject.setTexture(R.drawable.hearts);
+				mFaceRenderer.onFavoriteClicked(faceObject);
+			}
+		});
 
 
 		// Check for the camera permission before accessing the camera.  If the
@@ -87,7 +106,7 @@ public class SelfieActivity extends AppCompatActivity {
 			}
 		};
 
-//		Snackbar.make(mGraphicOverlay, "We need camera permission in order to take cool selfies !", Snackbar.LENGTH_INDEFINITE)
+//		Snackbar.make(mCameraSourcePreview, "We need camera permission in order to take cool selfies !", Snackbar.LENGTH_INDEFINITE)
 //		        .setAction("OK", listener)
 //		        .show();
 	}
@@ -99,10 +118,10 @@ public class SelfieActivity extends AppCompatActivity {
 	 */
 	private void createCameraSource() {
 		FaceDetector faceDetector = new FaceDetector.Builder(getApplicationContext()).setTrackingEnabled(true)
-		                                                                             .setProminentFaceOnly(true)
-		                                                                             .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
-		                                                                             .setLandmarkType(0)
-		                                                                             .build();
+				                            .setProminentFaceOnly(true)
+				                            .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
+				                            .setLandmarkType(0)
+				                            .build();
 //				FaceTrackerSquare faceTracker = new FaceTrackerSquare(mGraphicOverlay);
 		FaceTrackerAR faceTracker = new FaceTrackerAR(mFaceRenderer);
 		faceDetector.setProcessor(new LargestFaceFocusingProcessor.Builder(faceDetector, faceTracker).build());
@@ -119,10 +138,10 @@ public class SelfieActivity extends AppCompatActivity {
 			Log.w(TAG, "Face detector dependencies are not yet available.");
 		}
 		mCameraSource = new CameraSource.Builder(this, faceDetector).setRequestedFps(30.0f)
-		                                                            .setAutoFocusEnabled(false)
-		                                                            //		                                                            .setRequestedPreviewSize(640, 480)
-		                                                            .setFacing(CameraSource.CAMERA_FACING_FRONT)
-		                                                            .build();
+				                .setAutoFocusEnabled(false)
+//	             .setRequestedPreviewSize(640, 480)
+				                .setFacing(CameraSource.CAMERA_FACING_FRONT)
+				                .build();
 	}
 
 	/**
@@ -188,7 +207,7 @@ public class SelfieActivity extends AppCompatActivity {
 		}
 
 		Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
-		           " Result code = " + (grantResults.length > 0 ? grantResults[0] :"(empty)"));
+				           " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
 
 		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
@@ -198,9 +217,9 @@ public class SelfieActivity extends AppCompatActivity {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Face Tracker sample")
-		       .setMessage("We don't have camera permission :(")
-		       .setPositiveButton("OK", listener)
-		       .show();
+				.setMessage("We don't have camera permission :(")
+				.setPositiveButton("OK", listener)
+				.show();
 	}
 
 	//==============================================================================================
@@ -216,16 +235,16 @@ public class SelfieActivity extends AppCompatActivity {
 
 		// check that the device has play services available.
 		int code = GoogleApiAvailability.getInstance()
-		                                .isGooglePlayServicesAvailable(getApplicationContext());
+				           .isGooglePlayServicesAvailable(getApplicationContext());
 		if (code != ConnectionResult.SUCCESS) {
 			Dialog dlg = GoogleApiAvailability.getInstance()
-			                                  .getErrorDialog(this, code, RC_HANDLE_GMS);
+					             .getErrorDialog(this, code, RC_HANDLE_GMS);
 			dlg.show();
 		}
 
 		if (mCameraSource != null) {
 			try {
-				mCameraSourcePreview.start(mCameraSource,mFaceRenderer);
+				mCameraSourcePreview.start(mCameraSource, mFaceRenderer);
 			} catch (IOException e) {
 				Log.e(TAG, "Unable to start camera source.", e);
 				mCameraSource.release();
@@ -265,6 +284,7 @@ public class SelfieActivity extends AppCompatActivity {
 		@Override
 		public void onDone() {
 			super.onDone();
+//			mFaceRenderer.removeMFace();
 			Log.i(TAG, "Elvis has left the building.");
 		}
 	}

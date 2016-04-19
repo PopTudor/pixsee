@@ -1,10 +1,9 @@
 package com.marked.pixsee.face;
 
-import android.util.Log;
-
-import com.marked.pixsee.R;
+import android.support.annotation.NonNull;
 
 import org.rajawali3d.Object3D;
+import org.rajawali3d.loader.AMeshLoader;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
 import org.rajawali3d.materials.textures.ATexture;
@@ -15,44 +14,79 @@ import org.rajawali3d.renderer.Renderer;
 /**
  * Created by Tudor on 4/15/2016.
  */
-public class FaceObject {
-    private int drawingPosition;
-    private Renderer renderer;
-    private Material material;
-    private Object3D object3D;
+public class FaceObject implements Comparable<FaceObject> {
+	private int drawingPosition;
+	private Renderer renderer;
+	private Material material;
+	private Texture texture;
+	private Object3D object3D;
+	private AMeshLoader loader;
+	private int tag;
 
-    public FaceObject(int drawingPosition) {
-        this.drawingPosition = drawingPosition;
-        material = new Material();
-        material.enableLighting(true);
-        material.setDiffuseMethod(new DiffuseMethod.Lambert());
-        material.setColor(0);
 
-        try {
-            Texture mlgTexture = new Texture("mlg", R.drawable.mlg);
-            material.addTexture(mlgTexture);
-//                object3D = new Loader3DSMax(renderer,R.raw.mlg).parse().getParsedObject();
-            object3D = new Plane(5, 5, 1, 1);
-            object3D.setTransparent(true);
-            object3D.setMaterial(material);
-        } catch (ATexture.TextureException error) {
-            Log.d("DEBUG", "TEXTURE ERROR");
-        }
-    }
+	public FaceObject(Renderer renderer) {
+		this.drawingPosition = 0;
+		material = new Material();
+		material.enableLighting(true);
+		material.setDiffuseMethod(new DiffuseMethod.Lambert());
+		material.setColor(0);
+//		loader = new Loader3DSMax(renderer,R.)
+//			object3D = new Loader3DSMax(renderer, R.raw.rock).parse().getParsedObject();
+			object3D =  new Plane(5, 5, 1, 1);
+			object3D.setTransparent(true);
+	}
 
-    public int getDrawingPosition() {
-        return drawingPosition;
-    }
+	public void setTexture(int resourceID) {
+		tag = resourceID;
+		texture = new Texture("Texture_"+String.valueOf(tag), resourceID);
+		object3D.setMaterial(material);
+		try {
+			material.addTexture(texture);
+			object3D.setMaterial(material);
+		} catch (ATexture.TextureException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public Renderer getRenderer() {
-        return renderer;
-    }
+	public AMeshLoader getLoader() {
+		if (loader == null){
+			loader = new AMeshLoader("") {
+				@Override
+				public Object3D getParsedObject() {
+					return object3D;
+				}
+			};
+		}
+		return loader;
+	}
 
-    public Material getMaterial() {
-        return material;
-    }
+	public int getDrawingPosition() {
+		return drawingPosition;
+	}
 
-    public Object3D getObject3D() {
-        return object3D;
-    }
+	public Renderer getRenderer() {
+		return renderer;
+	}
+
+	public Material getMaterial() {
+		return material;
+	}
+
+	public Object3D getObject3D() {
+		return object3D;
+	}
+
+	public int getTag() {
+		return tag;
+	}
+
+	@Override
+	public int compareTo(@NonNull FaceObject another) {
+		if (tag < another.tag)
+			return -1;
+		else if (tag > another.tag)
+			return 1;
+		else
+			return 0;
+	}
 }
