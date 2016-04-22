@@ -10,7 +10,7 @@
 		active type: 3G/WiFi).
     -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permiswsion.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
@@ -74,12 +74,6 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="face"/>
 
-        <activity
-            android:name=".face.UserDefinedTargets.ImageTargets"
-            android:configChanges="orientation|keyboardHidden"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
         <activity
             android:name=".entry.AuthActivity"
             android:clearTaskOnLaunch="true"
