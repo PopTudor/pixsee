@@ -1,6 +1,8 @@
 package com.marked.pixsee.face;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -21,10 +23,19 @@ import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.renderer.Renderer;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
+
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * Created by Tudor on 4/8/2016.
  */
-public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, SelfieActivity.OnFavoritesListener {
+public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, SelfieActivity
+		                                                                            .OnFavoritesListener {
 	private static final String TAG = "***********";
 	private final Object mLock = new Object();
 	private Context context;
@@ -36,7 +47,11 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	private float mWidthScaleFactor = 1.0f;
 	private float mHeightScaleFactor = 1.0f;
 
+	private Object3D loadedObject = null;
 	private Face mFace;
+	private boolean screenshot;
+	private Bitmap lastScreenshot;
+
 
 	public FaceRenderer(Context context) {
 		super(context);
@@ -54,11 +69,19 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		getCurrentCamera().setPosition(0, 0, 10);
 	}
 
-//    @Override
-//    public void onRenderSurfaceCreated(EGLConfig config, GL10 gl, int width, int height) {
-//        super.onRenderSurfaceCreated(config, gl, width, height);
-//        addObject(new FaceObject(0,this));
-//    }
+	public void takeScreenshot() {
+		screenshot = true;
+	}
+
+	public void saveScreenshot(Bitmap screenshot) {
+		try {
+			File file = Utils.getPublicPixseeDir();
+			FileOutputStream out = new FileOutputStream(file.getPath() + "/photo_renderer.png");
+			screenshot.compress(Bitmap.CompressFormat.PNG, 90, out);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void onModelLoadComplete(ALoader loader) {
@@ -73,13 +96,51 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		getCurrentScene().addChild(loadedObject);
 	}
 
-	private Object3D loadedObject = null;
-
 	@Override
 	public void onFavoriteClicked(FaceObject object) {
 		FaceObject faceObject = new FaceObject(this);
 		faceObject.setTexture(object.getTag());
 		loadModel(object.getLoader(), this, faceObject.getTag());
+	}
+
+	public Bitmap getLastScreenshot() {
+		return lastScreenshot;
+	}
+
+	@Override
+	public void onRenderFrame(GL10 gl) {
+		super.onRenderFrame(gl);
+		if (screenshot) {
+			gl.glClearColor(1f, 1f, 1f, 1f);
+			int screenshotSize = mDefaultViewportWidth * mDefaultViewportHeight;
+			ByteBuffer bb = ByteBuffer.allocateDirect(screenshotSize * 4);
+			bb.order(ByteOrder.nativeOrder());
+			gl.glReadPixels(0, 0, mDefaultViewportWidth, mDefaultViewportHeight, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, bb);
+			int pixelsBuffer[] = new int[screenshotSize];
+			bb.asIntBuffer().get(pixelsBuffer);
+			bb = null;
+			Bitmap bitmap = Bitmap.createBitmap(mDefaultViewportWidth, mDefaultViewportHeight, Bitmap.Config.RGB_565);
+			bitmap.setPixels(pixelsBuffer, screenshotSize - mDefaultViewportWidth, -mDefaultViewportWidth, 0, 0,
+					mDefaultViewportWidth, mDefaultViewportHeight);
+			pixelsBuffer = null;
+
+			short sBuffer[] = new short[screenshotSize];
+			ShortBuffer sb = ShortBuffer.wrap(sBuffer);
+			bitmap.copyPixelsToBuffer(sb);
+
+			//Making created bitmap (from OpenGL points) compatible with Android bitmap
+			for (int i = 0; i < screenshotSize; ++i) {
+				short v = sBuffer[i];
+				sBuffer[i] = (short) (((v & 0x1f) << 11) | (v & 0x7e0) | ((v & 0xf800) >> 11));
+			}
+			sb.rewind();
+			bitmap.copyPixelsFromBuffer(sb);
+
+			lastScreenshot = bitmap;
+			saveScreenshot(lastScreenshot);
+
+			screenshot = false;
+		}
 	}
 
 	/**********************
@@ -89,7 +150,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		Object3D object3D = new Cube(3.5f);
 		object3D.rotate(Vector3.Axis.Y, 180);
 		Material material = new Material();
-		material.setColor(0);
+		material.setColor(Color.WHITE);
 		material.enableLighting(true);
 		material.setDiffuseMethod(new DiffuseMethod.Lambert());
 		try {

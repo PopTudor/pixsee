@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -24,6 +26,10 @@ import com.marked.pixsee.R;
 
 import org.rajawali3d.view.SurfaceView;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class SelfieActivity extends AppCompatActivity {
@@ -67,6 +73,48 @@ public class SelfieActivity extends AppCompatActivity {
 				FaceObject faceObject = new FaceObject(mFaceRenderer);
 				faceObject.setTexture(R.drawable.hearts);
 				mFaceRenderer.onFavoriteClicked(faceObject);
+			}
+		});
+		findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mCameraSource.takePicture(new CameraSource.ShutterCallback() {
+					@Override
+					public void onShutter() {
+						mFaceRenderer.takeScreenshot();
+					}
+				}, new CameraSource.PictureCallback() {
+					@Override
+					public void onPictureTaken(byte[] bytes) {
+						if (Utils.isExternalStorageWritable()) {
+							File photo = Utils.getPublicPixseeDir();
+							ByteArrayOutputStream streamArray = new ByteArrayOutputStream();
+							try {
+								FileOutputStream fos = new FileOutputStream(photo.getPath()
+										                                            + "/photo.png");
+								Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+								Bitmap rotatedImage = Utils.flip(bmp);
+								bmp = null;
+								BufferedOutputStream stream = new BufferedOutputStream(fos);
+
+								rotatedImage.compress(Bitmap.CompressFormat.PNG, 70, streamArray);
+
+								Bitmap result = Utils.combineImages(BitmapFactory.decodeByteArray
+										                                                  (streamArray
+												                                                   .toByteArray(), 0, streamArray.size()),
+										mFaceRenderer.getLastScreenshot());
+								streamArray.reset();
+								result.compress(Bitmap.CompressFormat.PNG, 100, streamArray);
+								stream.write(streamArray.toByteArray());
+								stream.close();
+							} catch (java.io.IOException e) {
+								Log.e("PictureDemo", "Exception in photoCallback", e);
+							}
+
+						}
+
+					}
+				});
 			}
 		});
 
