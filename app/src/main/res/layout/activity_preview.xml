@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <!--<android.opengl.GLSurfaceView-->
-        <org.rajawali3d.view.SurfaceView
+        <org.rajawali3d.view.TextureView
             android:id="@+id/faceSurfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

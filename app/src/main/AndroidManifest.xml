@@ -158,6 +158,7 @@
         <activity
             android:name=".face.SelfieActivity"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             >
         </activity>
     </application>

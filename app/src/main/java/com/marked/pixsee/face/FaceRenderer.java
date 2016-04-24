@@ -57,6 +57,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		super(context);
 		this.context = context;
 		setFrameRate(30);
+
 	}
 
 	@Override
@@ -66,6 +67,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		directionalLight.setPower(2);
 
 		getCurrentScene().addLight(directionalLight);
+		getCurrentScene().setBackgroundColor(Color.BLACK);
 		getCurrentCamera().setPosition(0, 0, 10);
 	}
 

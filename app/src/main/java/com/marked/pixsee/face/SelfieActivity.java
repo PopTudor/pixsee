@@ -7,12 +7,16 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -24,7 +28,7 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.R;
 
-import org.rajawali3d.view.SurfaceView;
+import org.rajawali3d.view.TextureView;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,10 +36,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class SelfieActivity extends AppCompatActivity {
+public class SelfieActivity extends AppCompatActivity implements android.view.TextureView.SurfaceTextureListener {
 	private static final String TAG = SelfieActivity.class + "***";
 
-	private CameraSource mCameraSource;
+	private CameraSourcePixsee mCameraSource;
 	private CameraSourcePreview mCameraSourcePreview;
 	private FaceRenderer mFaceRenderer;
 
@@ -47,18 +51,46 @@ public class SelfieActivity extends AppCompatActivity {
 		void onFavoriteClicked(FaceObject object);
 	}
 
+	TextureView mFaceTextureView;
+
+	@Override
+	public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+		mCameraSourcePreview.setSurfaceTexture(surface);
+		startCameraSource();
+	}
+
+	@Override
+	public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+	}
+
+	@Override
+	public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+		mCameraSourcePreview.setSurfaceTexture(surface);
+		return false;
+	}
+
+	@Override
+	public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_preview);
+		mFaceRenderer = new FaceRenderer(this);
 
 		mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
-		SurfaceView faceSurfaceView = (SurfaceView) findViewById(R.id.faceSurfaceView);
-		faceSurfaceView.setTransparent(true);
-		faceSurfaceView.setEGLContextClientVersion(2);
+		mFaceTextureView = (TextureView) findViewById(R.id.faceSurfaceView);
+//		faceSurfaceView.setTransparent(true);
+		mFaceTextureView.setEGLContextClientVersion(2);
+		mFaceTextureView.setSurfaceRenderer(mFaceRenderer);
+		mFaceTextureView.setSurfaceTextureListener(this);
 
-		mFaceRenderer = new FaceRenderer(this);
-		faceSurfaceView.setSurfaceRenderer(mFaceRenderer);
 		findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -78,12 +110,12 @@ public class SelfieActivity extends AppCompatActivity {
 		findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCameraSource.takePicture(new CameraSource.ShutterCallback() {
+				mCameraSource.takePicture(new CameraSourcePixsee.ShutterCallback() {
 					@Override
 					public void onShutter() {
 						mFaceRenderer.takeScreenshot();
 					}
-				}, new CameraSource.PictureCallback() {
+				}, new CameraSourcePixsee.PictureCallback() {
 					@Override
 					public void onPictureTaken(byte[] bytes) {
 						if (Utils.isExternalStorageWritable()) {
@@ -185,8 +217,8 @@ public class SelfieActivity extends AppCompatActivity {
 			// download completes on device.
 			Log.w(TAG, "Face detector dependencies are not yet available.");
 		}
-		mCameraSource = new CameraSource.Builder(this, faceDetector).setRequestedFps(30.0f)
-				                .setAutoFocusEnabled(false)
+		mCameraSource = new CameraSourcePixsee.Builder(this, faceDetector).setRequestedFps(30.0f)
+				                .setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO)
 //	             .setRequestedPreviewSize(640, 480)
 				                .setFacing(CameraSource.CAMERA_FACING_FRONT)
 				                .build();
@@ -199,7 +231,7 @@ public class SelfieActivity extends AppCompatActivity {
 	protected void onResume() {
 		super.onResume();
 
-		startCameraSource();
+//		startCameraSource();
 	}
 
 	/**
