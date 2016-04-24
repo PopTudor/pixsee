@@ -39,7 +39,6 @@ public class FaceObject implements Comparable<FaceObject> {
 	public void setTexture(int resourceID) {
 		tag = resourceID;
 		texture = new Texture("Texture_"+String.valueOf(tag), resourceID);
-		object3D.setMaterial(material);
 		try {
 			material.addTexture(texture);
 			object3D.setMaterial(material);
