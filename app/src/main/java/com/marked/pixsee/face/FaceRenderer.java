@@ -23,11 +23,7 @@ import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.renderer.Renderer;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.ShortBuffer;
+import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -41,7 +37,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	private Context context;
 	private DirectionalLight directionalLight;
 
-	private int mFacing = CameraSource.CAMERA_FACING_BACK;
+	private int mFacing = CameraSource.CAMERA_FACING_FRONT;
 	private int mPreviewWidth;
 	private int mPreviewHeight;
 	private float mWidthScaleFactor = 1.0f;
@@ -50,14 +46,12 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	private Object3D loadedObject = null;
 	private Face mFace;
 	private boolean screenshot;
-	private Bitmap lastScreenshot;
 
 
 	public FaceRenderer(Context context) {
 		super(context);
 		this.context = context;
-		setFrameRate(30);
-
+		setFrameRate(60);
 	}
 
 	@Override
@@ -67,22 +61,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		directionalLight.setPower(2);
 
 		getCurrentScene().addLight(directionalLight);
-		getCurrentScene().setBackgroundColor(Color.BLACK);
 		getCurrentCamera().setPosition(0, 0, 10);
-	}
-
-	public void takeScreenshot() {
-		screenshot = true;
-	}
-
-	public void saveScreenshot(Bitmap screenshot) {
-		try {
-			File file = Utils.getPublicPixseeDir();
-			FileOutputStream out = new FileOutputStream(file.getPath() + "/photo_renderer.png");
-			screenshot.compress(Bitmap.CompressFormat.PNG, 90, out);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -105,44 +84,46 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		loadModel(object.getLoader(), this, faceObject.getTag());
 	}
 
-	public Bitmap getLastScreenshot() {
-		return lastScreenshot;
+	public void takeScreenshot() {
+		screenshot = true;
 	}
 
 	@Override
 	public void onRenderFrame(GL10 gl) {
 		super.onRenderFrame(gl);
 		if (screenshot) {
-			gl.glClearColor(1f, 1f, 1f, 1f);
-			int screenshotSize = mDefaultViewportWidth * mDefaultViewportHeight;
-			ByteBuffer bb = ByteBuffer.allocateDirect(screenshotSize * 4);
-			bb.order(ByteOrder.nativeOrder());
-			gl.glReadPixels(0, 0, mDefaultViewportWidth, mDefaultViewportHeight, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, bb);
-			int pixelsBuffer[] = new int[screenshotSize];
-			bb.asIntBuffer().get(pixelsBuffer);
-			bb = null;
-			Bitmap bitmap = Bitmap.createBitmap(mDefaultViewportWidth, mDefaultViewportHeight, Bitmap.Config.RGB_565);
-			bitmap.setPixels(pixelsBuffer, screenshotSize - mDefaultViewportWidth, -mDefaultViewportWidth, 0, 0,
-					mDefaultViewportWidth, mDefaultViewportHeight);
-			pixelsBuffer = null;
-
-			short sBuffer[] = new short[screenshotSize];
-			ShortBuffer sb = ShortBuffer.wrap(sBuffer);
-			bitmap.copyPixelsToBuffer(sb);
-
-			//Making created bitmap (from OpenGL points) compatible with Android bitmap
-			for (int i = 0; i < screenshotSize; ++i) {
-				short v = sBuffer[i];
-				sBuffer[i] = (short) (((v & 0x1f) << 11) | (v & 0x7e0) | ((v & 0xf800) >> 11));
-			}
-			sb.rewind();
-			bitmap.copyPixelsFromBuffer(sb);
-
-			lastScreenshot = bitmap;
-			saveScreenshot(lastScreenshot);
-
+			takeScreenshot(gl, true);
 			screenshot = false;
 		}
+	}
+
+	private void takeScreenshot(GL10 gl, boolean save) {
+		Bitmap bitmap = savePixels(0, 0, mDefaultViewportWidth, mDefaultViewportHeight, gl);
+		if (save)
+			Utils.saveBitmapToFile(bitmap, "/photo_renderer.png");
+	}
+
+	public static Bitmap savePixels(int x, int y, int w, int h, GL10 gl) {
+		int b[] = new int[w * (y + h)];
+		int bt[] = new int[w * h];
+		IntBuffer ib = IntBuffer.wrap(b);
+		ib.position(0);
+		gl.glReadPixels(x, 0, w, y + h, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, ib);
+
+		for (int i = 0, k = 0; i < h; i++, k++) {//remember, that OpenGL bitmap is incompatible with Android bitmap
+			//and so, some correction need.
+			for (int j = 0; j < w; j++) {
+				int pix = b[i * w + j];
+				int pb = (pix >> 16) & 0xff;
+				int pr = (pix << 16) & 0x00ff0000;
+				int pix1 = (pix & 0xff00ff00) | pr | pb;
+				bt[(h - k - 1) * w + j] = pix1;
+			}
+		}
+
+
+		Bitmap sb = Bitmap.createBitmap(bt, w, h, Bitmap.Config.ARGB_8888);
+		return sb;
 	}
 
 	/**********************
@@ -171,6 +152,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	@Override
 	public void onModelLoadFailed(ALoader loader) {
 		Log.d(TAG, "onModelLoadFailed: ");
+		loadedObject = null;
 	}
 
 	@Override

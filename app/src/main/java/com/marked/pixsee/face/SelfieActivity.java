@@ -4,10 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -27,18 +25,19 @@ import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.R;
+import com.marked.pixsee.facedetail.FaceDetail;
 
-import org.rajawali3d.view.TextureView;
+import org.rajawali3d.view.SurfaceView;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class SelfieActivity extends AppCompatActivity implements android.view.TextureView.SurfaceTextureListener {
+public class SelfieActivity extends AppCompatActivity {
 	private static final String TAG = SelfieActivity.class + "***";
-
+	public static final String PHOTO_EXTRA = "PHOTO";
+	public static final String PHOTO_RENDERER_EXTRA = "PHOTO_RENDERER";
 	private CameraSourcePixsee mCameraSource;
 	private CameraSourcePreview mCameraSourcePreview;
 	private FaceRenderer mFaceRenderer;
@@ -51,9 +50,8 @@ public class SelfieActivity extends AppCompatActivity implements android.view.Te
 		void onFavoriteClicked(FaceObject object);
 	}
 
-	TextureView mFaceTextureView;
 
-	@Override
+	/*@Override
 	public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
 		mCameraSourcePreview.setSurfaceTexture(surface);
 		startCameraSource();
@@ -73,23 +71,21 @@ public class SelfieActivity extends AppCompatActivity implements android.view.Te
 	@Override
 	public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
-	}
+	}*/
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_preview);
 		mFaceRenderer = new FaceRenderer(this);
 
 		mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
-		mFaceTextureView = (TextureView) findViewById(R.id.faceSurfaceView);
-//		faceSurfaceView.setTransparent(true);
+		final SurfaceView mFaceTextureView = (SurfaceView) findViewById(R.id.texture_view);
+		mFaceTextureView.setTransparent(true);
 		mFaceTextureView.setEGLContextClientVersion(2);
 		mFaceTextureView.setSurfaceRenderer(mFaceRenderer);
-		mFaceTextureView.setSurfaceTextureListener(this);
 
 		findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -119,32 +115,20 @@ public class SelfieActivity extends AppCompatActivity implements android.view.Te
 					@Override
 					public void onPictureTaken(byte[] bytes) {
 						if (Utils.isExternalStorageWritable()) {
-							File photo = Utils.getPublicPixseeDir();
-							ByteArrayOutputStream streamArray = new ByteArrayOutputStream();
+							File photo = Utils.getPublicPicturesPixseeDir();
 							try {
-								FileOutputStream fos = new FileOutputStream(photo.getPath()
-										                                            + "/photo.png");
-								Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-								Bitmap rotatedImage = Utils.flip(bmp);
-								bmp = null;
-								BufferedOutputStream stream = new BufferedOutputStream(fos);
-
-								rotatedImage.compress(Bitmap.CompressFormat.PNG, 70, streamArray);
-
-								Bitmap result = Utils.combineImages(BitmapFactory.decodeByteArray
-										                                                  (streamArray
-												                                                   .toByteArray(), 0, streamArray.size()),
-										mFaceRenderer.getLastScreenshot());
-								streamArray.reset();
-								result.compress(Bitmap.CompressFormat.PNG, 100, streamArray);
-								stream.write(streamArray.toByteArray());
+								BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(photo.getPath() + "/photo.png"), bytes.length);
+								stream.write(bytes);
+								stream.flush();
 								stream.close();
+								Intent intent = new Intent(SelfieActivity.this, FaceDetail.class);
+								intent.putExtra(PHOTO_EXTRA, photo.getPath() + "/photo.png");
+								intent.putExtra(PHOTO_RENDERER_EXTRA, photo.getPath() + "/photo_renderer.png");
+								startActivity(intent);
 							} catch (java.io.IOException e) {
 								Log.e("PictureDemo", "Exception in photoCallback", e);
 							}
-
 						}
-
 					}
 				});
 			}
@@ -231,7 +215,7 @@ public class SelfieActivity extends AppCompatActivity implements android.view.Te
 	protected void onResume() {
 		super.onResume();
 
-//		startCameraSource();
+		startCameraSource();
 	}
 
 	/**

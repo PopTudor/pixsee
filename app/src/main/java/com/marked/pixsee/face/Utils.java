@@ -6,7 +6,11 @@ import android.graphics.Matrix;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 
 import static android.os.Environment.MEDIA_MOUNTED;
 import static android.os.Environment.getExternalStorageState;
@@ -15,7 +19,7 @@ import static android.os.Environment.getExternalStorageState;
  * Created by Tudor on 4/14/2016.
  */
 public class Utils {
-	static File getPublicPixseeDir() {
+	static File getPublicPicturesPixseeDir() {
 		File file = new File(Environment.getExternalStoragePublicDirectory(
 				Environment.DIRECTORY_PICTURES), "Pixsee/");
 		if (!file.exists()) {
@@ -32,23 +36,13 @@ public class Utils {
 		return dst;
 	}
 
-	static Bitmap combineImages(Bitmap c, Bitmap s) {
-		Bitmap cs = null;
+	static Bitmap combineImages(@NotNull Bitmap c, @NotNull Bitmap s) {
+		Bitmap overlay = Bitmap.createBitmap(c.getWidth(), c.getHeight(), Bitmap.Config.ARGB_8888);
+		Canvas result = new Canvas(overlay);
 
-		int width, height = 0;
-
-		width = c.getWidth();
-		height = c.getHeight();
-
-
-		cs = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-
-		Canvas comboImage = new Canvas(cs);
-
-		comboImage.drawBitmap(c, 0f, 0f, null);
-		comboImage.drawBitmap(s, 0, 0f, null);
-
-		return cs;
+		result.drawBitmap(c, 0f, 0f, null);
+		result.drawBitmap(s, 0, 0f, null);
+		return overlay;
 	}
 
 	/* Checks if external storage is available for read and write */
@@ -58,5 +52,17 @@ public class Utils {
 			return true;
 		}
 		return false;
+	}
+
+	public static void saveBitmapToFile(Bitmap screenshot, String filename) {
+		try {
+			File file = getPublicPicturesPixseeDir();
+			FileOutputStream out = new FileOutputStream(file.getPath() + filename);
+			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(out);
+			screenshot.compress(Bitmap.CompressFormat.PNG, 100, out);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

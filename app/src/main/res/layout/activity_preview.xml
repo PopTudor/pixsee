@@ -1,21 +1,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tool="http://schemas.android.com/tools"
-    android:id="@+id/containerFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tool:background="#00ffffff">
+                xmlns:tool="http://schemas.android.com/tools"
+                android:id="@+id/containerFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tool:background="#00ffffff">
 
-
-    <com.marked.pixsee.face.CameraSourcePreview
-        android:id="@+id/preview"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!--<android.opengl.GLSurfaceView-->
-        <org.rajawali3d.view.TextureView
-            android:id="@+id/faceSurfaceView"
+
+        <com.marked.pixsee.face.CameraSourcePreview
+            android:id="@+id/preview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </com.marked.pixsee.face.CameraSourcePreview>
+            android:layout_height="match_parent">
+            <!--<android.opengl.GLSurfaceView-->
+            <org.rajawali3d.view.SurfaceView
+                android:id="@+id/texture_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.marked.pixsee.face.CameraSourcePreview>
+    </FrameLayout>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -24,46 +28,46 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerHorizontal="true"
-        android:fillViewport="true"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:fillViewport="true">
 
         <LinearLayout
             android:id="@+id/bottom_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:measureWithLargestChild="false">
+            android:measureWithLargestChild="false"
+            android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/favorite1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:backgroundTint="#da000000"
-                android:maxHeight="32dp"
-                android:maxWidth="32dp"
-                android:src="@drawable/mlg_48"
-                android:adjustViewBounds="false"
-                android:cropToPadding="false"
-                android:background="@drawable/round_corner_button"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:padding="5dp" />
+                android:adjustViewBounds="false"
+                android:background="@drawable/round_corner_button"
+                android:backgroundTint="#da545454"
+                android:cropToPadding="false"
+                android:maxHeight="32dp"
+                android:maxWidth="32dp"
+                android:padding="5dp"
+                android:src="@drawable/mlg_48"/>
 
             <ImageButton
                 android:id="@+id/favorite2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#90ff00a6"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/round_corner_button"
+                android:backgroundTint="#fea3de"
                 android:maxHeight="32dp"
                 android:maxWidth="32dp"
-                android:src="@drawable/hearts_48"
-                android:layout_gravity="center"
-                android:background="@drawable/round_corner_button"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:padding="5dp" />
+                android:padding="5dp"
+                android:src="@drawable/hearts_48"/>
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -76,7 +80,7 @@
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
         android:contentDescription="Switch camera"
-        android:src="@drawable/ic_camera_rear_24dp" />
+        android:src="@drawable/ic_camera_rear_24dp"/>
 
     <ImageButton
         android:id="@+id/camera_button"
@@ -86,8 +90,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
         android:background="@drawable/round_button"
-        android:onClick="onCameraClick"
         android:backgroundTint="@color/accent_dark"
         android:backgroundTintMode="screen"
-        android:src="@drawable/ic_photo_camera_24dp" />
+        android:onClick="onCameraClick"
+        android:src="@drawable/ic_photo_camera_24dp"/>
 </RelativeLayout>
