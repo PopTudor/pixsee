@@ -6,7 +6,7 @@
     android:animateLayoutChanges="true"
     xmlns:fresco="http://schemas.android.com/tools"
     android:background="#212121"
-    tools:context=".ui.activity.FullscreenActivity">
+    tools:context=".frienddetail.ImageFullscreenActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -24,6 +24,8 @@
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.AppBarLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/fullscreenAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,12 +33,10 @@
             android:background="@android:color/transparent"
             app:elevation="0dp">
 
-            <app:android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/black_overlay"
-                android:orientation="vertical" />
+            <include
+                android:id="@+id/app_bar"
+                layout="@layout/toolbar"/>
+
         </android.support.design.widget.AppBarLayout>
 
         <LinearLayout

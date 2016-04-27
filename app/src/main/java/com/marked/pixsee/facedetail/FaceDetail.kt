@@ -1,33 +1,23 @@
-package com.marked.pixsee.frienddetail
+package com.marked.pixsee.facedetail
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.davemorrissey.labs.subscaleview.ImageSource
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import android.widget.ImageButton
 import com.marked.pixsee.R
-import kotlinx.android.synthetic.main.activity_fullscreen.*
+import com.marked.pixsee.face.SelfieActivity
+import kotlinx.android.synthetic.main.activity_face_detail.*
 import kotlinx.android.synthetic.main.toolbar.*
 
-/**
- * An example full-screen activity that shows and hides the UI with user interaction.
- */
-class ImageFullscreenActivity : AppCompatActivity() {
+class FaceDetail : AppCompatActivity() {
+    private var button: ImageButton? = null
     private val mHideHandler = Handler()
     private var mVisible: Boolean = false
-    private val mHidePart2Runnable = Runnable {
-        // Note that some of these constants are new as of API 16 (Jelly Bean)
-        // and API 19 (KitKat). It is safe to use them, as they are inlined
-        // at compile-time and do nothing on earlier devices.
-        fullscreenContent?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-    }
     private val mShowPart2Runnable = Runnable {
         // Delayed display of UI elements
         showAnimation()
@@ -39,59 +29,33 @@ class ImageFullscreenActivity : AppCompatActivity() {
      * while interacting with activity UI.
      */
     private val mDelayHideTouchListener = View.OnTouchListener { view, motionEvent ->
-        if (AUTO_HIDE) {
-            delayedHide(AUTO_HIDE_DELAY_MILLIS)
+        if (FaceDetail.AUTO_HIDE) {
+            delayedHide(FaceDetail.AUTO_HIDE_DELAY_MILLIS)
         }
         false
     }
 
     fun showAnimation(): Unit {
-        fullscreenContentControls
-                .animate()
+        app_bar.animate()
                 .alpha(1.0f)
                 .setDuration(300L)
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationStart(animation: Animator?) {
                         super.onAnimationStart(animation)
-                        fullscreenContentControls?.visibility = View.VISIBLE
-                    }
-                })
-                .start()
-
-        fullscreenAppBar
-                .animate()
-                .alpha(1.0f)
-                .setDuration(300L)
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationStart(animation: Animator?) {
-                        super.onAnimationStart(animation)
-                        fullscreenAppBar?.visibility = View.VISIBLE
+                        app_bar?.visibility = View.VISIBLE
                     }
                 })
                 .start()
     }
 
     fun hideAnimation(): Unit {
-        fullscreenContentControls
-                .animate()
+        app_bar.animate()
                 .alpha(0.0f)
                 .setDuration(300L)
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator?) {
                         super.onAnimationEnd(animation)
-                        fullscreenContentControls?.visibility = View.GONE
-                    }
-                })
-                .start()
-
-        fullscreenAppBar
-                .animate()
-                .alpha(0.0f)
-                .setDuration(300L)
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator?) {
-                        super.onAnimationEnd(animation)
-                        fullscreenAppBar?.visibility = View.GONE
+                        app_bar?.visibility = View.GONE
                     }
                 })
                 .start()
@@ -99,30 +63,25 @@ class ImageFullscreenActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fullscreen)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        window.statusBarColor = ContextCompat.getColor(this, R.color.semi_transparent_black)
+        setContentView(R.layout.activity_face_detail)
+        photoImageView.setImageURI(Uri.parse("file://" + intent.getStringExtra(SelfieActivity.PHOTO_EXTRA)))
+        photoRendererImageView.setImageURI(Uri.parse("file://" + intent.getStringExtra(SelfieActivity.PHOTO_RENDERER_EXTRA)))
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-		supportActionBar?.setDisplayShowTitleEnabled(false)
-		toolbar.setNavigationOnClickListener { onBackPressed() }
-
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
 
         mVisible = true
-
+        // Set up the user interaction to manually show or hide the system UI.
         fullscreenContent.apply {
-            // Set up the user interaction to manually show or hide the system UI.
-            setOnClickListener{ toggle() }
+            setOnClickListener { toggle() }
             setOnTouchListener(mDelayHideTouchListener)
-            setImage(ImageSource.uri(intent.getStringExtra("URI")))
-            setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM)
-            setMinimumDpi(100)
-            setDoubleTapZoomDpi(100 + 20)
-            setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER)
         }
+        button = findViewById(R.id.button) as ImageButton
+        button?.setOnClickListener { }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -144,7 +103,6 @@ class ImageFullscreenActivity : AppCompatActivity() {
 
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable)
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY.toLong())
     }
 
     @SuppressLint("InlinedApi")
@@ -153,7 +111,6 @@ class ImageFullscreenActivity : AppCompatActivity() {
         mVisible = true
 
         // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable)
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY.toLong())
     }
 
