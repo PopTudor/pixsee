@@ -109,7 +109,7 @@ public class SelfieActivity extends AppCompatActivity {
 				mCameraSource.takePicture(new CameraSourcePixsee.ShutterCallback() {
 					@Override
 					public void onShutter() {
-//						mFaceRenderer.takeScreenshot();
+						mFaceRenderer.takeScreenshot();
 
 					}
 				}, new CameraSourcePixsee.PictureCallback() {
@@ -117,7 +117,6 @@ public class SelfieActivity extends AppCompatActivity {
 					public void onPictureTaken(byte[] bytes) {
 						if (Utils.isExternalStorageWritable()) {
 							File pictureFile = Utils.getPublicPicturesPixseeDir("/pixsee.jpg");
-
 							if (pictureFile == null){
 								Toast.makeText(SelfieActivity.this, "Image retrieval failed.", Toast.LENGTH_SHORT).show();
 								return;
@@ -128,10 +127,11 @@ public class SelfieActivity extends AppCompatActivity {
 								stream.flush();
 								stream.close();
 
+								while (mFaceRenderer.mLastPictureLocation==null) ; // block untill OpenglRenderer takes a screenshot of the screen
 								Intent intent = new Intent(SelfieActivity.this, FaceDetail.class);
 								intent.putExtra(PHOTO_EXTRA, pictureFile.getPath());
-//								intent.putExtra(PHOTO_RENDERER_EXTRA, pictureFile.getPath() + "/photo_renderer.png");
-//								startActivity(intent);
+								intent.putExtra(PHOTO_RENDERER_EXTRA, mFaceRenderer.mLastPictureLocation.getPath());
+								startActivity(intent);
 							} catch (java.io.IOException e) {
 								Log.e("PictureDemo", "Exception in photoCallback", e);
 							}

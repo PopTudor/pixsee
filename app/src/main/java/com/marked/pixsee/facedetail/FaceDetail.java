@@ -28,7 +28,7 @@ public class FaceDetail extends AppCompatActivity {
 		pictureContainer = (RelativeLayout) findViewById(R.id.pictureContainer);
 
 		photoImageView.setImageURI(Uri.parse(getIntent().getStringExtra(SelfieActivity.PHOTO_EXTRA)));
-//		photoRendererImageView.setImageURI(Uri.parse(getIntent().getStringExtra(SelfieActivity.PHOTO_RENDERER_EXTRA)));
+		photoRendererImageView.setImageURI(Uri.parse(getIntent().getStringExtra(SelfieActivity.PHOTO_RENDERER_EXTRA)));
 
 		button = (Button) findViewById(R.id.button);
 		button.setOnClickListener(new View.OnClickListener() {

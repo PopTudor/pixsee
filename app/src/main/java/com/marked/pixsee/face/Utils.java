@@ -9,7 +9,6 @@ import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -23,8 +22,8 @@ public class Utils {
 	static File getPublicPicturesPixseeDir(String filename) {
 		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "/Pixsee/");
 
-		if (! mediaStorageDir.exists()){
-			if (! mediaStorageDir.mkdirs()){
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
 				Log.d("Camera Guide", "Required media storage does not exist");
 				return null;
 			}
@@ -60,14 +59,14 @@ public class Utils {
 		return false;
 	}
 
-	public static void saveBitmapToFile(Bitmap screenshot, String filename) {
+	public static File saveFile(Bitmap screenshot, String filename) {
+		File file = getPublicPicturesPixseeDir(filename);
 		try {
-			File file = getPublicPicturesPixseeDir(filename);
-			FileOutputStream out = new FileOutputStream(file);
-			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(out);
-			screenshot.compress(Bitmap.CompressFormat.PNG, 100, out);
+			screenshot.compress(Bitmap.CompressFormat.PNG, 85, new FileOutputStream(file));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return file;
 	}
+
 }
