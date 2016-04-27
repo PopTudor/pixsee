@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -29,7 +30,6 @@ import com.marked.pixsee.facedetail.FaceDetail;
 
 import org.rajawali3d.view.SurfaceView;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -109,25 +109,33 @@ public class SelfieActivity extends AppCompatActivity {
 				mCameraSource.takePicture(new CameraSourcePixsee.ShutterCallback() {
 					@Override
 					public void onShutter() {
-						mFaceRenderer.takeScreenshot();
+//						mFaceRenderer.takeScreenshot();
+
 					}
 				}, new CameraSourcePixsee.PictureCallback() {
 					@Override
 					public void onPictureTaken(byte[] bytes) {
 						if (Utils.isExternalStorageWritable()) {
-							File photo = Utils.getPublicPicturesPixseeDir();
+							File pictureFile = Utils.getPublicPicturesPixseeDir("/pixsee.jpg");
+
+							if (pictureFile == null){
+								Toast.makeText(SelfieActivity.this, "Image retrieval failed.", Toast.LENGTH_SHORT).show();
+								return;
+							}
 							try {
-								BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(photo.getPath() + "/photo.png"), bytes.length);
+								FileOutputStream stream = new FileOutputStream(pictureFile);
 								stream.write(bytes);
 								stream.flush();
 								stream.close();
+
 								Intent intent = new Intent(SelfieActivity.this, FaceDetail.class);
-								intent.putExtra(PHOTO_EXTRA, photo.getPath() + "/photo.png");
-								intent.putExtra(PHOTO_RENDERER_EXTRA, photo.getPath() + "/photo_renderer.png");
-								startActivity(intent);
+								intent.putExtra(PHOTO_EXTRA, pictureFile.getPath());
+//								intent.putExtra(PHOTO_RENDERER_EXTRA, pictureFile.getPath() + "/photo_renderer.png");
+//								startActivity(intent);
 							} catch (java.io.IOException e) {
 								Log.e("PictureDemo", "Exception in photoCallback", e);
 							}
+
 						}
 					}
 				});

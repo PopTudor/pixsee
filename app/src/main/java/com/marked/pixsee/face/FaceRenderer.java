@@ -1,7 +1,6 @@
 package com.marked.pixsee.face;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -23,6 +22,7 @@ import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.renderer.Renderer;
 
+import java.io.File;
 import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -92,38 +92,42 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	public void onRenderFrame(GL10 gl) {
 		super.onRenderFrame(gl);
 		if (screenshot) {
-			takeScreenshot(gl, true);
+			takeScreenshot(gl);
 			screenshot = false;
 		}
 	}
 
-	private void takeScreenshot(GL10 gl, boolean save) {
-		Bitmap bitmap = savePixels(0, 0, mDefaultViewportWidth, mDefaultViewportHeight, gl);
-		if (save)
-			Utils.saveBitmapToFile(bitmap, "/photo_renderer.png");
+	private void takeScreenshot(GL10 gl) {
+//		Bitmap bitmap = savePixels(0, 0, mDefaultViewportWidth, mDefaultViewportHeight, gl);
+//		if (save){
+			savePixels(0, 0, mDefaultViewportWidth, mDefaultViewportHeight, gl);
+//		}
+//			Utils.saveBitmapToFile(bitmap, "/photo_renderer.png");
 	}
 
-	public static Bitmap savePixels(int x, int y, int w, int h, GL10 gl) {
-		int b[] = new int[w * (y + h)];
-		int bt[] = new int[w * h];
+	public static String savePixels(int x, int y, int w, int h, GL10 gl) {
+		int b[] = new int[w * h];
+//		int bt[] = new int[w * h];
 		IntBuffer ib = IntBuffer.wrap(b);
 		ib.position(0);
-		gl.glReadPixels(x, 0, w, y + h, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, ib);
+		gl.glReadPixels(x, 0, w, h, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, ib);
 
-		for (int i = 0, k = 0; i < h; i++, k++) {//remember, that OpenGL bitmap is incompatible with Android bitmap
-			//and so, some correction need.
-			for (int j = 0; j < w; j++) {
-				int pix = b[i * w + j];
-				int pb = (pix >> 16) & 0xff;
-				int pr = (pix << 16) & 0x00ff0000;
-				int pix1 = (pix & 0xff00ff00) | pr | pb;
-				bt[(h - k - 1) * w + j] = pix1;
-			}
-		}
+//		for (int i = 0, k = 0; i < h; i++, k++) {//remember, that OpenGL bitmap is incompatible with Android bitmap
+//			//and so, some correction need.
+//			for (int j = 0; j < w; j++) {
+//				int pix = b[i * w + j];
+//				int pb = (pix >> 16) & 0xff;
+//				int pr = (pix << 16) & 0x00ff0000;
+//				int pix1 = (pix & 0xff00ff00) | pr | pb;
+//				bt[(h - k - 1) * w + j] = pix1;
+//			}
+//		}
+		File picture = Utils.getPublicPicturesPixseeDir("/model.jpg");
 
 
-		Bitmap sb = Bitmap.createBitmap(bt, w, h, Bitmap.Config.ARGB_8888);
-		return sb;
+
+//		Bitmap sb = Bitmap.createBitmap(bt, w, h, Bitmap.Config.ARGB_8888);
+		return null;
 	}
 
 	/**********************

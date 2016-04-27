@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.os.Environment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,13 +20,18 @@ import static android.os.Environment.getExternalStorageState;
  * Created by Tudor on 4/14/2016.
  */
 public class Utils {
-	static File getPublicPicturesPixseeDir() {
-		File file = new File(Environment.getExternalStoragePublicDirectory(
-				Environment.DIRECTORY_PICTURES), "Pixsee/");
-		if (!file.exists()) {
-			file.mkdirs();
+	static File getPublicPicturesPixseeDir(String filename) {
+		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "/Pixsee/");
+
+		if (! mediaStorageDir.exists()){
+			if (! mediaStorageDir.mkdirs()){
+				Log.d("Camera Guide", "Required media storage does not exist");
+				return null;
+			}
 		}
-		return file;
+
+		// Create a media file name
+		return new File(mediaStorageDir.getPath() + filename);
 	}
 
 	static Bitmap flip(Bitmap src) {
@@ -56,11 +62,10 @@ public class Utils {
 
 	public static void saveBitmapToFile(Bitmap screenshot, String filename) {
 		try {
-			File file = getPublicPicturesPixseeDir();
-			FileOutputStream out = new FileOutputStream(file.getPath() + filename);
+			File file = getPublicPicturesPixseeDir(filename);
+			FileOutputStream out = new FileOutputStream(file);
 			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(out);
 			screenshot.compress(Bitmap.CompressFormat.PNG, 100, out);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
