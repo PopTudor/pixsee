@@ -47,7 +47,7 @@ class ChatDetailActivity : AppCompatActivity(), FriendDetailFragment.ContactDeta
 		// Show the Up button in the action bar.
 		supportActionBar?.setDisplayHomeAsUpEnabled(true);
 
-		var upArrow = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back_24dp);
+		var upArrow = ContextCompat.getDrawable(this, R.drawable.ic_arrow_24dp);
 //		upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
 		supportActionBar?.setHomeAsUpIndicator(upArrow);
 

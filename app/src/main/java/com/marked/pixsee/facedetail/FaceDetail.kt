@@ -3,20 +3,37 @@ package com.marked.pixsee.facedetail
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.ImageButton
+import android.view.ViewGroup
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
+import com.facebook.imagepipeline.request.BasePostprocessor
+import com.facebook.share.Sharer
+import com.facebook.share.model.SharePhoto
+import com.facebook.share.model.SharePhotoContent
+import com.facebook.share.widget.ShareDialog
 import com.marked.pixsee.R
 import com.marked.pixsee.face.SelfieActivity
+import com.marked.pixsee.face.Utils
 import kotlinx.android.synthetic.main.activity_face_detail.*
 import kotlinx.android.synthetic.main.toolbar.*
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class FaceDetail : AppCompatActivity() {
-    private var button: ImageButton? = null
     private val mHideHandler = Handler()
     private var mVisible: Boolean = false
     private val mShowPart2Runnable = Runnable {
@@ -34,6 +51,113 @@ class FaceDetail : AppCompatActivity() {
             delayedHide(FaceDetail.AUTO_HIDE_DELAY_MILLIS)
         }
         false
+    }
+
+    private val facebookCallback by lazy {
+        object : FacebookCallback<Sharer.Result> {
+            override fun onCancel() {
+            }
+
+            override fun onError(error: FacebookException?) {
+            }
+
+            override fun onSuccess(result: Sharer.Result?) {
+            }
+        }
+    }
+    private val callbackManager: CallbackManager by lazy { CallbackManager.Factory.create() };
+    private val shareDialog: ShareDialog by lazy {
+        ShareDialog(this)
+    };
+    lateinit var overlayBitmap: Bitmap
+
+    val redMeshPostprocessor = object : BasePostprocessor() {
+        override fun getName(): String {
+            return "redMeshPostprocessor";
+        }
+
+        override fun process(bitmap: Bitmap) {
+
+
+            for (x in 1..bitmap.getWidth() step 2) {
+                for (y in 1..bitmap.getHeight() step 2) {
+                    bitmap.setPixel(x, y, Color.RED);
+                }
+            }
+        }
+    }
+    lateinit var mPictureFile: File
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_face_detail)
+        Fresco.getImagePipeline().clearCaches()
+
+        setupToolbar()
+        setupImage()
+        shareDialog.registerCallback(callbackManager, facebookCallback)
+
+        shareFacebookImageButton.setOnClickListener {
+            if (ShareDialog.canShow(SharePhotoContent::class.java)) {
+                saveToDisk()
+                val photo = SharePhoto.Builder()
+                        .setCaption("Pixsee")
+                        .setUserGenerated(true)
+                        .setImageUrl(Uri.fromFile(mPictureFile))
+                        .build();
+                val content = SharePhotoContent.Builder()
+                        .addPhoto(photo)
+                        .build();
+
+                shareDialog.show(content);
+            }
+        }
+        saveImageButton.setOnClickListener {
+            saveToDisk()
+        }
+
+        mVisible = true
+        // Set up the user interaction to manually show or hide the system UI.
+        fullscreenContent.apply {
+            setOnClickListener { toggle() }
+            setOnTouchListener(mDelayHideTouchListener)
+        }
+    }
+
+    private fun saveToDisk() {
+        val bitmap = getViewSnapshot(fullscreenAppBar)
+        val formatter = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")
+        val now = Date()
+        mPictureFile = Utils.saveFile(bitmap, Bitmap.CompressFormat.JPEG, 50, formatter.format(now) + "_.jpg")
+    }
+
+    private fun setupImage() {
+        //        mPictureFile = File(intent.getStringExtra(SelfieActivity.PHOTO_EXTRA))
+        val factory = BitmapFactory.Options()
+        factory.inSampleSize = 3
+
+        photoImageView.apply {
+            setImageURI(Uri.fromFile(File(intent.getStringExtra(SelfieActivity.PHOTO_EXTRA))), this)
+            val hierarchy = GenericDraweeHierarchyBuilder(getResources())
+                    .setOverlay(Drawable.createFromPath(intent.getStringExtra(SelfieActivity.PHOTO_RENDERER_EXTRA)))
+                    .build();
+            setHierarchy(hierarchy);
+        }
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
+    }
+
+    override
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     fun showAnimation(): Unit {
@@ -60,35 +184,6 @@ class FaceDetail : AppCompatActivity() {
                     }
                 })
                 .start()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_face_detail)
-        Fresco.getImagePipeline().clearCaches()
-
-        photoImageView.apply {
-            setImageURI(Uri.parse("file://" + intent.getStringExtra(SelfieActivity.PHOTO_EXTRA)), FaceDetail::class.java)
-        }
-        photoRendererImageView.apply {
-            setImageURI(Uri.parse("file://" + intent.getStringExtra(SelfieActivity.PHOTO_RENDERER_EXTRA)), FaceDetail::class.java)
-        }
-
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
-
-        mVisible = true
-        // Set up the user interaction to manually show or hide the system UI.
-        fullscreenContent.apply {
-            setOnClickListener { toggle() }
-            setOnTouchListener(mDelayHideTouchListener)
-        }
-        button = findViewById(R.id.button) as ImageButton
-        button?.setOnClickListener { }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -131,6 +226,14 @@ class FaceDetail : AppCompatActivity() {
     }
 
     companion object {
+        fun getViewSnapshot(view: ViewGroup): Bitmap {
+            view.isDrawingCacheEnabled = true
+            val bmap = view.drawingCache
+            val snapshot = Bitmap.createBitmap(bmap, 0, 0, bmap.width, bmap.height, null, true)
+            view.isDrawingCacheEnabled = false
+            return snapshot
+        }
+
         /**
          * Whether or not the system UI should be auto-hidden after
          * [.AUTO_HIDE_DELAY_MILLIS] milliseconds.

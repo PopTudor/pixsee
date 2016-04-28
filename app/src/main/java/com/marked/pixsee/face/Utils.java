@@ -1,14 +1,15 @@
 package com.marked.pixsee.face;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.os.Environment;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -33,20 +34,24 @@ public class Utils {
 		return new File(mediaStorageDir.getPath() + filename);
 	}
 
-	static Bitmap flip(Bitmap src) {
+	static byte[] flip(byte[] src) {
+		Bitmap bitmap = BitmapFactory.decodeByteArray(src, 0, src.length);
 		Matrix m = new Matrix();
 		m.preScale(-1, 1);
-		Bitmap dst = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), m, false);
-		dst.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-		return dst;
+		Bitmap dst = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, false);
+//		dst.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+
+		ByteArrayOutputStream blob = new ByteArrayOutputStream();
+		dst.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, blob);
+		bitmap.recycle();
+		return blob.toByteArray();
 	}
 
-	static Bitmap combineImages(@NotNull Bitmap c, @NotNull Bitmap s) {
-		Bitmap overlay = Bitmap.createBitmap(c.getWidth(), c.getHeight(), Bitmap.Config.RGB_565);
+	public static Bitmap combineImages(@NotNull Bitmap c, @NotNull Bitmap s) {
+		Bitmap overlay = Bitmap.createScaledBitmap(c, c.getWidth(), c.getHeight(), false);
 		Canvas result = new Canvas(overlay);
-
-		result.drawBitmap(c, 0f, 0f, null);
-		result.drawBitmap(s, 0, 0f, null);
+		Bitmap s1 = Bitmap.createScaledBitmap(s, s.getWidth(), s.getHeight(), false);
+		result.drawBitmap(s1, 0f, 0f, null);
 		return overlay;
 	}
 
@@ -59,10 +64,10 @@ public class Utils {
 		return false;
 	}
 
-	public static File saveFile(Bitmap screenshot, String filename) {
-		File file = getPublicPicturesPixseeDir(filename);
+	public static File saveFile(Bitmap screenshot, Bitmap.CompressFormat format, int quality, String filename) {
+		File file = getPublicPicturesPixseeDir("/"+filename);
 		try {
-			screenshot.compress(Bitmap.CompressFormat.PNG, 85, new FileOutputStream(file));
+			screenshot.compress(format, quality, new FileOutputStream(file));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

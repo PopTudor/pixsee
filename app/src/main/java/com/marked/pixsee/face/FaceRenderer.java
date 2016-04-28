@@ -117,10 +117,8 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 				bt[(h - k - 1) * w + j] = pix1;
 			}
 		}
-
-
 		Bitmap sb = Bitmap.createBitmap(bt, w, h, Bitmap.Config.ARGB_8888);
-		mLastPictureLocation = Utils.saveFile(sb, "/model.png");
+		mLastPictureLocation = Utils.saveFile(sb, Bitmap.CompressFormat.PNG, 0, "model.png");
 		return sb;
 	}
 
@@ -163,7 +161,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		if (mFace != null && loadedObject != null) {
 			try { // FIXME: 4/28/2016 why is this throwing null pointer exception when clearly I check for null
 				translation(loadedObject);
-			}catch (NullPointerException e){
+			} catch (NullPointerException e) {
 				e.printStackTrace();
 			}
 		}

@@ -49,6 +49,7 @@ ext {
     glassFishVersion = '10.0-b28'
     rajawali = '1.1.505-SNAPSHOT@aar'
     rxPermissions = '0.7.0@aar'
+    facebook = '4,5'
 
     //Testing
     junitVersion = '4.12'
@@ -86,6 +87,7 @@ ext {
             glassFishAnnotations : "org.glassfish:javax.annotation:${glassFishVersion}",
             rajawali             : "org.rajawali3d:rajawali:${rajawali}",
             chatMessageView      : "me.himanshusoni.chatmessageview:chat-message-view:${messageViewVersion}",
+            facebook      : "com.facebook.android:facebook-android-sdk:[${facebook})",
             rxPermissions        : "com.tbruyelle.rxpermissions:rxpermissions:${rxPermissions}"
     ]
 

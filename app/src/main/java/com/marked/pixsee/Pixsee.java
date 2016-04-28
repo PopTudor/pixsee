@@ -2,6 +2,8 @@ package com.marked.pixsee;
 
 import android.app.Application;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -25,7 +27,8 @@ public class Pixsee extends Application {
 		ImagePipelineConfig config = OkHttpImagePipelineConfigFactory
 				.newBuilder(this, new OkHttpClient()).build();
 		Fresco.initialize(this, config);
-
+		FacebookSdk.sdkInitialize(getApplicationContext());
+		AppEventsLogger.activateApp(this);
 		//        val fabric = Fabric.Builder(this)
 		//				.kits(Crashlytics())
 		//				.debuggable(true) // TODO: 13-Dec-15 disable this

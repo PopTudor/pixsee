@@ -115,20 +115,20 @@ public class SelfieActivity extends AppCompatActivity {
 					@Override
 					public void onShutter() {
 						mFaceRenderer.takeScreenshot();
-
 					}
 				}, new CameraSourcePixsee.PictureCallback() {
 					@Override
 					public void onPictureTaken(byte[] bytes) {
 						if (Utils.isExternalStorageWritable()) {
-							File pictureFile = Utils.getPublicPicturesPixseeDir("/pixsee.jpg");
+							File pictureFile = Utils.getPublicPicturesPixseeDir("pixsee.jpg");
 							if (pictureFile == null) {
 								Toast.makeText(SelfieActivity.this, "Image retrieval failed.", Toast.LENGTH_SHORT).show();
 								return;
 							}
+
 							try {
 								FileOutputStream stream = new FileOutputStream(pictureFile);
-								stream.write(bytes);
+								stream.write(Utils.flip(bytes));
 								stream.flush();
 								stream.close();
 

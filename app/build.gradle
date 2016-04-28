@@ -130,6 +130,7 @@ dependencies {
     compile app.dagger
     compile app.rajawali
     compile app.rxPermissions
+    compile app.facebook
 
     apt app.daggerCompiler
     provided app.daggerCompiler
