@@ -28,8 +28,6 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.facedetail.FaceDetail;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
-import org.rajawali3d.view.SurfaceView;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,29 +50,6 @@ public class SelfieActivity extends AppCompatActivity {
 		void onFavoriteClicked(FaceObject object);
 	}
 
-
-	/*@Override
-	public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-		mCameraSourcePreview.setSurfaceTexture(surface);
-		startCameraSource();
-	}
-
-	@Override
-	public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-	}
-
-	@Override
-	public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-		mCameraSourcePreview.setSurfaceTexture(surface);
-		return false;
-	}
-
-	@Override
-	public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-	}*/
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,7 +61,7 @@ public class SelfieActivity extends AppCompatActivity {
 		mFaceRenderer = new FaceRenderer(this);
 
 		mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
-		final SurfaceView mFaceTextureView = (SurfaceView) findViewById(R.id.texture_view);
+		final FaceSurfaceView mFaceTextureView = (FaceSurfaceView) findViewById(R.id.texture_view);
 		mFaceTextureView.setTransparent(true);
 		mFaceTextureView.setEGLContextClientVersion(2);
 		mFaceTextureView.setSurfaceRenderer(mFaceRenderer);
@@ -95,7 +70,7 @@ public class SelfieActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				FaceObject faceObject = new FaceObject(mFaceRenderer);
-				faceObject.setTexture(R.drawable.mlg);
+				faceObject.setTexture(R.drawable.mlg,false);
 				mFaceRenderer.onFavoriteClicked(faceObject);
 			}
 		});
@@ -103,7 +78,7 @@ public class SelfieActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				FaceObject faceObject = new FaceObject(mFaceRenderer);
-				faceObject.setTexture(R.drawable.hearts);
+				faceObject.setTexture(R.drawable.hearts,false);
 				mFaceRenderer.onFavoriteClicked(faceObject);
 			}
 		});
@@ -120,22 +95,20 @@ public class SelfieActivity extends AppCompatActivity {
 					public void onPictureTaken(byte[] bytes) {
 						File privateFolder = getDir("Pixsee", MODE_PRIVATE);
 						String filename = "picture.jpg";
-						String path = privateFolder.getPath()+"/";
+						String path = privateFolder.getPath() + "/";
 						try {
 							FileOutputStream stream = new FileOutputStream(path + filename);
 							stream.write(Utils.flip(bytes));
-
 							stream.flush();
 							stream.close();
-							mCameraSourcePreview.stop();
-								while (mFaceRenderer.mLastPictureLocation == null) ; // block untill OpenglRenderer takes a screenshot of the screen
-							Intent intent = new Intent(SelfieActivity.this, FaceDetail.class);
-							intent.putExtra(PHOTO_EXTRA, path + filename);
-							intent.putExtra(PHOTO_RENDERER_EXTRA, mFaceRenderer.mLastPictureLocation.getPath());
-							startActivity(intent);
 						} catch (java.io.IOException e) {
 							Log.e("PictureDemo", "Exception in photoCallback", e);
 						}
+						mCameraSourcePreview.stop();
+						Intent intent = new Intent(SelfieActivity.this, FaceDetail.class);
+						intent.putExtra(PHOTO_EXTRA, path + filename);
+						intent.putExtra(PHOTO_RENDERER_EXTRA, mFaceRenderer.mLastPictureLocation.getPath());
+						startActivity(intent);
 					}
 				});
 			}
@@ -194,7 +167,7 @@ public class SelfieActivity extends AppCompatActivity {
 	private void createCameraSource() {
 		FaceDetector faceDetector = new FaceDetector.Builder(getApplicationContext()).setTrackingEnabled(true)
 				                            .setProminentFaceOnly(true)
-				                            .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
+				                            .setClassificationType(FaceDetector.ACCURATE_MODE)
 				                            .setLandmarkType(0)
 				                            .build();
 //				FaceTrackerSquare faceTracker = new FaceTrackerSquare(mGraphicOverlay);
@@ -225,7 +198,6 @@ public class SelfieActivity extends AppCompatActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		startCameraSource();
 	}
 
@@ -338,7 +310,7 @@ public class SelfieActivity extends AppCompatActivity {
 		@Override
 		public void onNewItem(int id, Face item) {
 			super.onNewItem(id, item);
-			mFaceRenderer.setMFace(item);
+			mFaceRenderer.onNewItem(item);
 			Log.i(TAG, "Awesome person detected.  Hello!");
 		}
 
@@ -348,7 +320,7 @@ public class SelfieActivity extends AppCompatActivity {
 			if (item.getIsSmilingProbability() > 0.75) {
 				Log.i(TAG, "I see a smile.  They must really enjoy your app.");
 			}
-			mFaceRenderer.setMFace(item);
+			mFaceRenderer.onUpdate(item);
 		}
 
 		@Override
@@ -359,7 +331,7 @@ public class SelfieActivity extends AppCompatActivity {
 		@Override
 		public void onDone() {
 			super.onDone();
-//			mFaceRenderer.removeMFace();
+			mFaceRenderer.onDone();
 			Log.i(TAG, "Elvis has left the building.");
 		}
 	}

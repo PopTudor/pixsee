@@ -29,6 +29,8 @@ import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import rx.Observable;
+
 /**
  * Created by Tudor on 4/8/2016.
  */
@@ -82,7 +84,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	@Override
 	public void onFavoriteClicked(FaceObject object) {
 		FaceObject faceObject = new FaceObject(this);
-		faceObject.setTexture(object.getTag());
+		faceObject.setTexture(object.getTag(), faceObject.animatedTexture);
 		loadModel(object.getLoader(), this, faceObject.getTag());
 	}
 
@@ -122,9 +124,10 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		mLastPictureLocation = saveFile(sb, Bitmap.CompressFormat.PNG, 0, "model.png");
 		return sb;
 	}
+
 	private File saveFile(Bitmap screenshot, Bitmap.CompressFormat format, int quality, String filename) {
 		File privateFolder = context.getDir("Pixsee", Context.MODE_PRIVATE);
-		String path = privateFolder.getPath()+"/";
+		String path = privateFolder.getPath() + "/";
 //		String path = context.getFilesDir()+"/";
 		File file = new File(path + filename);
 		try {
@@ -135,6 +138,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		}
 		return file;
 	}
+
 	/**********************
 	 * TEST METHOD
 	 ****************************/
@@ -164,6 +168,8 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		loadedObject = null;
 	}
 
+	Observable observable;
+
 	@Override
 	protected void onRender(long ellapsedRealtime, double deltaTime) {
 		super.onRender(ellapsedRealtime, deltaTime);
@@ -173,6 +179,8 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		}
 		if (mFace != null && loadedObject != null) {
 			try { // FIXME: 4/28/2016 why is this throwing null pointer exception when clearly I check for null
+				scale(loadedObject);
+				rotate(loadedObject);
 				translation(loadedObject);
 			} catch (NullPointerException e) {
 				e.printStackTrace();
@@ -180,6 +188,24 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		}
 	}
 
+	private void scale(Object3D object3D) {
+		if (object3D == null || mFace == null)
+			return;
+		float x1 = mFace.getPosition().x;
+		float y1 = mFace.getPosition().y;
+		float x2 = mFace.getWidth();
+		float y2 = mFace.getHeight();
+		double dist = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+		double scaleValue = dist / mDefaultViewportWidth + 0.4;
+		loadedObject.setScale(scaleValue);
+	}
+
+	private void rotate(Object3D object3D) {
+		if (object3D == null || mFace == null)
+			return;
+		float x1 = mFace.getEulerZ();
+		object3D.rotateAround(Vector3.Z, x1, false);
+	}
 
 	/**
 	 * Second attempt to keep the mapped object on the face when tilting the phone
@@ -192,8 +218,20 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		object.setScreenCoordinates(x, y, mCurrentViewportWidth, mCurrentViewportHeight, 10);
 	}
 
-	public void setMFace(Face mFace) {
-		this.mFace = mFace;
+	public void onNewItem(Face face) {
+		this.mFace = face;
+		observable = Observable.just(face);
+		loadedObject.setVisible(true);
+	}
+
+	public void onUpdate(Face face) {
+		this.mFace = face;
+	}
+
+	public void onDone() {
+		this.mFace = null;
+		if (loadedObject != null)
+			loadedObject.setVisible(false);
 	}
 
 	/**

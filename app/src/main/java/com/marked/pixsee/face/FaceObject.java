@@ -6,7 +6,9 @@ import org.rajawali3d.Object3D;
 import org.rajawali3d.loader.AMeshLoader;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
+import org.rajawali3d.materials.textures.ASingleTexture;
 import org.rajawali3d.materials.textures.ATexture;
+import org.rajawali3d.materials.textures.AnimatedGIFTexture;
 import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.primitives.Plane;
 import org.rajawali3d.renderer.Renderer;
@@ -18,7 +20,8 @@ public class FaceObject implements Comparable<FaceObject> {
 	private int drawingPosition;
 	private Renderer renderer;
 	private Material material;
-	private Texture texture;
+	private ASingleTexture texture;
+	public boolean animatedTexture;
 	private Object3D object3D;
 	private AMeshLoader loader;
 	private int tag;
@@ -32,15 +35,21 @@ public class FaceObject implements Comparable<FaceObject> {
 		material.setColor(0);
 //		loader = new Loader3DSMax(renderer,R.)
 //			object3D = new Loader3DSMax(renderer, R.raw.rock).parse().getParsedObject();
-			object3D =  new Plane(5, 5, 1, 1);
-			object3D.setTransparent(true);
+		object3D = new Plane(5, 5, 1, 1);
+		object3D.setTransparent(true);
 	}
 
-	public void setTexture(int resourceID) {
+	public void setTexture(int resourceID, boolean animated) {
 		tag = resourceID;
-		texture = new Texture("Texture_"+String.valueOf(tag), resourceID);
+		animatedTexture = animated;
+		String texName = "Texture_" + String.valueOf(tag);
+		if (animated) {
+			texture = new AnimatedGIFTexture(texName, resourceID, 256);
+		}else
+			texture = new Texture(texName, resourceID);
 		try {
 			material.addTexture(texture);
+			material.setColorInfluence(0);
 			object3D.setMaterial(material);
 		} catch (ATexture.TextureException e) {
 			e.printStackTrace();
@@ -48,7 +57,7 @@ public class FaceObject implements Comparable<FaceObject> {
 	}
 
 	public AMeshLoader getLoader() {
-		if (loader == null){
+		if (loader == null) {
 			loader = new AMeshLoader("") {
 				@Override
 				public Object3D getParsedObject() {

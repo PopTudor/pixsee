@@ -11,6 +11,8 @@ import com.marked.pixsee.injection.components.AppComponent;
 import com.marked.pixsee.injection.components.DaggerAppComponent;
 import com.marked.pixsee.injection.modules.AppModule;
 import com.squareup.okhttp.OkHttpClient;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Tudor Pop on 17-Feb-16.
@@ -28,6 +30,8 @@ public class Pixsee extends Application {
 				.newBuilder(this, new OkHttpClient()).build();
 		Fresco.initialize(this, config);
 		FacebookSdk.sdkInitialize(getApplicationContext());
+		Fabric.with(this, new Crashlytics());
+
 		AppEventsLogger.activateApp(this);
 		//        val fabric = Fabric.Builder(this)
 		//				.kits(Crashlytics())

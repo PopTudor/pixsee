@@ -7,14 +7,16 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/previewContainer"
+        >
 
         <com.marked.pixsee.face.CameraSourcePreview
             android:id="@+id/preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <!--<android.opengl.GLSurfaceView-->
-            <org.rajawali3d.view.SurfaceView
+            <com.marked.pixsee.face.FaceSurfaceView
                 android:id="@+id/texture_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
@@ -79,6 +81,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
+        android:visibility="gone"
         android:contentDescription="Switch camera"
         android:src="@drawable/ic_camera_rear_24dp"/>
 
