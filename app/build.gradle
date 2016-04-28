@@ -129,6 +129,7 @@ dependencies {
     compile app.visionService
     compile app.dagger
     compile app.rajawali
+    compile app.rxPermissions
 
     apt app.daggerCompiler
     provided app.daggerCompiler

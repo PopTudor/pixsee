@@ -27,12 +27,15 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.R;
 import com.marked.pixsee.facedetail.FaceDetail;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.rajawali3d.view.SurfaceView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import rx.functions.Action1;
 
 public class SelfieActivity extends AppCompatActivity {
 	private static final String TAG = SelfieActivity.class + "***";
@@ -78,6 +81,8 @@ public class SelfieActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
 		setContentView(R.layout.activity_preview);
 		mFaceRenderer = new FaceRenderer(this);
 
@@ -117,7 +122,7 @@ public class SelfieActivity extends AppCompatActivity {
 					public void onPictureTaken(byte[] bytes) {
 						if (Utils.isExternalStorageWritable()) {
 							File pictureFile = Utils.getPublicPicturesPixseeDir("/pixsee.jpg");
-							if (pictureFile == null){
+							if (pictureFile == null) {
 								Toast.makeText(SelfieActivity.this, "Image retrieval failed.", Toast.LENGTH_SHORT).show();
 								return;
 							}
@@ -127,7 +132,7 @@ public class SelfieActivity extends AppCompatActivity {
 								stream.flush();
 								stream.close();
 
-								while (mFaceRenderer.mLastPictureLocation==null) ; // block untill OpenglRenderer takes a screenshot of the screen
+								while (mFaceRenderer.mLastPictureLocation == null) ; // block untill OpenglRenderer takes a screenshot of the screen
 								Intent intent = new Intent(SelfieActivity.this, FaceDetail.class);
 								intent.putExtra(PHOTO_EXTRA, pictureFile.getPath());
 								intent.putExtra(PHOTO_RENDERER_EXTRA, mFaceRenderer.mLastPictureLocation.getPath());
@@ -141,17 +146,21 @@ public class SelfieActivity extends AppCompatActivity {
 				});
 			}
 		});
-
-
-		// Check for the camera permission before accessing the camera.  If the
-		// permission is not granted yet, request permission.
-		int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-		if (rc == PackageManager.PERMISSION_GRANTED) {
-			createCameraSource();
-		} else {
-			requestCameraPermission();
-		}
-
+		// Must be done during an initialization phase like onCreate
+		RxPermissions.getInstance(this)
+				.request(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
+				.subscribe(new Action1<Boolean>() {
+					@Override
+					public void call(Boolean granted) {
+						if (granted) { // Always true pre-M
+							createCameraSource();
+							// I can control the camera now
+						} else {
+							// Oups permission denied
+							finish();
+						}
+					}
+				});
 	}
 
 	/**

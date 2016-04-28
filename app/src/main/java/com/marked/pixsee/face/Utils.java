@@ -42,7 +42,7 @@ public class Utils {
 	}
 
 	static Bitmap combineImages(@NotNull Bitmap c, @NotNull Bitmap s) {
-		Bitmap overlay = Bitmap.createBitmap(c.getWidth(), c.getHeight(), Bitmap.Config.ARGB_8888);
+		Bitmap overlay = Bitmap.createBitmap(c.getWidth(), c.getHeight(), Bitmap.Config.RGB_565);
 		Canvas result = new Canvas(overlay);
 
 		result.drawBitmap(c, 0f, 0f, null);

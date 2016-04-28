@@ -48,6 +48,7 @@ ext {
     sidemenuVersion = '1.0'
     glassFishVersion = '10.0-b28'
     rajawali = '1.1.505-SNAPSHOT@aar'
+    rxPermissions = '0.7.0@aar'
 
     //Testing
     junitVersion = '4.12'
@@ -84,7 +85,8 @@ ext {
             sideMenu             : "com.yalantis:sidemenu:${sidemenuVersion}",
             glassFishAnnotations : "org.glassfish:javax.annotation:${glassFishVersion}",
             rajawali             : "org.rajawali3d:rajawali:${rajawali}",
-            chatMessageView      : "me.himanshusoni.chatmessageview:chat-message-view:${messageViewVersion}"
+            chatMessageView      : "me.himanshusoni.chatmessageview:chat-message-view:${messageViewVersion}",
+            rxPermissions        : "com.tbruyelle.rxpermissions:rxpermissions:${rxPermissions}"
     ]
 
     testDependencies = [
