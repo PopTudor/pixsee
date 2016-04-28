@@ -9,6 +9,7 @@ import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.ImageButton
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.marked.pixsee.R
 import com.marked.pixsee.face.SelfieActivity
 import kotlinx.android.synthetic.main.activity_face_detail.*
@@ -64,8 +65,14 @@ class FaceDetail : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_face_detail)
-        photoImageView.setImageURI(Uri.parse("file://" + intent.getStringExtra(SelfieActivity.PHOTO_EXTRA)))
-        photoRendererImageView.setImageURI(Uri.parse("file://" + intent.getStringExtra(SelfieActivity.PHOTO_RENDERER_EXTRA)))
+        Fresco.getImagePipeline().clearCaches()
+
+        photoImageView.apply {
+            setImageURI(Uri.parse("file://" + intent.getStringExtra(SelfieActivity.PHOTO_EXTRA)), FaceDetail::class.java)
+        }
+        photoRendererImageView.apply {
+            setImageURI(Uri.parse("file://" + intent.getStringExtra(SelfieActivity.PHOTO_RENDERER_EXTRA)), FaceDetail::class.java)
+        }
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
