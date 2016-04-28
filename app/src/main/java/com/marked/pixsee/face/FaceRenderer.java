@@ -29,8 +29,6 @@ import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import rx.Observable;
-
 /**
  * Created by Tudor on 4/8/2016.
  */
@@ -103,7 +101,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 
 	public File mLastPictureLocation;
 
-	private Bitmap takeScreenshot(int x, int y, int w, int h, GL10 gl) {
+	private void takeScreenshot(int x, int y, int w, int h, GL10 gl) {
 		int b[] = new int[w * (y + h)];
 		int bt[] = new int[w * h];
 		IntBuffer ib = IntBuffer.wrap(b);
@@ -122,13 +120,12 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		}
 		Bitmap sb = Bitmap.createBitmap(bt, w, h, Bitmap.Config.ARGB_8888);
 		mLastPictureLocation = saveFile(sb, Bitmap.CompressFormat.PNG, 0, "model.png");
-		return sb;
+		sb.recycle();
 	}
 
 	private File saveFile(Bitmap screenshot, Bitmap.CompressFormat format, int quality, String filename) {
 		File privateFolder = context.getDir("Pixsee", Context.MODE_PRIVATE);
 		String path = privateFolder.getPath() + "/";
-//		String path = context.getFilesDir()+"/";
 		File file = new File(path + filename);
 		try {
 			// new BufferedOutputStream(new FileOutputStream(file)) throws exception. For some reason it doesn't create the file
@@ -165,10 +162,9 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	@Override
 	public void onModelLoadFailed(ALoader loader) {
 		Log.d(TAG, "onModelLoadFailed: ");
-		loadedObject = null;
+		onDone();
 	}
 
-	Observable observable;
 
 	@Override
 	protected void onRender(long ellapsedRealtime, double deltaTime) {
@@ -203,8 +199,8 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	private void rotate(Object3D object3D) {
 		if (object3D == null || mFace == null)
 			return;
-		float x1 = mFace.getEulerZ();
-		object3D.rotateAround(Vector3.Z, x1, false);
+		float eulerZ = mFace.getEulerZ();
+		object3D.rotateAround(Vector3.Z, eulerZ, false);
 	}
 
 	/**
@@ -220,8 +216,8 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 
 	public void onNewItem(Face face) {
 		this.mFace = face;
-		observable = Observable.just(face);
-		loadedObject.setVisible(true);
+		if (loadedObject != null)
+			loadedObject.setVisible(true);
 	}
 
 	public void onUpdate(Face face) {
