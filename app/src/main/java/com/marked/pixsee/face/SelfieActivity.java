@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -119,28 +118,23 @@ public class SelfieActivity extends AppCompatActivity {
 				}, new CameraSourcePixsee.PictureCallback() {
 					@Override
 					public void onPictureTaken(byte[] bytes) {
-						if (Utils.isExternalStorageWritable()) {
-							File pictureFile = Utils.getPublicPicturesPixseeDir("pixsee.jpg");
-							if (pictureFile == null) {
-								Toast.makeText(SelfieActivity.this, "Image retrieval failed.", Toast.LENGTH_SHORT).show();
-								return;
-							}
+						File privateFolder = getDir("Pixsee", MODE_PRIVATE);
+						String filename = "picture.jpg";
+						String path = privateFolder.getPath()+"/";
+						try {
+							FileOutputStream stream = new FileOutputStream(path + filename);
+							stream.write(Utils.flip(bytes));
 
-							try {
-								FileOutputStream stream = new FileOutputStream(pictureFile);
-								stream.write(Utils.flip(bytes));
-								stream.flush();
-								stream.close();
-
+							stream.flush();
+							stream.close();
+							mCameraSourcePreview.stop();
 								while (mFaceRenderer.mLastPictureLocation == null) ; // block untill OpenglRenderer takes a screenshot of the screen
-								Intent intent = new Intent(SelfieActivity.this, FaceDetail.class);
-								intent.putExtra(PHOTO_EXTRA, pictureFile.getPath());
-								intent.putExtra(PHOTO_RENDERER_EXTRA, mFaceRenderer.mLastPictureLocation.getPath());
-								startActivity(intent);
-							} catch (java.io.IOException e) {
-								Log.e("PictureDemo", "Exception in photoCallback", e);
-							}
-
+							Intent intent = new Intent(SelfieActivity.this, FaceDetail.class);
+							intent.putExtra(PHOTO_EXTRA, path + filename);
+							intent.putExtra(PHOTO_RENDERER_EXTRA, mFaceRenderer.mLastPictureLocation.getPath());
+							startActivity(intent);
+						} catch (java.io.IOException e) {
+							Log.e("PictureDemo", "Exception in photoCallback", e);
 						}
 					}
 				});
@@ -148,7 +142,7 @@ public class SelfieActivity extends AppCompatActivity {
 		});
 		// Must be done during an initialization phase like onCreate
 		RxPermissions.getInstance(this)
-				.request(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
+				.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
 				.subscribe(new Action1<Boolean>() {
 					@Override
 					public void call(Boolean granted) {

@@ -22,14 +22,12 @@ import static android.os.Environment.getExternalStorageState;
 public class Utils {
 	static File getPublicPicturesPixseeDir(String filename) {
 		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "/Pixsee/");
-
 		if (!mediaStorageDir.exists()) {
 			if (!mediaStorageDir.mkdirs()) {
 				Log.d("Camera Guide", "Required media storage does not exist");
 				return null;
 			}
 		}
-
 		// Create a media file name
 		return new File(mediaStorageDir.getPath() + filename);
 	}
@@ -42,7 +40,7 @@ public class Utils {
 //		dst.setDensity(DisplayMetrics.DENSITY_DEFAULT);
 
 		ByteArrayOutputStream blob = new ByteArrayOutputStream();
-		dst.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, blob);
+		dst.compress(Bitmap.CompressFormat.JPEG, 70 /*ignored for PNG*/, blob);
 		bitmap.recycle();
 		return blob.toByteArray();
 	}

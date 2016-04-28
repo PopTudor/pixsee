@@ -29,6 +29,7 @@ import com.marked.pixsee.face.SelfieActivity
 import com.marked.pixsee.face.Utils
 import kotlinx.android.synthetic.main.activity_face_detail.*
 import kotlinx.android.synthetic.main.toolbar.*
+import org.jetbrains.anko.toast
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -56,12 +57,15 @@ class FaceDetail : AppCompatActivity() {
     private val facebookCallback by lazy {
         object : FacebookCallback<Sharer.Result> {
             override fun onCancel() {
+                toast("Cancel...")
             }
 
             override fun onError(error: FacebookException?) {
+                toast("Error...")
             }
 
             override fun onSuccess(result: Sharer.Result?) {
+                toast("Posted...")
             }
         }
     }
@@ -126,9 +130,11 @@ class FaceDetail : AppCompatActivity() {
 
     private fun saveToDisk() {
         val bitmap = getViewSnapshot(fullscreenAppBar)
-        val formatter = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")
+        val formatter = SimpleDateFormat("yyyyMMdd_HHmmss")
         val now = Date()
-        mPictureFile = Utils.saveFile(bitmap, Bitmap.CompressFormat.JPEG, 50, formatter.format(now) + "_.jpg")
+        val prefix = "PX_IMG_"+formatter.format(now)
+        mPictureFile = Utils.saveFile(bitmap, Bitmap.CompressFormat.JPEG, 100, prefix + ".jpg");
+        toast("Image Saved !")
     }
 
     private fun setupImage() {

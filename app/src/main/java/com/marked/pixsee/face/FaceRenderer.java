@@ -24,6 +24,7 @@ import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.renderer.Renderer;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -118,10 +119,22 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 			}
 		}
 		Bitmap sb = Bitmap.createBitmap(bt, w, h, Bitmap.Config.ARGB_8888);
-		mLastPictureLocation = Utils.saveFile(sb, Bitmap.CompressFormat.PNG, 0, "model.png");
+		mLastPictureLocation = saveFile(sb, Bitmap.CompressFormat.PNG, 0, "model.png");
 		return sb;
 	}
-
+	private File saveFile(Bitmap screenshot, Bitmap.CompressFormat format, int quality, String filename) {
+		File privateFolder = context.getDir("Pixsee", Context.MODE_PRIVATE);
+		String path = privateFolder.getPath()+"/";
+//		String path = context.getFilesDir()+"/";
+		File file = new File(path + filename);
+		try {
+			// new BufferedOutputStream(new FileOutputStream(file)) throws exception. For some reason it doesn't create the file
+			screenshot.compress(format, quality, new FileOutputStream(file));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return file;
+	}
 	/**********************
 	 * TEST METHOD
 	 ****************************/
