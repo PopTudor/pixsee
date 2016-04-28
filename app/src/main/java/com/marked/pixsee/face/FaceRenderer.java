@@ -97,7 +97,9 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 			screenshot = false;
 		}
 	}
+
 	public File mLastPictureLocation;
+
 	private Bitmap takeScreenshot(int x, int y, int w, int h, GL10 gl) {
 		int b[] = new int[w * (y + h)];
 		int bt[] = new int[w * h];
@@ -154,12 +156,16 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	@Override
 	protected void onRender(long ellapsedRealtime, double deltaTime) {
 		super.onRender(ellapsedRealtime, deltaTime);
+		if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
+			mWidthScaleFactor = (float) mCurrentViewportWidth / (float) mPreviewWidth;
+			mHeightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
+		}
 		if (mFace != null && loadedObject != null) {
-			if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
-				mWidthScaleFactor = (float) mCurrentViewportWidth / (float) mPreviewWidth;
-				mHeightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
+			try { // FIXME: 4/28/2016 why is this throwing null pointer exception when clearly I check for null
+				translation(loadedObject);
+			}catch (NullPointerException e){
+				e.printStackTrace();
 			}
-			translation(loadedObject);
 		}
 	}
 
