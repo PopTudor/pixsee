@@ -23,6 +23,7 @@ import com.facebook.imagepipeline.request.BasePostprocessor
 import com.facebook.share.Sharer
 import com.facebook.share.model.SharePhoto
 import com.facebook.share.model.SharePhotoContent
+import com.facebook.share.widget.MessageDialog
 import com.facebook.share.widget.ShareDialog
 import com.marked.pixsee.R
 import com.marked.pixsee.face.SelfieActivity
@@ -115,6 +116,19 @@ class FaceDetail : AppCompatActivity() {
 
                 shareDialog.show(content);
             }
+        }
+
+        sendFacebookImageButton.setOnClickListener {
+            saveToDisk()
+            val photo = SharePhoto.Builder()
+                    .setCaption("Pixsee")
+                    .setUserGenerated(true)
+                    .setImageUrl(Uri.fromFile(mPictureFile))
+                    .build();
+            val content = SharePhotoContent.Builder()
+                    .addPhoto(photo)
+                    .build();
+            MessageDialog.show(this, content);
         }
         saveImageButton.setOnClickListener {
             saveToDisk()

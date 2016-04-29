@@ -75,6 +75,16 @@
             android:layout_gravity="center"/>
 
         <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/sendFacebookImageButton"
+            android:layout_weight="1"
+            android:src="@drawable/messenger_bubble_large_white"
+            android:background="#00ffffff"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center"/>
+
+        <ImageButton
             android:id="@+id/shareFacebookImageButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
