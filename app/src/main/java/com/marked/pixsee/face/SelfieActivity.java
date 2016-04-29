@@ -319,6 +319,7 @@ public class SelfieActivity extends AppCompatActivity {
 			super.onUpdate(detections, item);
 			if (item.getIsSmilingProbability() > 0.75) {
 				Log.i(TAG, "I see a smile.  They must really enjoy your app.");
+				mFaceRenderer.isSmiling();
 			}
 			mFaceRenderer.onUpdate(item);
 		}

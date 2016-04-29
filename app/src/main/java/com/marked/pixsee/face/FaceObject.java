@@ -20,7 +20,7 @@ public class FaceObject implements Comparable<FaceObject> {
 	private int drawingPosition;
 	private Renderer renderer;
 	private Material material;
-	private ASingleTexture texture;
+	 ASingleTexture texture;
 	public boolean animatedTexture;
 	private Object3D object3D;
 	private AMeshLoader loader;
@@ -45,6 +45,8 @@ public class FaceObject implements Comparable<FaceObject> {
 		String texName = "Texture_" + String.valueOf(tag);
 		if (animated) {
 			texture = new AnimatedGIFTexture(texName, resourceID, 256);
+			((AnimatedGIFTexture)texture).rewind();
+
 		}else
 			texture = new Texture(texName, resourceID);
 		try {

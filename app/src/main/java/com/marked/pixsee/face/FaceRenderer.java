@@ -17,7 +17,9 @@ import org.rajawali3d.loader.AMeshLoader;
 import org.rajawali3d.loader.async.IAsyncLoaderCallback;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
+import org.rajawali3d.materials.textures.ASingleTexture;
 import org.rajawali3d.materials.textures.ATexture;
+import org.rajawali3d.materials.textures.AnimatedGIFTexture;
 import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
@@ -66,6 +68,8 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		getCurrentCamera().setPosition(0, 0, 10);
 	}
 
+	ASingleTexture aSingleTexture;
+
 	@Override
 	public void onModelLoadComplete(ALoader loader) {
 		Log.d(TAG, "onModelLoadComplete: ");
@@ -83,6 +87,8 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	public void onFavoriteClicked(FaceObject object) {
 		FaceObject faceObject = new FaceObject(this);
 		faceObject.setTexture(object.getTag(), faceObject.animatedTexture);
+		if (faceObject.animatedTexture)
+			aSingleTexture = faceObject.texture;
 		loadModel(object.getLoader(), this, faceObject.getTag());
 	}
 
@@ -165,6 +171,9 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		onDone();
 	}
 
+	public void isSmiling() {
+
+	}
 
 	@Override
 	protected void onRender(long ellapsedRealtime, double deltaTime) {
@@ -179,6 +188,13 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 				rotate(loadedObject);
 				translation(loadedObject);
 			} catch (NullPointerException e) {
+				e.printStackTrace();
+			}
+		}
+		if (aSingleTexture!=null){
+			try {
+				((AnimatedGIFTexture)aSingleTexture).update();
+			} catch (ATexture.TextureException e) {
 				e.printStackTrace();
 			}
 		}
