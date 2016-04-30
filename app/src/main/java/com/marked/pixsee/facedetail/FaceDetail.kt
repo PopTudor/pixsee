@@ -7,13 +7,11 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.view.ViewGroup
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -26,8 +24,8 @@ import com.facebook.share.model.SharePhotoContent
 import com.facebook.share.widget.MessageDialog
 import com.facebook.share.widget.ShareDialog
 import com.marked.pixsee.R
+import com.marked.pixsee.face.BitmapUtils
 import com.marked.pixsee.face.SelfieActivity
-import com.marked.pixsee.face.Utils
 import kotlinx.android.synthetic.main.activity_face_detail.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.jetbrains.anko.toast
@@ -147,7 +145,7 @@ class FaceDetail : AppCompatActivity() {
         val formatter = SimpleDateFormat("yyyyMMdd_HHmmss")
         val now = Date()
         val prefix = "PX_IMG_"+formatter.format(now)
-        mPictureFile = Utils.saveFile(bitmap, Bitmap.CompressFormat.JPEG, 100, prefix + ".jpg");
+        mPictureFile = BitmapUtils.saveFile(bitmap, Bitmap.CompressFormat.JPEG, 100, prefix + ".jpg");
         toast("Image Saved !")
     }
 
@@ -159,7 +157,7 @@ class FaceDetail : AppCompatActivity() {
         photoImageView.apply {
             setImageURI(Uri.fromFile(File(intent.getStringExtra(SelfieActivity.PHOTO_EXTRA))), this)
             val hierarchy = GenericDraweeHierarchyBuilder(getResources())
-                    .setOverlay(Drawable.createFromPath(intent.getStringExtra(SelfieActivity.PHOTO_RENDERER_EXTRA)))
+//                    .setOverlay(Drawable.createFromPath(intent.getStringExtra(SelfieActivity.PHOTO_RENDERER_EXTRA)))
                     .build();
             setHierarchy(hierarchy);
         }
@@ -246,7 +244,7 @@ class FaceDetail : AppCompatActivity() {
     }
 
     companion object {
-        fun getViewSnapshot(view: ViewGroup): Bitmap {
+        fun getViewSnapshot(view: View): Bitmap {
             view.isDrawingCacheEnabled = true
             val bmap = view.drawingCache
             val snapshot = Bitmap.createBitmap(bmap, 0, 0, bmap.width, bmap.height, null, true)
