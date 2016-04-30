@@ -28,6 +28,8 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.facedetail.FaceDetail;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
+import org.rajawali3d.view.SurfaceView;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -57,11 +59,11 @@ public class SelfieActivity extends AppCompatActivity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
-		setContentView(R.layout.activity_preview);
+		setContentView(R.layout.activity_face);
 		mFaceRenderer = new FaceRenderer(this);
 
 		mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
-		final FaceSurfaceView mFaceTextureView = (FaceSurfaceView) findViewById(R.id.texture_view);
+		final SurfaceView mFaceTextureView = (SurfaceView) findViewById(R.id.texture_view);
 		mFaceTextureView.setTransparent(true);
 		mFaceTextureView.setEGLContextClientVersion(2);
 		mFaceTextureView.setSurfaceRenderer(mFaceRenderer);

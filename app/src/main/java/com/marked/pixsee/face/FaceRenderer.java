@@ -100,7 +100,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	public void onRenderFrame(GL10 gl) {
 		super.onRenderFrame(gl);
 		if (screenshot) {
-			takeScreenshot(0, 0, mDefaultViewportWidth, mDefaultViewportHeight, gl);
+			takeScreenshot(0, 0, (int) mFace.getWidth(), (int) mFace.getHeight(), gl);
 			screenshot = false;
 		}
 	}

@@ -45,11 +45,11 @@ public class Utils {
 		return blob.toByteArray();
 	}
 
-	public static Bitmap combineImages(@NotNull Bitmap c, @NotNull Bitmap s) {
-		Bitmap overlay = Bitmap.createScaledBitmap(c, c.getWidth(), c.getHeight(), false);
+	public static Bitmap combineImages(@NotNull Bitmap backgroundImage, @NotNull Bitmap overlayImage,int x,int y) {
+		Bitmap overlay = Bitmap.createBitmap(backgroundImage.getWidth(), backgroundImage.getHeight(), backgroundImage.getConfig());
 		Canvas result = new Canvas(overlay);
-		Bitmap s1 = Bitmap.createScaledBitmap(s, s.getWidth(), s.getHeight(), false);
-		result.drawBitmap(s1, 0f, 0f, null);
+		result.drawBitmap(backgroundImage, new Matrix(), null);
+		result.drawBitmap(overlayImage, x, y, null);
 		return overlay;
 	}
 
@@ -62,8 +62,15 @@ public class Utils {
 		return false;
 	}
 
+	/** Saves the given bitmap to public picture directory
+	 * @param screenshot the bitmap to save
+	 * @param format the format to save the image {@link android.graphics.Bitmap.CompressFormat} (JPEG, PNG)
+	 * @param quality quality of the image (PNG is loseless so this is ignored)
+	 * @param filename the name of the saved image
+	 * @return the path of the image
+	 */
 	public static File saveFile(Bitmap screenshot, Bitmap.CompressFormat format, int quality, String filename) {
-		File file = getPublicPicturesPixseeDir("/"+filename);
+		File file = getPublicPicturesPixseeDir("/" + filename);
 		try {
 			screenshot.compress(format, quality, new FileOutputStream(file));
 		} catch (Exception e) {

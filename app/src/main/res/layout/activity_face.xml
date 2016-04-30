@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <!--<android.opengl.GLSurfaceView-->
-            <com.marked.pixsee.face.FaceSurfaceView
+            <org.rajawali3d.view.SurfaceView
                 android:id="@+id/texture_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
