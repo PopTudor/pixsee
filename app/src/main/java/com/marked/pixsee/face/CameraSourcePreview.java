@@ -4,11 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.SurfaceTexture;
 import android.support.v4.app.ActivityCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
@@ -18,10 +19,10 @@ import java.io.IOException;
 public class CameraSourcePreview extends ViewGroup {
 	private static final String TAG = "CameraSourcePreview";
 
-	private Context      mContext;
-	private SurfaceView mSurfaceView;
-	private boolean      mStartRequested;
-	private boolean      mSurfaceAvailable;
+	private Context mContext;
+	private TextureView mTextureView; /* We user TextureView because we have to mirror the camera preview on front camera*/
+	private boolean mStartRequested;
+	private boolean mSurfaceAvailable;
 	private CameraSourcePixsee mCameraSource;
 
 	private FaceRenderer mOverlay;
@@ -32,18 +33,17 @@ public class CameraSourcePreview extends ViewGroup {
 		mStartRequested = false;
 		mSurfaceAvailable = false;
 
-		setSurfaceView(new SurfaceView(context));
-		addView(mSurfaceView);
+		setTextureView(new TextureView(context));
+		addView(mTextureView);
 	}
 
-	void setSurfaceView(SurfaceView surfaceView){
-		mSurfaceView = surfaceView;
-		mSurfaceView.getHolder()
-		            .addCallback(new SurfaceCallback());
+	void setTextureView(TextureView surfaceView) {
+		mTextureView = surfaceView;
+		mTextureView.setSurfaceTextureListener(new TextureCallback());
 	}
 
-	public SurfaceView getSurfaceView() {
-		return mSurfaceView;
+	public TextureView getTextureView() {
+		return mTextureView;
 	}
 
 	public void start(CameraSourcePixsee cameraSource) throws IOException {
@@ -89,7 +89,13 @@ public class CameraSourcePreview extends ViewGroup {
 				// for ActivityCompat#requestPermissions for more details.
 				return;
 			}
-			mCameraSource.start(mSurfaceView.getHolder());
+			if (mCameraSource.getCameraFacing()==CameraSourcePixsee.CAMERA_FACING_FRONT) {
+//				Matrix mirrorMatrix = new Matrix();
+//				mirrorMatrix.preScale(-1, 1);
+//				mTextureView.setTransform(mirrorMatrix);
+//				mTextureView.setScaleX(-1);
+			}
+			mCameraSource.start(mTextureView.getSurfaceTexture());
 			if (mOverlay != null) {
 				Size size = mCameraSource.getPreviewSize();
 				int min = Math.min(size.getWidth(), size.getHeight());
@@ -104,6 +110,35 @@ public class CameraSourcePreview extends ViewGroup {
 //				mOverlay.clear();
 			}
 			mStartRequested = false;
+		}
+	}
+
+	private class TextureCallback implements TextureView.SurfaceTextureListener {
+		@Override
+		public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+			mSurfaceAvailable = true;
+
+			try {
+				startIfReady();
+			} catch (IOException e) {
+				Log.e(TAG, "Could not start camera source.", e);
+			}
+		}
+
+		@Override
+		public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+		}
+
+		@Override
+		public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+			mSurfaceAvailable = false;
+			return false;
+		}
+
+		@Override
+		public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
 		}
 	}
 

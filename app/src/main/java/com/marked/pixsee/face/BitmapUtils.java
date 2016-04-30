@@ -137,6 +137,42 @@ public class BitmapUtils {
 
 		return bmp;
 	}
+	public static Bitmap combineImagesToSameSize(Bitmap bgd, Bitmap fg) {
+		Bitmap bmp;
+
+		int width = bgd.getWidth() < fg.getWidth() ? bgd.getWidth() : fg
+				                                                              .getWidth();
+		int height = bgd.getHeight() < fg.getHeight() ? bgd.getHeight() : fg
+				                                                                  .getHeight();
+
+		if (fg.getWidth() != width && fg.getHeight() != height) {
+			fg = zoom(fg, width, height);
+		}
+		if (bgd.getWidth() != width && bgd.getHeight() != height) {
+			bgd = zoom(bgd, width, height);
+		}
+
+		bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Paint paint = new Paint();
+		paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
+
+		Canvas canvas = new Canvas(bmp);
+		canvas.drawBitmap(bgd, 0, 0, null);
+		canvas.drawBitmap(fg, 0, 0, paint);
+
+		return bmp;
+	}
+	public static Bitmap zoom(Bitmap bitmap, int w, int h) {
+		int width = bitmap.getWidth();
+		int height = bitmap.getHeight();
+		Matrix matrix = new Matrix();
+		float scaleWidht = ((float) w / width);
+		float scaleHeight = ((float) h / height);
+		matrix.postScale(scaleWidht, scaleHeight);
+		Bitmap newbmp = Bitmap.createBitmap(bitmap, 0, 0, width, height,
+				matrix, true);
+		return newbmp;
+	}
 
 	public static Bitmap getBitmapFromByteArray(byte[] data, int offset,
 	                                            int length, int reqWidth, int reqHeight) {

@@ -6,8 +6,10 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +36,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class SelfieActivity extends AppCompatActivity {
 	private static final String TAG = SelfieActivity.class + "***";
@@ -72,7 +79,7 @@ public class SelfieActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				FaceObject faceObject = new FaceObject(mFaceRenderer);
-				faceObject.setTexture(R.drawable.mlg,false);
+				faceObject.setTexture(R.drawable.mlg, false);
 				mFaceRenderer.onFavoriteClicked(faceObject);
 			}
 		});
@@ -80,7 +87,7 @@ public class SelfieActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				FaceObject faceObject = new FaceObject(mFaceRenderer);
-				faceObject.setTexture(R.drawable.hearts,false);
+				faceObject.setTexture(R.drawable.hearts, false);
 				mFaceRenderer.onFavoriteClicked(faceObject);
 			}
 		});
@@ -94,23 +101,49 @@ public class SelfieActivity extends AppCompatActivity {
 					}
 				}, new CameraSourcePixsee.PictureCallback() {
 					@Override
-					public void onPictureTaken(byte[] bytes) {
-						File privateFolder = getDir("Pixsee", MODE_PRIVATE);
-						String filename = "picture.jpg";
-						String path = privateFolder.getPath() + "/";
-						try {
-							FileOutputStream stream = new FileOutputStream(path + filename);
-							stream.write(Utils.flip(bytes));
-							stream.flush();
-							stream.close();
-						} catch (java.io.IOException e) {
-							Log.e("PictureDemo", "Exception in photoCallback", e);
-						}
+					public void onPictureTaken(final byte[] bytes) {
 						mCameraSourcePreview.stop();
-						Intent intent = new Intent(SelfieActivity.this, FaceDetail.class);
-						intent.putExtra(PHOTO_EXTRA, path + filename);
-						intent.putExtra(PHOTO_RENDERER_EXTRA, mFaceRenderer.mLastPictureLocation.getPath());
-						startActivity(intent);
+						while (mFaceRenderer.mLastPictureLocation == null) ;
+						Observable.create(new Observable.OnSubscribe<Bitmap>() {
+							@Override
+							public void call(Subscriber<? super Bitmap> subscriber) {
+								Bitmap b1 = BitmapUtils.getBitmapFromFile(mFaceRenderer.mLastPictureLocation.getPath(),
+										mFaceRenderer.getDefaultViewportWidth(),
+										mFaceRenderer.getDefaultViewportHeight());
+								Bitmap b2 = BitmapUtils.getBitmapFromBytes(BitmapUtils.flipHorizontal(bytes));
+								Bitmap b3 = BitmapUtils.combineImagesToSameSize(b2, b1);
+								subscriber.onNext(b3);
+								subscriber.onCompleted();
+							}
+						}).subscribeOn(Schedulers.computation())
+								.map(new Func1<Bitmap, String>() {
+									@Override
+									public String call(Bitmap bitmap) {
+										String folderName = "Pixsee";
+										File privateFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), folderName);
+										String filename = "picture.jpg";
+										String path = privateFolder.getPath() + "/";
+										try {
+											FileOutputStream stream = new FileOutputStream(path + filename);
+											stream.write(BitmapUtils.getBytesFromBitmap(bitmap));
+											stream.flush();
+											stream.close();
+										} catch (java.io.IOException e) {
+											Log.e("PictureDemo", "Exception in photoCallback", e);
+										}
+										return path + filename;
+									}
+								})
+								.subscribeOn(Schedulers.io())
+								.observeOn(AndroidSchedulers.mainThread())
+								.subscribe(new Action1<String>() {
+									@Override
+									public void call(String s) {
+										Intent intent = new Intent(SelfieActivity.this, FaceDetail.class);
+										intent.putExtra(PHOTO_EXTRA, s);
+										startActivity(intent);
+									}
+								});
 					}
 				});
 			}
@@ -336,56 +369,6 @@ public class SelfieActivity extends AppCompatActivity {
 			super.onDone();
 			mFaceRenderer.onDone();
 			Log.i(TAG, "Elvis has left the building.");
-		}
-	}
-
-	/**
-	 * Face tracker for each detected individual. This maintains a face graphic within the app's
-	 * associated face overlay.
-	 */
-	private class FaceTrackerSquare extends Tracker<Face> {
-		private GraphicOverlay mOverlay;
-		private FaceGraphic mFaceGraphic;
-
-		FaceTrackerSquare(GraphicOverlay overlay) {
-			mOverlay = overlay;
-			mFaceGraphic = new FaceGraphic(overlay);
-		}
-
-		/**
-		 * Start tracking the detected face instance within the face overlay.
-		 */
-		@Override
-		public void onNewItem(int faceId, Face item) {
-			mFaceGraphic.setId(faceId);
-		}
-
-		/**
-		 * Update the position/characteristics of the face within the overlay.
-		 */
-		@Override
-		public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
-			mOverlay.add(mFaceGraphic);
-			mFaceGraphic.updateFace(face);
-		}
-
-		/**
-		 * Hide the graphic when the corresponding face was not detected.  This can happen for
-		 * intermediate frames temporarily (e.g., if the face was momentarily blocked from
-		 * view).
-		 */
-		@Override
-		public void onMissing(FaceDetector.Detections<Face> detectionResults) {
-			mOverlay.remove(mFaceGraphic);
-		}
-
-		/**
-		 * Called when the face is assumed to be gone for good. Remove the graphic annotation from
-		 * the overlay.
-		 */
-		@Override
-		public void onDone() {
-			mOverlay.remove(mFaceGraphic);
 		}
 	}
 }
