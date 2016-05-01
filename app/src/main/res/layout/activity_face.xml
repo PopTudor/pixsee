@@ -23,15 +23,14 @@
         </com.marked.pixsee.face.CameraSourcePreview>
     </FrameLayout>
 
-    <HorizontalScrollView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/camera_button"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:fillViewport="true">
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:id="@+id/bottomLayout">
 
         <LinearLayout
             android:id="@+id/bottom_bar"
@@ -39,7 +38,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:measureWithLargestChild="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
 
             <ImageButton
                 android:id="@+id/favorite1"
@@ -70,8 +70,27 @@
                 android:maxWidth="32dp"
                 android:padding="5dp"
                 android:src="@drawable/hearts_48"/>
+
         </LinearLayout>
-    </HorizontalScrollView>
+
+        <ImageButton
+            android:id="@+id/camera_button"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/round_button"
+            android:backgroundTint="@color/accent_dark"
+            android:backgroundTintMode="screen"
+            android:onClick="onCameraClick"
+            android:src="@drawable/ic_photo_camera_24dp"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragmentContainer">
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/switchCamera"
@@ -85,16 +104,4 @@
         android:contentDescription="Switch camera"
         android:src="@drawable/ic_camera_rear_24dp"/>
 
-    <ImageButton
-        android:id="@+id/camera_button"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/round_button"
-        android:backgroundTint="@color/accent_dark"
-        android:backgroundTintMode="screen"
-        android:onClick="onCameraClick"
-        android:src="@drawable/ic_photo_camera_24dp"/>
 </RelativeLayout>

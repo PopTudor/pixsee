@@ -31,7 +31,7 @@ ext {
     //Libraries
     daggerVersion = '2.2'
     kotlin_version = '1.0.0'
-    supportLibraryVersion = '23.2.1'
+    supportLibraryVersion = '23.3.0'
     rxJavaVersion = '1.1.0'
     rxAndroidVersion = '1.1.0'
     javaxAnnotationVersion = '1.0'

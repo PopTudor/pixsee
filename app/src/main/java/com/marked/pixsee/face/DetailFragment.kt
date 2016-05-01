@@ -1,39 +1,40 @@
-package com.marked.pixsee.facedetail
+package com.marked.pixsee.face
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.v7.app.AppCompatActivity
+import android.support.design.widget.AppBarLayout
+import android.support.v4.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
-import com.facebook.imagepipeline.request.BasePostprocessor
 import com.facebook.share.Sharer
 import com.facebook.share.model.SharePhoto
 import com.facebook.share.model.SharePhotoContent
 import com.facebook.share.widget.MessageDialog
 import com.facebook.share.widget.ShareDialog
 import com.marked.pixsee.R
-import com.marked.pixsee.face.BitmapUtils
-import com.marked.pixsee.face.SelfieActivity
-import kotlinx.android.synthetic.main.activity_face_detail.*
+import com.marked.pixsee.utility.toast
+import kotlinx.android.synthetic.main.fragment_face_detail.view.*
 import kotlinx.android.synthetic.main.toolbar.*
-import org.jetbrains.anko.toast
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FaceDetail : AppCompatActivity() {
+/**
+ * A simple [Fragment] subclass.
+ * Activities that contain this fragment must implement the
+ * [DetailFragment.OnFragmentInteractionListener] interface
+ * to handle interaction events.
+ */
+class DetailFragment : Fragment() {
     private val mHideHandler = Handler()
     private var mVisible: Boolean = false
     private val mShowPart2Runnable = Runnable {
@@ -47,11 +48,16 @@ class FaceDetail : AppCompatActivity() {
      * while interacting with activity UI.
      */
     private val mDelayHideTouchListener = View.OnTouchListener { view, motionEvent ->
-        if (FaceDetail.AUTO_HIDE) {
-            delayedHide(FaceDetail.AUTO_HIDE_DELAY_MILLIS)
+        if (DetailFragment.AUTO_HIDE) {
+            delayedHide(DetailFragment.AUTO_HIDE_DELAY_MILLIS)
         }
         false
     }
+
+    private var mListener: OnFragmentInteractionListener? = null
+    var pictureFile: String? = null
+
+    private lateinit var mAppbar:AppBarLayout
 
     private val facebookCallback by lazy {
         object : FacebookCallback<Sharer.Result> {
@@ -68,45 +74,30 @@ class FaceDetail : AppCompatActivity() {
             }
         }
     }
-    private val callbackManager: CallbackManager by lazy { CallbackManager.Factory.create() };
-    private val shareDialog: ShareDialog by lazy {
-        ShareDialog(this)
-    };
-    lateinit var overlayBitmap: Bitmap
-
-    val redMeshPostprocessor = object : BasePostprocessor() {
-        override fun getName(): String {
-            return "redMeshPostprocessor";
-        }
-
-        override fun process(bitmap: Bitmap) {
-
-
-            for (x in 1..bitmap.getWidth() step 2) {
-                for (y in 1..bitmap.getHeight() step 2) {
-                    bitmap.setPixel(x, y, Color.RED);
-                }
-            }
-        }
-    }
-    lateinit var mPictureFile: File
+    private val callbackManager: CallbackManager by lazy { com.facebook.CallbackManager.Factory.create() };
+    private val shareDialog: ShareDialog by lazy { ShareDialog(this) };
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_face_detail)
-        Fresco.getImagePipeline().clearCaches()
+//        mPictureFile = getArguments().getString(SelfieActivity.PHOTO_EXTRA, "")
+    }
 
-        setupToolbar()
-        setupImage()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        // Inflate the layout for this fragment
+        val rootView = inflater.inflate(R.layout.fragment_face_detail, container, false)
         shareDialog.registerCallback(callbackManager, facebookCallback)
 
-        shareFacebookImageButton.setOnClickListener {
-            if (ShareDialog.canShow(SharePhotoContent::class.java)) {
-                saveToDisk()
+        mAppbar = rootView.app_bar
+        rootView.saveImageButton.setOnClickListener {
+            saveToDisk()
+        }
+
+        rootView.shareFacebookImageButton.setOnClickListener {
+            if (ShareDialog.canShow(SharePhotoContent::class.java) && pictureFile != null) {
                 val photo = SharePhoto.Builder()
                         .setCaption("Pixsee")
                         .setUserGenerated(true)
-                        .setImageUrl(Uri.fromFile(mPictureFile))
+                        .setImageUrl(Uri.fromFile(File(pictureFile)))
                         .build();
                 val content = SharePhotoContent.Builder()
                         .addPhoto(photo)
@@ -116,97 +107,100 @@ class FaceDetail : AppCompatActivity() {
             }
         }
 
-        sendFacebookImageButton.setOnClickListener {
-            saveToDisk()
-            val photo = SharePhoto.Builder()
-                    .setCaption("Pixsee")
-                    .setUserGenerated(true)
-                    .setImageUrl(Uri.fromFile(mPictureFile))
-                    .build();
-            val content = SharePhotoContent.Builder()
-                    .addPhoto(photo)
-                    .build();
-            MessageDialog.show(this, content);
+        rootView.sendFacebookImageButton.setOnClickListener {
+            if(pictureFile !=null) {
+                val photo = SharePhoto.Builder()
+                        .setCaption("Pixsee")
+                        .setUserGenerated(true)
+                        .setImageUrl(Uri.fromFile(File(pictureFile)))
+                        .build();
+                val content = SharePhotoContent.Builder()
+                        .addPhoto(photo)
+                        .build();
+                MessageDialog.show(this, content);
+            }
         }
-        saveImageButton.setOnClickListener {
-            saveToDisk()
-        }
+        return rootView
+    }
 
-        mVisible = true
-        // Set up the user interaction to manually show or hide the system UI.
-        fullscreenContent.apply {
-            setOnClickListener { toggle() }
-            setOnTouchListener(mDelayHideTouchListener)
+    // TODO: Rename method, update argument and hook method into UI event
+    fun onButtonPressed(uri: Uri) {
+        if (mListener != null) {
+            mListener!!.onFragmentInteraction(uri)
+        }
+    }
+
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is OnFragmentInteractionListener) {
+            mListener = context as OnFragmentInteractionListener?
+        } else {
+            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        mListener = null
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     *
+     *
+     * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
+     */
+    interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        fun onFragmentInteraction(uri: Uri)
+    }
+
+    private fun setupToolbar() {
+        toolbar.setNavigationOnClickListener {
+            //			activity.onBackPressed()
         }
     }
 
     private fun saveToDisk() {
-        val bitmap = getViewSnapshot(fullscreenAppBar)
+//        val bitmap = BitmapUtils.getBitmapFromView(fullscreenAppBar)
         val formatter = SimpleDateFormat("yyyyMMdd_HHmmss")
         val now = Date()
-        val prefix = "PX_IMG_"+formatter.format(now)
-        mPictureFile = BitmapUtils.saveFile(bitmap, Bitmap.CompressFormat.JPEG, 100, prefix + ".jpg");
+        val prefix = "PX_IMG_" + formatter.format(now)
         toast("Image Saved !")
     }
 
-    private fun setupImage() {
-        //        mPictureFile = File(intent.getStringExtra(SelfieActivity.PHOTO_EXTRA))
-        val factory = BitmapFactory.Options()
-        factory.inSampleSize = 3
-
-        photoImageView.apply {
-            setImageURI(Uri.fromFile(File(intent.getStringExtra(SelfieActivity.PHOTO_EXTRA))), this)
-            val hierarchy = GenericDraweeHierarchyBuilder(getResources())
-//                    .setOverlay(Drawable.createFromPath(intent.getStringExtra(SelfieActivity.PHOTO_RENDERER_EXTRA)))
-                    .build();
-            setHierarchy(hierarchy);
-        }
-    }
-
-    private fun setupToolbar() {
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
-    }
-
-    override
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
     fun showAnimation(): Unit {
-        app_bar.animate()
+        mAppbar.animate()
                 .alpha(1.0f)
                 .setDuration(300L)
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationStart(animation: Animator?) {
                         super.onAnimationStart(animation)
-                        app_bar?.visibility = View.VISIBLE
+                        mAppbar.visibility = View.VISIBLE
                     }
                 })
                 .start()
     }
 
     fun hideAnimation(): Unit {
-        app_bar.animate()
+        mAppbar.animate()
                 .alpha(0.0f)
                 .setDuration(300L)
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator?) {
                         super.onAnimationEnd(animation)
-                        app_bar?.visibility = View.GONE
+                        mAppbar.visibility = View.GONE
                     }
                 })
                 .start()
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-
+    override fun onStart() {
+        super.onStart()
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
@@ -244,12 +238,12 @@ class FaceDetail : AppCompatActivity() {
     }
 
     companion object {
-        fun getViewSnapshot(view: View): Bitmap {
-            view.isDrawingCacheEnabled = true
-            val bmap = view.drawingCache
-            val snapshot = Bitmap.createBitmap(bmap, 0, 0, bmap.width, bmap.height, null, true)
-            view.isDrawingCacheEnabled = false
-            return snapshot
+        fun newInstance(): DetailFragment {
+            val detailFragment = DetailFragment()
+            val bundle = Bundle()
+//            bundle.putString(SelfieActivity.PHOTO_EXTRA, picturePath)
+            detailFragment.arguments = bundle
+            return detailFragment
         }
 
         /**
@@ -270,4 +264,4 @@ class FaceDetail : AppCompatActivity() {
          */
         private val UI_ANIMATION_DELAY = 100
     }
-}
+}// Required empty public constructor
