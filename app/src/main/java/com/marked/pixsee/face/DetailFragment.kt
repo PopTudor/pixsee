@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -23,8 +24,9 @@ import com.facebook.share.widget.ShareDialog
 import com.marked.pixsee.R
 import com.marked.pixsee.utility.toast
 import kotlinx.android.synthetic.main.fragment_face_detail.view.*
-import kotlinx.android.synthetic.main.toolbar.*
-import java.io.File
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -55,9 +57,7 @@ class DetailFragment : Fragment() {
     }
 
     private var mListener: OnFragmentInteractionListener? = null
-    var pictureFile: String? = null
-
-    private lateinit var mAppbar:AppBarLayout
+    private lateinit var mAppbar: AppBarLayout
 
     private val facebookCallback by lazy {
         object : FacebookCallback<Sharer.Result> {
@@ -77,11 +77,6 @@ class DetailFragment : Fragment() {
     private val callbackManager: CallbackManager by lazy { com.facebook.CallbackManager.Factory.create() };
     private val shareDialog: ShareDialog by lazy { ShareDialog(this) };
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-//        mPictureFile = getArguments().getString(SelfieActivity.PHOTO_EXTRA, "")
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val rootView = inflater.inflate(R.layout.fragment_face_detail, container, false)
@@ -93,32 +88,39 @@ class DetailFragment : Fragment() {
         }
 
         rootView.shareFacebookImageButton.setOnClickListener {
-            if (ShareDialog.canShow(SharePhotoContent::class.java) && pictureFile != null) {
-                val photo = SharePhoto.Builder()
-                        .setCaption("Pixsee")
-                        .setUserGenerated(true)
-                        .setImageUrl(Uri.fromFile(File(pictureFile)))
-                        .build();
-                val content = SharePhotoContent.Builder()
-                        .addPhoto(photo)
-                        .build();
-
-                shareDialog.show(content);
+            if (ShareDialog.canShow(SharePhotoContent::class.java)) {
+                getFinalImage().map {
+                    val photo = SharePhoto.Builder()
+                            .setCaption("Pixsee")
+                            .setUserGenerated(true)
+                            .setBitmap(it)
+                            .build();
+                    val content = SharePhotoContent.Builder()
+                            .addPhoto(photo)
+                            .build();
+                    return@map content
+                }.observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            shareDialog.show(it);
+                        }
             }
         }
 
         rootView.sendFacebookImageButton.setOnClickListener {
-            if(pictureFile !=null) {
+            getFinalImage().map {
                 val photo = SharePhoto.Builder()
                         .setCaption("Pixsee")
                         .setUserGenerated(true)
-                        .setImageUrl(Uri.fromFile(File(pictureFile)))
+                        .setBitmap(it)
                         .build();
                 val content = SharePhotoContent.Builder()
                         .addPhoto(photo)
                         .build();
-                MessageDialog.show(this, content);
-            }
+                return@map content
+            }.observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        MessageDialog.show(this, it);
+                    }
         }
         return rootView
     }
@@ -159,19 +161,34 @@ class DetailFragment : Fragment() {
         fun onFragmentInteraction(uri: Uri)
     }
 
-    private fun setupToolbar() {
-        toolbar.setNavigationOnClickListener {
-            //			activity.onBackPressed()
-        }
+    private fun saveToDisk() {
+        getFinalImage().map {
+            val formatter = SimpleDateFormat("yyyyMMdd_HHmmss")
+            val now = Date()
+            val prefix = "PX_IMG_" + formatter.format(now)
+            val filename = prefix + ".jpg"
+            BitmapUtils.saveFile(it, Bitmap.CompressFormat.JPEG, 100, filename)
+        }.observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ /*onNext*/ }, { /*onError*/
+                    toast("Image could not be saved !")
+                }, { /*onComplete*/
+                    toast("Image saved !")
+                })
     }
 
-    private fun saveToDisk() {
-//        val bitmap = BitmapUtils.getBitmapFromView(fullscreenAppBar)
-        val formatter = SimpleDateFormat("yyyyMMdd_HHmmss")
-        val now = Date()
-        val prefix = "PX_IMG_" + formatter.format(now)
-        toast("Image Saved !")
+    private fun getFinalImage(): Observable<Bitmap> {
+        return Observable.create<Bitmap> {
+            val b1 = BitmapUtils.getBitmapFromFile(BitmapUtils.getPublicPicture("/model.png").path,
+                    arguments.getInt("WIDTH", 680),
+                    arguments.getInt("HEIGHT", 420));
+            val b2 = BitmapUtils.getBitmapFromFile(BitmapUtils.getPublicPicture("/picture.jpg").path,
+                    arguments.getInt("WIDTH", 680),
+                    arguments.getInt("HEIGHT", 420));
+            it.onNext(BitmapUtils.combineImagesToSameSize(b2, b1))
+            it.onCompleted()
+        }.subscribeOn(Schedulers.io())
     }
+
 
     fun showAnimation(): Unit {
         mAppbar.animate()
@@ -238,10 +255,11 @@ class DetailFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): DetailFragment {
+        fun newInstance(width: Int, height: Int): DetailFragment {
             val detailFragment = DetailFragment()
             val bundle = Bundle()
-//            bundle.putString(SelfieActivity.PHOTO_EXTRA, picturePath)
+            bundle.putInt("WIDTH", width)
+            bundle.putInt("HEIGHT", height)
             detailFragment.arguments = bundle
             return detailFragment
         }

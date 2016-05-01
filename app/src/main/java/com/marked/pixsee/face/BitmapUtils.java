@@ -15,6 +15,8 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,7 +29,7 @@ import static android.os.Environment.getExternalStorageState;
  * Created by Tudor on 4/14/2016.
  */
 public class BitmapUtils {
-	static File getPublicPicturesPixseeDir(String filename) {
+	static File getPublicPicture(String filename) {
 		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "/Pixsee/");
 		if (!mediaStorageDir.exists()) {
 			if (!mediaStorageDir.mkdirs()) {
@@ -86,8 +88,7 @@ public class BitmapUtils {
 		return BitmapFactory.decodeStream(is, outPadding, options);
 	}
 
-	public static Bitmap getBitmapFromFile(String pathName, int reqWidth,
-	                                       int reqHeight) {
+	public static Bitmap getBitmapFromFile(String pathName, int reqWidth, int reqHeight) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(pathName, options);
@@ -95,9 +96,9 @@ public class BitmapUtils {
 		return BitmapFactory.decodeFile(pathName, options);
 	}
 
-	public static BitmapFactory.Options calculateInSampleSize(
-			                                                         final BitmapFactory.Options options, final int reqWidth,
-			                                                         final int reqHeight) {
+	public static BitmapFactory.Options calculateInSampleSize(final BitmapFactory.Options options,
+	                                                          final int reqWidth,
+	                                                          final int reqHeight) {
 		// 源图片的高度和宽度
 		final int height = options.outHeight;
 		final int width = options.outWidth;
@@ -137,13 +138,12 @@ public class BitmapUtils {
 
 		return bmp;
 	}
+
 	public static Bitmap combineImagesToSameSize(Bitmap bgd, Bitmap fg) {
 		Bitmap bmp;
 
-		int width = bgd.getWidth() < fg.getWidth() ? bgd.getWidth() : fg
-				                                                              .getWidth();
-		int height = bgd.getHeight() < fg.getHeight() ? bgd.getHeight() : fg
-				                                                                  .getHeight();
+		int width = bgd.getWidth() < fg.getWidth() ? bgd.getWidth() : fg.getWidth();
+		int height = bgd.getHeight() < fg.getHeight() ? bgd.getHeight() : fg.getHeight();
 
 		if (fg.getWidth() != width && fg.getHeight() != height) {
 			fg = zoom(fg, width, height);
@@ -162,6 +162,7 @@ public class BitmapUtils {
 
 		return bmp;
 	}
+
 	public static Bitmap zoom(Bitmap bitmap, int w, int h) {
 		int width = bitmap.getWidth();
 		int height = bitmap.getHeight();
@@ -224,6 +225,17 @@ public class BitmapUtils {
 		}
 	}
 
+	public static File saveBitmapToFile(Bitmap screenshot, Bitmap.CompressFormat format, int quality, String path, String filename) {
+		path += "/";
+		File file = new File(path + filename);
+		try {
+			// new BufferedOutputStream(new FileOutputStream(file)) throws exception. For some reason it doesn't create the file
+			screenshot.compress(format, quality, new FileOutputStream(file));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return file;
+	}
 
 	/* Checks if external storage is available for read and write */
 	static boolean isExternalStorageWritable() {
@@ -233,6 +245,7 @@ public class BitmapUtils {
 		}
 		return false;
 	}
+
 	/**
 	 * Saves the given bitmap to public picture directory
 	 *
@@ -242,10 +255,32 @@ public class BitmapUtils {
 	 * @param filename   the name of the saved image
 	 * @return the path of the image
 	 */
-	public static File saveFile(Bitmap screenshot, Bitmap.CompressFormat format, int quality, String filename) {
-		File file = getPublicPicturesPixseeDir("/" + filename);
+	public static File saveFile(@NotNull Bitmap screenshot, Bitmap.CompressFormat format, int quality, String filename) {
+		File file = getPublicPicture("/" + filename);
 		try {
 			screenshot.compress(format, quality, new FileOutputStream(file));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return file;
+	}
+
+	/**
+	 * Saves the given bitmap to public picture directory
+	 *
+	 * @param screenshot the bitmap to save
+	 * @param format     the format to save the image {@link android.graphics.Bitmap.CompressFormat} (JPEG, PNG)
+	 * @param quality    quality of the image (PNG is loseless so this is ignored)
+	 * @param filename   the name of the saved image
+	 * @return the path of the image
+	 */
+	public static File saveFile(byte[] screenshot, Bitmap.CompressFormat format, int quality, String filename) {
+		File file = getPublicPicture(filename);
+		try {
+			FileOutputStream stream = new FileOutputStream(file);
+			stream.write(screenshot);
+			stream.flush();
+			stream.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -36,17 +35,16 @@ import org.jetbrains.annotations.NotNull;
 import org.rajawali3d.view.SurfaceView;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class SelfieActivity extends AppCompatActivity implements DetailFragment.OnFragmentInteractionListener {
+import static com.marked.pixsee.face.DetailFragment.*;
+
+public class SelfieActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 	private static final String TAG = SelfieActivity.class + "***";
 	public static final String PHOTO_EXTRA = "PHOTO";
 	public static final String PHOTO_RENDERER_EXTRA = "PHOTO_RENDERER";
@@ -107,60 +105,31 @@ public class SelfieActivity extends AppCompatActivity implements DetailFragment.
 		mCameraButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View cameraButton) {
-				cameraButton.setEnabled(false);
+				cameraButton.setEnabled(false); /* disable the button because if the user double tapps the camera button(impatience), it would crash the app*/
 				mCameraSource.takePicture(new CameraSourcePixsee.ShutterCallback() {
 					@Override
 					public void onShutter() {
 						mFaceRenderer.takeScreenshot();
-						mCameraSourcePreview.stop();
 						getSupportFragmentManager().beginTransaction()
-								.add(R.id.fragmentContainer, DetailFragment.Companion.newInstance())
+								.add(R.id.fragmentContainer, Companion.newInstance(
+										mFaceRenderer.getDefaultViewportWidth(),
+										mFaceRenderer.getDefaultViewportHeight()))
 								.addToBackStack("DetailFragment")
 								.commit();
 					}
 				}, new CameraSourcePixsee.PictureCallback() {
 					@Override
 					public void onPictureTaken(final byte[] bytes) {
-						Observable.create(new Observable.OnSubscribe<Bitmap>() {
-							@Override
-							public void call(Subscriber<? super Bitmap> subscriber) {
-								Bitmap b1 = BitmapUtils.getBitmapFromFile(mFaceRenderer.mLastPictureLocation.getPath(),
-										mFaceRenderer.getDefaultViewportWidth(),
-										mFaceRenderer.getDefaultViewportHeight());
-								Bitmap b2 = BitmapUtils.getBitmapFromBytes(BitmapUtils.flipHorizontal(bytes));
-								Bitmap b3 = BitmapUtils.combineImagesToSameSize(b2, b1);
-								subscriber.onNext(b3);
-								subscriber.onCompleted();
-							}
-						}).subscribeOn(Schedulers.computation())
-								.map(new Func1<Bitmap, String>() {
+						mCameraSourcePreview.stop(); /* camera needs to be frozen after it took the picture*/
+						Observable.just(bytes)
+								.map(new Func1<byte[], File>() {
 									@Override
-									public String call(Bitmap bitmap) {
-										String folderName = "Pixsee";
-										File privateFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), folderName);
-										String filename = "picture.jpg";
-										String path = privateFolder.getPath() + "/";
-										try {
-											FileOutputStream stream = new FileOutputStream(path + filename);
-											stream.write(BitmapUtils.getBytesFromBitmap(bitmap));
-											stream.flush();
-											stream.close();
-										} catch (java.io.IOException e) {
-											Log.e("PictureDemo", "Exception in photoCallback", e);
-										}
-										return path + filename;
+									public File call(byte[] bytes) {
+										return BitmapUtils.saveFile(BitmapUtils.flipHorizontal(bytes), Bitmap.CompressFormat.JPEG, 60, "/picture.jpg");
 									}
 								})
 								.subscribeOn(Schedulers.io())
-								.observeOn(AndroidSchedulers.mainThread())
-								.subscribe(new Action1<String>() {
-									@Override
-									public void call(String picturePath) {
-										DetailFragment fragment = (DetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-										fragment.setPictureFile(picturePath);
-
-									}
-								});
+								.subscribe();
 					}
 				});
 			}
@@ -256,7 +225,6 @@ public class SelfieActivity extends AppCompatActivity implements DetailFragment.
 		}
 		mCameraSource = new CameraSourcePixsee.Builder(this, faceDetector).setRequestedFps(30.0f)
 				                .setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO)
-//	             .setRequestedPreviewSize(640, 480)
 				                .setFacing(CameraSource.CAMERA_FACING_FRONT)
 				                .build();
 	}
@@ -268,7 +236,8 @@ public class SelfieActivity extends AppCompatActivity implements DetailFragment.
 	protected void onResume() {
 		super.onResume();
 		startCameraSource();
-		if (getSupportFragmentManager().getBackStackEntryCount()>0)
+		/* if we resume and the user had the fragment screen, make him take another picture*/
+		if (getSupportFragmentManager().getBackStackEntryCount() > 0)
 			getSupportFragmentManager().popBackStack();
 	}
 

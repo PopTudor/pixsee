@@ -25,8 +25,6 @@ import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.renderer.Renderer;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -105,8 +103,6 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		}
 	}
 
-	public File mLastPictureLocation;
-
 	private void takeScreenshot(int x, int y, int w, int h, GL10 gl) {
 		int bitmapBuffer[] = new int[w * h];
 		int bitmapSource[] = new int[w * h];
@@ -127,22 +123,10 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 			}
 		}
 		Bitmap sb = Bitmap.createBitmap(bitmapSource, w, h, Bitmap.Config.ARGB_8888);
-		mLastPictureLocation = saveFile(sb, Bitmap.CompressFormat.PNG, 0, "model.png");
+		BitmapUtils.saveFile(sb, Bitmap.CompressFormat.PNG, 0,/* context.getDir("Pixsee", Context.MODE_PRIVATE).getPath(),*/ "model.png");
 		sb.recycle();
 	}
 
-	private File saveFile(Bitmap screenshot, Bitmap.CompressFormat format, int quality, String filename) {
-		File privateFolder = context.getDir("Pixsee", Context.MODE_PRIVATE);
-		String path = privateFolder.getPath() + "/";
-		File file = new File(path + filename);
-		try {
-			// new BufferedOutputStream(new FileOutputStream(file)) throws exception. For some reason it doesn't create the file
-			screenshot.compress(format, quality, new FileOutputStream(file));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return file;
-	}
 
 	/**********************
 	 * TEST METHOD
@@ -193,9 +177,9 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 				e.printStackTrace();
 			}
 		}
-		if (aSingleTexture!=null){
+		if (aSingleTexture != null) {
 			try {
-				((AnimatedGIFTexture)aSingleTexture).update();
+				((AnimatedGIFTexture) aSingleTexture).update();
 			} catch (ATexture.TextureException e) {
 				e.printStackTrace();
 			}
