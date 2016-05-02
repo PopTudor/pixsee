@@ -1,4 +1,4 @@
-package com.marked.pixsee.face;
+package com.marked.pixsee.utility;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -29,7 +29,7 @@ import static android.os.Environment.getExternalStorageState;
  * Created by Tudor on 4/14/2016.
  */
 public class BitmapUtils {
-	static File getPublicPicture(String filename) {
+	public static File getPublicPicture(String filename) {
 		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "/Pixsee/");
 		if (!mediaStorageDir.exists()) {
 			if (!mediaStorageDir.mkdirs()) {

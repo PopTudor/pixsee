@@ -29,20 +29,18 @@ import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.R;
+import com.marked.pixsee.utility.BitmapUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.jetbrains.annotations.NotNull;
-import org.rajawali3d.view.SurfaceView;
+import org.rajawali3d.view.TextureView;
 
-import java.io.File;
 import java.io.IOException;
 
-import rx.Observable;
 import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
-import static com.marked.pixsee.face.DetailFragment.*;
+import static com.marked.pixsee.face.DetailFragment.Companion;
+import static com.marked.pixsee.face.DetailFragment.OnFragmentInteractionListener;
 
 public class SelfieActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 	private static final String TAG = SelfieActivity.class + "***";
@@ -80,8 +78,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 		mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
 		mBottomLayout = (ViewGroup) findViewById(R.id.bottomLayout);
 
-		final SurfaceView mFaceTextureView = (SurfaceView) findViewById(R.id.texture_view);
-		mFaceTextureView.setTransparent(true);
+		final TextureView mFaceTextureView = (TextureView) findViewById(R.id.texture_view);
 		mFaceTextureView.setEGLContextClientVersion(2);
 		mFaceTextureView.setSurfaceRenderer(mFaceRenderer);
 
@@ -109,7 +106,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 				mCameraSource.takePicture(new CameraSourcePixsee.ShutterCallback() {
 					@Override
 					public void onShutter() {
-						mFaceRenderer.takeScreenshot();
+						BitmapUtils.saveFile(mFaceTextureView.getBitmap(), Bitmap.CompressFormat.JPEG, 100,"/tmp.jpg");
 						getSupportFragmentManager().beginTransaction()
 								.add(R.id.fragmentContainer, Companion.newInstance(
 										mFaceRenderer.getDefaultViewportWidth(),
@@ -121,15 +118,15 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 					@Override
 					public void onPictureTaken(final byte[] bytes) {
 						mCameraSourcePreview.stop(); /* camera needs to be frozen after it took the picture*/
-						Observable.just(bytes)
-								.map(new Func1<byte[], File>() {
-									@Override
-									public File call(byte[] bytes) {
-										return BitmapUtils.saveFile(BitmapUtils.flipHorizontal(bytes), Bitmap.CompressFormat.JPEG, 60, "/picture.jpg");
-									}
-								})
-								.subscribeOn(Schedulers.io())
-								.subscribe();
+//						Observable.just(bytes)
+//								.map(new Func1<byte[], File>() {
+//									@Override
+//									public File call(byte[] bytes) {
+//										return BitmapUtils.saveFile(BitmapUtils.flipHorizontal(bytes), Bitmap.CompressFormat.JPEG, 60, "/picture.jpg");
+//									}
+//								})
+//								.subscribeOn(Schedulers.io())
+//								.subscribe();
 					}
 				});
 			}

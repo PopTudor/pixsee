@@ -25,6 +25,7 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 
 import org.jetbrains.annotations.NotNull;
+import org.rajawali3d.materials.textures.StreamingTexture;
 
 import java.io.IOException;
 import java.lang.Thread.State;
@@ -90,6 +91,9 @@ public class CameraSourcePixsee {
 
 	// Guarded by mCameraLock
 	private Camera mCamera;
+
+	/* Used by Renderer to display camera preview on the screen*/
+	private StreamingTexture mStreamingTexture;
 
 	private int mFacing = CAMERA_FACING_FRONT;
 
@@ -211,6 +215,14 @@ public class CameraSourcePixsee {
 			mCameraSource.mFrameProcessor = mCameraSource.new FrameProcessingRunnable(mDetector);
 			return mCameraSource;
 		}
+	}
+
+	public void setStreamingTextureCallback(SurfaceTexture.OnFrameAvailableListener frameAvailableListener) {
+		this.mStreamingTexture = new StreamingTexture("Preview", mCamera, frameAvailableListener);
+	}
+
+	public StreamingTexture getStreamingTexture() {
+		return mStreamingTexture;
 	}
 
 	//==============================================================================================

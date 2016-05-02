@@ -22,6 +22,7 @@ import com.facebook.share.model.SharePhotoContent
 import com.facebook.share.widget.MessageDialog
 import com.facebook.share.widget.ShareDialog
 import com.marked.pixsee.R
+import com.marked.pixsee.utility.BitmapUtils
 import com.marked.pixsee.utility.toast
 import kotlinx.android.synthetic.main.fragment_face_detail.view.*
 import rx.Observable

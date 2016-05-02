@@ -1,8 +1,9 @@
 package com.marked.pixsee.face;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.SurfaceTexture;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -20,12 +21,12 @@ import org.rajawali3d.materials.methods.DiffuseMethod;
 import org.rajawali3d.materials.textures.ASingleTexture;
 import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.AnimatedGIFTexture;
+import org.rajawali3d.materials.textures.StreamingTexture;
 import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Cube;
+import org.rajawali3d.primitives.ScreenQuad;
 import org.rajawali3d.renderer.Renderer;
-
-import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -33,10 +34,9 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by Tudor on 4/8/2016.
  */
 public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, SelfieActivity
-		                                                                            .OnFavoritesListener {
+		                                                                            .OnFavoritesListener, SurfaceTexture.OnFrameAvailableListener {
 	private static final String TAG = "***********";
 	private final Object mLock = new Object();
-	private Context context;
 	private DirectionalLight directionalLight;
 
 	private int mFacing = CameraSource.CAMERA_FACING_FRONT;
@@ -47,13 +47,19 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 
 	private Object3D loadedObject = null;
 	private Face mFace;
-	private boolean screenshot;
+	ASingleTexture aSingleTexture;
+	private Handler handler;
+	/******************
+	 * Camera preview *
+	 ******************/
+	private ScreenQuad screenQuad;
+	StreamingTexture mCameraStreamingTexture;
 
 
 	public FaceRenderer(Context context) {
 		super(context);
-		this.context = context;
 		setFrameRate(60);
+		handler = new Handler();
 	}
 
 	@Override
@@ -62,11 +68,31 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		directionalLight.setColor(1.0f, 1.0f, 1.0f);
 		directionalLight.setPower(2);
 
+		screenQuad = new ScreenQuad();
+		screenQuad.rotate(Vector3.Axis.Z, -90);
 		getCurrentScene().addLight(directionalLight);
 		getCurrentCamera().setPosition(0, 0, 10);
 	}
 
-	ASingleTexture aSingleTexture;
+	public void setCameraStreamingTexture(StreamingTexture streamingTexture) {
+		if (mCameraStreamingTexture == null)
+			getTextureManager().removeTexture(mCameraStreamingTexture);
+		this.mCameraStreamingTexture = streamingTexture;
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Material material = new Material();
+					material.setColorInfluence(0);
+					material.addTexture(mCameraStreamingTexture);
+					screenQuad.setMaterial(material);
+					getCurrentScene().addChild(screenQuad);
+				} catch (ATexture.TextureException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
 	@Override
 	public void onModelLoadComplete(ALoader loader) {
@@ -74,10 +100,11 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		final AMeshLoader obj = (AMeshLoader) loader;
 		final Object3D parsedObject = obj.getParsedObject();
 		parsedObject.setPosition(Vector3.ZERO);
+		if (loadedObject != null)
+			getCurrentScene().removeChild(loadedObject);
 		loadedObject = parsedObject;
 
 //        loadedObject = testLoadedObject();
-		getCurrentScene().clearChildren();
 		getCurrentScene().addChild(loadedObject);
 	}
 
@@ -90,43 +117,20 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		loadModel(object.getLoader(), this, faceObject.getTag());
 	}
 
-	public void takeScreenshot() {
-		screenshot = true;
-	}
-
 	@Override
 	public void onRenderFrame(GL10 gl) {
 		super.onRenderFrame(gl);
-		if (screenshot) {
-			takeScreenshot(0, 0, mDefaultViewportWidth, mDefaultViewportHeight, gl);
-			screenshot = false;
+		if (mCameraStreamingTexture != null) {
+			mCameraStreamingTexture.update();
 		}
 	}
 
-	private void takeScreenshot(int x, int y, int w, int h, GL10 gl) {
-		int bitmapBuffer[] = new int[w * h];
-		int bitmapSource[] = new int[w * h];
-		IntBuffer intBuffer = IntBuffer.wrap(bitmapBuffer);
-		intBuffer.position(0);
-		gl.glReadPixels(x, y, w, h, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, intBuffer);
-
-		int offset1, offset2;
-		for (int i = 0, k = 0; i < h; i++, k++) {//remember, that OpenGL bitmap is incompatible with Android bitmap
-			offset1 = i * w;
-			offset2 = (h - i - 1) * w;
-			for (int j = 0; j < w; j++) {
-				int texturePixel = bitmapBuffer[offset1 + j];
-				int blue = (texturePixel >> 16) & 0xff;
-				int red = (texturePixel << 16) & 0x00ff0000;
-				int pixel = (texturePixel & 0xff00ff00) | red | blue;
-				bitmapSource[offset2 + j] = pixel;
-			}
-		}
-		Bitmap sb = Bitmap.createBitmap(bitmapSource, w, h, Bitmap.Config.ARGB_8888);
-		BitmapUtils.saveFile(sb, Bitmap.CompressFormat.PNG, 0,/* context.getDir("Pixsee", Context.MODE_PRIVATE).getPath(),*/ "model.png");
-		sb.recycle();
+	@Override
+	public boolean removeTexture(ATexture texture) {
+		if (texture.equals(mCameraStreamingTexture))
+			mCameraStreamingTexture = null;
+		return super.removeTexture(texture);
 	}
-
 
 	/**********************
 	 * TEST METHOD
@@ -289,6 +293,11 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 
 	@Override
 	public void onOffsetsChanged(float xOffset, float yOffset, float xOffsetStep, float yOffsetStep, int xPixelOffset, int yPixelOffset) {
+
+	}
+
+	@Override
+	public void onFrameAvailable(SurfaceTexture surfaceTexture) {
 
 	}
 }

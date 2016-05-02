@@ -9,10 +9,12 @@ import android.support.v4.app.ActivityCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.TextureView;
+import android.view.SurfaceView;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
+
+import org.rajawali3d.view.TextureView;
 
 import java.io.IOException;
 
@@ -20,12 +22,11 @@ public class CameraSourcePreview extends ViewGroup {
 	private static final String TAG = "CameraSourcePreview";
 
 	private Context mContext;
-	private TextureView mTextureView; /* We user TextureView because we have to mirror the camera preview on front camera*/
+	private SurfaceView mSurfaceView;
 	private boolean mStartRequested;
 	private boolean mSurfaceAvailable;
 	private CameraSourcePixsee mCameraSource;
-
-	private FaceRenderer mOverlay;
+	private FaceRenderer mFaceRenderer;
 
 	public CameraSourcePreview(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -33,17 +34,14 @@ public class CameraSourcePreview extends ViewGroup {
 		mStartRequested = false;
 		mSurfaceAvailable = false;
 
-		setTextureView(new TextureView(context));
-		addView(mTextureView);
+		setSurfaceView(new SurfaceView(context));
+		addView(mSurfaceView);
 	}
 
-	void setTextureView(TextureView surfaceView) {
-		mTextureView = surfaceView;
-		mTextureView.setSurfaceTextureListener(new TextureCallback());
-	}
-
-	public TextureView getTextureView() {
-		return mTextureView;
+	void setSurfaceView(SurfaceView surfaceView) {
+		mSurfaceView = surfaceView;
+		mSurfaceView.getHolder()
+				.addCallback(new SurfaceCallback());
 	}
 
 	public void start(CameraSourcePixsee cameraSource) throws IOException {
@@ -60,17 +58,21 @@ public class CameraSourcePreview extends ViewGroup {
 	}
 
 	public void start(CameraSourcePixsee cameraSource, FaceRenderer overlay) throws IOException {
-		mOverlay = overlay;
+		mFaceRenderer = overlay;
 		start(cameraSource);
 	}
 
 	public void stop() {
+		if (mFaceRenderer != null)
+			mFaceRenderer.setCameraStreamingTexture(null);
 		if (mCameraSource != null) {
 			mCameraSource.stop();
 		}
 	}
 
 	public void release() {
+		if (mFaceRenderer != null)
+			mFaceRenderer.setCameraStreamingTexture(null);;
 		if (mCameraSource != null) {
 			mCameraSource.release();
 			mCameraSource = null;
@@ -89,25 +91,20 @@ public class CameraSourcePreview extends ViewGroup {
 				// for ActivityCompat#requestPermissions for more details.
 				return;
 			}
-			if (mCameraSource.getCameraFacing()==CameraSourcePixsee.CAMERA_FACING_FRONT) {
-//				Matrix mirrorMatrix = new Matrix();
-//				mirrorMatrix.preScale(-1, 1);
-//				mTextureView.setTransform(mirrorMatrix);
-//				mTextureView.setScaleX(-1);
-			}
-			mCameraSource.start(mTextureView.getSurfaceTexture());
-			if (mOverlay != null) {
+			mCameraSource.start(mSurfaceView.getHolder());
+			mCameraSource.setStreamingTextureCallback(null);
+			if (mFaceRenderer != null) {
+				mFaceRenderer.setCameraStreamingTexture(mCameraSource.getStreamingTexture());
 				Size size = mCameraSource.getPreviewSize();
 				int min = Math.min(size.getWidth(), size.getHeight());
 				int max = Math.max(size.getWidth(), size.getHeight());
 				if (isPortraitMode()) {
 					// Swap width and height sizes when in portrait, since it will be rotated by
 					// 90 degrees
-					mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
+					mFaceRenderer.setCameraInfo(min, max, mCameraSource.getCameraFacing());
 				} else {
-					mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
+					mFaceRenderer.setCameraInfo(max, min, mCameraSource.getCameraFacing());
 				}
-//				mOverlay.clear();
 			}
 			mStartRequested = false;
 		}
