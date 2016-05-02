@@ -23,7 +23,7 @@ fun FragmentManager.addToBackStack(containerId: Int, fragment: Fragment) {
 }
 
 fun Fragment.toast(message: String) {
-    Toast.makeText(activity,message, Toast.LENGTH_SHORT)
+    Toast.makeText(activity,message, Toast.LENGTH_SHORT).show()
 }
 val Context.defaultSharedPreferences: SharedPreferences
     get() = PreferenceManager.getDefaultSharedPreferences(this)

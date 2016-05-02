@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.AppBarLayout
@@ -27,7 +26,6 @@ import com.marked.pixsee.utility.toast
 import kotlinx.android.synthetic.main.fragment_face_detail.view.*
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -85,22 +83,35 @@ class DetailFragment : Fragment() {
 
         mAppbar = rootView.app_bar
         rootView.saveImageButton.setOnClickListener {
-            saveToDisk()
+            mListener!!.onButtonClicked()
+                    .map {
+                        val formatter = SimpleDateFormat("yyyyMMdd_HHmmss")
+                        val now = Date()
+                        val prefix = "PX_IMG_" + formatter.format(now)
+                        val filename = prefix + ".jpg"
+                        BitmapUtils.saveFile(it, Bitmap.CompressFormat.JPEG, 100, filename)
+                    }.observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ /*onNext*/ }, { /*onError*/
+                        toast("Image could not be saved !")
+                    }, { /*onComplete*/
+                        toast("Image saved !")
+                    })
         }
 
         rootView.shareFacebookImageButton.setOnClickListener {
             if (ShareDialog.canShow(SharePhotoContent::class.java)) {
-                getFinalImage().map {
-                    val photo = SharePhoto.Builder()
-                            .setCaption("Pixsee")
-                            .setUserGenerated(true)
-                            .setBitmap(it)
-                            .build();
-                    val content = SharePhotoContent.Builder()
-                            .addPhoto(photo)
-                            .build();
-                    return@map content
-                }.observeOn(AndroidSchedulers.mainThread())
+                mListener!!.onButtonClicked()
+                        .map {
+                            val photo = SharePhoto.Builder()
+                                    .setCaption("Pixsee")
+                                    .setUserGenerated(true)
+                                    .setBitmap(it)
+                                    .build();
+                            val content = SharePhotoContent.Builder()
+                                    .addPhoto(photo)
+                                    .build();
+                            return@map content
+                        }.observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
                             shareDialog.show(it);
                         }
@@ -108,31 +119,24 @@ class DetailFragment : Fragment() {
         }
 
         rootView.sendFacebookImageButton.setOnClickListener {
-            getFinalImage().map {
-                val photo = SharePhoto.Builder()
-                        .setCaption("Pixsee")
-                        .setUserGenerated(true)
-                        .setBitmap(it)
-                        .build();
-                val content = SharePhotoContent.Builder()
-                        .addPhoto(photo)
-                        .build();
-                return@map content
-            }.observeOn(AndroidSchedulers.mainThread())
+            mListener!!.onButtonClicked()
+                    .map {
+                        val photo = SharePhoto.Builder()
+                                .setCaption("Pixsee")
+                                .setUserGenerated(true)
+                                .setBitmap(it)
+                                .build();
+                        val content = SharePhotoContent.Builder()
+                                .addPhoto(photo)
+                                .build();
+                        return@map content
+                    }.observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         MessageDialog.show(this, it);
                     }
         }
         return rootView
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
-        }
-    }
-
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -158,38 +162,8 @@ class DetailFragment : Fragment() {
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+        fun onButtonClicked(): Observable<Bitmap>
     }
-
-    private fun saveToDisk() {
-        getFinalImage().map {
-            val formatter = SimpleDateFormat("yyyyMMdd_HHmmss")
-            val now = Date()
-            val prefix = "PX_IMG_" + formatter.format(now)
-            val filename = prefix + ".jpg"
-            BitmapUtils.saveFile(it, Bitmap.CompressFormat.JPEG, 100, filename)
-        }.observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ /*onNext*/ }, { /*onError*/
-                    toast("Image could not be saved !")
-                }, { /*onComplete*/
-                    toast("Image saved !")
-                })
-    }
-
-    private fun getFinalImage(): Observable<Bitmap> {
-        return Observable.create<Bitmap> {
-            val b1 = BitmapUtils.getBitmapFromFile(BitmapUtils.getPublicPicture("/model.png").path,
-                    arguments.getInt("WIDTH", 680),
-                    arguments.getInt("HEIGHT", 420));
-            val b2 = BitmapUtils.getBitmapFromFile(BitmapUtils.getPublicPicture("/picture.jpg").path,
-                    arguments.getInt("WIDTH", 680),
-                    arguments.getInt("HEIGHT", 420));
-            it.onNext(BitmapUtils.combineImagesToSameSize(b2, b1))
-            it.onCompleted()
-        }.subscribeOn(Schedulers.io())
-    }
-
 
     fun showAnimation(): Unit {
         mAppbar.animate()
@@ -256,11 +230,9 @@ class DetailFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(width: Int, height: Int): DetailFragment {
+        fun newInstance(): DetailFragment {
             val detailFragment = DetailFragment()
             val bundle = Bundle()
-            bundle.putInt("WIDTH", width)
-            bundle.putInt("HEIGHT", height)
             detailFragment.arguments = bundle
             return detailFragment
         }

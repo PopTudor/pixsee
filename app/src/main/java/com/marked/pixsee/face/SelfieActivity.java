@@ -7,8 +7,8 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -29,15 +29,15 @@ import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.R;
-import com.marked.pixsee.utility.BitmapUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
-import org.jetbrains.annotations.NotNull;
 import org.rajawali3d.view.TextureView;
 
 import java.io.IOException;
 
+import rx.Observable;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static com.marked.pixsee.face.DetailFragment.Companion;
 import static com.marked.pixsee.face.DetailFragment.OnFragmentInteractionListener;
@@ -53,12 +53,14 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	private static final int RC_HANDLE_GMS = 9001;
 	// permission request codes need to be < 256
 	private static final int RC_HANDLE_CAMERA_PERM = 2;
-	ViewGroup mBottomLayout;
+	private TextureView mFaceTextureView;
+	private ViewGroup mBottomLayout;
 	private ImageButton mCameraButton;
 
+	@NonNull
 	@Override
-	public void onFragmentInteraction(@NotNull Uri uri) {
-
+	public Observable<Bitmap> onButtonClicked() {
+		return Observable.just(mFaceTextureView.getBitmap()).subscribeOn(Schedulers.computation());
 	}
 
 	interface OnFavoritesListener {
@@ -78,7 +80,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 		mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
 		mBottomLayout = (ViewGroup) findViewById(R.id.bottomLayout);
 
-		final TextureView mFaceTextureView = (TextureView) findViewById(R.id.texture_view);
+		mFaceTextureView = (TextureView) findViewById(R.id.texture_view);
 		mFaceTextureView.setEGLContextClientVersion(2);
 		mFaceTextureView.setSurfaceRenderer(mFaceRenderer);
 
@@ -106,11 +108,8 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 				mCameraSource.takePicture(new CameraSourcePixsee.ShutterCallback() {
 					@Override
 					public void onShutter() {
-						BitmapUtils.saveFile(mFaceTextureView.getBitmap(), Bitmap.CompressFormat.JPEG, 100,"/tmp.jpg");
 						getSupportFragmentManager().beginTransaction()
-								.add(R.id.fragmentContainer, Companion.newInstance(
-										mFaceRenderer.getDefaultViewportWidth(),
-										mFaceRenderer.getDefaultViewportHeight()))
+								.add(R.id.fragmentContainer, Companion.newInstance())
 								.addToBackStack("DetailFragment")
 								.commit();
 					}
@@ -118,15 +117,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 					@Override
 					public void onPictureTaken(final byte[] bytes) {
 						mCameraSourcePreview.stop(); /* camera needs to be frozen after it took the picture*/
-//						Observable.just(bytes)
-//								.map(new Func1<byte[], File>() {
-//									@Override
-//									public File call(byte[] bytes) {
-//										return BitmapUtils.saveFile(BitmapUtils.flipHorizontal(bytes), Bitmap.CompressFormat.JPEG, 60, "/picture.jpg");
-//									}
-//								})
-//								.subscribeOn(Schedulers.io())
-//								.subscribe();
+//						mFaceRenderer.stopRendering();
 					}
 				});
 			}
