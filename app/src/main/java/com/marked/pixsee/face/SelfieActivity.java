@@ -1,7 +1,6 @@
 package com.marked.pixsee.face;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -9,7 +8,6 @@ import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +26,7 @@ import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.R;
+import com.marked.pixsee.utility.UtilsFragmentKt;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.rajawali3d.view.TextureView;
@@ -107,16 +106,12 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 				mCameraSource.takePicture(new CameraSource.ShutterCallback() {
 					@Override
 					public void onShutter() {
-						getSupportFragmentManager().beginTransaction()
-								.add(R.id.fragmentContainer, Companion.newInstance())
-								.addToBackStack("DetailFragment")
-								.commit();
+						UtilsFragmentKt.addToBackStack(getSupportFragmentManager(), R.id.fragmentContainer, Companion.newInstance());
 					}
 				}, new CameraSource.PictureCallback() {
 					@Override
 					public void onPictureTaken(final byte[] bytes) {
 						mCameraPreview.stop(); /* camera needs to be frozen after it took the picture*/
-//						mFaceRenderer.stopRendering();
 					}
 				});
 			}
@@ -154,36 +149,6 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 				});
 	}
 
-
-	/**
-	 * Handles the requesting of the camera permission.  This includes
-	 * showing a "Snackbar" message of why the permission is needed then
-	 * sending the request.
-	 */
-	private void requestCameraPermission() {
-		Log.w(TAG, "Camera permission is not granted. Requesting permission");
-
-		final String[] permissions = new String[]{Manifest.permission.CAMERA};
-
-		if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-			ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_CAMERA_PERM);
-			return;
-		}
-
-		final Activity thisActivity = this;
-
-		View.OnClickListener listener = new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				ActivityCompat.requestPermissions(thisActivity, permissions, RC_HANDLE_CAMERA_PERM);
-			}
-		};
-
-//		Snackbar.make(mCameraSourcePreview, "We need camera permission in order to take cool selfies !", Snackbar.LENGTH_INDEFINITE)
-//		        .setAction("OK", listener)
-//		        .show();
-	}
-
 	/**
 	 * Creates and starts the camera.  Note that this uses a higher resolution in comparison
 	 * to other detection examples to enable the barcode detector to detect small barcodes
@@ -213,9 +178,9 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 		mCameraSource = new CameraSource.Builder(this, faceDetector).setRequestedFps(30.0f)
 				                .setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO)
 				                .setFacing(com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT)
+				                .setStreaming(mFaceRenderer)
 				                .build();
 	}
-
 	/**
 	 * Restarts the camera.
 	 */
@@ -235,8 +200,15 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	protected void onPause() {
 		super.onPause();
 		mCameraPreview.stop();
+		Log.d(TAG, "onPause: ");
 	}
-
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d(TAG, "onStop: ");
+	}
+	
 	/**
 	 * Releases the resources associated with the camera source, the associated detector, and the
 	 * rest of the processing pipeline.
@@ -244,9 +216,10 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (mCameraSource != null) {
-			mCameraSource.release();
+		if (mCameraPreview != null) {
+			mCameraPreview.release();
 		}
+		Log.d(TAG, "onDestroy: ");
 	}
 
 	/**
@@ -321,7 +294,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 				mCameraPreview.start(mCameraSource, mFaceRenderer);
 			} catch (IOException e) {
 				Log.e(TAG, "Unable to start camera source.", e);
-				mCameraSource.release();
+				mCameraPreview.release();
 				mCameraSource = null;
 			}
 		}

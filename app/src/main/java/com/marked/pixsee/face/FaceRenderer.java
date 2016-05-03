@@ -2,7 +2,7 @@ package com.marked.pixsee.face;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.face.Face;
 import com.marked.pixsee.R;
+import com.marked.pixsee.face.CameraSource.CameraCallback;
+import com.marked.pixsee.face.SelfieActivity.OnFavoritesListener;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
@@ -33,8 +35,7 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Created by Tudor on 4/8/2016.
  */
-public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, SelfieActivity
-		                                                                            .OnFavoritesListener, SurfaceTexture.OnFrameAvailableListener {
+class FaceRenderer extends Renderer implements IAsyncLoaderCallback,OnFavoritesListener, CameraCallback {
 	private static final String TAG = "***********";
 	private final Object mLock = new Object();
 	private DirectionalLight directionalLight;
@@ -53,31 +54,33 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	 * Camera preview *
 	 ******************/
 	private ScreenQuad screenQuad;
-	StreamingTexture mCameraStreamingTexture;
-
+	private StreamingTexture mCameraStreamingTexture;
 
 	public FaceRenderer(Context context) {
 		super(context);
 		setFrameRate(60);
 		handler = new Handler();
+
 	}
 
 	@Override
 	protected void initScene() {
+		screenQuad = new ScreenQuad();
+		screenQuad.rotate(Vector3.Axis.Z, -90);
+
 		directionalLight = new DirectionalLight(0f, 0f, -1.0f);
 		directionalLight.setColor(1.0f, 1.0f, 1.0f);
 		directionalLight.setPower(2);
 
-		screenQuad = new ScreenQuad();
-		screenQuad.rotate(Vector3.Axis.Z, -90);
 		getCurrentScene().addLight(directionalLight);
 		getCurrentCamera().setPosition(0, 0, 10);
 	}
 
-	public void setCameraStreamingTexture(StreamingTexture streamingTexture) {
-//		if (mCameraStreamingTexture == null)
-//			getTextureManager().removeTexture(mCameraStreamingTexture);
-		this.mCameraStreamingTexture = streamingTexture;
+	boolean streamingReady;
+
+	@Override
+	public void cameraCreated(Camera camera) {
+		mCameraStreamingTexture = new StreamingTexture("Preview", camera, null);
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
@@ -85,6 +88,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 					Material material = new Material();
 					material.setColorInfluence(0);
 					material.addTexture(mCameraStreamingTexture);
+
 					screenQuad.setMaterial(material);
 					getCurrentScene().addChild(screenQuad);
 				} catch (ATexture.TextureException e) {
@@ -92,7 +96,9 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 				}
 			}
 		});
+		streamingReady = true;
 	}
+
 
 	@Override
 	public void onModelLoadComplete(ALoader loader) {
@@ -108,13 +114,23 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		getCurrentScene().addChild(loadedObject);
 	}
 
+
 	@Override
-	public void onFavoriteClicked(FaceObject object) {
-		FaceObject faceObject = new FaceObject(this);
-		faceObject.setTexture(object.getTag(), faceObject.animatedTexture);
-		if (faceObject.animatedTexture)
-			aSingleTexture = faceObject.texture;
-		loadModel(object.getLoader(), this, faceObject.getTag());
+	public void onFavoriteClicked(final FaceObject object) {
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (object.animatedTexture)
+					aSingleTexture = object.texture;
+				loadModel(object.getLoader(), FaceRenderer.this, object.getTag());
+			}
+		});
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
 	}
 
 	@Override
@@ -123,13 +139,6 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 		if (mCameraStreamingTexture != null) {
 			mCameraStreamingTexture.update();
 		}
-	}
-
-	@Override
-	public boolean removeTexture(ATexture texture) {
-		if (texture.equals(mCameraStreamingTexture))
-			mCameraStreamingTexture = null;
-		return super.removeTexture(texture);
 	}
 
 	/**********************
@@ -296,8 +305,4 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 
 	}
 
-	@Override
-	public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-
-	}
 }

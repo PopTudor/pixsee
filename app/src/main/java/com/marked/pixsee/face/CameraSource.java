@@ -25,7 +25,6 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 
 import org.jetbrains.annotations.NotNull;
-import org.rajawali3d.materials.textures.StreamingTexture;
 
 import java.io.IOException;
 import java.lang.Thread.State;
@@ -41,19 +40,13 @@ import java.util.Map;
  * Created by Tudor on 4/23/2016.
  */
 @SuppressWarnings("deprecation")
-public class CameraSource {
+class CameraSource {
 	@SuppressLint("InlinedApi")
 	public static final int CAMERA_FACING_BACK = CameraInfo.CAMERA_FACING_BACK;
 	@SuppressLint("InlinedApi")
 	public static final int CAMERA_FACING_FRONT = CameraInfo.CAMERA_FACING_FRONT;
 
 	private static final String TAG = "OpenCameraSource";
-
-	/**
-	 * The dummy surface texture must be assigned a chosen name.  Since we never use an OpenGL
-	 * context, we can choose any ID we want here.
-	 */
-	private static final int DUMMY_TEXTURE_NAME = 100;
 
 	/**
 	 * If the absolute difference between a preview size aspect ratio and a picture size aspect
@@ -92,9 +85,6 @@ public class CameraSource {
 	// Guarded by mCameraLock
 	private Camera mCamera;
 
-	/* Used by Renderer to display camera preview on the screen*/
-	private StreamingTexture mStreamingTexture;
-
 	private int mFacing = CAMERA_FACING_FRONT;
 
 	/**
@@ -114,12 +104,7 @@ public class CameraSource {
 
 	private String mFocusMode = null;
 	private String mFlashMode = null;
-
-	// These instances need to be held onto to avoid GC of their underlying resources.  Even though
-	// these aren't used outside of the method that creates them, they still must have hard
-	// references maintained to them.
-	private SurfaceView mDummySurfaceView;
-	private SurfaceTexture mDummySurfaceTexture;
+	private CameraCallback mCallback;
 
 	/**
 	 * Dedicated thread and associated runnable for calling into the detector with frames, as the
@@ -207,6 +192,14 @@ public class CameraSource {
 			mCameraSource.mFacing = facing;
 			return this;
 		}
+		/**
+		 * Sets the camera to use (either {@link #CAMERA_FACING_BACK} or
+		 * {@link #CAMERA_FACING_FRONT}). Default: front facing.
+		 */
+		public Builder setStreaming(CameraCallback callback) {
+			mCameraSource.mCallback = callback;
+			return this;
+		}
 
 		/**
 		 * Creates an instance of the camera source.
@@ -217,14 +210,20 @@ public class CameraSource {
 		}
 	}
 
-	public void setStreamingTextureCallback(SurfaceTexture.OnFrameAvailableListener frameAvailableListener) {
-		this.mStreamingTexture = new StreamingTexture("Preview", mCamera, frameAvailableListener);
+	/**
+	 * Callback interface used to signal when the camera is ready to use
+	 * (specific case needed by renderer to output camera preview to texture)
+	 * This is better than making the camera a property with setters/getters because
+	 * we don't expose the CameraSource implementation and we can pass later
+	 * Camera2 instead of deprecated Camera
+	 */
+	interface CameraCallback {
+		/**
+		 * When the camera is ready and initialised, pass it on to whoever needs it
+		 * @param camera
+		 */
+		void cameraCreated(Camera camera);
 	}
-
-	public StreamingTexture getStreamingTexture() {
-		return mStreamingTexture;
-	}
-
 	//==============================================================================================
 	// Bridge Functionality for the Camera1 API
 	//==============================================================================================
@@ -314,15 +313,14 @@ public class CameraSource {
 			if (mCamera != null) {
 				return this;
 			}
-			this.mDummySurfaceTexture = surfaceTexture;
 			mCamera = createCamera();
 
 			// SurfaceTexture was introduced in Honeycomb (11), so if we are running and
 			// old version of Android. fall back to use SurfaceView.
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				mCamera.setPreviewTexture(mDummySurfaceTexture);
+				mCamera.setPreviewTexture(surfaceTexture);
 			} else {
-				mDummySurfaceView = new SurfaceView(mContext);
+				SurfaceView mDummySurfaceView = new SurfaceView(mContext);
 				mCamera.setPreviewDisplay(mDummySurfaceView.getHolder());
 				Log.d(TAG, "start: " + "Screen white ? Checkout CameraSource.start" +
 						           "(surfaceTexture) because the camera is not sending frames to " +
@@ -789,6 +787,7 @@ public class CameraSource {
 		camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
 		camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
 
+		mCallback.cameraCreated(camera);
 		return camera;
 	}
 

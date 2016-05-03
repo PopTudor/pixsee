@@ -14,11 +14,12 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
 
+import org.jetbrains.annotations.NotNull;
 import org.rajawali3d.view.TextureView;
 
 import java.io.IOException;
 
-public class CameraPreview extends ViewGroup {
+class CameraPreview extends ViewGroup {
 	private static final String TAG = "CameraSourcePreview";
 
 	private Context mContext;
@@ -40,39 +41,44 @@ public class CameraPreview extends ViewGroup {
 
 	void setSurfaceView(SurfaceView surfaceView) {
 		mSurfaceView = surfaceView;
-		mSurfaceView.getHolder()
-				.addCallback(new SurfaceCallback());
+		mSurfaceView.getHolder().addCallback(new SurfaceCallback());
 	}
 
-	public void start(CameraSource cameraSource) throws IOException {
+	public void start(@NotNull CameraSource cameraSource) throws IOException {
 		if (cameraSource == null) {
 			stop();
 		}
 
 		mCameraSource = cameraSource;
 
+//		if (mFaceRenderer != null) {
+//			mFaceRenderer.startRendering();
+//		}
 		if (mCameraSource != null) {
 			mStartRequested = true;
 			startIfReady();
 		}
 	}
 
-	public void start(CameraSource cameraSource, FaceRenderer overlay) throws IOException {
+	public void start(@NotNull CameraSource cameraSource,@NotNull FaceRenderer overlay) throws IOException {
 		mFaceRenderer = overlay;
 		start(cameraSource);
 	}
 
 	public void stop() {
-		if (mFaceRenderer != null)
-			mFaceRenderer.setCameraStreamingTexture(null);
+//		if (mFaceRenderer != null)
+//			mFaceRenderer.onPause();
 		if (mCameraSource != null) {
 			mCameraSource.stop();
 		}
 	}
 
 	public void release() {
-		if (mFaceRenderer != null)
-			mFaceRenderer.setCameraStreamingTexture(null);;
+//		if (mFaceRenderer != null) {
+//			mFaceRenderer.resetMaterials();
+//			mFaceRenderer.resetTextures();
+//			mFaceRenderer = null;
+//		}
 		if (mCameraSource != null) {
 			mCameraSource.release();
 			mCameraSource = null;
@@ -92,9 +98,7 @@ public class CameraPreview extends ViewGroup {
 				return;
 			}
 			mCameraSource.start(mSurfaceView.getHolder());
-			mCameraSource.setStreamingTextureCallback(null);
 			if (mFaceRenderer != null) {
-				mFaceRenderer.setCameraStreamingTexture(mCameraSource.getStreamingTexture());
 				Size size = mCameraSource.getPreviewSize();
 				int min = Math.min(size.getWidth(), size.getHeight());
 				int max = Math.max(size.getWidth(), size.getHeight());
