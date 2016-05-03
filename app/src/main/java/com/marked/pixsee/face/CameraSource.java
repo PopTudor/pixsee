@@ -723,7 +723,7 @@ class CameraSource {
 			throw new RuntimeException("Could not find requested camera.");
 		}
 		Camera camera = Camera.open(requestedCameraId);
-
+		mCallback.cameraCreated(camera);
 		SizePair sizePair = selectSizePair(camera, mRequestedPreviewWidth, mRequestedPreviewHeight);
 		if (sizePair == null) {
 			throw new RuntimeException("Could not find suitable preview size.");
@@ -787,7 +787,6 @@ class CameraSource {
 		camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
 		camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
 
-		mCallback.cameraCreated(camera);
 		return camera;
 	}
 

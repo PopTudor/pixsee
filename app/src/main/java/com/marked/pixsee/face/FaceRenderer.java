@@ -35,7 +35,7 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Created by Tudor on 4/8/2016.
  */
-class FaceRenderer extends Renderer implements IAsyncLoaderCallback,OnFavoritesListener, CameraCallback {
+class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, CameraCallback {
 	private static final String TAG = "***********";
 	private final Object mLock = new Object();
 	private DirectionalLight directionalLight;
@@ -91,7 +91,7 @@ class FaceRenderer extends Renderer implements IAsyncLoaderCallback,OnFavoritesL
 
 					screenQuad.setMaterial(material);
 					getCurrentScene().addChild(screenQuad);
-				} catch (ATexture.TextureException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -134,10 +134,23 @@ class FaceRenderer extends Renderer implements IAsyncLoaderCallback,OnFavoritesL
 	}
 
 	@Override
+	public void onPause() {
+
+		getTextureManager().taskReset();
+		getTextureManager().reset();
+		super.onPause();
+
+	}
+
+	@Override
 	public void onRenderFrame(GL10 gl) {
 		super.onRenderFrame(gl);
 		if (mCameraStreamingTexture != null) {
-			mCameraStreamingTexture.update();
+			try {
+				mCameraStreamingTexture.update();
+			}catch (RuntimeException e){
+				e.printStackTrace(); //
+			}
 		}
 	}
 

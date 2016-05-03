@@ -1,7 +1,6 @@
 package com.marked.pixsee.face;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -18,8 +17,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
@@ -279,16 +276,6 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	 * again when the camera source is created.
 	 */
 	private void startCameraSource() {
-
-		// check that the device has play services available.
-		int code = GoogleApiAvailability.getInstance()
-				           .isGooglePlayServicesAvailable(getApplicationContext());
-		if (code != ConnectionResult.SUCCESS) {
-			Dialog dlg = GoogleApiAvailability.getInstance()
-					             .getErrorDialog(this, code, RC_HANDLE_GMS);
-			dlg.show();
-		}
-
 		if (mCameraSource != null) {
 			try {
 				mCameraPreview.start(mCameraSource, mFaceRenderer);
