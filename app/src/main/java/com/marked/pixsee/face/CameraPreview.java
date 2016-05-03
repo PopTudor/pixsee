@@ -44,41 +44,35 @@ class CameraPreview extends ViewGroup {
 		mSurfaceView.getHolder().addCallback(new SurfaceCallback());
 	}
 
-	public void start(@NotNull CameraSource cameraSource) throws IOException {
+	public void start(@NotNull CameraSource cameraSource,@NotNull FaceRenderer overlay) throws IOException {
 		if (cameraSource == null) {
 			stop();
 		}
-
 		mCameraSource = cameraSource;
+		mFaceRenderer = overlay;
 
-//		if (mFaceRenderer != null) {
-//			mFaceRenderer.startRendering();
-//		}
+		if (mFaceRenderer != null) {
+			mFaceRenderer.onResume();
+		}
 		if (mCameraSource != null) {
 			mStartRequested = true;
 			startIfReady();
 		}
 	}
 
-	public void start(@NotNull CameraSource cameraSource,@NotNull FaceRenderer overlay) throws IOException {
-		mFaceRenderer = overlay;
-		start(cameraSource);
-	}
-
 	public void stop() {
-//		if (mFaceRenderer != null)
-//			mFaceRenderer.onPause();
+		if (mFaceRenderer != null)
+			mFaceRenderer.onPause();
 		if (mCameraSource != null) {
 			mCameraSource.stop();
 		}
 	}
 
 	public void release() {
-//		if (mFaceRenderer != null) {
-//			mFaceRenderer.resetMaterials();
-//			mFaceRenderer.resetTextures();
-//			mFaceRenderer = null;
-//		}
+		if (mFaceRenderer != null) {
+			mFaceRenderer.stopRendering();
+			mFaceRenderer = null;
+		}
 		if (mCameraSource != null) {
 			mCameraSource.release();
 			mCameraSource = null;
