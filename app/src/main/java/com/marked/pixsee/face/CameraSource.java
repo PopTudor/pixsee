@@ -41,7 +41,7 @@ import java.util.Map;
  * Created by Tudor on 4/23/2016.
  */
 @SuppressWarnings("deprecation")
-public class CameraSourcePixsee {
+public class CameraSource {
 	@SuppressLint("InlinedApi")
 	public static final int CAMERA_FACING_BACK = CameraInfo.CAMERA_FACING_BACK;
 	@SuppressLint("InlinedApi")
@@ -144,7 +144,7 @@ public class CameraSourcePixsee {
 	 */
 	public static class Builder {
 		private final Detector<?> mDetector;
-		private CameraSourcePixsee mCameraSource = new CameraSourcePixsee();
+		private CameraSource mCameraSource = new CameraSource();
 
 		/**
 		 * Creates a camera source builder with the supplied context and detector.  Camera preview
@@ -211,7 +211,7 @@ public class CameraSourcePixsee {
 		/**
 		 * Creates an instance of the camera source.
 		 */
-		public CameraSourcePixsee build() {
+		public CameraSource build() {
 			mCameraSource.mFrameProcessor = mCameraSource.new FrameProcessingRunnable(mDetector);
 			return mCameraSource;
 		}
@@ -309,7 +309,7 @@ public class CameraSourcePixsee {
 	 * @throws IOException if the camera's preview texture or display could not be initialized
 	 */
 	@RequiresPermission(Manifest.permission.CAMERA)
-	public CameraSourcePixsee start(SurfaceTexture surfaceTexture) throws IOException {
+	public CameraSource start(SurfaceTexture surfaceTexture) throws IOException {
 		synchronized (mCameraLock) {
 			if (mCamera != null) {
 				return this;
@@ -324,7 +324,7 @@ public class CameraSourcePixsee {
 			} else {
 				mDummySurfaceView = new SurfaceView(mContext);
 				mCamera.setPreviewDisplay(mDummySurfaceView.getHolder());
-				Log.d(TAG, "start: " + "Screen white ? Checkout CameraSourcePixsee.start" +
+				Log.d(TAG, "start: " + "Screen white ? Checkout CameraSource.start" +
 						           "(surfaceTexture) because the camera is not sending frames to " +
 						           "Surface texture but to a dummy SurfaceView");
 			}
@@ -346,7 +346,7 @@ public class CameraSourcePixsee {
 	 * @throws IOException if the supplied surface holder could not be used as the preview display
 	 */
 	@RequiresPermission(Manifest.permission.CAMERA)
-	public CameraSourcePixsee start(SurfaceHolder surfaceHolder) throws IOException {
+	public CameraSource start(SurfaceHolder surfaceHolder) throws IOException {
 		synchronized (mCameraLock) {
 			if (mCamera != null) {
 				return this;
@@ -647,7 +647,7 @@ public class CameraSourcePixsee {
 	/**
 	 * Only allow creation via the builder class.
 	 */
-	private CameraSourcePixsee() {
+	private CameraSource() {
 	}
 
 	/**

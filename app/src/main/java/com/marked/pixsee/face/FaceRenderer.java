@@ -75,8 +75,8 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, Self
 	}
 
 	public void setCameraStreamingTexture(StreamingTexture streamingTexture) {
-		if (mCameraStreamingTexture == null)
-			getTextureManager().removeTexture(mCameraStreamingTexture);
+//		if (mCameraStreamingTexture == null)
+//			getTextureManager().removeTexture(mCameraStreamingTexture);
 		this.mCameraStreamingTexture = streamingTexture;
 		handler.post(new Runnable() {
 			@Override

@@ -18,17 +18,17 @@ import org.rajawali3d.view.TextureView;
 
 import java.io.IOException;
 
-public class CameraSourcePreview extends ViewGroup {
+public class CameraPreview extends ViewGroup {
 	private static final String TAG = "CameraSourcePreview";
 
 	private Context mContext;
 	private SurfaceView mSurfaceView;
 	private boolean mStartRequested;
 	private boolean mSurfaceAvailable;
-	private CameraSourcePixsee mCameraSource;
+	private CameraSource mCameraSource;
 	private FaceRenderer mFaceRenderer;
 
-	public CameraSourcePreview(Context context, AttributeSet attrs) {
+	public CameraPreview(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mContext = context;
 		mStartRequested = false;
@@ -44,7 +44,7 @@ public class CameraSourcePreview extends ViewGroup {
 				.addCallback(new SurfaceCallback());
 	}
 
-	public void start(CameraSourcePixsee cameraSource) throws IOException {
+	public void start(CameraSource cameraSource) throws IOException {
 		if (cameraSource == null) {
 			stop();
 		}
@@ -57,7 +57,7 @@ public class CameraSourcePreview extends ViewGroup {
 		}
 	}
 
-	public void start(CameraSourcePixsee cameraSource, FaceRenderer overlay) throws IOException {
+	public void start(CameraSource cameraSource, FaceRenderer overlay) throws IOException {
 		mFaceRenderer = overlay;
 		start(cameraSource);
 	}

@@ -22,7 +22,6 @@ import android.widget.ImageButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
@@ -46,8 +45,8 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	private static final String TAG = SelfieActivity.class + "***";
 	public static final String PHOTO_EXTRA = "PHOTO";
 	public static final String PHOTO_RENDERER_EXTRA = "PHOTO_RENDERER";
-	private CameraSourcePixsee mCameraSource;
-	private CameraSourcePreview mCameraSourcePreview;
+	private CameraSource mCameraSource;
+	private CameraPreview mCameraPreview;
 	private FaceRenderer mFaceRenderer;
 
 	private static final int RC_HANDLE_GMS = 9001;
@@ -77,7 +76,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 		setContentView(R.layout.activity_face);
 		mFaceRenderer = new FaceRenderer(this);
 
-		mCameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
+		mCameraPreview = (CameraPreview) findViewById(R.id.preview);
 		mBottomLayout = (ViewGroup) findViewById(R.id.bottomLayout);
 
 		mFaceTextureView = (TextureView) findViewById(R.id.texture_view);
@@ -105,7 +104,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 			@Override
 			public void onClick(final View cameraButton) {
 				cameraButton.setEnabled(false); /* disable the button because if the user double tapps the camera button(impatience), it would crash the app*/
-				mCameraSource.takePicture(new CameraSourcePixsee.ShutterCallback() {
+				mCameraSource.takePicture(new CameraSource.ShutterCallback() {
 					@Override
 					public void onShutter() {
 						getSupportFragmentManager().beginTransaction()
@@ -113,10 +112,10 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 								.addToBackStack("DetailFragment")
 								.commit();
 					}
-				}, new CameraSourcePixsee.PictureCallback() {
+				}, new CameraSource.PictureCallback() {
 					@Override
 					public void onPictureTaken(final byte[] bytes) {
-						mCameraSourcePreview.stop(); /* camera needs to be frozen after it took the picture*/
+						mCameraPreview.stop(); /* camera needs to be frozen after it took the picture*/
 //						mFaceRenderer.stopRendering();
 					}
 				});
@@ -211,9 +210,9 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 			// download completes on device.
 			Log.w(TAG, "Face detector dependencies are not yet available.");
 		}
-		mCameraSource = new CameraSourcePixsee.Builder(this, faceDetector).setRequestedFps(30.0f)
+		mCameraSource = new CameraSource.Builder(this, faceDetector).setRequestedFps(30.0f)
 				                .setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO)
-				                .setFacing(CameraSource.CAMERA_FACING_FRONT)
+				                .setFacing(com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT)
 				                .build();
 	}
 
@@ -235,7 +234,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mCameraSourcePreview.stop();
+		mCameraPreview.stop();
 	}
 
 	/**
@@ -319,7 +318,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 
 		if (mCameraSource != null) {
 			try {
-				mCameraSourcePreview.start(mCameraSource, mFaceRenderer);
+				mCameraPreview.start(mCameraSource, mFaceRenderer);
 			} catch (IOException e) {
 				Log.e(TAG, "Unable to start camera source.", e);
 				mCameraSource.release();
