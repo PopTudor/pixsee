@@ -1,14 +1,10 @@
 package com.marked.pixsee.face;
 
 import android.Manifest;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -17,18 +13,18 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 
-import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.Tracker;
-import com.google.android.gms.vision.face.Face;
-import com.google.android.gms.vision.face.FaceDetector;
-import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.R;
+import com.marked.pixsee.face.di.DaggerSelfieComponent;
+import com.marked.pixsee.face.di.SelfieComponent;
+import com.marked.pixsee.face.di.SelfieModule;
 import com.marked.pixsee.utility.UtilsFragmentKt;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.rajawali3d.view.TextureView;
 
 import java.io.IOException;
+
+import javax.inject.Inject;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -41,15 +37,17 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	private static final String TAG = SelfieActivity.class + "***";
 	public static final String PHOTO_EXTRA = "PHOTO";
 	public static final String PHOTO_RENDERER_EXTRA = "PHOTO_RENDERER";
-	private CameraSource mCameraSource;
-	private CameraPreview mCameraPreview;
-	private FaceRenderer mFaceRenderer;
-
-	private static final int RC_HANDLE_GMS = 9001;
-	// permission request codes need to be < 256
 	private static final int RC_HANDLE_CAMERA_PERM = 2;
+
+	@Inject
+	CameraSource mCameraSource;
+	private CameraPreview mCameraPreview;
+
+	@Inject
+	FaceRenderer mFaceRenderer;
 	private TextureView mFaceTextureView;
 	private ViewGroup mBottomLayout;
+
 	private ImageButton mCameraButton;
 
 	@NonNull
@@ -62,15 +60,19 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 		void onFavoriteClicked(FaceObject object);
 	}
 
+	private SelfieComponent mSelfieComponent;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-
 		setContentView(R.layout.activity_face);
-		mFaceRenderer = new FaceRenderer(this);
+		// DI
+		mSelfieComponent = DaggerSelfieComponent.builder()
+				                   .selfieModule(new SelfieModule(this))
+				                   .build();
+		mSelfieComponent.inject(this);
 
 		mCameraPreview = (CameraPreview) findViewById(R.id.preview);
 		mBottomLayout = (ViewGroup) findViewById(R.id.bottomLayout);
@@ -136,7 +138,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 					@Override
 					public void call(Boolean granted) {
 						if (granted) { // Always true pre-M
-							createCameraSource();
+							mSelfieComponent.inject(mCameraSource);
 							// I can control the camera now
 						} else {
 							// Oups permission denied
@@ -146,38 +148,6 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 				});
 	}
 
-	/**
-	 * Creates and starts the camera.  Note that this uses a higher resolution in comparison
-	 * to other detection examples to enable the barcode detector to detect small barcodes
-	 * at long distances.
-	 */
-	private void createCameraSource() {
-		FaceDetector faceDetector = new FaceDetector.Builder(getApplicationContext()).setTrackingEnabled(true)
-				                            .setProminentFaceOnly(true)
-				                            .setClassificationType(FaceDetector.ACCURATE_MODE)
-				                            .setLandmarkType(0)
-				                            .build();
-//				FaceTrackerSquare faceTracker = new FaceTrackerSquare(mGraphicOverlay);
-		FaceTrackerAR faceTracker = new FaceTrackerAR(mFaceRenderer);
-		faceDetector.setProcessor(new LargestFaceFocusingProcessor.Builder(faceDetector, faceTracker).build());
-
-		if (!faceDetector.isOperational()) {
-			// Note: The first time that an app using face API is installed on a device, GMS will
-			// download a native library to the device in order to do detection.  Usually this
-			// completes before the app is run for the first time.  But if that download has not yet
-			// completed, then the above call will not detect any faces.
-			//
-			// isOperational() can be used to check if the required native library is currently
-			// available.  The detector will automatically become operational once the library
-			// download completes on device.
-			Log.w(TAG, "Face detector dependencies are not yet available.");
-		}
-		mCameraSource = new CameraSource.Builder(this, faceDetector).setRequestedFps(30.0f)
-				                .setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO)
-				                .setFacing(com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT)
-				                .setStreaming(mFaceRenderer)
-				                .build();
-	}
 	/**
 	 * Restarts the camera.
 	 */
@@ -199,13 +169,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 		mCameraPreview.stop();
 		Log.d(TAG, "onPause: ");
 	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
-		Log.d(TAG, "onStop: ");
-	}
-	
+
 	/**
 	 * Releases the resources associated with the camera source, the associated detector, and the
 	 * rest of the processing pipeline.
@@ -213,57 +177,8 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (mCameraPreview != null) {
-			mCameraPreview.release();
-		}
+		mCameraPreview.release();
 		Log.d(TAG, "onDestroy: ");
-	}
-
-	/**
-	 * Callback for the result from requesting permissions. This method
-	 * is invoked for every call on {@link #requestPermissions(String[], int)}.
-	 * <p>
-	 * <strong>Note:</strong> It is possible that the permissions request interaction
-	 * with the user is interrupted. In this case you will receive empty permissions
-	 * and results arrays which should be treated as a cancellation.
-	 * </p>
-	 *
-	 * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
-	 * @param permissions  The requested permissions. Never null.
-	 * @param grantResults The grant results for the corresponding permissions
-	 *                     which is either {@link PackageManager#PERMISSION_GRANTED}
-	 *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
-	 * @see #requestPermissions(String[], int)
-	 */
-	@Override
-	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-		if (requestCode != RC_HANDLE_CAMERA_PERM) {
-			Log.d(TAG, "Got unexpected permission result: " + requestCode);
-			super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-			return;
-		}
-
-		if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-			Log.d(TAG, "Camera permission granted - initialize the camera source");
-			// we have permission, so create the camerasource
-			createCameraSource();
-			return;
-		}
-
-		Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
-				           " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-
-		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				finish();
-			}
-		};
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Face Tracker sample")
-				.setMessage("We don't have camera permission :(")
-				.setPositiveButton("OK", listener)
-				.show();
 	}
 
 	//==============================================================================================
@@ -276,51 +191,12 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	 * again when the camera source is created.
 	 */
 	private void startCameraSource() {
-		if (mCameraSource != null) {
-			try {
-				mCameraPreview.start(mCameraSource, mFaceRenderer);
-			} catch (IOException e) {
-				Log.e(TAG, "Unable to start camera source.", e);
-				mCameraPreview.release();
-				mCameraSource = null;
-			}
-		}
-	}
-
-	class FaceTrackerAR extends Tracker<Face> {
-		private FaceRenderer mFaceRenderer;
-
-		public FaceTrackerAR(FaceRenderer faceRenderer) {
-			mFaceRenderer = faceRenderer;
-		}
-
-		@Override
-		public void onNewItem(int id, Face item) {
-			super.onNewItem(id, item);
-			mFaceRenderer.onNewItem(item);
-			Log.i(TAG, "Awesome person detected.  Hello!");
-		}
-
-		@Override
-		public void onUpdate(Detector.Detections<Face> detections, Face item) {
-			super.onUpdate(detections, item);
-			if (item.getIsSmilingProbability() > 0.75) {
-				Log.i(TAG, "I see a smile.  They must really enjoy your app.");
-				mFaceRenderer.isSmiling();
-			}
-			mFaceRenderer.onUpdate(item);
-		}
-
-		@Override
-		public void onMissing(Detector.Detections<Face> detections) {
-			super.onMissing(detections);
-		}
-
-		@Override
-		public void onDone() {
-			super.onDone();
-			mFaceRenderer.onDone();
-			Log.i(TAG, "Elvis has left the building.");
+		try {
+			mCameraPreview.start(mCameraSource, mFaceRenderer);
+		} catch (IOException e) {
+			Log.e(TAG, "Unable to start camera source.", e);
+			mCameraPreview.release();
+			mCameraSource = null;
 		}
 	}
 }

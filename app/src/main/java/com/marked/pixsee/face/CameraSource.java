@@ -40,7 +40,7 @@ import java.util.Map;
  * Created by Tudor on 4/23/2016.
  */
 @SuppressWarnings("deprecation")
-class CameraSource {
+public class CameraSource {
 	@SuppressLint("InlinedApi")
 	public static final int CAMERA_FACING_BACK = CameraInfo.CAMERA_FACING_BACK;
 	@SuppressLint("InlinedApi")

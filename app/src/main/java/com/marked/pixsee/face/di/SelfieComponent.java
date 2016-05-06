@@ -1,5 +1,7 @@
 package com.marked.pixsee.face.di;
 
+import com.marked.pixsee.face.CameraSource;
+import com.marked.pixsee.face.SelfieActivity;
 import com.marked.pixsee.injection.scopes.PerActivity;
 
 import dagger.Component;
@@ -7,8 +9,10 @@ import dagger.Component;
 /**
  * Created by Tudor on 4/24/2016.
  */
-@PerActivity
 @Component(modules = {SelfieModule.class})
+@PerActivity
 public interface SelfieComponent {
-//	void inject(SelfieActivity selfieActivity);
+	void inject(SelfieActivity selfieActivity);
+
+	void inject(CameraSource cameraSource);
 }
