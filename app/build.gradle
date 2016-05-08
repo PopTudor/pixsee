@@ -58,19 +58,18 @@ android {
             minifyEnabled true
             useProguard true
             proguardFiles(files { file('./proguard').listFiles() })
-            ndk {
-                abiFilters "armeabi-v7a"
-            }
+//            ndk {
+//                abiFilters "armeabi-v7a"
+//            }
+//            multiDexEnabled true
         }
         debug {
             debuggable true
 //            shrinkResources true
-//            useProguard true
 //            minifyEnabled true
 //            proguardFiles(files { file('./proguard').listFiles() })
-//            ndk {
-//                abiFilters "armeabi-v7a"
-//            }
+//            multiDexEnabled true
+
         }
     }
     productFlavors {

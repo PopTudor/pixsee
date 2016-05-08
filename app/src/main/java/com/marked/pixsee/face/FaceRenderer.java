@@ -17,6 +17,7 @@ import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.ALoader;
 import org.rajawali3d.loader.AMeshLoader;
+import org.rajawali3d.loader.Loader3DSMax;
 import org.rajawali3d.loader.async.IAsyncLoaderCallback;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
@@ -48,7 +49,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 
 	private Object3D loadedObject = null;
 	private Face mFace;
-	ASingleTexture aSingleTexture;
+	private ASingleTexture aSingleTexture;
 	private Handler handler;
 	/******************
 	 * Camera preview *
@@ -103,7 +104,17 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	@Override
 	public void onModelLoadComplete(ALoader loader) {
 		Log.d(TAG, "onModelLoadComplete: ");
-		final AMeshLoader obj = (AMeshLoader) loader;
+		final AMeshLoader obj;
+		if (loader instanceof Loader3DSMax) {
+			Log.d(TAG, "onModelLoadComplete: ");
+			obj = ((Loader3DSMax) loader);
+			try {
+				((Loader3DSMax)obj).build();
+			} catch (ATexture.TextureException e) {
+				e.printStackTrace();
+			}
+		}else
+			obj = ((AMeshLoader) loader);
 		final Object3D parsedObject = obj.getParsedObject();
 		parsedObject.setPosition(Vector3.ZERO);
 		if (loadedObject != null)
@@ -120,9 +131,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
-				if (object.animatedTexture)
-					aSingleTexture = object.texture;
-				loadModel(object.getLoader(), FaceRenderer.this, object.getTag());
+				loadModel(object.getLoader(), FaceRenderer.this, object.getResId());
 			}
 		});
 	}

@@ -50,16 +50,6 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 
 	private ImageButton mCameraButton;
 
-	@NonNull
-	@Override
-	public Observable<Bitmap> onButtonClicked() {
-		return Observable.just(mFaceTextureView.getBitmap()).subscribeOn(Schedulers.computation());
-	}
-
-	interface OnFavoritesListener {
-		void onFavoriteClicked(FaceObject object);
-	}
-
 	private SelfieComponent mSelfieComponent;
 
 	@Override
@@ -84,16 +74,31 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 		findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FaceObject faceObject = new FaceObject(mFaceRenderer);
-				faceObject.setTexture(R.drawable.mlg, false);
+				FaceObject faceObject = new FaceObject.FaceBuilder(SelfieActivity.this)
+						                        .withTextureId(R.drawable.mlg)
+						                        .withRenderer(mFaceRenderer)
+						                        .build();
 				mFaceRenderer.onFavoriteClicked(faceObject);
 			}
 		});
 		findViewById(R.id.favorite2).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FaceObject faceObject = new FaceObject(mFaceRenderer);
-				faceObject.setTexture(R.drawable.hearts, false);
+				FaceObject faceObject = new FaceObject.FaceBuilder(SelfieActivity.this)
+						                        .withTextureId(R.drawable.hearts)
+						                        .withRenderer(mFaceRenderer)
+						                        .build();
+				mFaceRenderer.onFavoriteClicked(faceObject);
+			}
+		});
+		findViewById(R.id.favorite3).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				FaceObject faceObject = new FaceObject.FaceBuilder(SelfieActivity.this)
+						                        .withResId(R.raw.android_head_obj)
+						                        .withObjectType(FaceObject.ObjectType.OBJ)
+						                        .withRenderer(mFaceRenderer)
+						                        .build();
 				mFaceRenderer.onFavoriteClicked(faceObject);
 			}
 		});
@@ -168,6 +173,16 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 		super.onPause();
 		mCameraPreview.stop();
 		Log.d(TAG, "onPause: ");
+	}
+
+	interface OnFavoritesListener {
+		void onFavoriteClicked(FaceObject object);
+	}
+
+	@NonNull
+	@Override
+	public Observable<Bitmap> onButtonClicked() {
+		return Observable.just(mFaceTextureView.getBitmap()).subscribeOn(Schedulers.computation());
 	}
 
 	/**

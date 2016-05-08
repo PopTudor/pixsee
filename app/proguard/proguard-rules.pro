@@ -17,12 +17,10 @@
 #}
 -keep class com.squareup.picasso.** {*;}
 -dontwarn com.squareup.picasso.**
--keep class com.qualcomm.ar.**{*;}
--dontwarn com.qualcomm.ar.**
+-dontwarn android.support.**
 # APACHE
 -dontwarn com.apache.**
 -dontwarn org.apache.**
-
 
 -keep class com.marked.**{*;}
 -keep class com.makeramen.**{*;}
