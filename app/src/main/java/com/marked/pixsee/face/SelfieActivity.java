@@ -14,6 +14,9 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 
 import com.marked.pixsee.R;
+import com.marked.pixsee.face.commands.FavOneClick;
+import com.marked.pixsee.face.commands.FavThreeClick;
+import com.marked.pixsee.face.commands.FavTwoClick;
 import com.marked.pixsee.face.di.DaggerSelfieComponent;
 import com.marked.pixsee.face.di.SelfieComponent;
 import com.marked.pixsee.face.di.SelfieModule;
@@ -38,6 +41,9 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	public static final String PHOTO_EXTRA = "PHOTO";
 	public static final String PHOTO_RENDERER_EXTRA = "PHOTO_RENDERER";
 	private static final int RC_HANDLE_CAMERA_PERM = 2;
+
+	@Inject
+	FacePresenter mFacePresenter;
 
 	@Inject
 	CameraSource mCameraSource;
@@ -74,32 +80,19 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 		findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FaceObject faceObject = new FaceObject.FaceBuilder(SelfieActivity.this)
-						                        .withTextureId(R.drawable.mlg)
-						                        .withRenderer(mFaceRenderer)
-						                        .build();
-				mFaceRenderer.onFavoriteClicked(faceObject);
+				mFacePresenter.execute(new FavOneClick(SelfieActivity.this,mFaceRenderer));
 			}
 		});
 		findViewById(R.id.favorite2).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FaceObject faceObject = new FaceObject.FaceBuilder(SelfieActivity.this)
-						                        .withTextureId(R.drawable.hearts)
-						                        .withRenderer(mFaceRenderer)
-						                        .build();
-				mFaceRenderer.onFavoriteClicked(faceObject);
+				mFacePresenter.execute(new FavTwoClick(SelfieActivity.this,mFaceRenderer));
 			}
 		});
 		findViewById(R.id.favorite3).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FaceObject faceObject = new FaceObject.FaceBuilder(SelfieActivity.this)
-						                        .withResId(R.raw.android_head_obj)
-						                        .withObjectType(FaceObject.ObjectType.OBJ)
-						                        .withRenderer(mFaceRenderer)
-						                        .build();
-				mFaceRenderer.onFavoriteClicked(faceObject);
+				mFacePresenter.execute(new FavThreeClick(SelfieActivity.this,mFaceRenderer));
 			}
 		});
 		mCameraButton = (ImageButton) findViewById(R.id.camera_button);
