@@ -1,7 +1,6 @@
 package com.marked.pixsee.face;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.util.Log;
@@ -9,10 +8,10 @@ import android.view.MotionEvent;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.face.Face;
-import com.marked.pixsee.R;
 import com.marked.pixsee.face.CameraSource.CameraCallback;
 import com.marked.pixsee.face.SelfieActivity.OnFavoritesListener;
 
+import org.jetbrains.annotations.NotNull;
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.ALoader;
@@ -20,14 +19,11 @@ import org.rajawali3d.loader.AMeshLoader;
 import org.rajawali3d.loader.Loader3DSMax;
 import org.rajawali3d.loader.async.IAsyncLoaderCallback;
 import org.rajawali3d.materials.Material;
-import org.rajawali3d.materials.methods.DiffuseMethod;
 import org.rajawali3d.materials.textures.ASingleTexture;
 import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.AnimatedGIFTexture;
 import org.rajawali3d.materials.textures.StreamingTexture;
-import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.vector.Vector3;
-import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.primitives.ScreenQuad;
 import org.rajawali3d.renderer.Renderer;
 
@@ -38,6 +34,7 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, CameraCallback {
 	private static final String TAG = "***********";
+	private static final int CAMERA_Z = 10;
 	private final Object mLock = new Object();
 	private DirectionalLight directionalLight;
 
@@ -49,7 +46,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 
 	private Object3D loadedObject = null;
 	private Face mFace;
-	private ASingleTexture aSingleTexture;
+	private ASingleTexture aSingleTexture; /* GIF */
 	private Handler handler;
 	/******************
 	 * Camera preview *
@@ -74,10 +71,8 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		directionalLight.setPower(2);
 
 		getCurrentScene().addLight(directionalLight);
-		getCurrentCamera().setPosition(0, 0, 10);
+		getCurrentCamera().setPosition(0, 0, CAMERA_Z);
 	}
-
-	boolean streamingReady;
 
 	@Override
 	public void cameraCreated(Camera camera) {
@@ -97,7 +92,6 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 				}
 			}
 		});
-		streamingReady = true;
 	}
 
 
@@ -109,19 +103,23 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 			Log.d(TAG, "onModelLoadComplete: ");
 			obj = ((Loader3DSMax) loader);
 			try {
-				((Loader3DSMax)obj).build();
+				((Loader3DSMax) obj).build();
 			} catch (ATexture.TextureException e) {
 				e.printStackTrace();
 			}
-		}else
+		} else
 			obj = ((AMeshLoader) loader);
+
 		final Object3D parsedObject = obj.getParsedObject();
 		parsedObject.setPosition(Vector3.ZERO);
-		if (loadedObject != null)
+
+		if (loadedObject != null) {
 			getCurrentScene().removeChild(loadedObject);
+			loadedObject.destroy();
+			loadedObject = null;
+		}
 		loadedObject = parsedObject;
 
-//        loadedObject = testLoadedObject();
 		getCurrentScene().addChild(loadedObject);
 	}
 
@@ -147,7 +145,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		try {
 			getTextureManager().taskReset();
 			getTextureManager().reset();
-		}catch (Exception e){/* if texManager != null is not working ? */}
+		} catch (Exception e) {/* if texManager != null is not working ? */}
 		super.onPause();
 
 	}
@@ -163,29 +161,6 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 			}
 		}
 	}
-
-	/**********************
-	 * TEST METHOD
-	 ****************************/
-	Object3D testLoadedObject() {
-		Object3D object3D = new Cube(3.5f);
-		object3D.rotate(Vector3.Axis.Y, 180);
-		Material material = new Material();
-		material.setColor(Color.WHITE);
-		material.enableLighting(true);
-		material.setDiffuseMethod(new DiffuseMethod.Lambert());
-		try {
-			Texture mlgTexture = new Texture("mlg_png", R.drawable.mlg);
-			material.addTexture(mlgTexture);
-		} catch (ATexture.TextureException error) {
-			error.printStackTrace();
-		}
-		object3D.setMaterial(material);
-		object3D.setTransparent(true);
-		return object3D;
-	}
-
-	/****************************************************************************************************/
 
 	@Override
 	public void onModelLoadFailed(ALoader loader) {
@@ -205,13 +180,9 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 			mHeightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
 		}
 		if (mFace != null && loadedObject != null) {
-			try { // FIXME: 4/28/2016 why is this throwing null pointer exception when clearly I check for null
-				scale(loadedObject);
-				rotate(loadedObject);
-				translation(loadedObject);
-			} catch (NullPointerException e) {
-				e.printStackTrace();
-			}
+			scale(loadedObject, mFace);
+			rotate(loadedObject, mFace);
+			translation(loadedObject, mFace);
 		}
 		if (aSingleTexture != null) {
 			try {
@@ -222,34 +193,47 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		}
 	}
 
-	private void scale(Object3D object3D) {
-		if (object3D == null || mFace == null)
-			return;
-		float x1 = mFace.getPosition().x;
-		float y1 = mFace.getPosition().y;
-		float x2 = mFace.getWidth();
-		float y2 = mFace.getHeight();
+	/**
+	 * Scale the object based on face size
+	 *
+	 * @param object3D the object to scale
+	 * @param face     the face to scale upon
+	 */
+	private void scale(@NotNull Object3D object3D, @NotNull Face face) {
+		float x1 = face.getPosition().x;
+		float y1 = face.getPosition().y;
+		float x2 = face.getWidth();
+		float y2 = face.getHeight();
 		double dist = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 		double scaleValue = dist / mDefaultViewportWidth + 0.4;
-		loadedObject.setScale(scaleValue);
+		object3D.setScale(scaleValue);
 	}
 
-	private void rotate(Object3D object3D) {
-		if (object3D == null || mFace == null)
-			return;
-		float eulerZ = mFace.getEulerZ();
+	/**
+	 * Rotate the object based on face rotation
+	 *
+	 * @param object3D the object to rotate
+	 * @param face     the face to get the rotation from
+	 */
+	private void rotate(@NotNull Object3D object3D, @NotNull Face face) {
+		float eulerZ = face.getEulerZ();
 		object3D.rotateAround(Vector3.Z, eulerZ, false);
 	}
 
 	/**
-	 * Second attempt to keep the mapped object on the face when tilting the phone
+	 * Translate the object based on face location
+	 *
+	 * @param object the object to translate
+	 * @param face   the face to get it's position
 	 */
-	private void translation(Object3D object) {
-		if (object == null)
-			return;
-		float x = translateX(mFace.getPosition().x + mFace.getWidth() / 2);
-		float y = translateY(mFace.getPosition().y + mFace.getHeight() / 2);
-		object.setScreenCoordinates(x, y, mCurrentViewportWidth, mCurrentViewportHeight, 10);
+	private void translation(@NotNull Object3D object, @NotNull Face face) {
+		float x = translateX(face.getPosition().x + face.getWidth() / 2);
+		float y = translateY(face.getPosition().y + face.getHeight() / 2);
+		try {
+			object.setScreenCoordinates(x, y, mCurrentViewportWidth, mCurrentViewportHeight, CAMERA_Z);
+		}catch (NullPointerException e){
+			e.printStackTrace();
+		}
 	}
 
 	public void onNewItem(Face face) {

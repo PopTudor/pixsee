@@ -1,7 +1,6 @@
 package com.marked.pixsee.face;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.loader.ALoader;
@@ -12,7 +11,6 @@ import org.rajawali3d.loader.LoaderGCode;
 import org.rajawali3d.loader.LoaderMD2;
 import org.rajawali3d.loader.LoaderOBJ;
 import org.rajawali3d.loader.LoaderSTL;
-import org.rajawali3d.loader.ParsingException;
 import org.rajawali3d.loader.fbx.LoaderFBX;
 import org.rajawali3d.loader.md5.LoaderMD5Anim;
 import org.rajawali3d.loader.md5.LoaderMD5Mesh;
@@ -142,24 +140,11 @@ public class FaceObject {
 			else
 				buildFileLoader();
 
-			buildObjectOrAnimation();
 			buildTexture();
 			buildMaterial();
 
 			faceObject = new FaceObject(this);
 			return faceObject;
-		}
-
-		private void buildObjectOrAnimation() {
-			try {
-				if (this.aLoader instanceof AMeshLoader)
-					this.object3D = ((AMeshLoader) aLoader.parse()).getParsedObject();
-				else if (aLoader instanceof LoaderMD5Anim) {
-					Log.d(TAG, "buildObjectOrAnimation: animation");
-				}
-			} catch (ParsingException e) {
-				e.printStackTrace();
-			}
 		}
 
 		private void buildMaterial() {
