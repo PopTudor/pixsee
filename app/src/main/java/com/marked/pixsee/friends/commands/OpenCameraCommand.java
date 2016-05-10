@@ -2,6 +2,9 @@ package com.marked.pixsee.friends.commands;
 
 import android.content.Context;
 
+import com.marked.pixsee.commands.ClickCommand;
+import com.marked.pixsee.commands.Command;
+
 import javax.inject.Inject;
 
 /**

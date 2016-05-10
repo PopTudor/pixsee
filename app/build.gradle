@@ -25,7 +25,7 @@ def JAR_DIR = 'build/java/vuforia'
 
 repositories {
     mavenCentral()
-    maven {url "https://jitpack.io"}
+    maven { url "https://jitpack.io" }
     maven { url 'https://maven.fabric.io/public' }
 }
 // Manifest version information!
