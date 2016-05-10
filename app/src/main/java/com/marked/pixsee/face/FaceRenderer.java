@@ -29,6 +29,10 @@ import org.rajawali3d.renderer.Renderer;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import rx.Observable;
+import rx.Subscriber;
+import rx.schedulers.Schedulers;
+
 /**
  * Created by Tudor on 4/8/2016.
  */
@@ -126,12 +130,14 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 
 	@Override
 	public void onFavoriteClicked(final FaceObject object) {
-		handler.post(new Runnable() {
+		Observable.create(new Observable.OnSubscribe<ALoader>() {
 			@Override
-			public void run() {
+			public void call(Subscriber<? super ALoader> subscriber) {
 				loadModel(object.getLoader(), FaceRenderer.this, object.getResId());
 			}
-		});
+		})
+				.subscribeOn(Schedulers.trampoline())
+				.subscribe();
 	}
 
 	@Override
