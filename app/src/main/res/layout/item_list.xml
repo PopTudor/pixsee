@@ -9,5 +9,5 @@
                                         android:layout_marginLeft="16dp"
                                         android:layout_marginRight="16dp"
                                         app:layoutManager="LinearLayoutManager"
-                                        tools:context="com.marked.pixsee.store.ItemListActivity"
+                                        tools:context=".store.ShopListActivity"
                                         tools:listitem="@layout/item_list_content"/>
