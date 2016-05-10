@@ -1,0 +1,67 @@
+package com.marked.pixsee.store;
+
+import android.support.annotation.NonNull;
+
+import com.marked.pixsee.BasePresenter;
+import com.marked.pixsee.BaseView;
+import com.marked.pixsee.store.data.Category;
+
+import java.util.List;
+
+/**
+ * Created by Tudor on 2016-05-11.
+ */
+public interface Contract {
+	interface View extends BaseView<Presenter> {
+
+		void setLoadingIndicator(boolean active);
+
+		void showTasks(List<Category> tasks);
+
+		void showAddTask();
+
+		void showTaskDetailsUi(String taskId);
+
+		void showTaskMarkedComplete();
+
+		void showTaskMarkedActive();
+
+		void showCompletedTasksCleared();
+
+		void showLoadingTasksError();
+
+		void showNoTasks();
+
+		void showActiveFilterLabel();
+
+		void showCompletedFilterLabel();
+
+		void showAllFilterLabel();
+
+		void showNoActiveTasks();
+
+		void showNoCompletedTasks();
+
+		void showSuccessfullySavedMessage();
+
+		boolean isActive();
+
+		void showFilteringPopUpMenu();
+	}
+	interface Presenter extends BasePresenter{
+		void result(int requestCode, int resultCode);
+
+		void loadTasks(boolean forceUpdate);
+
+		void addNewTask();
+
+		void openTaskDetails(@NonNull Category requestedTask);
+
+		void completeTask(@NonNull Category completedTask);
+
+		void activateTask(@NonNull Category activeTask);
+
+		void clearCompletedTasks();
+	}
+
+}
