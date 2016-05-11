@@ -9,17 +9,17 @@ import com.marked.pixsee.store.data.Category;
  * Created by Tudor on 2016-05-10.
  */
 public class ShopPresenter implements Contract.Presenter {
-	private Contract.View view;
+	private Contract.View mView;
 
 	public ShopPresenter(Contract.View view) {
-		this.view = view;
+		this.mView = view;
 
-		this.view.setPresenter(this);
+		this.mView.setPresenter(this);
 	}
 
 	@Override
 	public void start() {
-
+		loadTasks(false);
 	}
 
 	@Override
@@ -29,6 +29,28 @@ public class ShopPresenter implements Contract.Presenter {
 
 	@Override
 	public void loadTasks(boolean forceUpdate) {
+		if (forceUpdate){
+
+		}else {
+//			final List<Category> categories = new ArrayList<>(3);
+//			Observable.from(new ArrayList<Category>(new Category()){})
+//					.subscribe(new Subscriber<Category>() {
+//						@Override
+//						public void onCompleted() {
+//							mView.showTasks(categories);
+//						}
+//
+//						@Override
+//						public void onError(Throwable e) {
+//							mView.showLoadingTasksError();
+//						}
+//
+//						@Override
+//						public void onNext(Category category) {
+//							categories.add(category);
+//						}
+//					});
+		}
 
 	}
 

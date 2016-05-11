@@ -1,8 +1,15 @@
 package com.marked.pixsee.store.list;
 
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.DimenRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +19,7 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.store.Contract;
 import com.marked.pixsee.store.data.Category;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,24 +30,94 @@ public class ShopListFragment extends Fragment implements Contract.View {
 	private Contract.Presenter mPresenter;
 	private CategoryAdapter mCategoryAdapter;
 
-	public static ShopListFragment newInstance(){
+	public static ShopListFragment newInstance() {
 		return new ShopListFragment();
 	}
 
 	public ShopListFragment() {
 	}
+
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mCategoryAdapter = new CategoryAdapter();
+		mCategoryAdapter = new CategoryAdapter(new ArrayList<Category>(0));
 	}
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.shop_list, container, false);
-
+		GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+		RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.categoryRecyclerview);
+		recyclerView.setLayoutManager(gridLayoutManager);
+		recyclerView.addItemDecoration(new ItemOffsetDecoration(getActivity(),R.dimen.item_spacing),0);
+		recyclerView.setAdapter(mCategoryAdapter);
 		return root;
+	}
+	public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
+
+		private int mItemOffset;
+
+		public ItemOffsetDecoration(int itemOffset) {
+			mItemOffset = itemOffset;
+		}
+
+		public ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
+			this(context.getResources().getDimensionPixelSize(itemOffsetId));
+		}
+
+		@Override
+		public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+		                           RecyclerView.State state) {
+			super.getItemOffsets(outRect, view, parent, state);
+			outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset);
+		}
+	}
+	@Override
+	public void onStart() {
+		super.onStart();
+		Category category = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.network_icon),
+				                                ContextCompat.getDrawable(getActivity(), R.drawable.login_gradient),
+				                                "Internet", "3 Items");
+		Category category2 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
+				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
+				                                 "Emojis", "Coming soon");
+		Category category3 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
+				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
+				                                 "Gestures", "Coming soon");
+		Category category4 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
+				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
+				                                 "Box emotions", "Coming soon");
+		Category category5 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
+				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
+				                                 "Animals", "Coming soon");
+		Category category6 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
+				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
+				                                 "Plands", "Coming soon");
+		Category category7 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
+				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
+				                                 "Aliens", "Coming soon");
+		Category category8 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
+				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
+				                                 "Social", "Coming soon");
+		Category category9 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
+				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
+				                                 "Spooky", "Coming soon");
+		Category category10 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
+				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
+				                                 "Anonym", "Coming soon");
+		List<Category> categories = new ArrayList<>();
+		categories.add(category);
+		categories.add(category2);
+		categories.add(category3);
+		categories.add(category4);
+		categories.add(category5);
+		categories.add(category6);
+		categories.add(category7);
+		categories.add(category8);
+		categories.add(category9);
+		categories.add(category10);
+		mCategoryAdapter.replaceData(categories);
 	}
 
 	@Override
@@ -135,6 +213,14 @@ public class ShopListFragment extends Fragment implements Contract.View {
 
 	@Override
 	public void setPresenter(@NotNull Contract.Presenter presenter) {
-		mPresenter =presenter;
+		mPresenter = presenter;
+	}
+
+	public interface CategoryListener {
+		void onCategoryClicked(Category category);
+
+		void onCompleteCategoryClick(Category completedCategory);
+
+		void onActivateCategoryClick(Category activatedCategory);
 	}
 }

@@ -87,7 +87,7 @@ ext {
             glassFishAnnotations : "org.glassfish:javax.annotation:${glassFishVersion}",
             rajawali             : "org.rajawali3d:rajawali:${rajawali}",
             chatMessageView      : "me.himanshusoni.chatmessageview:chat-message-view:${messageViewVersion}",
-            facebook      : "com.facebook.android:facebook-android-sdk:[${facebook})",
+            facebook             : "com.facebook.android:facebook-android-sdk:[${facebook}]",
             rxPermissions        : "com.tbruyelle.rxpermissions:rxpermissions:${rxPermissions}"
     ]
 
