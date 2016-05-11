@@ -15,9 +15,11 @@ import java.util.List;
  */
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryVH> {
 	private List<Category> mDataSet;
+	private ShopListFragment.CategoryListener categoryListener;
 
-	public CategoryAdapter(List<Category> mDataSet) {
+	public CategoryAdapter(List<Category> mDataSet, ShopListFragment.CategoryListener listener) {
 		this.mDataSet = mDataSet;
+		this.categoryListener = listener;
 	}
 
 
@@ -28,8 +30,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryVH> {
 	}
 
 	@Override
-	public void onBindViewHolder(CategoryVH holder, int position) {
+	public void onBindViewHolder(final CategoryVH holder, int position) {
 		holder.bind(mDataSet.get(position));
+		holder.itemView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				categoryListener.onCategoryClicked(mDataSet.get(holder.getAdapterPosition()));
+			}
+		});
 	}
 
 	@Override

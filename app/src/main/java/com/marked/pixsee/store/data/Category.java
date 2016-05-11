@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
  * Created by Tudor on 2016-05-11.
  */
 public class Category {
+	private String path;
 	private Drawable icon;
 	private Drawable background;
 	private String title;
@@ -34,4 +35,7 @@ public class Category {
 		return subtitle;
 	}
 
+	public String getPath() {
+		return path;
+	}
 }

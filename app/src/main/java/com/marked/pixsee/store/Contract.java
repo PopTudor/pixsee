@@ -20,13 +20,13 @@ public interface Contract {
 
 		void showAddTask();
 
-		void showTaskDetailsUi(String taskId);
+		void showCategoryDetailsUi(String taskId);
 
-		void showTaskMarkedComplete();
+		void showCategoryMarkedComplete();
 
-		void showTaskMarkedActive();
+		void showCategoryMarkedActive();
 
-		void showCompletedTasksCleared();
+		void showCompletedCategoryCleared();
 
 		void showLoadingTasksError();
 

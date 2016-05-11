@@ -171,6 +171,8 @@
 
         <activity android:name=".store.ShopActivity">
         </activity>
+        <activity android:name=".store.detail.StoreDetail">
+        </activity>
     </application>
 
 </manifest>

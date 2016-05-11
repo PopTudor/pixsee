@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.View;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.store.di.DaggerShopComponent;
@@ -32,6 +33,12 @@ public class ShopActivity extends AppCompatActivity {
 			getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_24dp);
 			getSupportActionBar().setTitle("Emotions Market");
 			toolbar.setTitle("Emotions Market");
+			toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					onBackPressed();
+				}
+			});
 		} catch (Exception e){
 			e.printStackTrace();
 		}

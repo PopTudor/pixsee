@@ -1,13 +1,13 @@
 package com.marked.pixsee.store.list;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,17 +18,37 @@ import com.google.repacked.antlr.v4.runtime.misc.NotNull;
 import com.marked.pixsee.R;
 import com.marked.pixsee.store.Contract;
 import com.marked.pixsee.store.data.Category;
+import com.marked.pixsee.store.detail.StoreDetail;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.support.v4.content.ContextCompat.getDrawable;
 
 
 /**
  * Created by Tudor on 2016-05-11.
  */
 public class ShopListFragment extends Fragment implements Contract.View {
+	public static final String CATEGORY_TAG = "CATEGORY_TAG";
 	private Contract.Presenter mPresenter;
 	private CategoryAdapter mCategoryAdapter;
+	private CategoryListener mCategoryListener = new CategoryListener() {
+		@Override
+		public void onCategoryClicked(Category category) {
+			mPresenter.openTaskDetails(category);
+		}
+
+		@Override
+		public void onCompleteCategoryClick(Category completedCategory) {
+			mPresenter.completeTask(completedCategory);
+		}
+
+		@Override
+		public void onActivateCategoryClick(Category activatedCategory) {
+			mPresenter.activateTask(activatedCategory);
+		}
+	};
 
 	public static ShopListFragment newInstance() {
 		return new ShopListFragment();
@@ -40,7 +60,7 @@ public class ShopListFragment extends Fragment implements Contract.View {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mCategoryAdapter = new CategoryAdapter(new ArrayList<Category>(0));
+		mCategoryAdapter = new CategoryAdapter(new ArrayList<Category>(0), mCategoryListener);
 	}
 
 	@Nullable
@@ -55,7 +75,7 @@ public class ShopListFragment extends Fragment implements Contract.View {
 		return root;
 	}
 
-	public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
+	public static class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
 
 		private int mItemOffset;
 
@@ -78,8 +98,8 @@ public class ShopListFragment extends Fragment implements Contract.View {
 	@Override
 	public void onStart() {
 		super.onStart();
-		Category category = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.network_icon),
-				                                ContextCompat.getDrawable(getActivity(), R.drawable.login_gradient),
+		Category category = new Category(getDrawable(getActivity(), R.drawable.network_icon),
+				                                getDrawable(getActivity(), R.drawable.login_gradient),
 				                                "Internet", "3 Items");
 		Category category2 = new Category(null, null, "Emojis", "Coming soon");
 		Category category3 = new Category(null, null, "Gestures", "Coming soon");
@@ -126,22 +146,24 @@ public class ShopListFragment extends Fragment implements Contract.View {
 	}
 
 	@Override
-	public void showTaskDetailsUi(String taskId) {
+	public void showCategoryDetailsUi(String taskId) {
+		Intent intent = new Intent(getActivity(), StoreDetail.class);
+		intent.putExtra(CATEGORY_TAG, taskId);
+		startActivity(intent);
+	}
+
+	@Override
+	public void showCategoryMarkedComplete() {
 
 	}
 
 	@Override
-	public void showTaskMarkedComplete() {
+	public void showCategoryMarkedActive() {
 
 	}
 
 	@Override
-	public void showTaskMarkedActive() {
-
-	}
-
-	@Override
-	public void showCompletedTasksCleared() {
+	public void showCompletedCategoryCleared() {
 
 	}
 

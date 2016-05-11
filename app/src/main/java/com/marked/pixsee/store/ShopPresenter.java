@@ -61,7 +61,7 @@ public class ShopPresenter implements Contract.Presenter {
 
 	@Override
 	public void openTaskDetails(@NonNull Category requestedTask) {
-
+		mView.showCategoryDetailsUi(requestedTask.getPath());
 	}
 
 	@Override

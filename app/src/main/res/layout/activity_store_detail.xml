@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.marked.pixsee.store.detail.StoreDetail"
+    android:background="@color/colorPrimaryDark">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#424242"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:elevation="5dp"
+            >
+
+        </android.support.v7.widget.Toolbar>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:layout_alignParentStart="true"
+            android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/favorite1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="false"
+                    android:background="@drawable/round_corner_button"
+                    android:backgroundTint="#da545454"
+                    android:cropToPadding="false"
+                    android:maxHeight="32dp"
+                    android:maxWidth="32dp"
+                    android:padding="5dp"
+                    android:src="@drawable/mlg_48"
+                    android:layout_below="@+id/toolbar"
+                    android:layout_alignParentStart="true"
+                    android:layout_margin="16dp"/>
+
+                <ImageButton
+                    android:id="@+id/favorite2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/round_corner_button"
+                    android:backgroundTint="#fea3de"
+                    android:maxHeight="32dp"
+                    android:maxWidth="32dp"
+                    android:padding="5dp"
+                    android:src="@drawable/hearts_48"
+                    android:layout_alignTop="@+id/favorite1"
+                    android:layout_toEndOf="@+id/favorite1"
+                    android:layout_marginRight="8dp"/>
+
+                <ImageButton
+                    android:id="@+id/favorite3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/round_corner_button"
+                    android:backgroundTint="#A4C639"
+                    android:maxHeight="32dp"
+                    android:maxWidth="32dp"
+                    android:padding="5dp"
+                    android:src="@android:mipmap/sym_def_app_icon"
+                    android:layout_alignTop="@+id/favorite2"
+                    android:layout_toEndOf="@+id/favorite2"
+                    android:layout_marginLeft="8dp"/>
+        </LinearLayout>
+
+</RelativeLayout>
