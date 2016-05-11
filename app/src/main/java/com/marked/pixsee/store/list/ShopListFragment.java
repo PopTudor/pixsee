@@ -50,10 +50,11 @@ public class ShopListFragment extends Fragment implements Contract.View {
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
 		RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.categoryRecyclerview);
 		recyclerView.setLayoutManager(gridLayoutManager);
-		recyclerView.addItemDecoration(new ItemOffsetDecoration(getActivity(),R.dimen.item_spacing),0);
+		recyclerView.addItemDecoration(new ItemOffsetDecoration(getActivity(), R.dimen.item_spacing), 0);
 		recyclerView.setAdapter(mCategoryAdapter);
 		return root;
 	}
+
 	public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
 
 		private int mItemOffset;
@@ -73,39 +74,22 @@ public class ShopListFragment extends Fragment implements Contract.View {
 			outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset);
 		}
 	}
+
 	@Override
 	public void onStart() {
 		super.onStart();
 		Category category = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.network_icon),
 				                                ContextCompat.getDrawable(getActivity(), R.drawable.login_gradient),
 				                                "Internet", "3 Items");
-		Category category2 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
-				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
-				                                 "Emojis", "Coming soon");
-		Category category3 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
-				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
-				                                 "Gestures", "Coming soon");
-		Category category4 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
-				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
-				                                 "Box emotions", "Coming soon");
-		Category category5 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
-				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
-				                                 "Animals", "Coming soon");
-		Category category6 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
-				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
-				                                 "Plands", "Coming soon");
-		Category category7 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
-				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
-				                                 "Aliens", "Coming soon");
-		Category category8 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
-				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
-				                                 "Social", "Coming soon");
-		Category category9 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
-				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
-				                                 "Spooky", "Coming soon");
-		Category category10 = new Category(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp),
-				                                 ContextCompat.getDrawable(getActivity(), R.color.cardview_dark_background),
-				                                 "Anonym", "Coming soon");
+		Category category2 = new Category(null, null, "Emojis", "Coming soon");
+		Category category3 = new Category(null, null, "Gestures", "Coming soon");
+		Category category4 = new Category(null, null, "Box emotions", "Coming soon");
+		Category category5 = new Category(null, null, "Animals", "Coming soon");
+		Category category6 = new Category(null, null, "Plants", "Coming soon");
+		Category category7 = new Category(null, null, "Aliens", "Coming soon");
+		Category category8 = new Category(null, null, "Social", "Coming soon");
+		Category category9 = new Category(null, null, "Spooky", "Coming soon");
+		Category category10 = new Category(null, null, "Anonym", "Coming soon");
 		List<Category> categories = new ArrayList<>();
 		categories.add(category);
 		categories.add(category2);
