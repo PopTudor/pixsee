@@ -66,7 +66,7 @@ public class ShopListFragment extends Fragment implements Contract.View {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.shop_list, container, false);
+		View root = inflater.inflate(R.layout.fragment_shop_list, container, false);
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
 		RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.categoryRecyclerview);
 		recyclerView.setLayoutManager(gridLayoutManager);
@@ -98,7 +98,7 @@ public class ShopListFragment extends Fragment implements Contract.View {
 	@Override
 	public void onStart() {
 		super.onStart();
-		Category category = new Category(getDrawable(getActivity(), R.drawable.network_icon),
+		Category category = new Category(getDrawable(getActivity(), R.drawable.ic_internet),
 				                                getDrawable(getActivity(), R.drawable.login_gradient),
 				                                "Internet", "3 Items");
 		Category category2 = new Category(null, null, "Emojis", "Coming soon");
