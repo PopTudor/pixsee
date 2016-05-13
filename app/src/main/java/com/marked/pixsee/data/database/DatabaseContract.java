@@ -41,7 +41,7 @@ public class DatabaseContract {
 	}
 
 	/* App's user*/
-	public static class User implements BaseColumns {
+	protected static class User implements BaseColumns {
 		public static final String TABLE_NAME = "user";
 		public static final String COLUMN_ID = FriendConstants.ID;
 		public static final String COLUMN_NAME = FriendConstants.NAME;

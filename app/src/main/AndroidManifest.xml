@@ -95,13 +95,13 @@
             android:label="@string/title_contact_list"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".frienddetail.ChatDetailActivity"
+            android:name=".frienddetail.FriendDetailActivity"
             android:label="@string/title_contact_detail"
             android:parentActivityName=".friends.FriendsActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".frienddetail.ChatDetailActivity"/>
+                android:value=".frienddetail.FriendDetailActivity"/>
         </activity>
 
         <!-- [START gcm_receiver] -->

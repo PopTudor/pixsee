@@ -63,7 +63,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
 	public void onClick(View v) {
 		// if we got internet, process the click. else tell them to activate it
-		if (Utils.INSTANCE.isOnline(this))
+		if (Utils.isOnline(this))
 			switch (v.getId()) {
 				case R.id.logInButtonPixy: {
 					if (!new DataValidation(this)
@@ -82,7 +82,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 				}
 			}
 		else
-			Utils.INSTANCE.showNoConnectionDialog(this);
+			Utils.showNoConnectionDialog(this);
 	}
 
 	public boolean onMenuItemClick(MenuItem item) {

@@ -82,7 +82,7 @@ public class GCMListenerService extends GcmListenerService {
 		 */
 
 		/*send notification only if the user is not inside the chatting fragment */
-		if (!FriendDetailFragment.Static.isInForeground())
+		if (!FriendDetailFragment.isInForeground)
 			sendNotification(payload);
 		// [END_EXCLUDE]
 	}

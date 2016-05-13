@@ -23,7 +23,7 @@ import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.User;
 import com.marked.pixsee.databinding.FragmentFriendBinding;
-import com.marked.pixsee.frienddetail.ChatDetailActivity;
+import com.marked.pixsee.frienddetail.FriendDetailActivity;
 import com.marked.pixsee.friends.data.FriendRepository;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import javax.inject.Inject;
+
 
 /**
  * A list fragment representing a list of Contacts. This fragment
@@ -63,8 +64,8 @@ public class FriendFragment extends Fragment implements FriendViewModel.DataList
 	public FriendItemListener friendItemInteraction = new FriendItemListener() {
 		@Override
 		public void onFriendClick(User friend) {
-			Intent intent = new Intent(getActivity(), ChatDetailActivity.class);
-			intent.putExtra(ChatDetailActivity.EXTRA_CONTACT, friend);
+			Intent intent = new Intent(getActivity(), FriendDetailActivity.class);
+			intent.putExtra(FriendDetailActivity.EXTRA_CONTACT, friend);
 			getActivity().startActivity(intent);
 		}
 	};

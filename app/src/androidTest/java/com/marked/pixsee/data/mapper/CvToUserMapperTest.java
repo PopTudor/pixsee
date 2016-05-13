@@ -3,7 +3,6 @@ package com.marked.pixsee.data.mapper;
 import android.content.ContentValues;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.marked.pixsee.data.User;
 import com.marked.pixsee.data.database.DatabaseContract;
 
 import org.junit.Test;

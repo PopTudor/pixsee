@@ -9,7 +9,6 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
-import com.marked.pixsee.utility.UtilsFragmentKt;
 
 
 /**
@@ -51,7 +50,7 @@ public class FriendsActivity extends AppCompatActivity {
 		if (toolbar != null) {
 			toolbar.setTitle(getTitle());
 		}
-		UtilsFragmentKt.add(mFragmentManager, R.id.fragmentContainer, FriendFragment.newInstance());
+		getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, FriendFragment.newInstance()).commit();
 	}
 
 	public ActivityComponent getComponent() {

@@ -6,7 +6,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.marked.pixsee.injection.scopes.PerActivity;
-import com.marked.pixsee.service.RegistrationListener;
+import com.marked.pixsee.service.RegistrationBroadcastReceiver;
 import com.marked.pixsee.signup.DialogRegistration;
 
 import dagger.Module;
@@ -36,8 +36,8 @@ public class ActivityModule {
 
 	@Provides
 	@PerActivity
-	RegistrationListener provideDialogRegistration(ProgressDialog dialog) {
-		return new DialogRegistration(activity, dialog);
+	RegistrationBroadcastReceiver.RegistrationListener provideDialogRegistration(ProgressDialog dialog) {
+		return new DialogRegistration(dialog, activity);
 	}
 
 	@Provides

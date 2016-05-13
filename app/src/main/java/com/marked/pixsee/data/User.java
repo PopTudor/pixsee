@@ -48,6 +48,9 @@ public final class User implements Parcelable {
 		}
 	};
 
+	public String getUserID() {
+		return userID;
+	}
 
 	@Override
 	public int describeContents() {
@@ -60,5 +63,41 @@ public final class User implements Parcelable {
 		dest.writeString(email);
 		dest.writeString(token);
 		dest.writeString(password);
+	}
+
+	public void setUserID(String userID) {
+		this.userID = userID;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getEmail() {
+		return email;
 	}
 }

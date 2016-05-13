@@ -1,6 +1,7 @@
 package com.marked.pixsee.data.message;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.marked.pixsee.data.User;
@@ -65,7 +66,7 @@ public class MessageDataset extends ArrayList<Message> {
 
 	public static MessageDataset messages;
 
-	MessageDataset getInstance(Context context) {
+	public static MessageDataset getInstance(Context context) {
 		if (messages == null)
 			return new MessageDataset(context);
 		return messages;
@@ -79,22 +80,28 @@ public class MessageDataset extends ArrayList<Message> {
 	}
 
 	public void loadMore(User friend, int limit) {
-//		mContext.database.use {
-//			select(DatabaseContract.Message.TABLE_NAME,
-//					DatabaseContract.Message.COLUMN_DATA_BODY,
-//					DatabaseContract.Message.COLUMN_TYPE,
-//					DatabaseContract.Message.COLUMN_DATE,
-//					DatabaseContract.Message.COLUMN_TO
-//			).where("${DatabaseContract.Message.COLUMN_TO}={to}", "to" to friend.userID.toString()).limit(size, limit)
-//					.exec {
-//						parseList(rowParser {
-//							body: String, type: Int, date: Int, to: String
-//							->
-//							val message = Message.Builder().addData(MessageConstants.DATA_BODY, body).messageType(type).date(date.toLong()).to(to).build()
-//							super.add(message)
-//						})
-//						//			}
-//					}
-//		}
+		PixyDatabase.getInstance(mContext).getReadableDatabase().beginTransaction();
+		Cursor cursor = PixyDatabase.getInstance(mContext).getReadableDatabase().query(
+				DatabaseContract.Message.TABLE_NAME,
+				new String[]{DatabaseContract.Message.COLUMN_DATA_BODY,
+						DatabaseContract.Message.COLUMN_TYPE,
+						DatabaseContract.Message.COLUMN_DATE,
+						DatabaseContract.Message.COLUMN_TO},
+				DatabaseContract.Message.COLUMN_TO + " = " + friend.getUserID(),
+				null, null, null, null, String.valueOf(limit)
+		);
+		cursor.moveToFirst();
+		String bodyColName = cursor.getColumnName(cursor.getColumnIndex(DatabaseContract.Message.COLUMN_DATA_BODY));
+		String typeColName = cursor.getColumnName(cursor.getColumnIndex(DatabaseContract.Message.COLUMN_TYPE));
+		String dateColName = cursor.getColumnName(cursor.getColumnIndex(DatabaseContract.Message.COLUMN_DATE));
+		String toColName = cursor.getColumnName(cursor.getColumnIndex(DatabaseContract.Message.COLUMN_TO));
+		while (!cursor.isAfterLast()) {
+			Message message = new Message.Builder()
+					                  .addData(MessageConstants.DATA_BODY, bodyColName)
+					                  .messageType(Integer.parseInt(typeColName))
+					                  .date(Long.parseLong(dateColName))
+					                  .to(toColName).build();
+			super.add(message);
+		}
 	}
 }

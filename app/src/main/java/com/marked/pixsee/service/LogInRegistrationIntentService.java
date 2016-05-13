@@ -32,12 +32,10 @@ import com.google.android.gms.iid.InstanceID;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.login.LoginAPI;
 import com.marked.pixsee.networking.HTTPStatusCodes;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.utility.GCMConstants;
-import com.marked.pixsee.utility.UtilsKt;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -182,7 +180,8 @@ public class LogInRegistrationIntentService extends IntentService {
 					                                                                .putString(GCMConstants.USER_ID, userID)
 					                                                                .apply();
 					notifyBroadcastReceiver(GCMConstants.ACTION_LOGIN);
-					UtilsKt.saveToTable(LogInRegistrationIntentService.this, DatabaseContract.Friend.TABLE_NAME, friends);
+					// // FIXME: 2016-05-13 store friends to db
+					//saveToTable(LogInRegistrationIntentService.this, DatabaseContract.Friend.TABLE_NAME, friends);
 				} else {
 					handleRegistrationError(response.raw().code());
 				}

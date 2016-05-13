@@ -21,7 +21,6 @@ import com.marked.pixsee.face.commands.ShopImageButtonClick;
 import com.marked.pixsee.face.di.DaggerSelfieComponent;
 import com.marked.pixsee.face.di.SelfieComponent;
 import com.marked.pixsee.face.di.SelfieModule;
-import com.marked.pixsee.utility.UtilsFragmentKt;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.rajawali3d.view.TextureView;
@@ -34,7 +33,6 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-import static com.marked.pixsee.face.DetailFragment.Companion;
 import static com.marked.pixsee.face.DetailFragment.OnFragmentInteractionListener;
 
 public class SelfieActivity extends AppCompatActivity implements OnFragmentInteractionListener {
@@ -111,7 +109,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 				mCameraSource.takePicture(new CameraSource.ShutterCallback() {
 					@Override
 					public void onShutter() {
-						UtilsFragmentKt.addToBackStack(getSupportFragmentManager(), R.id.fragmentContainer, Companion.newInstance());
+						getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, DetailFragment.newInstance()).commit();
 					}
 				}, new CameraSource.PictureCallback() {
 					@Override

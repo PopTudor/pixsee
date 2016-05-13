@@ -2,7 +2,6 @@ package com.marked.pixsee.data.mapper;
 
 import android.content.ContentValues;
 
-import com.marked.pixsee.data.mapper.Mapper;
 import com.marked.pixsee.data.User;
 import com.marked.pixsee.data.database.DatabaseContract;
 

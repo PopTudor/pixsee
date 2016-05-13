@@ -13,7 +13,6 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.store.di.DaggerShopComponent;
 import com.marked.pixsee.store.di.ShopModule;
 import com.marked.pixsee.store.list.ShopListFragment;
-import com.marked.pixsee.utility.UtilsFragmentKt;
 
 import javax.inject.Inject;
 
@@ -46,7 +45,7 @@ public class ShopActivity extends AppCompatActivity {
 		ShopListFragment listFragment = (ShopListFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
 		if (listFragment == null) {
 			listFragment = ShopListFragment.newInstance();
-			UtilsFragmentKt.add(getSupportFragmentManager(), R.id.fragmentContainer, listFragment);
+			getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, listFragment).commit();
 		}
 		DaggerShopComponent.builder()
 				.shopModule(new ShopModule(listFragment))
