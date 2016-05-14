@@ -54,16 +54,6 @@
         android:background="@color/primary">
 
         <ImageButton
-            android:id="@+id/saveImageButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:background="#00ffffff"
-            android:src="@drawable/ic_save_24dp"/>
-
-        <ImageButton
             android:id="@+id/sendFacebookImageButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"

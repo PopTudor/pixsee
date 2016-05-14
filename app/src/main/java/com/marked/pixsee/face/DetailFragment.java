@@ -4,7 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -28,6 +30,7 @@ import com.facebook.share.widget.ShareDialog;
 import com.marked.pixsee.R;
 import com.marked.pixsee.utility.BitmapUtils;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -103,48 +106,19 @@ public class DetailFragment extends Fragment {
 
 		mAppbar = (AppBarLayout) rootView.findViewById(R.id.app_bar);
 
-		ImageButton saveImageButton = (ImageButton) rootView.findViewById(R.id.saveImageButton);
-		saveImageButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mListener.onButtonClicked()
-						.map(new Func1<Bitmap, Void>() {
-							@Override
-							public Void call(Bitmap bitmap) {
-								SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
-								Date now = new Date();
-								String prefix = "PX_IMG_" + formatter.format(now);
-								String filename = prefix + ".jpg";
-								BitmapUtils.saveFile(bitmap, Bitmap.CompressFormat.JPEG, 100, filename);
-								return null;
-							}
-						}).observeOn(AndroidSchedulers.mainThread())
-						.subscribe(new Subscriber<Void>() {
-							@Override
-							public void onCompleted() {
-								Toast.makeText(getActivity(), "Image saved !", Toast.LENGTH_SHORT).show();
-
-							}
-
-							@Override
-							public void onError(Throwable e) {
-								Toast.makeText(getActivity(), "Error...", Toast.LENGTH_SHORT).show();
-
-							}
-
-							@Override
-							public void onNext(Void aVoid) {
-							}
-						});
-
-			}
-		});
 		ImageButton shareFacebookImageButton = (ImageButton) rootView.findViewById(R.id.shareFacebookImageButton);
 		shareFacebookImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (ShareDialog.canShow(SharePhotoContent.class)) {
 					mListener.onButtonClicked()
+							.map(new Func1<Bitmap, Bitmap>() {
+								@Override
+								public Bitmap call(Bitmap bitmap) {
+									saveBitmap(bitmap);
+									return bitmap;
+								}
+							})
 							.map(new Func1<Bitmap, SharePhotoContent>() {
 								@Override
 								public SharePhotoContent call(Bitmap bitmap) {
@@ -183,6 +157,13 @@ public class DetailFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				mListener.onButtonClicked()
+						.map(new Func1<Bitmap, Bitmap>() {
+							@Override
+							public Bitmap call(Bitmap bitmap) {
+								saveBitmap(bitmap);
+								return bitmap;
+							}
+						})
 						.map(new Func1<Bitmap, SharePhotoContent>() {
 							@Override
 							public SharePhotoContent call(Bitmap bitmap) {
@@ -216,6 +197,22 @@ public class DetailFragment extends Fragment {
 			}
 		});
 		return rootView;
+	}
+	private void galleryAddPic(String photoPath) {
+		Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+		File f = new File(photoPath);
+		Uri contentUri = Uri.fromFile(f);
+		mediaScanIntent.setData(contentUri);
+		getActivity().sendBroadcast(mediaScanIntent);
+	}
+
+	private void saveBitmap(Bitmap bitmap) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
+		Date now = new Date();
+		String prefix = "PX_IMG_" + formatter.format(now);
+		String filename = prefix + ".jpg";
+		File file = BitmapUtils.saveFile(bitmap, Bitmap.CompressFormat.JPEG, 100, filename);
+		galleryAddPic(file.getPath());
 	}
 
 	@Override
