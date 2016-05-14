@@ -1,8 +1,8 @@
-package com.marked.pixsee.store;
+package com.marked.pixsee.shop;
 
 import android.support.annotation.NonNull;
 
-import com.marked.pixsee.store.data.Category;
+import com.marked.pixsee.shop.data.Category;
 
 
 /**

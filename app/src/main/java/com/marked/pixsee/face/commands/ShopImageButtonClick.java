@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.marked.pixsee.commands.ClickCommand;
-import com.marked.pixsee.store.ShopActivity;
+import com.marked.pixsee.shop.ShopActivity;
 
 /**
  * Created by Tudor on 2016-05-10.

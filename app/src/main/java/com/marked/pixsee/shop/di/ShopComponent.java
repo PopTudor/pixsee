@@ -1,7 +1,7 @@
-package com.marked.pixsee.store.di;
+package com.marked.pixsee.shop.di;
 
 import com.marked.pixsee.injection.scopes.PerActivity;
-import com.marked.pixsee.store.ShopActivity;
+import com.marked.pixsee.shop.ShopActivity;
 
 import dagger.Component;
 

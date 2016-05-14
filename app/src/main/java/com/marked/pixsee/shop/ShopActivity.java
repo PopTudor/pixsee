@@ -1,4 +1,4 @@
-package com.marked.pixsee.store;
+package com.marked.pixsee.shop;
 
 import android.app.SearchManager;
 import android.os.Bundle;
@@ -10,9 +10,9 @@ import android.view.Menu;
 import android.view.View;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.store.di.DaggerShopComponent;
-import com.marked.pixsee.store.di.ShopModule;
-import com.marked.pixsee.store.list.ShopListFragment;
+import com.marked.pixsee.shop.di.DaggerShopComponent;
+import com.marked.pixsee.shop.di.ShopModule;
+import com.marked.pixsee.shop.list.ShopListFragment;
 
 import javax.inject.Inject;
 

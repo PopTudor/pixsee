@@ -1,4 +1,4 @@
-package com.marked.pixsee.store.list;
+package com.marked.pixsee.shop.list;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.store.data.Category;
+import com.marked.pixsee.shop.data.Category;
 
 /**
  * Created by Tudor on 2016-05-11.

@@ -1,4 +1,4 @@
-package com.marked.pixsee.store.list;
+package com.marked.pixsee.shop.list;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,9 +16,9 @@ import android.view.ViewGroup;
 
 import com.google.repacked.antlr.v4.runtime.misc.NotNull;
 import com.marked.pixsee.R;
-import com.marked.pixsee.store.Contract;
-import com.marked.pixsee.store.data.Category;
-import com.marked.pixsee.store.detail.StoreDetail;
+import com.marked.pixsee.shop.Contract;
+import com.marked.pixsee.shop.data.Category;
+import com.marked.pixsee.shop.detail.StoreDetail;
 
 import java.util.ArrayList;
 import java.util.List;

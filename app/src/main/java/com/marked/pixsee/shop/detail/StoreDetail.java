@@ -1,4 +1,4 @@
-package com.marked.pixsee.store.detail;
+package com.marked.pixsee.shop.detail;
 
 import android.graphics.Color;
 import android.os.Build;

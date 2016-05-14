@@ -169,9 +169,9 @@
             android:authorities="com.facebook.app.FacebookContentProvider1677465395803625"
             android:exported="true"/>
 
-        <activity android:name=".store.ShopActivity">
+        <activity android:name=".shop.ShopActivity">
         </activity>
-        <activity android:name=".store.detail.StoreDetail">
+        <activity android:name=".shop.detail.StoreDetail">
         </activity>
     </application>
 

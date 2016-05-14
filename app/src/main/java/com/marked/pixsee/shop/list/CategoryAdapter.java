@@ -1,4 +1,4 @@
-package com.marked.pixsee.store.list;
+package com.marked.pixsee.shop.list;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.store.data.Category;
+import com.marked.pixsee.shop.data.Category;
 
 import java.util.List;
 

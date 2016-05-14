@@ -1,7 +1,7 @@
-package com.marked.pixsee.store.di;
+package com.marked.pixsee.shop.di;
 
-import com.marked.pixsee.store.Contract;
-import com.marked.pixsee.store.ShopPresenter;
+import com.marked.pixsee.shop.Contract;
+import com.marked.pixsee.shop.ShopPresenter;
 
 import dagger.Module;
 import dagger.Provides;

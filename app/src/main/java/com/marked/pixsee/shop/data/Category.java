@@ -1,4 +1,4 @@
-package com.marked.pixsee.store.data;
+package com.marked.pixsee.shop.data;
 
 import android.graphics.drawable.Drawable;
 
