@@ -43,8 +43,8 @@ import rx.functions.Func1;
  * to handle interaction events.
  */
 public class DetailFragment extends Fragment {
-    private Handler mHideHandler = new Handler();
-    private Boolean mVisible = false;
+	private Handler mHideHandler = new Handler();
+	private Boolean mVisible = false;
 	private Runnable mShowPart2Runnable = new Runnable() {
 		@Override
 		public void run() {
@@ -81,6 +81,7 @@ public class DetailFragment extends Fragment {
 		public void onSuccess(Sharer.Result result) {
 			Toast.makeText(getActivity(), "Posted...", Toast.LENGTH_SHORT).show();
 		}
+
 		@Override
 		public void onCancel() {
 			Toast.makeText(getActivity(), "Cancel...", Toast.LENGTH_SHORT).show();
@@ -91,8 +92,8 @@ public class DetailFragment extends Fragment {
 			Toast.makeText(getActivity(), "Error...", Toast.LENGTH_SHORT).show();
 		}
 	};
-	private CallbackManager callbackManager = com.facebook.CallbackManager.Factory.create() ;
-    private ShareDialog shareDialog= new ShareDialog(this);
+	private CallbackManager callbackManager;
+	private ShareDialog shareDialog;
 
 	@Nullable
 	@Override
@@ -133,8 +134,6 @@ public class DetailFragment extends Fragment {
 
 							@Override
 							public void onNext(Void aVoid) {
-								Toast.makeText(getActivity(), "Image could not be saved !", Toast.LENGTH_SHORT).show();
-
 							}
 						});
 
@@ -224,6 +223,8 @@ public class DetailFragment extends Fragment {
 		super.onAttach(context);
 		if (context instanceof OnFragmentInteractionListener) {
 			mListener = (DetailFragment.OnFragmentInteractionListener) context;
+			callbackManager = com.facebook.CallbackManager.Factory.create();
+			shareDialog = new ShareDialog(this);
 		} else {
 			throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
 		}
@@ -235,95 +236,92 @@ public class DetailFragment extends Fragment {
 		mListener = null;
 	}
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
-     */
-    interface OnFragmentInteractionListener {
-	    Observable<Bitmap> onButtonClicked();
-    }
+	/**
+	 * This interface must be implemented by activities that contain this
+	 * fragment to allow an interaction in this fragment to be communicated
+	 * to the activity and potentially other fragments contained in that
+	 * activity.
+	 * <p/>
+	 * <p/>
+	 * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
+	 */
+	interface OnFragmentInteractionListener {
+		Observable<Bitmap> onButtonClicked();
+	}
 
-    void  showAnimation() {
-	    mAppbar.animate()
-			    .alpha(1.0f)
-			    .setDuration(300L)
-			    .setListener(new AnimatorListenerAdapter() {
-				    @Override
-				    public void onAnimationStart(Animator animation) {
-					    super.onAnimationStart(animation);
-					    mAppbar.setVisibility(View.VISIBLE);
-				    }
-			    })
-			    .start();
-    }
+	void showAnimation() {
+		mAppbar.animate()
+				.alpha(1.0f)
+				.setDuration(300L)
+				.setListener(new AnimatorListenerAdapter() {
+					@Override
+					public void onAnimationStart(Animator animation) {
+						super.onAnimationStart(animation);
+						mAppbar.setVisibility(View.VISIBLE);
+					}
+				})
+				.start();
+	}
 
-    void hideAnimation() {
-        mAppbar.animate()
-                .alpha(0.0f)
-                .setDuration(300L)
-                .setListener(new AnimatorListenerAdapter() {
-	                @Override
-	                public void onAnimationStart(Animator animation) {
-		                super.onAnimationStart(animation);
-		                mAppbar.setVisibility(View.GONE);
-	                }
-                })
-		        .start();
-    }
+	void hideAnimation() {
+		mAppbar.animate()
+				.alpha(0.0f)
+				.setDuration(300L)
+				.setListener(new AnimatorListenerAdapter() {
+					@Override
+					public void onAnimationStart(Animator animation) {
+						super.onAnimationStart(animation);
+						mAppbar.setVisibility(View.GONE);
+					}
+				})
+				.start();
+	}
 
-    @Override
-    public void onStart() {
-	    super.onStart();
-	    // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-	    delayedHide(3000);
-    }
+	@Override
+	public void onStart() {
+		super.onStart();
+		// Trigger the initial hide() shortly after the activity has been
+		// created, to briefly hint to the user that UI controls
+		// are available.
+		delayedHide(3000);
+	}
 
-    private void  toggle() {
-	    if (mVisible) hide(); else show();
-    }
+	private void toggle() {
+		if (mVisible) hide();
+		else show();
+	}
 
-    private void hide() {
-        // Hide UI first
-	    hideAnimation();
+	private void hide() {
+		// Hide UI first
+		hideAnimation();
 
-	    mVisible = false;
+		mVisible = false;
 
-        // Schedule a runnable to remove the status and navigation bar after a delay
-	    mHideHandler.removeCallbacks(mShowPart2Runnable);
-    }
+		// Schedule a runnable to remove the status and navigation bar after a delay
+		mHideHandler.removeCallbacks(mShowPart2Runnable);
+	}
 
-    @SuppressLint("InlinedApi")
-    private void  show() {
-        // Show the system bar
-	    mVisible = true;
+	@SuppressLint("InlinedApi")
+	private void show() {
+		// Show the system bar
+		mVisible = true;
 
-        // Schedule a runnable to display UI elements after a delay
-	    mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-    }
+		// Schedule a runnable to display UI elements after a delay
+		mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+	}
 
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-	    mHideHandler.removeCallbacks(mHideRunnable);
-	    mHideHandler.postDelayed(mHideRunnable, delayMillis);
-    }
+	/**
+	 * Schedules a call to hide() in [delay] milliseconds, canceling any
+	 * previously scheduled calls.
+	 */
+	private void delayedHide(int delayMillis) {
+		mHideHandler.removeCallbacks(mHideRunnable);
+		mHideHandler.postDelayed(mHideRunnable, delayMillis);
+	}
 
-        static DetailFragment newInstance() {
-	        DetailFragment detailFragment = new DetailFragment();
-	        Bundle bundle = new Bundle();
-	        detailFragment.setArguments(bundle);
-
-	        return detailFragment;
-        }
+	public static DetailFragment newInstance() {
+		return new DetailFragment();
+	}
 
 	/**
 	 * Whether or not the system UI should be auto-hidden after

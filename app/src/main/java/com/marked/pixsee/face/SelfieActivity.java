@@ -109,7 +109,8 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 				mCameraSource.takePicture(new CameraSource.ShutterCallback() {
 					@Override
 					public void onShutter() {
-						getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, DetailFragment.newInstance()).commit();
+						getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, DetailFragment.newInstance()).addToBackStack(null)
+								.commit();
 					}
 				}, new CameraSource.PictureCallback() {
 					@Override
