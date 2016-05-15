@@ -21,10 +21,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/textView4"
-            android:layout_marginLeft="16dp"
             android:layout_above="@+id/textView5"
             android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="5dp"
+            android:paddingLeft="16dp"
+            >
 
         </android.support.v7.widget.RecyclerView>
 
@@ -47,14 +48,79 @@
             android:id="@+id/textView5"
             android:layout_above="@+id/descriptionTextview"
             android:layout_alignStart="@+id/descriptionTextview"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp"
+            />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/descriptionTextview"
+            android:text="dummy"
+            style="@style/TextAppearance.AppCompat.Subhead.Inverse"
+            android:enabled="true"
+            android:textColor="#a5ffffff"
+            android:layout_above="@+id/bottom_bar"
+            android:layout_alignEnd="@+id/itemDetailRecyclerview"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"/>
+
+        <LinearLayout
+            android:id="@+id/bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:measureWithLargestChild="false"
+            android:orientation="horizontal"
             android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/itemDetailRecyclerview"
-            android:layout_marginBottom="16dp"/>
+            android:layout_alignParentStart="true"
+            android:background="#2d2d2d"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
+
+                <ImageButton
+                    android:id="@+id/favorite1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:adjustViewBounds="false"
+                    android:background="@drawable/round_corner_button"
+                    android:backgroundTint="#da545454"
+                    android:cropToPadding="false"
+                    android:maxHeight="48dp"
+                    android:maxWidth="48dp"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_mlg"/>
+
+                <ImageButton
+                    android:id="@+id/favorite2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/round_corner_button"
+                    android:backgroundTint="#fea3de"
+                    android:maxHeight="48dp"
+                    android:maxWidth="48dp"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_hearts"/>
+
+                <ImageButton
+                    android:id="@+id/favorite3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/round_corner_button"
+                    android:backgroundTint="#A4C639"
+                    android:maxHeight="48dp"
+                    android:maxWidth="48dp"
+                    android:padding="5dp"
+                    android:src="@android:mipmap/sym_def_app_icon"/>
+
+        </LinearLayout>
 
 </RelativeLayout>

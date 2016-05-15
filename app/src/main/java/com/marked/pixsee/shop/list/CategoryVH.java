@@ -28,7 +28,7 @@ class CategoryVH extends RecyclerView.ViewHolder {
 	public void bind(Category category) {
 		title.setText(category.getTitle());
 		subtitle.setText(category.getSubtitle());
-		if (category.getBackground() == null)
+		if (category.getBackground() == null && category.getIcon() == null)
 			return;
 		title.setAlpha(1.0f);
 		subtitle.setAlpha(1.0f);

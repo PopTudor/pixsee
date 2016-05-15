@@ -75,10 +75,14 @@ public class ShopListFragment extends Fragment implements Contract.View {
 	@Override
 	public void onStart() {
 		super.onStart();
+		Category category2 = new Category(getDrawable(getActivity(),R.drawable.ic_emoji_category),
+				                                 getDrawable(getActivity(),R.drawable.emoji_category_background),
+				                                 "Emojis", "2 Emojis",
+				                                 "Feel in a particular way ? Release your emotions with these expressive filters.");
 		Category category = new Category(getDrawable(getActivity(), R.drawable.ic_internet),
 				                                getDrawable(getActivity(), R.drawable.login_gradient),
-				                                "Internet", "3 Items","Here you find popular memes on the internet.");
-		Category category2 = new Category(null, null, "Emojis", "Coming soon","Coming soon");
+				                                "Internet", "1 Item",
+				                                "Here you find popular memes on the internet.");
 		Category category3 = new Category(null, null, "Gestures", "Coming soon","Coming soon");
 		Category category4 = new Category(null, null, "Box emotions", "Coming soon","Coming soon");
 		Category category5 = new Category(null, null, "Animals", "Coming soon","Coming soon");
