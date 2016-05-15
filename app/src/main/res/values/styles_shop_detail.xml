@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ThemeOverlay.AppCompat.Dark.ActionBar.ShopDetail">
+        <!-- This would set the toolbar's icon color -->
+        <item name="android:background">#424242</item>
+        <!-- android:textColorPrimary is the color of the title text in the Toolbar  -->
+        <item name="android:textColorPrimary">@color/white</item>
+        <!-- android:actionMenuTextColor is the color of the text of action (menu) items  -->
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+</resources>

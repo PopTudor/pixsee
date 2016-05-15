@@ -2,7 +2,7 @@ package com.marked.pixsee.shop;
 
 import android.support.annotation.NonNull;
 
-import com.marked.pixsee.shop.data.Category;
+import com.marked.pixsee.shop.list.Category;
 
 
 /**
@@ -61,7 +61,7 @@ public class ShopPresenter implements Contract.Presenter {
 
 	@Override
 	public void openTaskDetails(@NonNull Category requestedTask) {
-		mView.showCategoryDetailsUi(requestedTask.getPath());
+		mView.showCategoryDetailsUi(requestedTask);
 	}
 
 	@Override

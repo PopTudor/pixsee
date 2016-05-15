@@ -1,11 +1,7 @@
 package com.marked.pixsee.shop.list;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.DimenRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,7 +13,7 @@ import android.view.ViewGroup;
 import com.google.repacked.antlr.v4.runtime.misc.NotNull;
 import com.marked.pixsee.R;
 import com.marked.pixsee.shop.Contract;
-import com.marked.pixsee.shop.data.Category;
+import com.marked.pixsee.shop.SpaceItemDecorator;
 import com.marked.pixsee.shop.detail.StoreDetail;
 
 import java.util.ArrayList;
@@ -31,6 +27,7 @@ import static android.support.v4.content.ContextCompat.getDrawable;
  */
 public class ShopListFragment extends Fragment implements Contract.View {
 	public static final String CATEGORY_TAG = "CATEGORY_TAG";
+	public static final String CATEGORY_DESCRIPTION = "CATEGORY_DESCRIPTION";
 	private Contract.Presenter mPresenter;
 	private CategoryAdapter mCategoryAdapter;
 	private CategoryListener mCategoryListener = new CategoryListener() {
@@ -70,29 +67,9 @@ public class ShopListFragment extends Fragment implements Contract.View {
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
 		RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.categoryRecyclerview);
 		recyclerView.setLayoutManager(gridLayoutManager);
-		recyclerView.addItemDecoration(new ItemOffsetDecoration(getActivity(), R.dimen.item_spacing), 0);
+		recyclerView.addItemDecoration(new SpaceItemDecorator(getActivity(), R.dimen.item_spacing), 0);
 		recyclerView.setAdapter(mCategoryAdapter);
 		return root;
-	}
-
-	public static class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
-
-		private int mItemOffset;
-
-		public ItemOffsetDecoration(int itemOffset) {
-			mItemOffset = itemOffset;
-		}
-
-		public ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
-			this(context.getResources().getDimensionPixelSize(itemOffsetId));
-		}
-
-		@Override
-		public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-		                           RecyclerView.State state) {
-			super.getItemOffsets(outRect, view, parent, state);
-			outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset);
-		}
 	}
 
 	@Override
@@ -100,16 +77,16 @@ public class ShopListFragment extends Fragment implements Contract.View {
 		super.onStart();
 		Category category = new Category(getDrawable(getActivity(), R.drawable.ic_internet),
 				                                getDrawable(getActivity(), R.drawable.login_gradient),
-				                                "Internet", "3 Items");
-		Category category2 = new Category(null, null, "Emojis", "Coming soon");
-		Category category3 = new Category(null, null, "Gestures", "Coming soon");
-		Category category4 = new Category(null, null, "Box emotions", "Coming soon");
-		Category category5 = new Category(null, null, "Animals", "Coming soon");
-		Category category6 = new Category(null, null, "Plants", "Coming soon");
-		Category category7 = new Category(null, null, "Aliens", "Coming soon");
-		Category category8 = new Category(null, null, "Social", "Coming soon");
-		Category category9 = new Category(null, null, "Spooky", "Coming soon");
-		Category category10 = new Category(null, null, "Anonym", "Coming soon");
+				                                "Internet", "3 Items","Here you find popular memes on the internet.");
+		Category category2 = new Category(null, null, "Emojis", "Coming soon","Coming soon");
+		Category category3 = new Category(null, null, "Gestures", "Coming soon","Coming soon");
+		Category category4 = new Category(null, null, "Box emotions", "Coming soon","Coming soon");
+		Category category5 = new Category(null, null, "Animals", "Coming soon","Coming soon");
+		Category category6 = new Category(null, null, "Plants", "Coming soon","Coming soon");
+		Category category7 = new Category(null, null, "Aliens", "Coming soon","Coming soon");
+		Category category8 = new Category(null, null, "Social", "Coming soon","Coming soon");
+		Category category9 = new Category(null, null, "Spooky", "Coming soon","Coming soon");
+		Category category10 = new Category(null, null, "Anonym", "Coming soon","Coming soon");
 		List<Category> categories = new ArrayList<>();
 		categories.add(category);
 		categories.add(category2);
@@ -146,9 +123,10 @@ public class ShopListFragment extends Fragment implements Contract.View {
 	}
 
 	@Override
-	public void showCategoryDetailsUi(String taskId) {
+	public void showCategoryDetailsUi(Category category) {
 		Intent intent = new Intent(getActivity(), StoreDetail.class);
-		intent.putExtra(CATEGORY_TAG, taskId);
+		intent.putExtra(CATEGORY_TAG, category.getPath());
+		intent.putExtra(CATEGORY_DESCRIPTION, category.getDescription());
 		startActivity(intent);
 	}
 

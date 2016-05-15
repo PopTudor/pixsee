@@ -6,14 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.shop.data.Category;
 
 import java.util.List;
 
 /**
  * Created by Tudor on 2016-05-11.
  */
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryVH> {
+class CategoryAdapter extends RecyclerView.Adapter<CategoryVH> {
 	private List<Category> mDataSet;
 	private ShopListFragment.CategoryListener categoryListener;
 

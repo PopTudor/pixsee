@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
-import com.marked.pixsee.shop.data.Category;
+import com.marked.pixsee.shop.list.Category;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface Contract {
 
 		void showAddTask();
 
-		void showCategoryDetailsUi(String taskId);
+		void showCategoryDetailsUi(Category taskId);
 
 		void showCategoryMarkedComplete();
 

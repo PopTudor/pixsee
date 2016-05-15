@@ -7,12 +7,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.shop.data.Category;
 
 /**
  * Created by Tudor on 2016-05-11.
  */
-public class CategoryVH extends RecyclerView.ViewHolder {
+class CategoryVH extends RecyclerView.ViewHolder {
 	private LinearLayout container;
 	private ImageView simpleDraweeView;
 	private TextView title;

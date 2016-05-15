@@ -52,10 +52,10 @@
                 android:background="@drawable/round_corner_button"
                 android:backgroundTint="#da545454"
                 android:cropToPadding="false"
-                android:maxHeight="32dp"
-                android:maxWidth="32dp"
+                android:maxHeight="48dp"
+                android:maxWidth="48dp"
                 android:padding="5dp"
-                android:src="@drawable/mlg_48"/>
+                android:src="@drawable/ic_mlg"/>
 
             <ImageButton
                 android:id="@+id/favorite2"
@@ -66,10 +66,10 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/round_corner_button"
                 android:backgroundTint="#fea3de"
-                android:maxHeight="32dp"
-                android:maxWidth="32dp"
+                android:maxHeight="48dp"
+                android:maxWidth="48dp"
                 android:padding="5dp"
-                android:src="@drawable/hearts_48"/>
+                android:src="@drawable/ic_hearts"/>
 
             <ImageButton
                 android:id="@+id/favorite3"
@@ -80,8 +80,8 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/round_corner_button"
                 android:backgroundTint="#A4C639"
-                android:maxHeight="32dp"
-                android:maxWidth="32dp"
+                android:maxHeight="48dp"
+                android:maxWidth="48dp"
                 android:padding="5dp"
                 android:src="@android:mipmap/sym_def_app_icon"/>
 

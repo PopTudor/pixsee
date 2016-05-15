@@ -1,4 +1,4 @@
-package com.marked.pixsee.shop.data;
+package com.marked.pixsee.shop.list;
 
 import android.graphics.drawable.Drawable;
 
@@ -11,12 +11,14 @@ public class Category {
 	private Drawable background;
 	private String title;
 	private String subtitle;
+	private String description;
 
-	public Category(Drawable icon, Drawable background, String title, String subtitle) {
+	public Category(Drawable icon, Drawable background, String title, String subtitle,String description) {
 		this.icon = icon;
 		this.background = background;
 		this.title = title;
 		this.subtitle = subtitle;
+		this.description = description;
 	}
 
 	public Drawable getIcon() {
@@ -38,4 +40,9 @@ public class Category {
 	public String getPath() {
 		return path;
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
 }
