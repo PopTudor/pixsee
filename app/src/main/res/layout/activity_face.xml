@@ -15,7 +15,7 @@
             android:id="@+id/preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <!--<android.opengl.GLSurfaceView-->
+            <!--<android.opengl.GLSurfaceVizew-->
             <org.rajawali3d.view.TextureView
                 android:id="@+id/texture_view"
                 android:layout_width="match_parent"
@@ -50,12 +50,12 @@
                 android:layout_marginRight="10dp"
                 android:adjustViewBounds="false"
                 android:background="@drawable/round_corner_button"
-                android:backgroundTint="#da545454"
+                android:backgroundTint="#FFD26E"
                 android:cropToPadding="false"
                 android:maxHeight="48dp"
                 android:maxWidth="48dp"
                 android:padding="5dp"
-                android:src="@drawable/ic_mlg"/>
+                android:src="@drawable/ic_emoji_mlg"/>
 
             <ImageButton
                 android:id="@+id/favorite2"
@@ -69,7 +69,7 @@
                 android:maxHeight="48dp"
                 android:maxWidth="48dp"
                 android:padding="5dp"
-                android:src="@drawable/ic_hearts"/>
+                android:src="@drawable/ic_emoji_love"/>
 
             <ImageButton
                 android:id="@+id/favorite3"

@@ -91,7 +91,7 @@
                     android:maxHeight="48dp"
                     android:maxWidth="48dp"
                     android:padding="5dp"
-                    android:src="@drawable/ic_mlg"/>
+                    android:src="@drawable/ic_emoji_mlg"/>
 
                 <ImageButton
                     android:id="@+id/favorite2"
@@ -105,7 +105,7 @@
                     android:maxHeight="48dp"
                     android:maxWidth="48dp"
                     android:padding="5dp"
-                    android:src="@drawable/ic_hearts"/>
+                    android:src="@drawable/ic_emoji_love"/>
 
                 <ImageButton
                     android:id="@+id/favorite3"
