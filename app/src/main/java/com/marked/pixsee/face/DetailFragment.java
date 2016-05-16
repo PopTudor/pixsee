@@ -123,7 +123,6 @@ public class DetailFragment extends Fragment {
 								@Override
 								public SharePhotoContent call(Bitmap bitmap) {
 									SharePhoto photo = new SharePhoto.Builder()
-											                   .setCaption("Pixsee")
 											                   .setUserGenerated(true)
 											                   .setBitmap(bitmap)
 											                   .build();
@@ -168,7 +167,6 @@ public class DetailFragment extends Fragment {
 							@Override
 							public SharePhotoContent call(Bitmap bitmap) {
 								SharePhoto photo = new SharePhoto.Builder()
-										                   .setCaption("Pixsee")
 										                   .setUserGenerated(true)
 										                   .setBitmap(bitmap)
 										                   .build();
