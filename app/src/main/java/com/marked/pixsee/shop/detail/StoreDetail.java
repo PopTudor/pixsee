@@ -36,9 +36,12 @@ public class StoreDetail extends Fragment {
 
 
 		List<ItemDetail> itemDetails = new ArrayList<>();
-		itemDetails.add(new ItemDetail(ContextCompat.getDrawable(getActivity(), R.drawable.ic_mlg)));
-		itemDetails.add(new ItemDetail(ContextCompat.getDrawable(getActivity(), R.drawable.ic_hearts)));
-		itemDetails.add(new ItemDetail(ContextCompat.getDrawable(getActivity(), android.R.mipmap.sym_def_app_icon)));
+		if (title.equalsIgnoreCase("internet")) {
+			itemDetails.add(new ItemDetail(ContextCompat.getDrawable(getActivity(), android.R.mipmap.sym_def_app_icon)));
+		} else {
+			itemDetails.add(new ItemDetail(ContextCompat.getDrawable(getActivity(), R.drawable.ic_mlg)));
+			itemDetails.add(new ItemDetail(ContextCompat.getDrawable(getActivity(), R.drawable.ic_hearts)));
+		}
 		itemDetails.add(new ItemDetail(ContextCompat.getDrawable(getActivity(), R.drawable.ic_lock_24dp)));
 		itemDetailAdapter = new ItemDetailAdapter(itemDetails);
 		// Set up the toolbar.
