@@ -31,5 +31,10 @@
         android:layout_marginRight="8dp"
         android:layout_below="@+id/shopAppBarLayout"
         android:layout_margin="8dp"/>
+    <FrameLayout
+        android:id="@+id/fullscreenFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/shopAppBarLayout"/>
 
 </RelativeLayout>
