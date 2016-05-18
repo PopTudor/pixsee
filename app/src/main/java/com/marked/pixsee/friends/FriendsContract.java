@@ -1,5 +1,7 @@
 package com.marked.pixsee.friends;
 
+import com.marked.pixsee.BasePresenter;
+import com.marked.pixsee.BaseView;
 import com.marked.pixsee.data.User;
 
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +13,7 @@ import java.util.List;
  * This specifies the contract between the view and the presenter.
  */
 public interface FriendsContract {
-	interface Presenter {
+	interface Presenter extends BasePresenter{
 		List<User> getFriends();
 
 		List<User> getFriends(int start);
@@ -23,7 +25,16 @@ public interface FriendsContract {
 		void clear();
 
 	}
-	interface View{
 
+	interface View extends BaseView<Presenter>{
+		void setRecyclerViewVisibility(int viewVisibility);
+		void onFriendsInsert(List<User> list, int from, int to);
+		void onFriendsReplace(List<User> list);
+		/**
+		 * Open detail view for a [User]
+		 *
+		 * @param friend The [User] to show details of
+		 */
+		void showFriendDetailUI(User friend);
 	}
 }

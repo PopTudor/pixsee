@@ -21,7 +21,8 @@ public class GetFriendsStartingWith implements SQLSpecification {
 	public String createQuery() {
 		return "SELECT * FROM " + DatabaseContract.Friend.TABLE_NAME
 				       +" WHERE " + DatabaseContract.Friend.COLUMN_NAME
-					   +" LIKE " + text +"%"
+					   +" LIKE "
+				       +'\'' + text +"%" +'\''
 				       + " LIMIT " + limit + " OFFSET " + offset;
 	}
 }

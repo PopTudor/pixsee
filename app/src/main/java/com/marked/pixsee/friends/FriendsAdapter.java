@@ -25,7 +25,7 @@ class FriendsAdapter extends RecyclerView.Adapter<FriendVH> {
 
 	FriendsAdapter(@NotNull FriendFragment.FriendItemListener friendItemListener) {
 		this.friendItemListener = checkNotNull(friendItemListener);
-		mDataSet=new ArrayList<User>();
+		mDataSet= new ArrayList<>();
 	}
 
 	@Override
@@ -36,7 +36,8 @@ class FriendsAdapter extends RecyclerView.Adapter<FriendVH> {
 	}
 
 	public void setDataSet(List<User> dataSet) {
-		mDataSet = dataSet;
+		mDataSet.clear();
+		mDataSet.addAll(dataSet);
 	}
 
 	@Override

@@ -31,61 +31,51 @@ import static com.marked.pixsee.data.database.DatabaseContract.Friend.TABLE_NAME
  */
 public class FriendRepository implements Repository<User> {
 	private PixyDatabase db;
-
 	public FriendRepository(PixyDatabase db) {
 		this.db = db;
 	}
 
-	private List<User> cache = new ArrayList<>();
 	private Mapper<Cursor, User> cursorToUserMapper = new CursorToUserMapper();
 	private Mapper<User, ContentValues> userToCvMapper = new UserToCvMapper();
 
 	public int length() {
-		int size = cache.size();
-		if (size == 0) {
-			Cursor cursor = db.getReadableDatabase().query(TABLE_NAME, null, null, null, null, null, null);
-			size = cursor.getCount();
-			cursor.close();
-		}
+		int size;
+		Cursor cursor = db.getReadableDatabase().query(TABLE_NAME, null, null, null, null, null, null);
+		size = cursor.getCount();
+		cursor.close();
 		return size;
 	}
 
 	@Override
 	public void update(@NotNull User item) {
 		db.getWritableDatabase().update(TABLE_NAME, userToCvMapper.map(item), DatabaseContract.Friend.COLUMN_ID + " = ?", new String[]{item.getUserID()});
-		cache.set(cache.indexOf(item), item);
 	}
 
 
 	@Override
 	public Observable<List<User>> query(Specification specification) {
+		List<User> users = new ArrayList<>();
+
 		if (specification instanceof SQLSpecification) {
 			db.getReadableDatabase().beginTransaction();
 			Cursor cursor = db.getReadableDatabase().rawQuery(((SQLSpecification) specification).createQuery(), null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				User friend = cursorToUserMapper.map(cursor);
-				cache.add(friend);
+				users.add(friend);
 				cursor.moveToNext();
 			}
 			db.getReadableDatabase().setTransactionSuccessful();
 			db.getReadableDatabase().endTransaction();
 			cursor.close();
 		}
-		List<User> users = new ArrayList<>();
-		users.add(new User("123", "Pop Tudor", "tudor08pop@yahoo.com", "dea"));
-		users.add(new User("124", "Sima Ioana", "skumpic_ioana@yahoo.com", "asd"));
-		users.add(new User("125", "Popa Cristian", "cristipopa@ymail.com", "dsa"));
-		users.add(new User("126", "Marcel Mirel", "cristipopa@ymail.com", "zxc"));
-		users.add(new User("127", "Milica Ionut", "cristipopa@ymail.com", "cxz"));
-		users.add(new User("128", "Andrei Bogdan", "cristipopa@ymail.com", "xcv"));
+
 		return Observable.just(users);
 	}
 
 	@Override
 	public void add(@NonNull User element) {
 		db.getWritableDatabase().insertWithOnConflict(TABLE_NAME, null, userToCvMapper.map(element), SQLiteDatabase.CONFLICT_IGNORE);
-		cache.add(element);
 	}
 
 	@Override
@@ -97,13 +87,11 @@ public class FriendRepository implements Repository<User> {
 			}
 		}
 		db.getWritableDatabase().setTransactionSuccessful();
-		cache.addAll(elements);
 	}
 
 	@Override
 	public void remove(@NonNull User element) {
 		db.getWritableDatabase().delete(TABLE_NAME, DatabaseContract.Friend.COLUMN_ID + " = ?", new String[]{element.getUserID()});
-		cache.remove(element);
 	}
 
 	@Override

@@ -1,22 +1,25 @@
 package com.marked.pixsee.friends;
 
-import android.databinding.ObservableArrayList;
-import android.databinding.ObservableField;
-import android.databinding.ObservableInt;
 import android.view.View;
 
 import com.marked.pixsee.data.User;
 import com.marked.pixsee.data.repository.Repository;
+import com.marked.pixsee.data.repository.Specification;
 import com.marked.pixsee.friends.commands.FabCommand;
 import com.marked.pixsee.friends.commands.OpenCameraCommand;
 import com.marked.pixsee.friends.data.specifications.GetFriendsSpecification;
+import com.marked.pixsee.friends.data.specifications.GetFriendsStartingWith;
 import com.marked.pixsee.injection.scopes.PerFragment;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Tudor Pop on 23-Mar-16.
@@ -25,17 +28,11 @@ import rx.functions.Action1;
 public class FriendPresenter {
 	private Repository<User> repository;
 
+	private FriendsContract.View mView;
+
 	public FriendPresenter(Repository<User> repository) {
 		this.repository = repository;
 	}
-
-	public ObservableInt progressVisibility = new ObservableInt(View.INVISIBLE);
-	public ObservableInt recyclerViewVisibility = new ObservableInt(View.INVISIBLE);
-	public ObservableField<String> infoMessage = new ObservableField("Click the + button to add a friend");
-	public ObservableInt infoMessageVisibility = new ObservableInt(View.INVISIBLE);
-	public ObservableArrayList<User> friends = new ObservableArrayList();
-
-	public DataListener dataListener;
 
 	@Inject
 	OpenCameraCommand openCamera;
@@ -46,6 +43,33 @@ public class FriendPresenter {
 		loadFriends(false, num);
 	}
 
+	void loadFriends(String text, int limit) {
+		Specification specification = new GetFriendsStartingWith(text, 0, limit);
+		if (text == null || text.isEmpty())
+			specification = new GetFriendsSpecification(0, limit);
+
+		repository.query(new GetFriendsStartingWith(text, 0, limit))
+				.debounce(300, TimeUnit.MILLISECONDS)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Subscriber<List<User>>() {
+					@Override
+					public void onCompleted() {
+
+					}
+
+					@Override
+					public void onError(Throwable e) {
+
+					}
+
+					@Override
+					public void onNext(List<User> users) {
+						mView.onFriendsReplace(users);
+					}
+				});
+	}
+
 	int size = 0;
 
 	public int getSize() {
@@ -53,14 +77,20 @@ public class FriendPresenter {
 	}
 
 	public void loadFriends(boolean forceUpdate, final int limit) {
+//		repository.add(new User("123", "Pop Tudor", "tudor08pop@yahoo.com", "dea"));
+//		repository.add(new User("124", "Sima Ioana", "skumpic_ioana@yahoo.com", "asd"));
+//		repository.add(new User("125", "Popa Cristian", "cristipopa@ymail.com", "dsa"));
+//		repository.add(new User("126", "Marcel Mirel", "cristipopa@ymail.com", "zxc"));
+//		repository.add(new User("127", "Milica Ionut", "cristipopa@ymail.com", "cxz"));
+//		repository.add(new User("128", "Andrei Bogdan", "cristipopa@ymail.com", "xcv"));
 		if (forceUpdate) {
 			repository.query(new GetFriendsSpecification(0, limit))
 					.subscribe(new Action1<List<User>>() {
 						           @Override
 						           public void call(List<User> users) {
 							           if (users.size() > 0)
-								           recyclerViewVisibility.set(View.VISIBLE);
-							           dataListener.onFriendsLoaded(users, 0, users.size());
+								           mView.setRecyclerViewVisibility(View.VISIBLE);
+							           mView.onFriendsInsert(users, 0, users.size());
 							           size = users.size();
 						           }
 					           }
@@ -74,7 +104,7 @@ public class FriendPresenter {
 					.subscribe(new Action1<List<User>>() {
 						           @Override
 						           public void call(List<User> users) {
-							           dataListener.onFriendsLoaded(users, size, limit);
+							           mView.onFriendsInsert(users, size, limit);
 							           size += users.size();
 						           }
 					           }
@@ -82,8 +112,8 @@ public class FriendPresenter {
 		}
 	}
 
-	public void setDataListener(DataListener dataListener) {
-		this.dataListener = dataListener;
+	public void setView(FriendsContract.View view) {
+		this.mView = view;
 	}
 
 	public FabCommand getFabCommand() {
@@ -94,16 +124,4 @@ public class FriendPresenter {
 		return openCamera;
 	}
 
-	/*This interface is used to send notifications to the view*/
-	public interface DataListener {
-
-		/**
-		 * Open detail view for a [User]
-		 *
-		 * @param friend The [User] to show details of
-		 */
-		void showFriendDetailUI(User friend);
-
-		void onFriendsLoaded(List<User> list, int from, int to);
-	}
 }

@@ -50,7 +50,7 @@ import javax.inject.Inject;
  * Activities containing this fragment MUST implement the [Callbacks]
  * interface.
  */
-public class FriendFragment extends Fragment implements FriendPresenter.DataListener {
+public class FriendFragment extends Fragment implements FriendsContract.View {
 	public static int REQUEST_INVITE = 11;
 
 	@Inject
@@ -75,9 +75,24 @@ public class FriendFragment extends Fragment implements FriendPresenter.DataList
 		}
 	};
 
+	@Override
+	public void setRecyclerViewVisibility(int viewVisibility) {
+		if (mFriendsRecyclerview != null)
+			mFriendsRecyclerview.setVisibility(viewVisibility);
+	}
+
+	@Override
+	public void onFriendsReplace(List<User> friends) {
+//		int count = mFriendsAdapter.getItemCount();
+		mFriendsAdapter.setDataSet(friends);
+		mFriendsAdapter.notifyDataSetChanged();
+//		mFriendsAdapter.notifyItemRangeRemoved(0,count);
+//		mFriendsAdapter.notifyItemRangeInserted(0,friends.size());
+	}
+
 	@UiThread
 	@Override
-	public void onFriendsLoaded(@NonNull List<User> friends, int from, int to) {
+	public void onFriendsInsert(@NonNull List<User> friends, int from, int to) {
 		mFriendsAdapter.setDataSet(friends);
 		mFriendsAdapter.notifyItemRangeInserted(from, to);
 	}
@@ -105,7 +120,7 @@ public class FriendFragment extends Fragment implements FriendPresenter.DataList
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mFriendsAdapter = new FriendsAdapter(friendItemInteraction);
-		mPresenter.setDataListener(this);
+		mPresenter.setView(this);
 		mPresenter.loadFriends(true, 50);
 	}
 
@@ -166,6 +181,7 @@ public class FriendFragment extends Fragment implements FriendPresenter.DataList
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 		super.onCreateOptionsMenu(menu, inflater);
 	}
+
 	private SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
 		@Override
 		public boolean onQueryTextSubmit(String query) {
@@ -175,6 +191,7 @@ public class FriendFragment extends Fragment implements FriendPresenter.DataList
 
 		@Override
 		public boolean onQueryTextChange(String newText) {
+			mPresenter.loadFriends(newText, 10);
 			return false;
 		}
 	};
@@ -290,6 +307,11 @@ public class FriendFragment extends Fragment implements FriendPresenter.DataList
 
 	public static FriendFragment newInstance() {
 		return new FriendFragment();
+	}
+
+	@Override
+	public void setPresenter(FriendsContract.Presenter presenter) {
+
 	}
 
 
