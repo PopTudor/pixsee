@@ -41,7 +41,7 @@ public class FriendsActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_contact_master);
 		mComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
 
-		getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, FriendFragment.newInstance()).commit();
+		getSupportFragmentManager().beginTransaction().add(R.id.friendFragmentContainer, FriendFragment.newInstance()).commit();
 	}
 
 	public ActivityComponent getComponent() {

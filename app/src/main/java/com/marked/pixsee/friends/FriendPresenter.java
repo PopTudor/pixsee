@@ -8,7 +8,6 @@ import com.marked.pixsee.friends.commands.FabCommand;
 import com.marked.pixsee.friends.commands.OpenCameraCommand;
 import com.marked.pixsee.friends.data.specifications.GetFriendsSpecification;
 import com.marked.pixsee.friends.data.specifications.GetFriendsStartingWith;
-import com.marked.pixsee.injection.scopes.PerFragment;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -22,14 +21,14 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Tudor Pop on 23-Mar-16.
  */
-@PerFragment
 public class FriendPresenter {
 	private Repository<User> repository;
 
 	private FriendsContract.View mView;
 
-	public FriendPresenter(Repository<User> repository) {
+	public FriendPresenter(FriendsContract.View view , Repository<User> repository) {
 		this.repository = repository;
+		this.mView = view;
 	}
 
 	@Inject
@@ -94,10 +93,6 @@ public class FriendPresenter {
 					           }
 					);
 		}
-	}
-
-	public void setView(FriendsContract.View view) {
-		this.mView = view;
 	}
 
 	public FabCommand getFabCommand() {

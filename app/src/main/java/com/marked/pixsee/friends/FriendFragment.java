@@ -107,7 +107,6 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 				                             .friendModule(new FriendModule(this))
 				                             .build();
 		component.inject(this);
-		component.inject(mPresenter);
 	}
 
 	@Override
@@ -117,7 +116,6 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mFriendsAdapter = new FriendsAdapter(friendItemInteraction);
-		mPresenter.setView(this);
 		mPresenter.loadFriends(true, 50);
 	}
 
