@@ -4,7 +4,6 @@ import android.view.View;
 
 import com.marked.pixsee.data.User;
 import com.marked.pixsee.data.repository.Repository;
-import com.marked.pixsee.data.repository.Specification;
 import com.marked.pixsee.friends.commands.FabCommand;
 import com.marked.pixsee.friends.commands.OpenCameraCommand;
 import com.marked.pixsee.friends.data.specifications.GetFriendsSpecification;
@@ -16,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -44,27 +42,13 @@ public class FriendPresenter {
 	}
 
 	void loadFriends(String text, int limit) {
-		Specification specification = new GetFriendsStartingWith(text, 0, limit);
-		if (text == null || text.isEmpty())
-			specification = new GetFriendsSpecification(0, limit);
-
 		repository.query(new GetFriendsStartingWith(text, 0, limit))
 				.debounce(300, TimeUnit.MILLISECONDS)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Subscriber<List<User>>() {
+				.subscribe(new Action1<List<User>>() {
 					@Override
-					public void onCompleted() {
-
-					}
-
-					@Override
-					public void onError(Throwable e) {
-
-					}
-
-					@Override
-					public void onNext(List<User> users) {
+					public void call(List<User> users) {
 						mView.onFriendsReplace(users);
 					}
 				});

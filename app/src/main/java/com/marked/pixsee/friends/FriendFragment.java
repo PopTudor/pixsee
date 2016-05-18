@@ -83,11 +83,8 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 
 	@Override
 	public void onFriendsReplace(List<User> friends) {
-//		int count = mFriendsAdapter.getItemCount();
 		mFriendsAdapter.setDataSet(friends);
 		mFriendsAdapter.notifyDataSetChanged();
-//		mFriendsAdapter.notifyItemRangeRemoved(0,count);
-//		mFriendsAdapter.notifyItemRangeInserted(0,friends.size());
 	}
 
 	@UiThread
