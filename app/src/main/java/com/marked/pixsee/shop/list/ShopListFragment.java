@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.google.repacked.antlr.v4.runtime.misc.NotNull;
 import com.marked.pixsee.R;
 import com.marked.pixsee.shop.Contract;
-import com.marked.pixsee.shop.SpaceItemDecorator;
+import com.marked.pixsee.commons.SpaceItemDecorator;
 
 import java.util.ArrayList;
 import java.util.List;

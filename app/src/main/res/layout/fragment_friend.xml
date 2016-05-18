@@ -6,34 +6,50 @@
     <data>
         <variable name="viewModel" type="com.marked.pixsee.friends.FriendViewModel"/>
     </data>
+
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/friendsRecyclerview"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:clipToPadding="false"
-            android:visibility="@{viewModel.recyclerViewVisibility}"
+            android:layout_height="wrap_content"
+            >
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            tools:listitem="@layout/item_friend"/>
-        <!--<com.github.clans.fab.FloatingActionMenu-->
-        <!--android:id="@+id/fabMenu"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_gravity="end|bottom"-->
-        <!--android:paddingBottom="20dp"-->
-        <!--android:paddingRight="20dp"-->
-        <!--android:paddingLeft="20dp"-->
-        <!--android:paddingEnd="20dp"-->
-        <!--fab:menu_colorNormal="@color/primary"-->
-        <!--fab:menu_colorPressed="@color/primary_dark"-->
-        <!--fab:menu_fab_label="Invite by email/message"-->
-        <!--fab:menu_colorRipple="@color/primary_dark"-->
-        <!--fab:menu_icon="@drawable/ic_group_add_24dp">-->
-        <!--**************   BUTTONS   ****************-->
+            </android.support.v7.widget.Toolbar>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/friendsRecyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:visibility="@{viewModel.recyclerViewVisibility}"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                tools:listitem="@layout/item_friend"
+                android:paddingBottom="5dp"/>
+            <!--<com.github.clans.fab.FloatingActionMenu-->
+            <!--android:id="@+id/fabMenu"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="end|bottom"-->
+            <!--android:paddingBottom="20dp"-->
+            <!--android:paddingRight="20dp"-->
+            <!--android:paddingLeft="20dp"-->
+            <!--android:paddingEnd="20dp"-->
+            <!--fab:menu_colorNormal="@color/primary"-->
+            <!--fab:menu_colorPressed="@color/primary_dark"-->
+            <!--fab:menu_fab_label="Invite by email/message"-->
+            <!--fab:menu_colorRipple="@color/primary_dark"-->
+            <!--fab:menu_icon="@drawable/ic_group_add_24dp">-->
+            <!--**************   BUTTONS   ****************-->
+
+        </android.support.design.widget.AppBarLayout>
+
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"

@@ -10,20 +10,19 @@
             type="com.marked.pixsee.friends.ItemFriendViewModel"/>
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         style="@style/Base.Widget.AppCompat.ListView"
         android:id="@+id/rootItemFriend"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:orientation="vertical"
+        >
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/friendIconImageView"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center_vertical"
             fresco:actualImageScaleType="fitCenter"
             fresco:placeholderImage="@drawable/ic_account_circle_24dp"
@@ -31,33 +30,22 @@
             fresco:roundAsCircle="true"
             fresco:roundingBorderColor="#fff"
             fresco:roundingBorderWidth="2dp"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/friendNameTextView"
+            style="@style/Base.TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingLeft="16dp"
-            >
-
-            <TextView
-                android:id="@+id/friendNameTextView"
-                style="@style/Base.TextAppearance.AppCompat.Body1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:inputType="textCapWords|textCapSentences|textPersonName"
-                android:singleLine="true"
-                android:text="@{viewModel.name}"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/friendEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.email}"/>
-        </LinearLayout>
-
-    </LinearLayout>
+            android:inputType="textCapWords|textCapSentences|textPersonName"
+            android:singleLine="true"
+            android:text="@{viewModel.name}"
+            android:layout_gravity="center"
+            android:textColor="#ffffff"
+            android:layout_below="@+id/friendIconImageView"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:gravity="center"/>
+    </RelativeLayout>
 </layout>

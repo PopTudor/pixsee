@@ -28,6 +28,7 @@ import com.marked.pixsee.friends.data.FriendRepository;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
 import com.marked.pixsee.friends.di.FriendsComponent;
+import com.marked.pixsee.commons.SpaceItemDecorator;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -128,6 +129,8 @@ public class FriendFragment extends Fragment implements FriendViewModel.DataList
 
 	void setUpRecyclerView() {
 		RecyclerView recyclerView = mBinding.friendsRecyclerview;
+		recyclerView.addItemDecoration(new SpaceItemDecorator(getActivity(),R.dimen.item_spacing_chat));
+		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		recyclerView.setAdapter(mFriendsAdapter);
 		recyclerView.setLayoutManager(mLayoutManager);
 		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

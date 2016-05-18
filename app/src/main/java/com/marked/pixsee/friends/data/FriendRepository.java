@@ -69,9 +69,17 @@ public class FriendRepository implements Repository<User> {
 				cursor.moveToNext();
 			}
 			db.getReadableDatabase().setTransactionSuccessful();
+			db.getReadableDatabase().endTransaction();
 			cursor.close();
 		}
-		return Observable.just(cache);
+		List<User> users = new ArrayList<>();
+		users.add(new User("123", "Pop Tudor", "tudor08pop@yahoo.com", "dea"));
+		users.add(new User("124", "Sima Ioana", "skumpic_ioana@yahoo.com", "asd"));
+		users.add(new User("125", "Popa Cristian", "cristipopa@ymail.com", "dsa"));
+		users.add(new User("126", "Marcel Mirel", "cristipopa@ymail.com", "zxc"));
+		users.add(new User("127", "Milica Ionut", "cristipopa@ymail.com", "cxz"));
+		users.add(new User("128", "Andrei Bogdan", "cristipopa@ymail.com", "xcv"));
+		return Observable.just(users);
 	}
 
 	@Override

@@ -1,9 +1,7 @@
 package com.marked.pixsee.friends;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.injection.components.ActivityComponent;
@@ -30,7 +28,6 @@ import com.marked.pixsee.injection.modules.ActivityModule;
  * to listen for item selections.
  */
 public class FriendsActivity extends AppCompatActivity {
-	private FragmentManager mFragmentManager;
 
 	/**
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -42,14 +39,8 @@ public class FriendsActivity extends AppCompatActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contact_master);
-		mFragmentManager = getSupportFragmentManager();
 		mComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		if (toolbar != null) {
-			toolbar.setTitle(getTitle());
-		}
 		getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, FriendFragment.newInstance()).commit();
 	}
 

@@ -30,12 +30,14 @@ public class DatabaseContract {
 		public static final String COLUMN_TOKEN = FriendConstants.TOKEN;
 
 		public static final String CREATE_TABLE =
-				"CREATE TABLE " + TABLE_NAME + "(" + BaseColumns._ID +
+				"CREATE TABLE " + TABLE_NAME
+						+ "(" + BaseColumns._ID +
 						" INTEGER PRIMARY KEY AUTOINCREMENT," +
 						COLUMN_ID + " TEXT," +
 						COLUMN_NAME + " TEXT," +
 						COLUMN_EMAIL + " TEXT," +
-						COLUMN_TOKEN + " TEXT );";
+						COLUMN_TOKEN + " TEXT "
+						+ ");";
 
 		public static final String DELETE_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME";
 	}
@@ -49,11 +51,14 @@ public class DatabaseContract {
 		public static final String COLUMN_TOKEN = FriendConstants.TOKEN;
 
 		public static final String CREATE_TABLE =
-				" CREATE TABLE " + TABLE_NAME + "(" + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+				" CREATE TABLE " + TABLE_NAME
+						+ "(" +
+						BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
 						+ COLUMN_ID + " TEXT,"
 						+ COLUMN_NAME + " TEXT,"
 						+ COLUMN_EMAIL + " TEXT,"
-						+ COLUMN_TOKEN + " TEXT);";
+						+ COLUMN_TOKEN + " TEXT"
+						+ ");";
 		public static final String DELETE_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME";
 	}
 
@@ -66,16 +71,19 @@ public class DatabaseContract {
 		public static final String COLUMN_DATE = MessageConstants.CREATION_DATE;
 		public static final String COLUMN_TO = "_" + MessageConstants.TO;
 
-		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + BaseColumns._ID +
+		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+				                                          + "("
+				                                          + BaseColumns._ID +
 				                                          " INTEGER PRIMARY KEY AUTOINCREMENT," +
 				                                          COLUMN_ID + " TEXT,"
 				                                          + COLUMN_DATA_BODY + " TEXT,"
 				                                          + COLUMN_TYPE + " INTEGER,"
 				                                          + COLUMN_DATE + " INTEGER,"
 				                                          + COLUMN_TO + " TEXT, FOREIGN KEY( "
-				                                          + COLUMN_TO + " REFERENCES "
+				                                          + COLUMN_TO + ")" + " REFERENCES "
 				                                          + Friend.TABLE_NAME + "("
-				                                          + Friend.COLUMN_ID + ")";
+				                                          + Friend.COLUMN_ID + ")"
+				                                          + ")";
 
 
 		public static final String DELETE_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME";

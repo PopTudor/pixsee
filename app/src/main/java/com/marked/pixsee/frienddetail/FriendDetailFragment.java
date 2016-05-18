@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.marked.pixsee.R;
+import com.marked.pixsee.commons.SpaceItemDecorator;
 import com.marked.pixsee.data.User;
 import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.message.MessageConstants;
@@ -23,7 +24,6 @@ import com.marked.pixsee.data.message.MessageDataset;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.service.GCMListenerService;
 import com.marked.pixsee.utility.GCMConstants;
-import com.marked.pixsee.utility.SpacesItemDecoration;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -175,7 +175,7 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 		mThatUser = getArguments().getParcelable(FriendDetailActivity.EXTRA_CONTACT);
 		messagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.messagesRecyclerView);
 		messagesRecyclerView.setLayoutManager(mLinearLayoutManager);
-		messagesRecyclerView.addItemDecoration(new SpacesItemDecoration(15));
+		messagesRecyclerView.addItemDecoration(new SpaceItemDecorator(15));
 		messagesRecyclerView.setAdapter(mMessageAdapter);
 		return rootView;
 	}

@@ -1,4 +1,4 @@
-package com.marked.pixsee.shop;
+package com.marked.pixsee.commons;
 
 import android.content.Context;
 import android.graphics.Rect;

@@ -2,13 +2,12 @@ package com.marked.pixsee.data.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-
-import org.jetbrains.anko.db.ManagedSQLiteOpenHelper;
+import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by Tudor Pop on 26-Jan-16.
  */
-public class PixyDatabase extends ManagedSQLiteOpenHelper {
+public class PixyDatabase extends SQLiteOpenHelper {
 
 	private PixyDatabase(Context context) {
 		super(context, DatabaseContract.DATABASE_NAME, null, DatabaseContract.DATABASE_VERSION);
