@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.marked.pixsee.data.User;
 import com.marked.pixsee.data.repository.Repository;
 import com.marked.pixsee.data.repository.SQLSpecification;
-import com.marked.pixsee.friends.FriendViewModel;
+import com.marked.pixsee.friends.FriendPresenter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,9 +24,9 @@ import static org.mockito.Mockito.when;
 
 /**
  * Created by Tudor Pop on 16-Mar-16.
- * Unit tests for the implementation of {@link com.marked.pixsee.friends.FriendViewModel}
+ * Unit tests for the implementation of {@link FriendPresenter}
  */
-public class FriendViewModelTest {
+public class FriendPresenterTest {
 	private static List<User> FRIENDS = Lists.newArrayList(new User("user1", "xyz", "xyz@emai.com", "asd"),
 	                                                       new User("user2", "zxc", "zxc@emai.com", "zxc"),
 	                                                       new User("user3", "zxc", "zxc@emai.com", "zxc"),
@@ -36,14 +36,14 @@ public class FriendViewModelTest {
 	@Mock
 	Repository<User>             mRepository;
 	@Mock
-	FriendViewModel.DataListener mDataListener;
+	FriendPresenter.DataListener mDataListener;
 
-	FriendViewModel mViewModel;
+	FriendPresenter mViewModel;
 
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		mViewModel = new FriendViewModel(mRepository);
+		mViewModel = new FriendPresenter(mRepository);
 		mViewModel.setDataListener(mDataListener);
 	}
 

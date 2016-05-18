@@ -11,7 +11,7 @@ import java.util.List;
  * This specifies the contract between the view and the presenter.
  */
 public interface FriendsContract {
-	interface Model {
+	interface Presenter {
 		List<User> getFriends();
 
 		List<User> getFriends(int start);
@@ -21,6 +21,9 @@ public interface FriendsContract {
 		void loadMore(@NotNull int num);
 
 		void clear();
+
+	}
+	interface View{
 
 	}
 }

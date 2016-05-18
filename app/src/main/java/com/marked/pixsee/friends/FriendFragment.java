@@ -1,34 +1,37 @@
 package com.marked.pixsee.friends;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.marked.pixsee.R;
+import com.marked.pixsee.commons.SpaceItemDecorator;
 import com.marked.pixsee.data.User;
-import com.marked.pixsee.databinding.FragmentFriendBinding;
 import com.marked.pixsee.frienddetail.FriendDetailActivity;
 import com.marked.pixsee.friends.data.FriendRepository;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
 import com.marked.pixsee.friends.di.FriendsComponent;
-import com.marked.pixsee.commons.SpaceItemDecorator;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,21 +45,22 @@ import javax.inject.Inject;
  * also supports tablet devices by allowing list items to be given an
  * 'activated' state upon selection. This helps indicate which item is
  * currently being viewed in a [ChatDetailFragment].
- * <p>
- * <p>
+ * <p/>
+ * <p/>
  * Activities containing this fragment MUST implement the [Callbacks]
  * interface.
  */
-public class FriendFragment extends Fragment implements FriendViewModel.DataListener {
+public class FriendFragment extends Fragment implements FriendPresenter.DataListener {
 	public static int REQUEST_INVITE = 11;
 
 	@Inject
 	FriendRepository mRepository;
 
 	@Inject
-	FriendViewModel mViewModel;
+	FriendPresenter mPresenter;
 
-	private FragmentFriendBinding mBinding;
+	private RecyclerView mFriendsRecyclerview;
+
 	private FriendsAdapter mFriendsAdapter;
 	private LinearLayoutManager mLayoutManager;
 
@@ -86,54 +90,59 @@ public class FriendFragment extends Fragment implements FriendViewModel.DataList
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		FriendsComponent component = DaggerFriendsComponent.builder().activityComponent(((FriendsActivity) getActivity()).getComponent()).friendModule(new FriendModule(this))
-		                                                   .build();
+		FriendsComponent component = DaggerFriendsComponent.builder()
+				                             .activityComponent(((FriendsActivity) getActivity()).getComponent())
+				                             .friendModule(new FriendModule(this))
+				                             .build();
 		component.inject(this);
-		component.inject(mViewModel);
+		component.inject(mPresenter);
 	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 		mLayoutManager = new LinearLayoutManager(getActivity());
+		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mFriendsAdapter = new FriendsAdapter(friendItemInteraction);
-		mViewModel.setDataListener(this);
-		mViewModel.loadFriends(true, 50);
+		mPresenter.setDataListener(this);
+		mPresenter.loadFriends(true, 50);
 	}
 
-	public void setupListeners(){
-		mBinding.vuforiaCamera.setOnClickListener(new View.OnClickListener() {
+	public void setupListeners(View rootView) {
+//		mBinding.vuforiaCamera.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mPresenter.getOpenCamera().execute();
+//			}
+//		});
+		rootView.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mViewModel.getOpenCamera().execute();
-			}
-		});
-		mBinding.fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mViewModel.getFabCommand().execute();
+				mPresenter.getFabCommand().execute();
 			}
 		});
 	}
 
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend, container, false);
-		mBinding.setViewModel(mViewModel);
+		View rootView = inflater.inflate(R.layout.fragment_friend, container, false);
+		mFriendsRecyclerview = (RecyclerView) rootView.findViewById(R.id.friendsRecyclerview);
 		setUpRecyclerView();
 		//		setUpFab();
-		setupListeners();
-		return mBinding.getRoot();
+		setupListeners(rootView);
+
+		((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
+
+		return rootView;
 	}
 
-
 	void setUpRecyclerView() {
-		RecyclerView recyclerView = mBinding.friendsRecyclerview;
-		recyclerView.addItemDecoration(new SpaceItemDecorator(getActivity(),R.dimen.item_spacing_chat));
-		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-		recyclerView.setAdapter(mFriendsAdapter);
-		recyclerView.setLayoutManager(mLayoutManager);
-		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+		mFriendsRecyclerview.addItemDecoration(new SpaceItemDecorator(getActivity(), R.dimen.item_spacing_chat));
+		mFriendsRecyclerview.setAdapter(mFriendsAdapter);
+		mFriendsRecyclerview.setLayoutManager(mLayoutManager);
+		mFriendsRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
@@ -141,11 +150,38 @@ public class FriendFragment extends Fragment implements FriendViewModel.DataList
 					int s = mLayoutManager.getChildCount();
 					int x = mLayoutManager.findFirstVisibleItemPosition();
 					if (x + s >= recyclerView.getLayoutManager().getItemCount()) {
-						mViewModel.loadFriends(50);
+						mPresenter.loadFriends(50);
 					}
 				}
 			}
 		});
+	}
+
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu_friends, menu);
+		// Associate searchable configuration with the SearchView
+		SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+		final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+		searchView.setOnQueryTextListener(onQueryTextListener);
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+	private SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
+		@Override
+		public boolean onQueryTextSubmit(String query) {
+
+			return false;
+		}
+
+		@Override
+		public boolean onQueryTextChange(String newText) {
+			return false;
+		}
+	};
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return super.onOptionsItemSelected(item);
 	}
 
 	//	void setUpFab() {
@@ -236,11 +272,6 @@ public class FriendFragment extends Fragment implements FriendViewModel.DataList
             super.onStop()
             mFabMenu.close(false)
         }*/
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.menu_contacts_activity, menu);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
 	public void onDetach() {
 		super.onDetach();
 		// Reset the active callbacks interface to the dummy implementation.

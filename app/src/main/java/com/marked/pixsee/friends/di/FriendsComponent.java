@@ -3,7 +3,7 @@ package com.marked.pixsee.friends.di;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.scopes.PerFragment;
 import com.marked.pixsee.friends.FriendFragment;
-import com.marked.pixsee.friends.FriendViewModel;
+import com.marked.pixsee.friends.FriendPresenter;
 import com.marked.pixsee.friends.FriendsActivity;
 
 import dagger.Component;
@@ -20,5 +20,5 @@ public interface FriendsComponent {
 
 	void inject(FriendsActivity friendsActivity);
 
-	void inject(FriendViewModel viewModel);
+	void inject(FriendPresenter viewModel);
 }

@@ -15,6 +15,20 @@ public final class User implements Parcelable {
 	String email;
 	String token;
 	String password;
+	String cover;
+
+	String icon;
+
+	public User(String userID, String name, String email, String token, String password, String cover, String icon) {
+		this.userID = userID;
+		this.name = name;
+		this.email = email;
+		this.token = token;
+		this.password = password;
+		this.cover = cover;
+		this.icon = icon;
+	}
+
 
 	public User(String userID, String name, String email, String token) {
 		this.userID = userID;
@@ -29,6 +43,16 @@ public final class User implements Parcelable {
 		this.email = parcelIn.readString();
 		this.token = parcelIn.readString();
 		this.password = parcelIn.readString();
+		this.cover = parcelIn.readString();
+		this.icon = parcelIn.readString();
+	}
+
+	public String getCover() {
+		return cover;
+	}
+
+	public String getIcon() {
+		return icon;
 	}
 
 	public User(String userID, String name, String email, String token, String password) {
@@ -63,6 +87,8 @@ public final class User implements Parcelable {
 		dest.writeString(email);
 		dest.writeString(token);
 		dest.writeString(password);
+		dest.writeString(cover);
+		dest.writeString(icon);
 	}
 
 	public void setUserID(String userID) {

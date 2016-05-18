@@ -22,10 +22,10 @@ import rx.functions.Action1;
  * Created by Tudor Pop on 23-Mar-16.
  */
 @PerFragment
-public class FriendViewModel {
+public class FriendPresenter {
 	private Repository<User> repository;
 
-	public FriendViewModel(Repository<User> repository) {
+	public FriendPresenter(Repository<User> repository) {
 		this.repository = repository;
 	}
 

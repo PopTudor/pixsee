@@ -1,51 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootItemFriend"
+    style="@style/Base.Widget.AppCompat.ListView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="vertical"
     >
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.marked.pixsee.friends.ItemFriendViewModel"/>
-    </data>
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/friendIconImageView"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_vertical"
+        fresco:actualImageScaleType="fitCenter"
+        fresco:placeholderImage="@drawable/ic_account_circle_24dp"
+        fresco:placeholderImageScaleType="fitCenter"
+        fresco:roundAsCircle="true"
+        fresco:roundingBorderColor="#fff"
+        fresco:roundingBorderWidth="2dp"/>
 
-    <RelativeLayout
-        style="@style/Base.Widget.AppCompat.ListView"
-        android:id="@+id/rootItemFriend"
+    <TextView
+        android:id="@+id/friendNameTextView"
+        style="@style/Base.TextAppearance.AppCompat.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="vertical"
-        >
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/friendIconImageView"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            fresco:actualImageScaleType="fitCenter"
-            fresco:placeholderImage="@drawable/ic_account_circle_24dp"
-            fresco:placeholderImageScaleType="fitCenter"
-            fresco:roundAsCircle="true"
-            fresco:roundingBorderColor="#fff"
-            fresco:roundingBorderWidth="2dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
-        <TextView
-            android:id="@+id/friendNameTextView"
-            style="@style/Base.TextAppearance.AppCompat.Caption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords|textCapSentences|textPersonName"
-            android:singleLine="true"
-            android:text="@{viewModel.name}"
-            android:layout_gravity="center"
-            android:textColor="#ffffff"
-            android:layout_below="@+id/friendIconImageView"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true"
-            android:gravity="center"/>
-    </RelativeLayout>
-</layout>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/friendIconImageView"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:inputType="textCapWords|textCapSentences|textPersonName"
+        android:singleLine="true"
+        android:text="\@{viewModel.name}"
+        android:textColor="#ffffff"/>
+</RelativeLayout>
