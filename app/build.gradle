@@ -131,8 +131,6 @@ dependencies {
     compile app.rajawali
     compile app.rxPermissions
     compile app.facebook
-    compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
-    compile 'com.github.gabrielemariotti.cards:cardslib-recyclerview:2.1.0'
 
 
     apt app.daggerCompiler

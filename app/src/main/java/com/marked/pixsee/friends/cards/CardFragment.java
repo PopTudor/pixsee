@@ -4,11 +4,18 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
+import com.marked.pixsee.data.User;
+import com.marked.pixsee.data.message.Message;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,12 +26,11 @@ import com.marked.pixsee.R;
  * create an instance of this fragment.
  */
 public class CardFragment extends Fragment implements CardContract.View {
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String ARG_PARAM1 = "param1";
+	private static final String ARG_FRIEND = "param1";
+	private RecyclerView mCardRecyclerView;
+	private CardAdapter mCardAdapter;
 
-	// TODO: Rename and change types of parameters
-	private String mParam1;
+	private User mFriend;
 
 	private OnFragmentInteractionListener mListener;
 	private CardContract.Presenter mPresenter;
@@ -36,11 +42,10 @@ public class CardFragment extends Fragment implements CardContract.View {
 	 * @param friend Friend's messages to show on the screen
 	 * @return A new instance of fragment MessagesFragment.
 	 */
-	// TODO: Rename and change types and number of parameters
-	public static CardFragment newInstance(String friend) {
+	public static CardFragment newInstance(User friend) {
 		CardFragment fragment = new CardFragment();
 		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, friend);
+		args.putParcelable(ARG_FRIEND, friend);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -53,18 +58,27 @@ public class CardFragment extends Fragment implements CardContract.View {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
+			mFriend = getArguments().getParcelable(ARG_FRIEND);
 		}
+		mCardAdapter = new CardAdapter(new ArrayList<Message>(), mPresenter);
+		mPresenter.loadMore(10, mFriend.getUserID());
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_messages, container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_messages, container, false);
+		mCardRecyclerView = (RecyclerView) rootView.findViewById(R.id.cardRecyclerView);
+		mCardRecyclerView.setAdapter(mCardAdapter);
+		mCardRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+		return rootView;
 	}
 
-	// TODO: Rename method, update argument and hook method into UI event
+	@Override
+	public void onStart() {
+		super.onStart();
+		mPresenter.start();
+	}
+
 	public void onButtonPressed(Uri uri) {
 		if (mListener != null) {
 			mListener.onFragmentInteraction(uri);
@@ -91,6 +105,12 @@ public class CardFragment extends Fragment implements CardContract.View {
 	@Override
 	public void setPresenter(CardContract.Presenter presenter) {
 		mPresenter = presenter;
+	}
+
+	@Override
+	public void showCards(List<Message> cards) {
+		mCardAdapter.setDataset(cards);
+		mCardAdapter.notifyDataSetChanged();
 	}
 
 	/**

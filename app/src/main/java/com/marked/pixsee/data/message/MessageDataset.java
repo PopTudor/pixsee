@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.marked.pixsee.data.User;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.database.PixyDatabase;
+import com.marked.pixsee.data.mapper.MessageToCVMapper;
 
 import org.json.JSONArray;
 
@@ -19,6 +20,7 @@ import java.util.List;
  */
 public class MessageDataset extends ArrayList<Message> {
 	private Context mContext;
+	private MessageToCVMapper messageToCVMapper = new MessageToCVMapper();
 
 	public MessageDataset(Context mContext) {
 		this.mContext = mContext;
@@ -29,7 +31,7 @@ public class MessageDataset extends ArrayList<Message> {
 		if (element.getMessageType() != MessageConstants.MessageType.TYPING) /* if the message is a 'typing' message, then don't add it to the database */
 			PixyDatabase.getInstance(mContext)
 					.getWritableDatabase()
-					.insertWithOnConflict(DatabaseContract.Message.TABLE_NAME, null, element.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
+					.insertWithOnConflict(DatabaseContract.Message.TABLE_NAME, null, messageToCVMapper.map(element), SQLiteDatabase.CONFLICT_IGNORE);
 		return super.add(element);
 	}
 
@@ -40,7 +42,7 @@ public class MessageDataset extends ArrayList<Message> {
 			SQLiteDatabase database = PixyDatabase.getInstance(mContext).getWritableDatabase();
 			database.beginTransaction();
 			for (Message message : collection)
-				database.insertWithOnConflict(DatabaseContract.Message.TABLE_NAME, null, message.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
+				database.insertWithOnConflict(DatabaseContract.Message.TABLE_NAME, null, messageToCVMapper.map(message), SQLiteDatabase.CONFLICT_IGNORE);
 			database.endTransaction();
 			database.setTransactionSuccessful();
 		}
@@ -51,7 +53,7 @@ public class MessageDataset extends ArrayList<Message> {
 	public Message set(int index, Message element) {
 		PixyDatabase.getInstance(mContext)
 				.getWritableDatabase()
-				.update(DatabaseContract.Message.TABLE_NAME, element.toContentValues(), DatabaseContract.Message.COLUMN_ID + " = ?",
+				.update(DatabaseContract.Message.TABLE_NAME, messageToCVMapper.map(element), DatabaseContract.Message.COLUMN_ID + " = ?",
 						new String[]{element.getId()});
 		return super.set(index, element);
 	}

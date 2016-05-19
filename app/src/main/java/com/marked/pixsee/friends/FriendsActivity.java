@@ -9,7 +9,7 @@ import com.marked.pixsee.data.User;
 import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.friends.cards.CardFragment;
 import com.marked.pixsee.friends.cards.CardPresenter;
-import com.marked.pixsee.friends.cards.CardRepository;
+import com.marked.pixsee.data.message.MessageRepository;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
 import com.marked.pixsee.friends.friends.FriendFragment;
@@ -74,8 +74,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendFragment
 
 	@Override
 	public void onFriendClick(User friend) {
-		CardFragment fragment = CardFragment.newInstance(friend.getUserID());
-		fragment.setPresenter(new CardPresenter(fragment, new CardRepository(PixyDatabase.getInstance(this))));
+		CardFragment fragment = CardFragment.newInstance(friend);
+		fragment.setPresenter(new CardPresenter(fragment, new MessageRepository(PixyDatabase.getInstance(this))));
 		getSupportFragmentManager().beginTransaction().replace(R.id.friendFragmentContainer, fragment).commit();
 	}
 	/* // uncomment this when you add FloatingActionMenu
