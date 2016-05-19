@@ -71,10 +71,10 @@ android {
     productFlavors {
         mock {
             applicationIdSuffix = ".mock"
-            minSdkVersion 21
+            minSdkVersion 16
         }
         prod {
-            minSdkVersion 21
+            minSdkVersion 16
         }
     }
     // Remove mockRelease as it's not needed.
@@ -108,16 +108,13 @@ dependencies {
     }
 
     compile app.supportAppcompat
-    compile app.ankoSQL
     compile app.gcmService
-    compile app.appInvitesService
     compile app.visionService
     compile app.supportRecyclerView
     compile app.supportDesign
     compile app.chatMessageView
     compile app.dilatingProgressBar
     compile app.fab
-//    compile app.sideMenu
     compile app.fresco
     compile app.frescoImgPipeline
     compile app.rxAndroid

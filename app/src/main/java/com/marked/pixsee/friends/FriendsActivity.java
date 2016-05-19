@@ -3,6 +3,7 @@ package com.marked.pixsee.friends;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.User;
@@ -10,6 +11,7 @@ import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.friends.cards.CardFragment;
 import com.marked.pixsee.friends.cards.CardPresenter;
 import com.marked.pixsee.data.message.MessageRepository;
+import com.marked.pixsee.friends.commands.FabCommand;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
 import com.marked.pixsee.friends.friends.FriendFragment;
@@ -56,7 +58,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendFragment
 		FriendFragment friendFragment = FriendFragment.newInstance();
 
 		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
-
 		DaggerFriendsComponent.builder()
 				.activityComponent(activityComponent)
 				.friendModule(new FriendModule(friendFragment))
@@ -64,6 +65,12 @@ public class FriendsActivity extends AppCompatActivity implements FriendFragment
 
 		getSupportFragmentManager().beginTransaction().add(R.id.friendFragmentContainer, friendFragment).commit();
 //		getSupportFragmentManager().beginTransaction().add(R.id.messageFragmentContainer, cardFragment).commit();
+		findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				friendPresenter.execute(new FabCommand(FriendsActivity.this));
+			}
+		});
 	}
 
 

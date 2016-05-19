@@ -23,7 +23,7 @@ allprojects {
 
 ext {
     // Sdk and tools
-    minSdkVersion = 21
+    minSdkVersion = 16
     targetSdkVersion = 23
     compileSdkVersion = 23
     buildToolsVersion = '23.0.3'
@@ -43,8 +43,6 @@ ext {
     retrofitVersion = '2.0.0-beta4'
     playServicesVersion = '8.4.0'
     scaleImageVersion = '3.4.1'
-    ankoSQLVersion = '0.8.2'
-    sidemenuVersion = '1.0'
     glassFishVersion = '10.0-b28'
     rajawali = '1.1.505-SNAPSHOT@aar'
     rxPermissions = '0.7.0@aar'
@@ -79,10 +77,7 @@ ext {
             okHttpLogger         : "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
             subSamplingScaleImage: "com.davemorrissey.labs:subsampling-scale-image-view:${scaleImageVersion}",
             gcmService           : "com.google.android.gms:play-services-gcm:${playServicesVersion}",
-            appInvitesService    : "com.google.android.gms:play-services-appinvite:${playServicesVersion}",
             visionService        : "com.google.android.gms:play-services-vision:${playServicesVersion}",
-            ankoSQL              : "org.jetbrains.anko:anko-sqlite:${ankoSQLVersion}",
-            sideMenu             : "com.yalantis:sidemenu:${sidemenuVersion}",
             glassFishAnnotations : "org.glassfish:javax.annotation:${glassFishVersion}",
             rajawali             : "org.rajawali3d:rajawali:${rajawali}",
             chatMessageView      : "me.himanshusoni.chatmessageview:chat-message-view:${messageViewVersion}",

@@ -23,11 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.marked.pixsee.R;
 import com.marked.pixsee.commons.SpaceItemDecorator;
 import com.marked.pixsee.data.User;
-import com.marked.pixsee.friends.commands.FabCommand;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -115,12 +113,6 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 //				mPresenter.getOpenCamera().execute();
 //			}
 //		});
-		rootView.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mPresenter.execute(new FabCommand(getActivity()));
-			}
-		});
 	}
 
 
@@ -210,8 +202,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 				// (one for each contact select by the user). You can use these for analytics
 				// as the ID will be consistent on the sending and receiving devices.
 				if (data != null) {
-					String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-					Toast.makeText(getActivity(), "got invitations " + ids.length, Toast.LENGTH_SHORT).show();
+//					Toast.makeText(getActivity(), "got invitations " + ids.length, Toast.LENGTH_SHORT).show();
 				}
 			} else {
 				// Sending failed or it was canceled, show failure message to the user

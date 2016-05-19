@@ -2,11 +2,10 @@ package com.marked.pixsee.friends.commands;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 
-import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.facebook.share.model.AppInviteContent;
+import com.facebook.share.widget.AppInviteDialog;
 import com.marked.pixsee.commands.ClickCommand;
-import com.marked.pixsee.friends.friends.FriendFragment;
 
 import javax.inject.Inject;
 
@@ -14,19 +13,26 @@ import javax.inject.Inject;
  * Created by Tudor Pop on 26-Mar-16.
  */
 public class FabCommand extends ClickCommand {
-
+	Context context;
 	@Inject
 	public FabCommand(Context context) {
 		super(context);
+		this.context = context;
 	}
 
 	@Override
 	public void execute() {
-		Intent intent = new AppInviteInvitation.IntentBuilder("Invite more friends").setMessage("Check out this cool app !")
-		                                                                            //.setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
-		                                                                            //.setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
-		                                                                            //.setCallToActionText(getString(R.string.invitation_cta))
-		                                                                            .build();
-		((Activity) mContext).startActivityForResult(intent, FriendFragment.REQUEST_INVITE);
+		String appLinkUrl, previewImageUrl;
+
+		appLinkUrl = "https://fb.me/1707374479479383";
+		previewImageUrl = "https://www.mydomain.com/my_invite_image.jpg";
+
+		if (AppInviteDialog.canShow()) {
+			AppInviteContent content = new AppInviteContent.Builder()
+					                           .setApplinkUrl(appLinkUrl)
+					                           .setPreviewImageUrl(previewImageUrl)
+					                           .build();
+			AppInviteDialog.show((Activity) context, content);
+		}
 	}
 }

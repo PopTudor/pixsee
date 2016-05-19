@@ -19,7 +19,7 @@ import org.rajawali3d.view.TextureView;
 
 import java.io.IOException;
 
-class CameraPreview extends ViewGroup {
+public class CameraPreview extends ViewGroup {
 	private static final String TAG = "CameraSourcePreview";
 
 	private Context mContext;
