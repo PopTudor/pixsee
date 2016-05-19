@@ -45,22 +45,7 @@ public class CardFragment extends Fragment implements CardContract.View {
 		return fragment;
 	}
 
-	/**
-	 * Use this factory method to create a new instance of
-	 * this fragment using the provided parameters.
-	 *
-	 * @param param1 Parameter 1.
-	 * @param param2 Parameter 2.
-	 * @return A new instance of fragment MessagesFragment.
-	 */
-	// TODO: Rename and change types and number of parameters
-	public static CardFragment newInstance(String param1, String param2) {
-		CardFragment fragment = new CardFragment();
-		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, param1);
-		fragment.setArguments(args);
-		return fragment;
-	}	public CardFragment() {
+	public CardFragment() {
 		// Required empty public constructor
 	}
 
