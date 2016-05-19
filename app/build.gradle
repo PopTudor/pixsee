@@ -131,6 +131,9 @@ dependencies {
     compile app.rajawali
     compile app.rxPermissions
     compile app.facebook
+    compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
+    compile 'com.github.gabrielemariotti.cards:cardslib-recyclerview:2.1.0'
+
 
     apt app.daggerCompiler
     provided app.daggerCompiler
@@ -148,7 +151,6 @@ dependencies {
     androidTestCompile test.supportAnnotation
     androidTestCompile test.runner
     androidTestCompile test.rules
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
 }
 
 

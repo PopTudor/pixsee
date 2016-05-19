@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends;
+package com.marked.pixsee.friends.friends;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;

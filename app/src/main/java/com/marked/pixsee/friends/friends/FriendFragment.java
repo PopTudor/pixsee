@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends;
+package com.marked.pixsee.friends.friends;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -27,17 +27,11 @@ import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.marked.pixsee.R;
 import com.marked.pixsee.commons.SpaceItemDecorator;
 import com.marked.pixsee.data.User;
-import com.marked.pixsee.frienddetail.FriendDetailActivity;
-import com.marked.pixsee.friends.data.FriendRepository;
-import com.marked.pixsee.friends.di.DaggerFriendsComponent;
-import com.marked.pixsee.friends.di.FriendModule;
-import com.marked.pixsee.friends.di.FriendsComponent;
+import com.marked.pixsee.friends.commands.FabCommand;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 
 /**
@@ -53,27 +47,18 @@ import javax.inject.Inject;
 public class FriendFragment extends Fragment implements FriendsContract.View {
 	public static int REQUEST_INVITE = 11;
 
-	@Inject
-	FriendRepository mRepository;
-
-	@Inject
-	FriendPresenter mPresenter;
+	private FriendsContract.Presenter mPresenter;
 
 	private RecyclerView mFriendsRecyclerview;
-
 	private FriendsAdapter mFriendsAdapter;
 	private LinearLayoutManager mLayoutManager;
 
-	//	lateinit private var mFabMenu: FloatingActionMenu
+	/**
+	 * Used to open a friend's cards collection
+	 */
+	private FriendFragmentInteractionListener mCallback;
 
-	public FriendItemListener friendItemInteraction = new FriendItemListener() {
-		@Override
-		public void onFriendClick(User friend) {
-			Intent intent = new Intent(getActivity(), FriendDetailActivity.class);
-			intent.putExtra(FriendDetailActivity.EXTRA_CONTACT, friend);
-			getActivity().startActivity(intent);
-		}
-	};
+	//	lateinit private var mFabMenu: FloatingActionMenu
 
 	@Override
 	public void setRecyclerViewVisibility(int viewVisibility) {
@@ -81,6 +66,10 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 			mFriendsRecyclerview.setVisibility(viewVisibility);
 	}
 
+	/**
+	 * Used when searching a friend with the query menu
+	 * @param friends the found friends that correspond to the query
+	 */
 	@Override
 	public void onFriendsReplace(List<User> friends) {
 		mFriendsAdapter.setDataSet(friends);
@@ -102,11 +91,11 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		FriendsComponent component = DaggerFriendsComponent.builder()
-				                             .activityComponent(((FriendsActivity) getActivity()).getComponent())
-				                             .friendModule(new FriendModule(this))
-				                             .build();
-		component.inject(this);
+		try {
+			mCallback = (FriendFragmentInteractionListener) context;
+		}catch (ClassCastException e){
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -115,8 +104,8 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 		setHasOptionsMenu(true);
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-		mFriendsAdapter = new FriendsAdapter(friendItemInteraction);
-		mPresenter.loadFriends(true, 50);
+		mFriendsAdapter = new FriendsAdapter(mCallback);
+		mPresenter.loadMore(true, 50);
 	}
 
 	public void setupListeners(View rootView) {
@@ -129,7 +118,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 		rootView.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mPresenter.getFabCommand().execute();
+				mPresenter.execute(new FabCommand(getActivity()));
 			}
 		});
 	}
@@ -160,7 +149,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 					int s = mLayoutManager.getChildCount();
 					int x = mLayoutManager.findFirstVisibleItemPosition();
 					if (x + s >= recyclerView.getLayoutManager().getItemCount()) {
-						mPresenter.loadFriends(50);
+						mPresenter.loadMore(50);
 					}
 				}
 			}
@@ -186,7 +175,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 
 		@Override
 		public boolean onQueryTextChange(String newText) {
-			mPresenter.loadFriends(newText, 10);
+			mPresenter.loadMore(newText, 10);
 			return false;
 		}
 	};
@@ -306,11 +295,11 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 
 	@Override
 	public void setPresenter(FriendsContract.Presenter presenter) {
-
+		mPresenter = presenter;
 	}
 
 
-	public interface FriendItemListener {
+	public interface FriendFragmentInteractionListener {
 		void onFriendClick(User friend);
 	}
 }

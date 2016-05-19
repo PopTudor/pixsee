@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.marked.pixsee.commands.ClickCommand;
-import com.marked.pixsee.friends.FriendFragment;
+import com.marked.pixsee.friends.friends.FriendFragment;
 
 import javax.inject.Inject;
 

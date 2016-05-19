@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends;
+package com.marked.pixsee.friends.friends;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,10 +21,10 @@ import static com.facebook.common.internal.Preconditions.checkNotNull;
  */
 class FriendsAdapter extends RecyclerView.Adapter<FriendVH> {
 	private List<User> mDataSet;
-	private FriendFragment.FriendItemListener friendItemListener;
+	private FriendFragment.FriendFragmentInteractionListener friendFragmentInteractionListener;
 
-	FriendsAdapter(@NotNull FriendFragment.FriendItemListener friendItemListener) {
-		this.friendItemListener = checkNotNull(friendItemListener);
+	FriendsAdapter(@NotNull FriendFragment.FriendFragmentInteractionListener friendFragmentInteractionListener) {
+		this.friendFragmentInteractionListener = checkNotNull(friendFragmentInteractionListener);
 		mDataSet= new ArrayList<>();
 	}
 
@@ -50,7 +50,7 @@ class FriendsAdapter extends RecyclerView.Adapter<FriendVH> {
 				// itemView is a public member that points to the root element of the contactHolder (in the layout)
 				// TODO: 03-Dec-15 send contact detail from here to ContactDetailActivity
 				// send the clicked contact to detail activity
-				friendItemListener.onFriendClick(friend);
+				friendFragmentInteractionListener.onFriendClick(friend);
 			}
 		});
 	}

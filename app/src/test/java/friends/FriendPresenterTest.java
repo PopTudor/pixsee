@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import com.marked.pixsee.data.User;
 import com.marked.pixsee.data.repository.Repository;
 import com.marked.pixsee.data.repository.SQLSpecification;
-import com.marked.pixsee.friends.FriendPresenter;
-import com.marked.pixsee.friends.FriendsContract;
+import com.marked.pixsee.friends.friends.FriendPresenter;
+import com.marked.pixsee.friends.friends.FriendsContract;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,37 +38,36 @@ public class FriendPresenterTest {
 	@Mock
 	FriendsContract.View mDataListener;
 
-	FriendPresenter mViewModel;
+	FriendPresenter mPresenter;
 
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		mViewModel = new FriendPresenter(mRepository);
-		mViewModel.setView(mDataListener);
+		mPresenter = new FriendPresenter(mDataListener,mRepository);
 	}
 
 	@Test
 	public void testLoadFriendsForced() throws Exception {
 		when(mRepository.query(any(SQLSpecification.class))).thenReturn(Observable.from(FRIENDS).take(2).toList());
-		mViewModel.loadFriends(true, 2);
+		mPresenter.loadMore(true, 2);
 		verify(mDataListener).onFriendsInsert(FRIENDS.subList(0, 2), 0, FRIENDS.size() / 2); /* callback got triggered */
-		assertEquals(2, mViewModel.getSize());
+		assertEquals(2, mPresenter.getSize());
 	}
 
 
 	@Test
 	public void testLoadFriendsShouldAppend() throws Exception {
 		when(mRepository.query(any(SQLSpecification.class))).thenReturn(Observable.just(FRIENDS.subList(0, 2))).thenReturn(Observable.just(FRIENDS));
-		mViewModel.loadFriends(true, 2);
+		mPresenter.loadMore(true, 2);
 		
 		verify(mDataListener).onFriendsInsert(FRIENDS.subList(0, 2), 0, 2); /* load only 2 items */
-		assertEquals(2, mViewModel.getSize());
+		assertEquals(2, mPresenter.getSize());
 		/* add friends to the already loaded list */
-		mViewModel.loadFriends(false, 2);
+		mPresenter.loadMore(false, 2);
 		// load another 2 items, starting with an offset of 2
 		//		verify(mDataListener).onFriendsLoaded(FRIENDS.subList(2, 4), 2, 2);
 		verify(mDataListener).onFriendsInsert(FRIENDS, 2, 2);
-		assertEquals(6, mViewModel.getSize());
+		assertEquals(6, mPresenter.getSize());
 		verify(mDataListener).setRecyclerViewVisibility(VISIBLE);
 	}
 }

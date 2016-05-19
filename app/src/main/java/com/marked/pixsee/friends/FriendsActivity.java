@@ -1,12 +1,23 @@
 package com.marked.pixsee.friends;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.marked.pixsee.R;
+import com.marked.pixsee.data.User;
+import com.marked.pixsee.friends.cards.CardFragment;
+import com.marked.pixsee.friends.cards.CardPresenter;
+import com.marked.pixsee.friends.di.DaggerFriendsComponent;
+import com.marked.pixsee.friends.di.FriendModule;
+import com.marked.pixsee.friends.di.FriendsComponent;
+import com.marked.pixsee.friends.friends.FriendFragment;
+import com.marked.pixsee.friends.friends.FriendPresenter;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
+
+import javax.inject.Inject;
 
 
 /**
@@ -27,25 +38,47 @@ import com.marked.pixsee.injection.modules.ActivityModule;
  * [FriendFragment.Callbacks] interface
  * to listen for item selections.
  */
-public class FriendsActivity extends AppCompatActivity {
+public class FriendsActivity extends AppCompatActivity implements FriendFragment.FriendFragmentInteractionListener,CardFragment
+		                                                                                                                   .OnFragmentInteractionListener{
 
 	/**
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
 	 * device.
 	 */
 	private boolean mTwoPane = false;
+	@Inject
+	FriendPresenter friendPresenter;
+	@Inject
+	CardPresenter cardPresenter;
 
-	private ActivityComponent mComponent;
+	private FriendsComponent mComponent;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contact_master);
-		mComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
+		FriendFragment friendFragment = FriendFragment.newInstance();
+		CardFragment cardFragment = CardFragment.newInstance("");
 
-		getSupportFragmentManager().beginTransaction().add(R.id.friendFragmentContainer, FriendFragment.newInstance()).commit();
+//		mComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
+		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build();
+		mComponent = DaggerFriendsComponent.builder()
+				             .activityComponent(activityComponent)
+				             .friendModule(new FriendModule(friendFragment, cardFragment))
+				             .build();
+		mComponent.inject(this);
+
+		getSupportFragmentManager().beginTransaction().add(R.id.friendFragmentContainer, friendFragment).commit();
+		getSupportFragmentManager().beginTransaction().add(R.id.messageFragmentContainer, cardFragment).commit();
 	}
 
-	public ActivityComponent getComponent() {
-		return mComponent;
+
+	@Override
+	public void onFragmentInteraction(Uri uri) {
+
+	}
+
+	@Override
+	public void onFriendClick(User friend) {
+
 	}
 	/* // uncomment this when you add FloatingActionMenu
 	override fun onBackPressed() {
