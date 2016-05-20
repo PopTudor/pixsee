@@ -6,7 +6,7 @@ import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.User;
 import com.marked.pixsee.friends.commands.FabCommand;
 import com.marked.pixsee.friends.commands.OpenCameraCommand;
-import com.marked.pixsee.friends.data.FriendsDatasource;
+import com.marked.pixsee.friends.friends.data.FriendsDatasource;
 
 import org.jetbrains.annotations.NotNull;
 

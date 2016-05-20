@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.data;
+package com.marked.pixsee.friends.friends.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -59,7 +59,7 @@ public class FriendsLocalDatasource implements FriendsDatasource {
 
 	@Override
 	public void saveUser(@NonNull User user) {
-		db.getWritableDatabase().update(TABLE_NAME, userToCvMapper.map(user), DatabaseContract.Friend.COLUMN_ID + " = ?", new String[]{user.getUserID()});
+		db.getWritableDatabase().insertWithOnConflict(TABLE_NAME, null,userToCvMapper.map(user),SQLiteDatabase.CONFLICT_REPLACE);
 	}
 
 	@Override

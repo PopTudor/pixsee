@@ -4,9 +4,9 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 
 import com.marked.pixsee.data.database.PixyDatabase;
-import com.marked.pixsee.friends.data.FriendRepository;
-import com.marked.pixsee.friends.data.FriendsLocalDatasource;
-import com.marked.pixsee.friends.data.FriendsRemoteDatasource;
+import com.marked.pixsee.friends.friends.data.FriendRepository;
+import com.marked.pixsee.friends.friends.data.FriendsLocalDatasource;
+import com.marked.pixsee.friends.friends.data.FriendsRemoteDatasource;
 import com.marked.pixsee.friends.friends.FriendPresenter;
 import com.marked.pixsee.friends.friends.FriendsContract;
 import com.marked.pixsee.injection.scopes.PerFragment;

@@ -39,5 +39,7 @@ public interface CardContract {
 
 	interface View extends BaseView<Presenter> {
 		void showCards(List<Message> cards);
+
+		void showNoCards();
 	}
 }

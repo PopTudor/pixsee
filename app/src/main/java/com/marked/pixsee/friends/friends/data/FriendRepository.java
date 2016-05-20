@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.data;
+package com.marked.pixsee.friends.friends.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -25,14 +25,14 @@ import rx.functions.Func1;
  * Singleton class used to keep all the friends of the user
  */
 public class FriendRepository implements FriendsDatasource {
-	private FriendsDatasource localFriendsDatasource;
-	private FriendsDatasource remoteFriendsDatasource;
+	private FriendsDatasource disk;
+	private FriendsDatasource network;
 	final List<User> cache = new ArrayList<>();
 	private boolean dirtyCache;
 
-	public FriendRepository(@NotNull FriendsDatasource localFriendsDatasource, @NotNull FriendsDatasource remoteFriendsDatasource) {
-		this.localFriendsDatasource = localFriendsDatasource;
-		this.remoteFriendsDatasource = remoteFriendsDatasource;
+	public FriendRepository(@NotNull FriendsDatasource disk, @NotNull FriendsDatasource network) {
+		this.disk = disk;
+		this.network = network;
 	}
 
 	private Mapper<Cursor, User> cursorToUserMapper = new CursorToUserMapper();
@@ -52,7 +52,7 @@ public class FriendRepository implements FriendsDatasource {
 			return Observable.just(cache);
 
 		// Query the local storage if available. If not, query the network.
-		Observable<List<User>> local = localFriendsDatasource.getUsers()
+		Observable<List<User>> local = disk.getUsers()
 				.doOnNext(new Action1<List<User>>() {
 					@Override
 					public void call(List<User> users) {
@@ -60,7 +60,8 @@ public class FriendRepository implements FriendsDatasource {
 						cache.addAll(users);
 					}
 				});
-		Observable<List<User>> remote =remoteFriendsDatasource.getUsers()
+
+		Observable<List<User>> remote = network.getUsers()
 				.flatMap(new Func1<List<User>, Observable<User>>() {
 					@Override
 					public Observable<User> call(List<User> users) {
@@ -70,7 +71,7 @@ public class FriendRepository implements FriendsDatasource {
 				.doOnNext(new Action1<User>() {
 					@Override
 					public void call(User user) {
-						localFriendsDatasource.saveUser(user);
+						disk.saveUser(user);
 						cache.clear();
 						cache.add(user);
 					}
@@ -81,15 +82,16 @@ public class FriendRepository implements FriendsDatasource {
 						dirtyCache = false;
 					}
 				}).toList();
-
-//		return Observable.concat(Observable.from(cache).toList(), localTasks).first();
-		return Observable.concat(local,remote).first();
+		if (cache.size()==0)
+			return remote;
+		else
+			return local;
 	}
 
 	@Override
 	public void saveUser(@NonNull List<User> users) {
-		localFriendsDatasource.saveUser(users);
-		remoteFriendsDatasource.saveUser(users);
+		disk.saveUser(users);
+		network.saveUser(users);
 		cache.addAll(users);
 	}
 
@@ -100,8 +102,8 @@ public class FriendRepository implements FriendsDatasource {
 
 	@Override
 	public void saveUser(@NonNull User item) {
-		remoteFriendsDatasource.saveUser(item);
-		localFriendsDatasource.saveUser(item);
+		network.saveUser(item);
+		disk.saveUser(item);
 		cache.set(cache.indexOf(item), item);
 	}
 
@@ -117,8 +119,8 @@ public class FriendRepository implements FriendsDatasource {
 
 	@Override
 	public void deleteUsers(@NonNull User userId) {
-		localFriendsDatasource.deleteUsers(userId);
-		remoteFriendsDatasource.deleteUsers(userId);
+		disk.deleteUsers(userId);
+		network.deleteUsers(userId);
 	}
 //	fun JSONArray.contactListfromJSONArray(startingIndex:Int=0):List<User>{
 //			                                                                      val contacts=ArrayList<User>()
