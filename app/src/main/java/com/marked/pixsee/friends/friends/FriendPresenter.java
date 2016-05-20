@@ -4,11 +4,9 @@ import android.view.View;
 
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.User;
-import com.marked.pixsee.data.repository.Repository;
 import com.marked.pixsee.friends.commands.FabCommand;
 import com.marked.pixsee.friends.commands.OpenCameraCommand;
-import com.marked.pixsee.friends.data.specifications.GetFriendsSpecification;
-import com.marked.pixsee.friends.data.specifications.GetFriendsStartingWith;
+import com.marked.pixsee.friends.data.FriendsDatasource;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -25,11 +24,11 @@ import rx.schedulers.Schedulers;
  * Created by Tudor Pop on 23-Mar-16.
  */
 public class FriendPresenter implements FriendsContract.Presenter {
-	private Repository<User> repository;
+	private FriendsDatasource repository;
 	private FriendsContract.View mView;
 
 	@Inject
-	public FriendPresenter(FriendsContract.View view, Repository<User> repository) {
+	public FriendPresenter(FriendsContract.View view, FriendsDatasource repository) {
 		this.repository = repository;
 		this.mView = view;
 		this.mView.setPresenter(this);
@@ -42,7 +41,7 @@ public class FriendPresenter implements FriendsContract.Presenter {
 
 	@Override
 	public void loadMore(String text, int limit) {
-		repository.query(new GetFriendsStartingWith(text, 0, limit))
+		repository.getUsers()
 				.debounce(300, TimeUnit.MILLISECONDS)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
@@ -69,19 +68,26 @@ public class FriendPresenter implements FriendsContract.Presenter {
 //		repository.add(new User("127", "Milica Ionut", "cristipopa@ymail.com", "cxz"));
 //		repository.add(new User("128", "Andrei Bogdan", "cristipopa@ymail.com", "xcv"));
 		if (forceUpdate) {
-			repository.query(new GetFriendsSpecification(0, limit))
+			final Subscription subscription = repository.getUsers()
+													  .observeOn(AndroidSchedulers.mainThread())
 					.subscribe(new Action1<List<User>>() {
 						           @Override
 						           public void call(List<User> users) {
-							           if (users.size() > 0)
+							           if (users.size() > 0) {
 								           mView.setRecyclerViewVisibility(View.VISIBLE);
-							           mView.onFriendsInsert(users, 0, users.size());
-							           size = users.size();
+								           mView.onFriendsInsert(users, 0, users.size());
+								           size = users.size();
+							           }
 						           }
 					           }
-					).unsubscribe();
+							, new Action1<Throwable>() {
+								@Override
+								public void call(Throwable throwable) {
+									mView.showNoFriends();
+								}
+							});
 		} else {
-			repository.query(new GetFriendsSpecification(size, limit))
+			repository.getUsers()
 					//                    .flatMap { Observable.from(it) }
 					//                    .skip(size)
 					//                    .take(limit) /* take unsubscribes automatically */

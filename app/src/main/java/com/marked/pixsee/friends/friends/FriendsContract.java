@@ -43,5 +43,6 @@ public interface FriendsContract {
 		 * @param friend The [User] to show details of
 		 */
 		void showFriendDetailUI(User friend);
+		void showNoFriends();
 	}
 }

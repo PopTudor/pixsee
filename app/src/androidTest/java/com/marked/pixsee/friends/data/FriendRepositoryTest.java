@@ -2,6 +2,7 @@ package com.marked.pixsee.friends.data;
 
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
@@ -24,17 +25,19 @@ public class FriendRepositoryTest {
 	Context context;
 	PixyDatabase pixydb;
 
-    @Before
-    void setupViewModel() {
-        context = InstrumentationRegistry.getTargetContext();
-	    pixydb = PixyDatabase.getInstance(context);
-	    friendRepository = new FriendRepository(pixydb);
-    }
+	@Before
+	void setupViewModel() {
+		context = InstrumentationRegistry.getTargetContext();
+		pixydb = PixyDatabase.getInstance(context);
+		FriendsLocalDatasource friendsLocalDatasource = new FriendsLocalDatasource(pixydb);
+		FriendsRemoteDatasource friendsRemoteDatasource = new FriendsRemoteDatasource(PreferenceManager.getDefaultSharedPreferences(context));
+		friendRepository = new FriendRepository(friendsLocalDatasource, friendsRemoteDatasource);
+	}
 
-    @Test
-    void testLength() {
+	@Test
+	void testLength() {
 //        Mockito.`when`(pixydb.readableDatabase.select(DatabaseContract.Friend.TABLE_NAME)).thenReturn(selectQueryBuilder)
 //        Mockito.`when`(pixydb.readableDatabase.select(DatabaseContract.Friend.TABLE_NAME).exec { count }).thenReturn(0)
-	    Assert.assertEquals(0, friendRepository.length());
-    }
+		Assert.assertEquals(0, friendRepository.length());
+	}
 }

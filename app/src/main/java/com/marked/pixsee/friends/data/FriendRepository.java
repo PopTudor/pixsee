@@ -2,18 +2,12 @@ package com.marked.pixsee.friends.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import com.marked.pixsee.data.User;
-import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.mapper.CursorToUserMapper;
 import com.marked.pixsee.data.mapper.Mapper;
 import com.marked.pixsee.data.mapper.UserToCvMapper;
-import com.marked.pixsee.data.repository.Repository;
-import com.marked.pixsee.data.repository.SQLSpecification;
-import com.marked.pixsee.data.repository.Specification;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,18 +15,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-
-import static com.marked.pixsee.data.database.DatabaseContract.Friend.TABLE_NAME;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 
 /**
  * Created by Tudor Pop on 12-Dec-15.
  * Singleton class used to keep all the friends of the user
  */
-public class FriendRepository implements Repository<User> {
-	private PixyDatabase db;
-	public FriendRepository(PixyDatabase db) {
-		this.db = db;
+public class FriendRepository implements FriendsDatasource {
+	private FriendsDatasource localFriendsDatasource;
+	private FriendsDatasource remoteFriendsDatasource;
+	final List<User> cache = new ArrayList<>();
+	private boolean dirtyCache;
+
+	public FriendRepository(@NotNull FriendsDatasource localFriendsDatasource, @NotNull FriendsDatasource remoteFriendsDatasource) {
+		this.localFriendsDatasource = localFriendsDatasource;
+		this.remoteFriendsDatasource = remoteFriendsDatasource;
 	}
 
 	private Mapper<Cursor, User> cursorToUserMapper = new CursorToUserMapper();
@@ -40,63 +40,85 @@ public class FriendRepository implements Repository<User> {
 
 	public int length() {
 		int size;
-		Cursor cursor = db.getReadableDatabase().query(TABLE_NAME, null, null, null, null, null, null);
-		size = cursor.getCount();
-		cursor.close();
-		return size;
+//		Cursor cursor = db.getReadableDatabase().query(TABLE_NAME, null, null, null, null, null, null);
+//		size = cursor.getCount();
+//		cursor.close();
+		return cache.size();
 	}
 
 	@Override
-	public void update(@NotNull User item) {
-		db.getWritableDatabase().update(TABLE_NAME, userToCvMapper.map(item), DatabaseContract.Friend.COLUMN_ID + " = ?", new String[]{item.getUserID()});
-	}
+	public Observable<List<User>> getUsers() {
+		if (cache.size() != 0 && !dirtyCache)
+			return Observable.just(cache);
 
+		// Query the local storage if available. If not, query the network.
+		Observable<List<User>> local = localFriendsDatasource.getUsers()
+				.doOnNext(new Action1<List<User>>() {
+					@Override
+					public void call(List<User> users) {
+						cache.clear();
+						cache.addAll(users);
+					}
+				});
+		Observable<List<User>> remote =remoteFriendsDatasource.getUsers()
+				.flatMap(new Func1<List<User>, Observable<User>>() {
+					@Override
+					public Observable<User> call(List<User> users) {
+						return Observable.from(users);
+					}
+				})
+				.doOnNext(new Action1<User>() {
+					@Override
+					public void call(User user) {
+						localFriendsDatasource.saveUser(user);
+						cache.clear();
+						cache.add(user);
+					}
+				})
+				.doOnCompleted(new Action0() {
+					@Override
+					public void call() {
+						dirtyCache = false;
+					}
+				}).toList();
 
-	@Override
-	public Observable<List<User>> query(Specification specification) {
-		List<User> users = new ArrayList<>();
-
-		if (specification instanceof SQLSpecification) {
-			db.getReadableDatabase().beginTransaction();
-			Cursor cursor = db.getReadableDatabase().rawQuery(((SQLSpecification) specification).createQuery(), null);
-			cursor.moveToFirst();
-			while (!cursor.isAfterLast()) {
-				User friend = cursorToUserMapper.map(cursor);
-				users.add(friend);
-				cursor.moveToNext();
-			}
-			db.getReadableDatabase().setTransactionSuccessful();
-			db.getReadableDatabase().endTransaction();
-			cursor.close();
-		}
-
-		return Observable.just(users);
-	}
-
-	@Override
-	public void add(@NonNull User element) {
-		db.getWritableDatabase().insertWithOnConflict(TABLE_NAME, null, userToCvMapper.map(element), SQLiteDatabase.CONFLICT_IGNORE);
-	}
-
-	@Override
-	public void add(@NonNull List<User> elements) {
-		db.getWritableDatabase().beginTransaction();
-		{
-			for (User element : elements) {
-				db.getWritableDatabase().insertWithOnConflict(TABLE_NAME, null, userToCvMapper.map(element), SQLiteDatabase.CONFLICT_IGNORE);
-			}
-		}
-		db.getWritableDatabase().setTransactionSuccessful();
+//		return Observable.concat(Observable.from(cache).toList(), localTasks).first();
+		return Observable.concat(local,remote).first();
 	}
 
 	@Override
-	public void remove(@NonNull User element) {
-		db.getWritableDatabase().delete(TABLE_NAME, DatabaseContract.Friend.COLUMN_ID + " = ?", new String[]{element.getUserID()});
+	public void saveUser(@NonNull List<User> users) {
+		localFriendsDatasource.saveUser(users);
+		remoteFriendsDatasource.saveUser(users);
+		cache.addAll(users);
 	}
 
 	@Override
-	public void remove(Specification specification) {
+	public Observable<User> getUser(@NonNull User userId) {
+		return null;
+	}
 
+	@Override
+	public void saveUser(@NonNull User item) {
+		remoteFriendsDatasource.saveUser(item);
+		localFriendsDatasource.saveUser(item);
+		cache.set(cache.indexOf(item), item);
+	}
+
+	@Override
+	public void refreshUsers() {
+
+	}
+
+	@Override
+	public void deleteAllUsers() {
+
+	}
+
+	@Override
+	public void deleteUsers(@NonNull User userId) {
+		localFriendsDatasource.deleteUsers(userId);
+		remoteFriendsDatasource.deleteUsers(userId);
 	}
 //	fun JSONArray.contactListfromJSONArray(startingIndex:Int=0):List<User>{
 //			                                                                      val contacts=ArrayList<User>()

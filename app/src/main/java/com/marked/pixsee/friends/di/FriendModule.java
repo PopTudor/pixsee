@@ -1,9 +1,12 @@
 package com.marked.pixsee.friends.di;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 
 import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.friends.data.FriendRepository;
+import com.marked.pixsee.friends.data.FriendsLocalDatasource;
+import com.marked.pixsee.friends.data.FriendsRemoteDatasource;
 import com.marked.pixsee.friends.friends.FriendPresenter;
 import com.marked.pixsee.friends.friends.FriendsContract;
 import com.marked.pixsee.injection.scopes.PerFragment;
@@ -25,7 +28,10 @@ public class FriendModule {
 	@Provides
 	@PerFragment
 	FriendRepository provideRepository(Context application) {
-		return new FriendRepository(PixyDatabase.getInstance(application));
+		FriendsLocalDatasource friendsLocalDatasource = new FriendsLocalDatasource(PixyDatabase.getInstance(application));
+		FriendsRemoteDatasource friendsRemoteDatasource = new FriendsRemoteDatasource(PreferenceManager.getDefaultSharedPreferences(application));
+
+		return new FriendRepository(friendsLocalDatasource, friendsRemoteDatasource);
 	}
 
 	@Provides

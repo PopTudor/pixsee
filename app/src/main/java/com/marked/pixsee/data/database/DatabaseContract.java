@@ -22,12 +22,14 @@ public class DatabaseContract {
 
 
 	/* Friends */
-	public class Friend implements BaseColumns {
-		public static final String TABLE_NAME = "friend";
+	public static class Friend implements BaseColumns {
+		public static final String TABLE_NAME = "friends";
 		public static final String COLUMN_ID = FriendConstants.ID; /* id from online stored database */
 		public static final String COLUMN_NAME = FriendConstants.NAME;
 		public static final String COLUMN_EMAIL = FriendConstants.EMAIL;
 		public static final String COLUMN_TOKEN = FriendConstants.TOKEN;
+
+		public static final String[] ALL_TABLES = new String[]{COLUMN_ID, COLUMN_NAME, COLUMN_EMAIL, COLUMN_TOKEN};
 
 		public static final String CREATE_TABLE =
 				"CREATE TABLE " + TABLE_NAME

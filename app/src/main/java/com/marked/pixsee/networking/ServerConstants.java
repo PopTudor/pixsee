@@ -11,6 +11,7 @@ public interface ServerConstants {
 	String USER = "user";
 
 	String FRIENDS = "friends";
+	String USER_FRIENDS = USER +"/"+"friends";
 	String RECOVERY = "recovery";
 	String LOGIN = "login";
 

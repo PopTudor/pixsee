@@ -24,6 +24,9 @@ public class GetFriendsSpecification implements SQLSpecification {
 
 	@Override
 	public String createQuery() {
-		return "SELECT * FROM " + DatabaseContract.Friend.TABLE_NAME + " LIMIT " + limit + " OFFSET " + offset;
+		if (limit == -1)
+			return "SELECT * FROM " + DatabaseContract.Friend.TABLE_NAME;
+		else
+			return "SELECT * FROM " + DatabaseContract.Friend.TABLE_NAME + " LIMIT " + limit + " OFFSET " + offset;
 	}
 }

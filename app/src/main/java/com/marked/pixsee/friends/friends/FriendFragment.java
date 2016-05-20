@@ -66,6 +66,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 
 	/**
 	 * Used when searching a friend with the query menu
+	 *
 	 * @param friends the found friends that correspond to the query
 	 */
 	@Override
@@ -87,11 +88,16 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 	}
 
 	@Override
+	public void showNoFriends() {
+
+	}
+
+	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		try {
 			mCallback = (FriendFragmentInteractionListener) context;
-		}catch (ClassCastException e){
+		} catch (ClassCastException e) {
 			e.printStackTrace();
 		}
 	}
@@ -103,7 +109,8 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mFriendsAdapter = new FriendsAdapter(mCallback);
-		mPresenter.loadMore(true, 50);
+		if (mPresenter != null)
+			mPresenter.loadMore(true, 50);
 	}
 
 	public void setupListeners(View rootView) {
