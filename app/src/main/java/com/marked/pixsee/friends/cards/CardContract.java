@@ -3,7 +3,7 @@ package com.marked.pixsee.friends.cards;
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.data.message.Message;
+import com.marked.pixsee.friends.cards.data.Message;
 
 import java.util.List;
 

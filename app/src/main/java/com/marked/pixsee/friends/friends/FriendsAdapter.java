@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.User;
+import com.marked.pixsee.friends.friends.data.User;
 
 import org.jetbrains.annotations.NotNull;
 

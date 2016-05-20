@@ -7,8 +7,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.message.Message;
-import com.marked.pixsee.data.message.MessageConstants;
+import com.marked.pixsee.friends.cards.data.Message;
+import com.marked.pixsee.friends.cards.data.MessageConstants;
 
 /**
  * Created by Tudor on 2016-05-19.

@@ -2,18 +2,25 @@ package com.marked.pixsee.friends.cards.data;
 
 import android.support.annotation.NonNull;
 
-import com.marked.pixsee.data.message.Message;
-
 import java.util.List;
 
 import rx.Observable;
 
 /**
- * Created by Tudor on 2016-05-20.
+ * Created by Tudor on 2016-05-19.
  */
-public class MessageRemoteDatasource implements MessageDatasource {
+public class CardRepository implements CardDatasource {
+	private CardDatasource disk;
+	private CardDatasource network;
+
+	public CardRepository(CardDatasource disk, CardDatasource network) {
+		this.disk = disk;
+		this.network = network;
+	}
+
 	@Override
 	public Observable<List<Message>> getMessages() {
+
 		return null;
 	}
 

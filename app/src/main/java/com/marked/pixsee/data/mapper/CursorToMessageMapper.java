@@ -2,7 +2,7 @@ package com.marked.pixsee.data.mapper;
 
 import android.database.Cursor;
 
-import com.marked.pixsee.data.message.Message;
+import com.marked.pixsee.friends.cards.data.Message;
 
 /**
  * Created by Tudor on 2016-05-19.

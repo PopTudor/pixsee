@@ -1,4 +1,4 @@
-package com.marked.pixsee.data.message
+package com.marked.pixsee.friends.cards.data
 		;
 
 import android.os.Bundle;

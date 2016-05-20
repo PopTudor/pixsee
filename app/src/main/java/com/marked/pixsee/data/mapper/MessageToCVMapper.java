@@ -2,8 +2,8 @@ package com.marked.pixsee.data.mapper;
 
 import android.content.ContentValues;
 
-import com.marked.pixsee.data.message.Message;
-import com.marked.pixsee.data.message.MessageConstants;
+import com.marked.pixsee.friends.cards.data.Message;
+import com.marked.pixsee.friends.cards.data.MessageConstants;
 
 import java.util.Map;
 

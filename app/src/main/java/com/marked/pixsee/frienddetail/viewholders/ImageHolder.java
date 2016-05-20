@@ -15,7 +15,7 @@ import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.message.Message;
+import com.marked.pixsee.friends.cards.data.Message;
 import com.marked.pixsee.frienddetail.ImageFullscreenActivity;
 
 import java.io.File;

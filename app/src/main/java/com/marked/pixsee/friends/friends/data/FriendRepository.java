@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
-import com.marked.pixsee.data.User;
 import com.marked.pixsee.data.mapper.CursorToUserMapper;
 import com.marked.pixsee.data.mapper.Mapper;
 import com.marked.pixsee.data.mapper.UserToCvMapper;

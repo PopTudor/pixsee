@@ -10,19 +10,22 @@ import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.mapper.CursorToMessageMapper;
 import com.marked.pixsee.data.mapper.Mapper;
 import com.marked.pixsee.data.mapper.MessageToCVMapper;
-import com.marked.pixsee.data.message.Message;
+import com.marked.pixsee.friends.data.specifications.GetFriendsSpecification;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
 
+import static com.marked.pixsee.data.database.DatabaseContract.Friend.TABLE_NAME;
+
 /**
  * Created by Tudor on 2016-05-20.
  */
-public class MessageLocalDatasource implements MessageDatasource {
+public class CardLocalDatasource implements CardDatasource {
 	private PixyDatabase database;
 
-	public MessageLocalDatasource(PixyDatabase database) {
+	public CardLocalDatasource(PixyDatabase database) {
 		this.database = database;
 	}
 
@@ -31,12 +34,27 @@ public class MessageLocalDatasource implements MessageDatasource {
 
 	@Override
 	public Observable<List<Message>> getMessages() {
-		return null;
+		List<Message> users = new ArrayList<>();
+		database.getReadableDatabase().beginTransaction();
+		Cursor cursor = database.getReadableDatabase().rawQuery(new GetFriendsSpecification(0, -1).createQuery(), null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Message friend = cursorToMessageMapper.map(cursor);
+			users.add(friend);
+			cursor.moveToNext();
+		}
+		database.getReadableDatabase().setTransactionSuccessful();
+		database.getReadableDatabase().endTransaction();
+		cursor.close();
+		return Observable.just(users);
 	}
 
 	@Override
 	public Observable<Message> getMessage(@NonNull Message messageId) {
-		return null;
+		Cursor cursor = database.getReadableDatabase().query(TABLE_NAME, DatabaseContract.Friend.ALL_TABLES, "WHERE "+messageId.getId()+"=?",
+				new String[]{messageId.getId()}, null, null, null);
+		cursor.moveToFirst();
+		return Observable.just(cursorToMessageMapper.map(cursor));
 	}
 
 	@Override

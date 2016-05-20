@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.message.Message;
+import com.marked.pixsee.friends.cards.data.Message;
 
 import java.util.List;
 

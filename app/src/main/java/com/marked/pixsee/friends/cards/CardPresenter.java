@@ -1,8 +1,8 @@
 package com.marked.pixsee.friends.cards;
 
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.data.message.Message;
-import com.marked.pixsee.friends.cards.data.MessageDatasource;
+import com.marked.pixsee.friends.cards.data.Message;
+import com.marked.pixsee.friends.cards.data.CardDatasource;
 
 import java.util.List;
 
@@ -14,10 +14,10 @@ import rx.schedulers.Schedulers;
  * Created by Tudor on 2016-05-19.
  */
 public class CardPresenter implements CardContract.Presenter {
-	private MessageDatasource mRepository;
+	private CardDatasource mRepository;
 	private CardContract.View mView;
 
-	public CardPresenter(CardContract.View mView, MessageDatasource mRepository) {
+	public CardPresenter(CardContract.View mView, CardDatasource mRepository) {
 		this.mRepository = mRepository;
 		this.mView = mView;
 		this.mView.setPresenter(this);

@@ -1,4 +1,4 @@
-package com.marked.pixsee.data;
+package com.marked.pixsee.friends.friends.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;

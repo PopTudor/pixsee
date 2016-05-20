@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import com.marked.pixsee.data.User;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.mapper.CursorToUserMapper;

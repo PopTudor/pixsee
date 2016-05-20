@@ -2,7 +2,7 @@ package com.marked.pixsee.data.mapper;
 
 import android.content.ContentValues;
 
-import com.marked.pixsee.data.User;
+import com.marked.pixsee.friends.friends.data.User;
 import com.marked.pixsee.friends.data.FriendConstants;
 
 /**

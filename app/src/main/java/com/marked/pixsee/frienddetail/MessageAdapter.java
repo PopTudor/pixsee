@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.message.Message;
-import com.marked.pixsee.data.message.MessageConstants;
+import com.marked.pixsee.friends.cards.data.Message;
+import com.marked.pixsee.friends.cards.data.MessageConstants;
 import com.marked.pixsee.frienddetail.viewholders.ImageHolder;
 import com.marked.pixsee.frienddetail.viewholders.MessageHolder;
 import com.marked.pixsee.frienddetail.viewholders.TypingHolder;

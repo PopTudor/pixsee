@@ -14,7 +14,7 @@ import android.view.View;
 
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.User;
+import com.marked.pixsee.friends.friends.data.User;
 import com.marked.pixsee.databinding.ActivityLogInBinding;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;

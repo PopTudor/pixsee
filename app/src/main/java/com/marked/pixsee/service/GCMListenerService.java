@@ -34,9 +34,9 @@ import com.marked.pixsee.frienddetail.FriendDetailFragment;
 import static android.app.PendingIntent.getActivity;
 import static android.media.RingtoneManager.TYPE_NOTIFICATION;
 import static android.media.RingtoneManager.getDefaultUri;
-import static com.marked.pixsee.data.message.MessageConstants.DATA_BODY;
-import static com.marked.pixsee.data.message.MessageConstants.NOTIFICATION_PAYLOAD_BODY;
-import static com.marked.pixsee.data.message.MessageConstants.NOTIFICATION_PAYLOAD_TITLE;
+import static com.marked.pixsee.friends.cards.data.MessageConstants.DATA_BODY;
+import static com.marked.pixsee.friends.cards.data.MessageConstants.NOTIFICATION_PAYLOAD_BODY;
+import static com.marked.pixsee.friends.cards.data.MessageConstants.NOTIFICATION_PAYLOAD_TITLE;
 
 /**
  * Receives messages sent by GCM server

@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.marked.pixsee.data.User;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.friends.data.FriendsAPI;
 import com.marked.pixsee.networking.ServerConstants;

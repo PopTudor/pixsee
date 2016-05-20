@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.User;
+import com.marked.pixsee.friends.friends.data.User;
 
 import org.jetbrains.annotations.NotNull;
 

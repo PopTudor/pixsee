@@ -2,8 +2,6 @@ package com.marked.pixsee.friends.friends.data;
 
 import android.support.annotation.NonNull;
 
-import com.marked.pixsee.data.User;
-
 import java.util.List;
 
 import rx.Observable;
