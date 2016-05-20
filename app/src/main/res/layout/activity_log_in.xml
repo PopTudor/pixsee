@@ -8,7 +8,7 @@
 
         <variable
             name="user"
-            type="com.marked.pixsee.data.User"/>
+            type="com.marked.pixsee.friends.friends.data.User"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout

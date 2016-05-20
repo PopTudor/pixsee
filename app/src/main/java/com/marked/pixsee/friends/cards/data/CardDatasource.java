@@ -12,7 +12,7 @@ import rx.Observable;
  * <p/>
  */
 public interface CardDatasource {
-	Observable<List<Message>> getMessages();
+	Observable<List<Message>> getMessagesOfFriend(String friendId);
 
 	Observable<Message> getMessage(@NonNull Message messageId);
 

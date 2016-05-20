@@ -24,7 +24,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/messageFragmentContainer"
+        android:id="@+id/cardFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -32,8 +32,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="0dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp">
+        android:layout_below="@+id/friendFragmentContainer">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab"

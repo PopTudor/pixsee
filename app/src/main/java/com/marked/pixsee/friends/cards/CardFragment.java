@@ -113,6 +113,11 @@ public class CardFragment extends Fragment implements CardContract.View {
 		mCardAdapter.notifyDataSetChanged();
 	}
 
+	@Override
+	public void showNoCards() {
+
+	}
+
 	/**
 	 * This interface must be implemented by activities that contain this
 	 * fragment to allow an interaction in this fragment to be communicated

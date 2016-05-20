@@ -34,8 +34,8 @@ public class CardPresenter implements CardContract.Presenter {
 	}
 
 	@Override
-	public void loadMore(int limit, String text) {
-		mRepository.getMessages()
+	public void loadMore(int limit, String friendId) {
+		mRepository.getMessagesOfFriend(friendId)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Action1<List<Message>>() {

@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.data.specifications;
+package com.marked.pixsee.friends.specifications;
 
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.SQLSpecification;

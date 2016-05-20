@@ -2,9 +2,14 @@ package com.marked.pixsee.friends.cards.data;
 
 import android.support.annotation.NonNull;
 
+
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created by Tudor on 2016-05-19.
@@ -12,6 +17,8 @@ import rx.Observable;
 public class CardRepository implements CardDatasource {
 	private CardDatasource disk;
 	private CardDatasource network;
+	private List<Message> cache = new ArrayList<>();
+	private boolean dirtyCache;
 
 	public CardRepository(CardDatasource disk, CardDatasource network) {
 		this.disk = disk;
@@ -19,9 +26,45 @@ public class CardRepository implements CardDatasource {
 	}
 
 	@Override
-	public Observable<List<Message>> getMessages() {
-
-		return null;
+	public Observable<List<Message>> getMessagesOfFriend(String friendId) {
+		if (cache.size() != 0 && !dirtyCache)
+			return Observable.just(cache);
+		
+		// Query the local storage if available. If not, query the network.
+		Observable<List<Message>> local = disk.getMessagesOfFriend(friendId)
+				                                  .doOnNext(new Action1<List<Message>>() {
+					                                  @Override
+					                                  public void call(List<Message> message) {
+						                                  cache.clear();
+						                                  cache.addAll(message);
+					                                  }
+				                                  });
+		
+		Observable<List<Message>> remote = network.getMessagesOfFriend(friendId)
+				                                   .flatMap(new Func1<List<Message>, Observable<Message>>() {
+					                                   @Override
+					                                   public Observable<Message> call(List<Message> messagess) {
+						                                   return Observable.from(messagess);
+					                                   }
+				                                   })
+				                                   .doOnNext(new Action1<Message>() {
+					                                   @Override
+					                                   public void call(Message messages) {
+						                                   disk.saveMessage(messages);
+						                                   cache.clear();
+						                                   cache.add(messages);
+					                                   }
+				                                   })
+				                                   .doOnCompleted(new Action0() {
+					                                   @Override
+					                                   public void call() {
+						                                   dirtyCache = false;
+					                                   }
+				                                   }).toList();
+		if (cache.size() == 0)
+			return remote;
+		else
+			return local;
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.mapper.CursorToUserMapper;
 import com.marked.pixsee.data.mapper.Mapper;
 import com.marked.pixsee.data.mapper.UserToCvMapper;
-import com.marked.pixsee.friends.data.specifications.GetFriendsSpecification;
+import com.marked.pixsee.friends.specifications.GetFriendsSpecification;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,6 +2,7 @@ package com.marked.pixsee.friends;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -85,9 +86,9 @@ public class FriendsActivity extends AppCompatActivity implements FriendFragment
 	public void onFriendClick(User friend) {
 		CardFragment fragment = CardFragment.newInstance(friend);
 		CardLocalDatasource localDatasource = new CardLocalDatasource(PixyDatabase.getInstance(this));
-		CardRemoteDatasource remoteDatasource = new CardRemoteDatasource();
+		CardRemoteDatasource remoteDatasource = new CardRemoteDatasource(PreferenceManager.getDefaultSharedPreferences(this));
 		fragment.setPresenter(new CardPresenter(fragment, new CardRepository(localDatasource,remoteDatasource)));
-		getSupportFragmentManager().beginTransaction().replace(R.id.friendFragmentContainer, fragment).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.cardFragmentContainer, fragment).commit();
 	}
 	/* // uncomment this when you add FloatingActionMenu
 	override fun onBackPressed() {

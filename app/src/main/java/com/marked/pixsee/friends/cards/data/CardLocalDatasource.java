@@ -10,7 +10,7 @@ import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.mapper.CursorToMessageMapper;
 import com.marked.pixsee.data.mapper.Mapper;
 import com.marked.pixsee.data.mapper.MessageToCVMapper;
-import com.marked.pixsee.friends.data.specifications.GetFriendsSpecification;
+import com.marked.pixsee.friends.specifications.GetMessagesByGroupedByDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +33,10 @@ public class CardLocalDatasource implements CardDatasource {
 	Mapper<Message, ContentValues> messageToCVMapper = new MessageToCVMapper();
 
 	@Override
-	public Observable<List<Message>> getMessages() {
+	public Observable<List<Message>> getMessagesOfFriend(String friendId) {
 		List<Message> users = new ArrayList<>();
 		database.getReadableDatabase().beginTransaction();
-		Cursor cursor = database.getReadableDatabase().rawQuery(new GetFriendsSpecification(0, -1).createQuery(), null);
+		Cursor cursor = database.getReadableDatabase().rawQuery(new GetMessagesByGroupedByDate(friendId).createQuery(), null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			Message friend = cursorToMessageMapper.map(cursor);
