@@ -5,12 +5,15 @@ package com.marked.pixsee.networking;
  */
 public interface ServerConstants {
 	String PORT = ":3000/";
-	String BASE_URL = "http://192.168.0.105";
-	//			"http://46.101.168.55"; /* DIGITAL-OCEAN */
+	String BASE_URL =
+//			"http://192.168.0.105";
+			"http://172.20.10.10";
+//				"http://46.101.182.220"; /* DIGITAL-OCEAN */
 	/* ENDPOINTS */
 	String USER = "user";
 
 	String FRIENDS = "friends";
+	String MESSAGES = "messages";
 	String USER_FRIENDS = USER +"/"+"friends";
 	String RECOVERY = "recovery";
 	String LOGIN = "login";

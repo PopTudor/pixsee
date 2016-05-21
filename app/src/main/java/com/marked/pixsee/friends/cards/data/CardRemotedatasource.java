@@ -27,18 +27,16 @@ import rx.schedulers.Schedulers;
  * Created by Tudor on 2016-05-20.
  */
 public class CardRemoteDatasource implements CardDatasource {
-	private final HttpLoggingInterceptor loggingInterceptor;
-	private final OkHttpClient httpClient;
 	private final Retrofit retrofit;
 	private final String userid;
 	private final Gson gson = new Gson();
 
 	public CardRemoteDatasource(SharedPreferences sharedPreferences) {
-		loggingInterceptor = new HttpLoggingInterceptor();
+		HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
 		loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-		httpClient = new OkHttpClient.Builder()
-				             .addInterceptor(loggingInterceptor)
-				             .build();
+		OkHttpClient httpClient = new OkHttpClient.Builder()
+				                          .addInterceptor(loggingInterceptor)
+				                          .build();
 		retrofit = new Retrofit.Builder()
 				           .baseUrl(ServerConstants.SERVER)
 				           .addConverterFactory(GsonConverterFactory.create())
@@ -57,15 +55,16 @@ public class CardRemoteDatasource implements CardDatasource {
 				       .map(new Func1<JsonObject, JsonArray>() {
 					       @Override
 					       public JsonArray call(JsonObject jsonObject) {
-						       return jsonObject.getAsJsonArray(DatabaseContract.Friend.TABLE_NAME);
+						       return jsonObject.getAsJsonArray(DatabaseContract.Message.TABLE_NAME);
 					       }
 				       })
 				       .map(new Func1<JsonArray, List<Message>>() {
 					       @Override
 					       public List<Message> call(JsonArray jsonElements) {
 						       final List<Message> cache = new ArrayList<>();
-						       for (JsonElement it : jsonElements)
+						       for (JsonElement it : jsonElements){
 							       cache.add(gson.fromJson(it.toString(), Message.class));
+						       }
 						       return cache;
 					       }
 				       });

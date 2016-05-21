@@ -11,6 +11,6 @@ import rx.Observable;
  * Created by Tudor on 2016-05-20.
  */
 public interface MessageAPI {
-	@GET(ServerConstants.FRIENDS)
+	@GET(ServerConstants.MESSAGES)
 	Observable<JsonObject> getMessagesOfFriend(@Query("user_id") String userId, @Query("friend_id") String friendId);
 }

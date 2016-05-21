@@ -66,7 +66,7 @@ public class DatabaseContract {
 
 	/* Message */
 	public static class Message implements BaseColumns {
-		public static final String TABLE_NAME = "message";
+		public static final String TABLE_NAME = "messages";
 		public static final String COLUMN_ID = MessageConstants.ID;
 		public static final String COLUMN_DATA_BODY = MessageConstants.DATA_BODY;
 		public static final String COLUMN_TYPE = MessageConstants.MESSAGE_TYPE;

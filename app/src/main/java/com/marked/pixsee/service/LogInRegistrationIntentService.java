@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -80,7 +81,11 @@ public class LogInRegistrationIntentService extends IntentService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
+			if (token == null){
+				// if google services had some troubles
+				Toast.makeText(getApplicationContext(), "We could not register you, please update your system !", Toast.LENGTH_SHORT);
+				return;
+			}
 			getDefaultSharedPreferences(this).edit().putString(GCMConstants.TOKEN, token).apply();
 
 			switch (intent.getAction()) {
@@ -90,6 +95,7 @@ public class LogInRegistrationIntentService extends IntentService {
 					String param2 = intent
 							.getStringExtra(LogInRegistrationIntentService.EXTRA_PARAM_PASSWORD);
 					handleActionLogin(param1, param2, token);
+					break;
 				}
 				case LogInRegistrationIntentService.ACTION_SIGNUP: {
 					String param1 = intent
@@ -99,11 +105,13 @@ public class LogInRegistrationIntentService extends IntentService {
 					String param3 = intent
 							.getStringExtra(LogInRegistrationIntentService.EXTRA_PARAM_PASSWORD);
 					handleActionSignup(param1, param2, param3, token);
+					break;
 				}
 				case LogInRegistrationIntentService.ACTION_RECOVERY: {
 					String param1 = intent
 							.getStringExtra(LogInRegistrationIntentService.EXTRA_PARAM_EMAIL);
 					handleActionRecovery(param1, token);
+					break;
 				}
 			}
 			// Subscribe to topic channels

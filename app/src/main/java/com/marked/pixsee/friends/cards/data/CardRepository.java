@@ -31,40 +31,38 @@ public class CardRepository implements CardDatasource {
 			return Observable.just(cache);
 		
 		// Query the local storage if available. If not, query the network.
-		Observable<List<Message>> local = disk.getMessagesOfFriend(friendId)
-				                                  .doOnNext(new Action1<List<Message>>() {
-					                                  @Override
-					                                  public void call(List<Message> message) {
-						                                  cache.clear();
-						                                  cache.addAll(message);
-					                                  }
-				                                  });
+		disk.getMessagesOfFriend(friendId).doOnNext(new Action1<List<Message>>() {
+			@Override
+			public void call(List<Message> message) {
+				cache.clear();
+				cache.addAll(message);
+			}
+		}).subscribe();
 		
-		Observable<List<Message>> remote = network.getMessagesOfFriend(friendId)
-				                                   .flatMap(new Func1<List<Message>, Observable<Message>>() {
-					                                   @Override
-					                                   public Observable<Message> call(List<Message> messagess) {
-						                                   return Observable.from(messagess);
-					                                   }
-				                                   })
-				                                   .doOnNext(new Action1<Message>() {
-					                                   @Override
-					                                   public void call(Message messages) {
-						                                   disk.saveMessage(messages);
-						                                   cache.clear();
-						                                   cache.add(messages);
-					                                   }
-				                                   })
-				                                   .doOnCompleted(new Action0() {
-					                                   @Override
-					                                   public void call() {
-						                                   dirtyCache = false;
-					                                   }
-				                                   }).toList();
-		if (cache.size() == 0)
-			return remote;
+		if (cache.size() != 0)
+			return Observable.just(cache);
 		else
-			return local;
+			return network.getMessagesOfFriend(friendId)
+					       .flatMap(new Func1<List<Message>, Observable<Message>>() {
+						       @Override
+						       public Observable<Message> call(List<Message> messagess) {
+							       return Observable.from(messagess);
+						       }
+					       })
+					       .doOnNext(new Action1<Message>() {
+						       @Override
+						       public void call(Message messages) {
+							       disk.saveMessage(messages);
+							       cache.clear();
+							       cache.add(messages);
+						       }
+					       })
+					       .doOnCompleted(new Action0() {
+						       @Override
+						       public void call() {
+							       dirtyCache = false;
+						       }
+					       }).toList();
 	}
 
 	@Override

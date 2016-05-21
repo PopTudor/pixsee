@@ -45,7 +45,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 		DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build()
 		                       .inject(this);
 		if (BuildConfig.DEBUG)
-			bind.setUser(new User("", "", "tudor08pop@yahoo.com", "", "parola"));
+			bind.setUser(new User("", "", "tudor08pop@yahoo.com", "", "password"));
 	}
 
 	public void onResume() {
@@ -83,6 +83,13 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 			}
 		else
 			Utils.showNoConnectionDialog(this);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mProgressDialog.cancel();
+		mProgressDialog = null;
 	}
 
 	public boolean onMenuItemClick(MenuItem item) {
