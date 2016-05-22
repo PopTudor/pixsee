@@ -23,8 +23,7 @@ public class FavThreeClick extends ClickCommand {
 	@Override
 	public void execute() {
 		FaceObject faceObject = new FaceObject.FaceBuilder(mContext)
-				                        .withResId(R.raw.android_head_obj)
-				                        .withObjectType(FaceObject.ObjectType.OBJ)
+				                        .withTextureId(R.drawable.kiss)
 				                        .withRenderer(mFaceRenderer.get())
 				                        .build();
 		mFaceRenderer.get().onFavoriteClicked(faceObject);

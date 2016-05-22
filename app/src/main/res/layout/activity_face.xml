@@ -79,11 +79,11 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/round_corner_button"
-                android:backgroundTint="#A4C639"
+                android:backgroundTint="#ffd26e"
                 android:maxHeight="48dp"
                 android:maxWidth="48dp"
                 android:padding="5dp"
-                android:src="@android:mipmap/sym_def_app_icon"/>
+                android:src="@drawable/ic_emoji_kiss"/>
 
         </LinearLayout>
 
@@ -107,26 +107,26 @@
 
     </FrameLayout>
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/shopImageButton"
-        android:layout_gravity="left|top"
-        android:src="@drawable/ic_shopping_basket_24dp"
-        android:background="@color/transparent"
-        android:padding="15dp"
-        android:layout_alignParentEnd="true"/>
+    <!--<ImageButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/shopImageButton"-->
+        <!--android:layout_gravity="left|top"-->
+        <!--android:src="@drawable/ic_shopping_basket_24dp"-->
+        <!--android:background="@color/transparent"-->
+        <!--android:padding="15dp"-->
+        <!--android:layout_alignParentEnd="true"/>-->
 
-    <ImageView
-        android:id="@+id/switchCamera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
-        android:visibility="gone"
-        android:contentDescription="Switch camera"
-        android:src="@drawable/ic_camera_rear_24dp"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/switchCamera"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:visibility="gone"-->
+        <!--android:contentDescription="Switch camera"-->
+        <!--android:src="@drawable/ic_camera_rear_24dp"/>-->
 
 </RelativeLayout>

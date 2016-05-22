@@ -17,7 +17,6 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.face.commands.FavOneClick;
 import com.marked.pixsee.face.commands.FavThreeClick;
 import com.marked.pixsee.face.commands.FavTwoClick;
-import com.marked.pixsee.face.commands.ShopImageButtonClick;
 import com.marked.pixsee.face.di.DaggerSelfieComponent;
 import com.marked.pixsee.face.di.SelfieComponent;
 import com.marked.pixsee.face.di.SelfieModule;
@@ -94,12 +93,12 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 				mFacePresenter.execute(new FavThreeClick(SelfieActivity.this,mFaceRenderer));
 			}
 		});
-		findViewById(R.id.shopImageButton).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mFacePresenter.execute(new ShopImageButtonClick(SelfieActivity.this));
-			}
-		});
+//		findViewById(R.id.shopImageButton).setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mFacePresenter.execute(new ShopImageButtonClick(SelfieActivity.this));
+//			}
+//		});
 
 		mCameraButton = (ImageButton) findViewById(R.id.camera_button);
 		mCameraButton.setOnClickListener(new View.OnClickListener() {

@@ -164,7 +164,7 @@ public class FaceObject {
 
 		private void buildTexture() {
 			String texName = "Texture_" + String.valueOf(this.textureId);
-			if (this.isAnimated) {
+			if (this.isAnimated) { /* GIF */
 				this.texture = new AnimatedGIFTexture(texName, this.textureId, this.textureSize);
 				((AnimatedGIFTexture) this.texture).rewind();
 			} else
