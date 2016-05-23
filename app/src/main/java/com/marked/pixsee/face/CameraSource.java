@@ -19,6 +19,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.android.gms.common.images.Size;
 import com.google.android.gms.vision.Detector;
@@ -192,6 +193,7 @@ public class CameraSource {
 			mCameraSource.mFacing = facing;
 			return this;
 		}
+
 		/**
 		 * Sets the camera to use (either {@link #CAMERA_FACING_BACK} or
 		 * {@link #CAMERA_FACING_FRONT}). Default: front facing.
@@ -220,6 +222,7 @@ public class CameraSource {
 	interface CameraCallback {
 		/**
 		 * When the camera is ready and initialised, pass it on to whoever needs it
+		 *
 		 * @param camera
 		 */
 		void cameraCreated(Camera camera);
@@ -296,8 +299,11 @@ public class CameraSource {
 	 */
 	public void release() {
 		synchronized (mCameraLock) {
-			stop();
-			mFrameProcessor.release();
+//			stop();
+			if (mCamera != null)
+				mCamera.release();
+			if (mFrameProcessor != null)
+				mFrameProcessor.release();
 		}
 	}
 
@@ -322,6 +328,7 @@ public class CameraSource {
 			} else {
 				SurfaceView mDummySurfaceView = new SurfaceView(mContext);
 				mCamera.setPreviewDisplay(mDummySurfaceView.getHolder());
+				Toast.makeText(mContext, "Please close other camera apps, or update the system.", Toast.LENGTH_LONG);
 				Log.d(TAG, "start: " + "Screen white ? Checkout CameraSource.start" +
 						           "(surfaceTexture) because the camera is not sending frames to " +
 						           "Surface texture but to a dummy SurfaceView");
@@ -349,8 +356,14 @@ public class CameraSource {
 			if (mCamera != null) {
 				return this;
 			}
+			try {
+				mCamera = createCamera();
 
-			mCamera = createCamera();
+			} catch (RuntimeException e) {
+				if (mCamera != null)
+					mCamera.release();
+				Toast.makeText(mContext, "Camera could not be opened. You might need to restart the device !", Toast.LENGTH_LONG);
+			}
 			mCamera.setPreviewDisplay(surfaceHolder);
 			mCamera.startPreview();
 
@@ -407,8 +420,8 @@ public class CameraSource {
 				} catch (Exception e) {
 					Log.e(TAG, "Failed to clear camera preview: " + e);
 				}
-				mCamera.release();
-				mCamera = null;
+//				mCamera.release();
+//				mCamera = null;
 			}
 		}
 	}
@@ -722,6 +735,7 @@ public class CameraSource {
 		if (requestedCameraId == -1) {
 			throw new RuntimeException("Could not find requested camera.");
 		}
+
 		Camera camera = Camera.open(requestedCameraId);
 		mCallback.cameraCreated(camera);
 		SizePair sizePair = selectSizePair(camera, mRequestedPreviewWidth, mRequestedPreviewHeight);

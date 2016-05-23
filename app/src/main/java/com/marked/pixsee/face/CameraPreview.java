@@ -19,7 +19,7 @@ import org.rajawali3d.view.TextureView;
 
 import java.io.IOException;
 
-public class CameraPreview extends ViewGroup {
+public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
 	private static final String TAG = "CameraSourcePreview";
 
 	private Context mContext;
@@ -41,19 +41,14 @@ public class CameraPreview extends ViewGroup {
 
 	void setSurfaceView(SurfaceView surfaceView) {
 		mSurfaceView = surfaceView;
-		mSurfaceView.getHolder().addCallback(new SurfaceCallback());
+		mSurfaceView.getHolder().addCallback(this);
 	}
 
-	public void start(@NotNull CameraSource cameraSource,@NotNull FaceRenderer overlay) throws IOException {
-		if (cameraSource == null) {
-			stop();
-		}
+	public void start(@NotNull CameraSource cameraSource, @NotNull FaceRenderer overlay) throws IOException {
 		mCameraSource = cameraSource;
 		mFaceRenderer = overlay;
 
-		if (mFaceRenderer != null) {
-			mFaceRenderer.onResume();
-		}
+		mFaceRenderer.onResume();
 		if (mCameraSource != null) {
 			mStartRequested = true;
 			startIfReady();
@@ -61,19 +56,12 @@ public class CameraPreview extends ViewGroup {
 	}
 
 	public void stop() {
-		if (mFaceRenderer != null)
-			mFaceRenderer.onPause();
-		if (mCameraSource != null) {
-			mCameraSource.stop();
-		}
-	}
-
-	public void release() {
 		if (mFaceRenderer != null) {
-			mFaceRenderer.stopRendering();
+			mFaceRenderer.onPause(); /* calls renderer.stopRendering() */
 			mFaceRenderer = null;
 		}
 		if (mCameraSource != null) {
+			mCameraSource.stop();
 			mCameraSource.release();
 			mCameraSource = null;
 		}
@@ -108,11 +96,30 @@ public class CameraPreview extends ViewGroup {
 		}
 	}
 
+	@Override
+	public void surfaceCreated(SurfaceHolder holder) {
+		mSurfaceAvailable = true;
+		try {
+			startIfReady();
+		} catch (IOException e) {
+			Log.e(TAG, "Could not start camera source.", e);
+		}
+	}
+
+	@Override
+	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+	}
+
+	@Override
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		mSurfaceAvailable = false;
+	}
+
 	private class TextureCallback implements TextureView.SurfaceTextureListener {
 		@Override
 		public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
 			mSurfaceAvailable = true;
-
 			try {
 				startIfReady();
 			} catch (IOException e) {
@@ -134,27 +141,6 @@ public class CameraPreview extends ViewGroup {
 		@Override
 		public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
-		}
-	}
-
-	private class SurfaceCallback implements SurfaceHolder.Callback {
-		@Override
-		public void surfaceCreated(SurfaceHolder surface) {
-			mSurfaceAvailable = true;
-			try {
-				startIfReady();
-			} catch (IOException e) {
-				Log.e(TAG, "Could not start camera source.", e);
-			}
-		}
-
-		@Override
-		public void surfaceDestroyed(SurfaceHolder surface) {
-			mSurfaceAvailable = false;
-		}
-
-		@Override
-		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		}
 	}
 

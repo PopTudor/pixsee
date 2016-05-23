@@ -35,12 +35,15 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created by Tudor on 4/8/2016.
+ * Used to render models onto a @{StreamingTexture} using the render thread
+ * The renderer should only be created once we have a running camera
  */
 public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, CameraCallback {
 	private static final String TAG = "***********";
 	private static final int CAMERA_Z = 10;
 	private final Object mLock = new Object();
 	private DirectionalLight directionalLight;
+
 
 	private int mFacing = CameraSource.CAMERA_FACING_FRONT;
 	private int mPreviewWidth;
@@ -78,9 +81,17 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		getCurrentCamera().setPosition(0, 0, CAMERA_Z);
 	}
 
+	boolean streamingReady;
+
+	/**
+	 * When we have a camera, start rendering
+	 *
+	 * @param camera
+	 */
 	@Override
 	public void cameraCreated(Camera camera) {
 		mCameraStreamingTexture = new StreamingTexture("Preview", camera, null);
+		mCameraStreamingTexture.shouldRecycle(true);
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
@@ -90,7 +101,9 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 					material.addTexture(mCameraStreamingTexture);
 
 					screenQuad.setMaterial(material);
+//					getCurrentScene().replaceChild(screenQuad, screenQuad);
 					getCurrentScene().addChild(screenQuad);
+					streamingReady = true;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -119,8 +132,8 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 
 		if (loadedObject != null) {
 			getCurrentScene().removeChild(loadedObject);
-			loadedObject.destroy();
-			loadedObject = null;
+//				loadedObject.destroy();
+//				loadedObject = null;
 		}
 		loadedObject = parsedObject;
 
@@ -149,7 +162,6 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	@Override
 	public void onPause() {
 		try {
-			getTextureManager().taskReset();
 			getTextureManager().reset();
 		} catch (Exception e) {/* if texManager != null is not working ? */}
 		super.onPause();
@@ -159,12 +171,11 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	@Override
 	public void onRenderFrame(GL10 gl) {
 		super.onRenderFrame(gl);
-		if (mCameraStreamingTexture != null) {
-			try {
+		try {
+			if (streamingReady)
 				mCameraStreamingTexture.update();
-			} catch (RuntimeException e) {
-				e.printStackTrace(); //
-			}
+		} catch (RuntimeException e) {
+			e.printStackTrace(); //
 		}
 	}
 
@@ -223,6 +234,8 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	 */
 	private void rotate(@NotNull Object3D object3D, @NotNull Face face) {
 		float eulerZ = face.getEulerZ();
+		float eulerY = face.getEulerY();
+		object3D.rotateAround(Vector3.Y, eulerZ, false);
 		object3D.rotateAround(Vector3.Z, eulerZ, false);
 	}
 
@@ -237,7 +250,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		float y = translateY(face.getPosition().y + face.getHeight() / 2);
 		try {
 			object.setScreenCoordinates(x, y, mCurrentViewportWidth, mCurrentViewportHeight, CAMERA_Z);
-		}catch (NullPointerException e){
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 	}

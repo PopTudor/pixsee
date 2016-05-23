@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.face.CameraSource;
+import com.marked.pixsee.face.FaceContract;
 import com.marked.pixsee.face.FacePresenter;
 import com.marked.pixsee.face.FaceRenderer;
 import com.marked.pixsee.face.FaceTrackerAR;
@@ -29,8 +30,8 @@ public class SelfieModule {
 
 	@Provides
 	@PerActivity
-	public FacePresenter provideFacePresenter() {
-		return new FacePresenter();
+	public FaceContract.Presenter provideFacePresenter() {
+		return new FacePresenter(mSelfieActivity);
 	}
 
 	@Provides

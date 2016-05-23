@@ -18,6 +18,7 @@
             <!--<android.opengl.GLSurfaceVizew-->
             <org.rajawali3d.view.TextureView
                 android:id="@+id/texture_view"
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </com.marked.pixsee.face.CameraPreview>

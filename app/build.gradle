@@ -28,7 +28,6 @@ repositories {
 def versionMajor = 1
 def versionMinor = 0
 def versionPatch = 0
-def versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -41,9 +40,8 @@ android {
         applicationId 'com.marked.pixsee'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+        versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch * 10
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
-        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     archivesBaseName = rootProject.projectDir.getName()

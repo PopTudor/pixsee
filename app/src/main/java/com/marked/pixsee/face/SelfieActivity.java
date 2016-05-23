@@ -34,14 +34,14 @@ import rx.schedulers.Schedulers;
 
 import static com.marked.pixsee.face.DetailFragment.OnFragmentInteractionListener;
 
-public class SelfieActivity extends AppCompatActivity implements OnFragmentInteractionListener {
+public class SelfieActivity extends AppCompatActivity implements OnFragmentInteractionListener,FaceContract.View {
 	private static final String TAG = SelfieActivity.class + "***";
 	public static final String PHOTO_EXTRA = "PHOTO";
 	public static final String PHOTO_RENDERER_EXTRA = "PHOTO_RENDERER";
 	private static final int RC_HANDLE_CAMERA_PERM = 2;
 
 	@Inject
-	FacePresenter mFacePresenter;
+	FaceContract.Presenter mFacePresenter;
 
 	@Inject
 	CameraSource mCameraSource;
@@ -105,13 +105,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 			@Override
 			public void onClick(final View cameraButton) {
 				cameraButton.setEnabled(false); /* disable the button because if the user double tapps the camera button(impatience), it would crash the app*/
-				mCameraSource.takePicture(new CameraSource.ShutterCallback() {
-					@Override
-					public void onShutter() {
-						getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, DetailFragment.newInstance()).addToBackStack(null)
-								.commit();
-					}
-				}, new CameraSource.PictureCallback() {
+				mCameraSource.takePicture(mFacePresenter, new CameraSource.PictureCallback() {
 					@Override
 					public void onPictureTaken(final byte[] bytes) {
 						mCameraPreview.stop(); /* camera needs to be frozen after it took the picture*/
@@ -165,13 +159,27 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	}
 
 	/**
-	 * Stops the camera.
+	 * Releases the resources associated with the camera source, the associated detector, and the
+	 * rest of the processing pipeline.
 	 */
 	@Override
 	protected void onPause() {
 		super.onPause();
 		mCameraPreview.stop();
 		Log.d(TAG, "onPause: ");
+	}
+
+	@Override
+	public void onShutter() {
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.fragmentContainer, DetailFragment.newInstance())
+				.addToBackStack(null)
+				.commit();
+	}
+
+	@Override
+	public void setPresenter(FaceContract.Presenter presenter) {
+		this.mFacePresenter = presenter;
 	}
 
 	interface OnFavoritesListener {
@@ -182,17 +190,6 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	@Override
 	public Observable<Bitmap> onButtonClicked() {
 		return Observable.just(mFaceTextureView.getBitmap()).subscribeOn(Schedulers.computation());
-	}
-
-	/**
-	 * Releases the resources associated with the camera source, the associated detector, and the
-	 * rest of the processing pipeline.
-	 */
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mCameraPreview.release();
-		Log.d(TAG, "onDestroy: ");
 	}
 
 	//==============================================================================================
@@ -209,7 +206,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 			mCameraPreview.start(mCameraSource, mFaceRenderer);
 		} catch (IOException e) {
 			Log.e(TAG, "Unable to start camera source.", e);
-			mCameraPreview.release();
+			mCameraPreview.stop();
 			mCameraSource = null;
 		}
 	}
