@@ -1,6 +1,6 @@
 package com.marked.pixsee.face.di;
 
-import com.marked.pixsee.face.CameraSource;
+import com.marked.pixsee.face.custom.CameraSource;
 import com.marked.pixsee.face.SelfieActivity;
 import com.marked.pixsee.injection.scopes.PerActivity;
 

@@ -1,4 +1,4 @@
-package com.marked.pixsee.face;
+package com.marked.pixsee.face.custom;
 
 import android.util.Log;
 
@@ -11,27 +11,23 @@ import com.google.android.gms.vision.face.Face;
  */
 public class FaceTrackerAR extends Tracker<Face> {
 	private static final String TAG = "FACE_TRACKER_***";
-	private FaceRenderer mFaceRenderer;
+	private TrackerCallback trackerCallback;
 
-	public FaceTrackerAR(FaceRenderer faceRenderer) {
-		mFaceRenderer = faceRenderer;
+	public FaceTrackerAR(TrackerCallback trackerCallback) {
+		this.trackerCallback = trackerCallback;
 	}
 
 	@Override
 	public void onNewItem(int id, Face item) {
 		super.onNewItem(id, item);
-		mFaceRenderer.onNewItem(item);
+		trackerCallback.onNewItem(id, item);
 		Log.i(TAG, "Awesome person detected.  Hello!");
 	}
 
 	@Override
 	public void onUpdate(Detector.Detections<Face> detections, Face item) {
 		super.onUpdate(detections, item);
-		if (item.getIsSmilingProbability() > 0.75) {
-			Log.i(TAG, "I see a smile.  They must really enjoy your app.");
-			mFaceRenderer.isSmiling();
-		}
-		mFaceRenderer.onUpdate(item);
+		trackerCallback.onUpdate(detections, item);
 	}
 
 	@Override
@@ -42,7 +38,15 @@ public class FaceTrackerAR extends Tracker<Face> {
 	@Override
 	public void onDone() {
 		super.onDone();
-		mFaceRenderer.onDone();
+		trackerCallback.onDone();
 		Log.i(TAG, "Elvis has left the building.");
+	}
+
+	interface TrackerCallback {
+		void onNewItem(int id, Face face);
+
+		void onUpdate(Detector.Detections<Face> detections, Face face);
+
+		void onDone();
 	}
 }

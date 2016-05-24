@@ -5,11 +5,11 @@ import android.util.Log;
 
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
-import com.marked.pixsee.face.CameraSource;
+import com.marked.pixsee.face.custom.CameraSource;
 import com.marked.pixsee.face.FaceContract;
 import com.marked.pixsee.face.FacePresenter;
-import com.marked.pixsee.face.FaceRenderer;
-import com.marked.pixsee.face.FaceTrackerAR;
+import com.marked.pixsee.face.custom.FaceRenderer;
+import com.marked.pixsee.face.custom.FaceTrackerAR;
 import com.marked.pixsee.face.SelfieActivity;
 import com.marked.pixsee.injection.scopes.PerActivity;
 

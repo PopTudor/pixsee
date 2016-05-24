@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.commands.ClickCommand;
-import com.marked.pixsee.face.FaceObject;
-import com.marked.pixsee.face.FaceRenderer;
+import com.marked.pixsee.face.data.FaceObject;
+import com.marked.pixsee.face.custom.FaceRenderer;
 
 import java.lang.ref.WeakReference;
 

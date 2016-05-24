@@ -3,6 +3,7 @@ package com.marked.pixsee.face;
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.commands.Command;
+import com.marked.pixsee.face.custom.CameraSource;
 
 /**
  * Created by Tudor on 2016-05-22.

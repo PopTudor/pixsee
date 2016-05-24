@@ -1,4 +1,4 @@
-package com.marked.pixsee.face;
+package com.marked.pixsee.face.custom;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
@@ -9,9 +9,11 @@ import android.view.MotionEvent;
 import android.view.Surface;
 
 import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.face.Face;
-import com.marked.pixsee.face.CameraSource.CameraCallback;
+import com.marked.pixsee.face.custom.CameraSource.CameraCallback;
 import com.marked.pixsee.face.SelfieActivity.OnFavoritesListener;
+import com.marked.pixsee.face.data.FaceObject;
 
 import org.jetbrains.annotations.NotNull;
 import org.rajawali3d.Object3D;
@@ -40,7 +42,7 @@ import rx.schedulers.Schedulers;
  * Used to render models onto a @{StreamingTexture} using the render thread
  * The renderer should only be created once we have a running camera
  */
-public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, CameraCallback, StreamingTexture.ISurfaceListener {
+public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, CameraCallback, StreamingTexture.ISurfaceListener ,FaceTrackerAR.TrackerCallback {
 	private static final String TAG = "***********";
 	private static final int CAMERA_Z = 10;
 	private final Object mLock = new Object();
@@ -214,12 +216,10 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 			mWidthScaleFactor = (float) mCurrentViewportWidth / (float) mPreviewWidth;
 			mHeightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
 		}
-		synchronized (mLock) {
-			if (mFace != null && loadedObject != null) {
-				scale(loadedObject, mFace);
-				rotate(loadedObject, mFace);
-				translation(loadedObject, mFace);
-			}
+		if (mFace != null && loadedObject != null) {
+			scale(loadedObject, mFace);
+			rotate(loadedObject, mFace);
+			translation(loadedObject, mFace);
 		}
 		if (aSingleTexture != null) {
 			try {
@@ -275,16 +275,19 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		}
 	}
 
-	public void onNewItem(Face face) {
+	@Override
+	public void onNewItem(int id, Face face) {
 		this.mFace = face;
 		if (loadedObject != null)
 			loadedObject.setVisible(true);
 	}
 
-	public void onUpdate(Face face) {
+	@Override
+	public void onUpdate(Detector.Detections<Face> detections, Face face) {
 		this.mFace = face;
 	}
 
+	@Override
 	public void onDone() {
 		this.mFace = null;
 		if (loadedObject != null)
@@ -357,7 +360,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 			callback.onTextureAvailable(mCameraStreamingTexture.getSurfaceTexture());
 	}
 
-	interface FaceRendererCallback {
+	public interface FaceRendererCallback {
 		void onTextureAvailable(SurfaceTexture texture);
 	}
 }

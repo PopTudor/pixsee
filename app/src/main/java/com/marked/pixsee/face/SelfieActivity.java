@@ -18,6 +18,10 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.face.commands.FavOneClick;
 import com.marked.pixsee.face.commands.FavThreeClick;
 import com.marked.pixsee.face.commands.FavTwoClick;
+import com.marked.pixsee.face.custom.CameraPreview;
+import com.marked.pixsee.face.custom.CameraSource;
+import com.marked.pixsee.face.custom.FaceRenderer;
+import com.marked.pixsee.face.data.FaceObject;
 import com.marked.pixsee.face.di.DaggerSelfieComponent;
 import com.marked.pixsee.face.di.SelfieComponent;
 import com.marked.pixsee.face.di.SelfieModule;
@@ -191,7 +195,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 		this.mFacePresenter = presenter;
 	}
 
-	interface OnFavoritesListener {
+	public interface OnFavoritesListener {
 		void onFavoriteClicked(FaceObject object);
 	}
 

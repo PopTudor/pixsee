@@ -1,4 +1,4 @@
-package com.marked.pixsee.face;
+package com.marked.pixsee.face.data;
 
 import android.content.Context;
 
