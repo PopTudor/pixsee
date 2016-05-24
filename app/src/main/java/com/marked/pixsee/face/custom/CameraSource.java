@@ -105,7 +105,6 @@ public class CameraSource {
 
 	private String mFocusMode = null;
 	private String mFlashMode = null;
-	private CameraCallback mCallback;
 
 	/**
 	 * Dedicated thread and associated runnable for calling into the detector with frames, as the
@@ -195,15 +194,6 @@ public class CameraSource {
 		}
 
 		/**
-		 * Sets the camera to use (either {@link #CAMERA_FACING_BACK} or
-		 * {@link #CAMERA_FACING_FRONT}). Default: front facing.
-		 */
-		public Builder setStreaming(CameraCallback callback) {
-			mCameraSource.mCallback = callback;
-			return this;
-		}
-
-		/**
 		 * Creates an instance of the camera source.
 		 */
 		public CameraSource build() {
@@ -212,21 +202,6 @@ public class CameraSource {
 		}
 	}
 
-	/**
-	 * Callback interface used to signal when the camera is ready to use
-	 * (specific case needed by renderer to output camera preview to texture)
-	 * This is better than making the camera a property with setters/getters because
-	 * we don't expose the CameraSource implementation and we can pass later
-	 * Camera2 instead of deprecated Camera
-	 */
-	interface CameraCallback {
-		/**
-		 * When the camera is ready and initialised, pass it on to whoever needs it
-		 *
-		 * @param camera
-		 */
-		void cameraCreated(Camera camera);
-	}
 	//==============================================================================================
 	// Bridge Functionality for the Camera1 API
 	//==============================================================================================
@@ -738,7 +713,6 @@ public class CameraSource {
 		}
 
 		Camera camera = Camera.open(requestedCameraId);
-		mCallback.cameraCreated(camera);
 		SizePair sizePair = selectSizePair(camera, mRequestedPreviewWidth, mRequestedPreviewHeight);
 		if (sizePair == null) {
 			throw new RuntimeException("Could not find suitable preview size.");

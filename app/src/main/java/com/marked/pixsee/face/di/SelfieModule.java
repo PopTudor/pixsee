@@ -63,7 +63,6 @@ public class SelfieModule {
 		return new CameraSource.Builder(mSelfieActivity, faceDetector).setRequestedFps(30.0f)
 				       .setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO)
 				       .setFacing(com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT)
-				       .setStreaming(faceRenderer)
 				       .build();
 	}
 

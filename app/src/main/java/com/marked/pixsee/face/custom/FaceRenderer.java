@@ -2,7 +2,6 @@ package com.marked.pixsee.face.custom;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
-import android.hardware.Camera;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -11,7 +10,6 @@ import android.view.Surface;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.face.Face;
-import com.marked.pixsee.face.custom.CameraSource.CameraCallback;
 import com.marked.pixsee.face.SelfieActivity.OnFavoritesListener;
 import com.marked.pixsee.face.data.FaceObject;
 
@@ -42,7 +40,7 @@ import rx.schedulers.Schedulers;
  * Used to render models onto a @{StreamingTexture} using the render thread
  * The renderer should only be created once we have a running camera
  */
-public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, CameraCallback, StreamingTexture.ISurfaceListener ,FaceTrackerAR.TrackerCallback {
+public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, StreamingTexture.ISurfaceListener ,FaceTrackerAR.TrackerCallback {
 	private static final String TAG = "***********";
 	private static final int CAMERA_Z = 10;
 	private final Object mLock = new Object();
@@ -103,34 +101,6 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * When we have a camera, start rendering
-	 *
-	 * @param camera
-	 */
-	@Override
-	public void cameraCreated(Camera camera) {
-//		mCameraStreamingTexture = new StreamingTexture("Preview", camera, null);
-//		mCameraStreamingTexture.shouldRecycle(true);
-//		handler.post(new Runnable() {
-//			@Override
-//			public void run() {
-//				try {
-//					Material material = new Material();
-//					material.setColorInfluence(0);
-//					material.addTexture(mCameraStreamingTexture);
-//
-//					screenQuad.setMaterial(material);
-//					getCurrentScene().replaceChild(screenQuad, screenQuad);
-//		getCurrentScene().addChild(screenQuad);
-//					streamingReady = true;
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
 	}
 
 	@Override
