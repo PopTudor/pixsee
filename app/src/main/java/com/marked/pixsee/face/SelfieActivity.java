@@ -2,6 +2,7 @@ package com.marked.pixsee.face;
 
 import android.Manifest;
 import android.graphics.Bitmap;
+import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -55,6 +56,13 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	private ImageButton mCameraButton;
 
 	private SelfieComponent mSelfieComponent;
+	private FaceRenderer.FaceRendererCallback faceRendererCallback = new FaceRenderer.FaceRendererCallback() {
+		@Override
+		public void onTextureAvailable(SurfaceTexture texture) {
+			mCameraPreview.setSurfaceTexture(texture);
+			startCameraSource();
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +82,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 		mFaceTextureView = (TextureView) findViewById(R.id.texture_view);
 		mFaceTextureView.setEGLContextClientVersion(2);
 		mFaceTextureView.setSurfaceRenderer(mFaceRenderer);
+		mFaceRenderer.setCallback(faceRendererCallback);
 
 		findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
 			@Override

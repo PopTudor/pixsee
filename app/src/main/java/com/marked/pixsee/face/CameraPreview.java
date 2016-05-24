@@ -28,6 +28,7 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
 	private boolean mSurfaceAvailable;
 	private CameraSource mCameraSource;
 	private FaceRenderer mFaceRenderer;
+	private SurfaceTexture surfaceTexture;
 
 	public CameraPreview(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -35,13 +36,18 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
 		mStartRequested = false;
 		mSurfaceAvailable = false;
 
-		setSurfaceView(new SurfaceView(context));
-		addView(mSurfaceView);
+//		setSurfaceView(new SurfaceView(context));
+//		addView(mSurfaceView);
 	}
 
 	void setSurfaceView(SurfaceView surfaceView) {
 		mSurfaceView = surfaceView;
 		mSurfaceView.getHolder().addCallback(this);
+	}
+
+	public void setSurfaceTexture(SurfaceTexture surfaceTexture) {
+		this.surfaceTexture = surfaceTexture;
+		mSurfaceAvailable = true;
 	}
 
 	public void start(@NotNull CameraSource cameraSource, @NotNull FaceRenderer overlay) throws IOException {
@@ -79,7 +85,8 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
 				// for ActivityCompat#requestPermissions for more details.
 				return;
 			}
-			mCameraSource.start(mSurfaceView.getHolder());
+//			mCameraSource.start(mSurfaceView.getHolder());
+			mCameraSource.start(surfaceTexture);
 			if (mFaceRenderer != null) {
 				Size size = mCameraSource.getPreviewSize();
 				int min = Math.min(size.getWidth(), size.getHeight());

@@ -1,10 +1,12 @@
 package com.marked.pixsee.face;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.Surface;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.face.Face;
@@ -38,7 +40,7 @@ import rx.schedulers.Schedulers;
  * Used to render models onto a @{StreamingTexture} using the render thread
  * The renderer should only be created once we have a running camera
  */
-public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, CameraCallback {
+public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, CameraCallback, StreamingTexture.ISurfaceListener {
 	private static final String TAG = "***********";
 	private static final int CAMERA_Z = 10;
 	private final Object mLock = new Object();
@@ -55,6 +57,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	private Face mFace;
 	private ASingleTexture aSingleTexture; /* GIF */
 	private Handler handler;
+	private FaceRendererCallback callback;
 	/******************
 	 * Camera preview *
 	 ******************/
@@ -62,15 +65,23 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	private StreamingTexture mCameraStreamingTexture;
 
 	public FaceRenderer(Context context) {
+		this(context, null);
+	}
+	public FaceRenderer(Context context,FaceRendererCallback faceRendererCallback) {
 		super(context);
+		this.callback = faceRendererCallback;
 		setFrameRate(60);
 		handler = new Handler();
+		screenQuad = new ScreenQuad();
+		mCameraStreamingTexture = new StreamingTexture("Preview", this);
+	}
 
+	public void setCallback(FaceRendererCallback callback) {
+		this.callback = callback;
 	}
 
 	@Override
 	protected void initScene() {
-		screenQuad = new ScreenQuad();
 		screenQuad.rotate(Vector3.Axis.Z, -90);
 
 		directionalLight = new DirectionalLight(0f, 0f, -1.0f);
@@ -79,9 +90,18 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 
 		getCurrentScene().addLight(directionalLight);
 		getCurrentCamera().setPosition(0, 0, CAMERA_Z);
-	}
+		try {
+			Material material = new Material();
+			material.setColorInfluence(0);
+			material.addTexture(mCameraStreamingTexture);
 
-	boolean streamingReady;
+			screenQuad.setMaterial(material);
+//					getCurrentScene().replaceChild(screenQuad, screenQuad);
+			getCurrentScene().addChild(screenQuad);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * When we have a camera, start rendering
@@ -90,27 +110,26 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	 */
 	@Override
 	public void cameraCreated(Camera camera) {
-		mCameraStreamingTexture = new StreamingTexture("Preview", camera, null);
-		mCameraStreamingTexture.shouldRecycle(true);
-		handler.post(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Material material = new Material();
-					material.setColorInfluence(0);
-					material.addTexture(mCameraStreamingTexture);
-
-					screenQuad.setMaterial(material);
+//		mCameraStreamingTexture = new StreamingTexture("Preview", camera, null);
+//		mCameraStreamingTexture.shouldRecycle(true);
+//		handler.post(new Runnable() {
+//			@Override
+//			public void run() {
+//				try {
+//					Material material = new Material();
+//					material.setColorInfluence(0);
+//					material.addTexture(mCameraStreamingTexture);
+//
+//					screenQuad.setMaterial(material);
 //					getCurrentScene().replaceChild(screenQuad, screenQuad);
-					getCurrentScene().addChild(screenQuad);
-					streamingReady = true;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+//		getCurrentScene().addChild(screenQuad);
+//					streamingReady = true;
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
 	}
-
 
 	@Override
 	public void onModelLoadComplete(ALoader loader) {
@@ -172,8 +191,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	public void onRenderFrame(GL10 gl) {
 		super.onRenderFrame(gl);
 		try {
-			if (streamingReady)
-				mCameraStreamingTexture.update();
+			mCameraStreamingTexture.update();
 		} catch (RuntimeException e) {
 			e.printStackTrace(); //
 		}
@@ -196,10 +214,12 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 			mWidthScaleFactor = (float) mCurrentViewportWidth / (float) mPreviewWidth;
 			mHeightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
 		}
-		if (mFace != null && loadedObject != null) {
-			scale(loadedObject, mFace);
-			rotate(loadedObject, mFace);
-			translation(loadedObject, mFace);
+		synchronized (mLock) {
+			if (mFace != null && loadedObject != null) {
+				scale(loadedObject, mFace);
+				rotate(loadedObject, mFace);
+				translation(loadedObject, mFace);
+			}
 		}
 		if (aSingleTexture != null) {
 			try {
@@ -331,4 +351,13 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 
 	}
 
+	@Override
+	public void setSurface(Surface surface) {
+		if (callback != null)
+			callback.onTextureAvailable(mCameraStreamingTexture.getSurfaceTexture());
+	}
+
+	interface FaceRendererCallback {
+		void onTextureAvailable(SurfaceTexture texture);
+	}
 }

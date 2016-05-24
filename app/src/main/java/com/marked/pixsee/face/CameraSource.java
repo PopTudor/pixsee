@@ -302,8 +302,10 @@ public class CameraSource {
 //			stop();
 			if (mCamera != null)
 				mCamera.release();
-			if (mFrameProcessor != null)
+			if (mFrameProcessor != null) {
+				mFrameProcessor.setActive(false);
 				mFrameProcessor.release();
+			}
 		}
 	}
 
@@ -360,8 +362,7 @@ public class CameraSource {
 				mCamera = createCamera();
 
 			} catch (RuntimeException e) {
-				if (mCamera != null)
-					mCamera.release();
+				release();
 				Toast.makeText(mContext, "Camera could not be opened. You might need to restart the device !", Toast.LENGTH_LONG);
 			}
 			mCamera.setPreviewDisplay(surfaceHolder);
