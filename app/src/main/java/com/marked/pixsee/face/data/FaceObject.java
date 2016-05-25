@@ -31,12 +31,12 @@ import java.util.Random;
  * Created by Tudor on 4/15/2016.
  */
 public class FaceObject {
-	private final int drawingPosition;
-	private final Material material;
-	private final ASingleTexture texture;
-	private final boolean isAnimated;
-	private final Object3D object3D;
-	private final ALoader loader;
+	private final int drawingPosition; /* Left/Right eye etc...*/
+	private final Material material; /* one object has only one material */
+	private final ASingleTexture texture; /* GIF use case */
+	private final boolean isAnimated; /* if the texture is animated, GIF use case */
+	private final Object3D object3D; /* the model to load */
+	private final ALoader loader; /* Loader used to load the model */
 	private final int textureId,resId;
 
 
@@ -135,9 +135,10 @@ public class FaceObject {
 			return this;
 		}
 		public FaceObject build() {
-			if (resId != -1)
+			if (resId != -1) {
 				buildResLoader();
-			else
+				resId = textureId;
+			}else
 				buildFileLoader();
 
 			buildTexture();

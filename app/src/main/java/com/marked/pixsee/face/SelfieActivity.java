@@ -85,7 +85,7 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 
 		mFaceTextureView = (TextureView) findViewById(R.id.texture_view);
 		mFaceTextureView.setEGLContextClientVersion(2);
-		mFaceTextureView.setSurfaceRenderer(mFaceRenderer);
+		mFaceTextureView.setSurfaceRenderer(mFaceRenderer); /* the surface where the renderer should display it's scene*/
 		mFaceRenderer.setCallback(faceRendererCallback);
 
 		findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {

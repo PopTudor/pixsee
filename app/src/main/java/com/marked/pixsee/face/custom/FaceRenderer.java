@@ -2,7 +2,6 @@ package com.marked.pixsee.face.custom;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
-import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -18,7 +17,6 @@ import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.ALoader;
 import org.rajawali3d.loader.AMeshLoader;
-import org.rajawali3d.loader.Loader3DSMax;
 import org.rajawali3d.loader.async.IAsyncLoaderCallback;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.textures.ASingleTexture;
@@ -31,16 +29,12 @@ import org.rajawali3d.renderer.Renderer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.schedulers.Schedulers;
-
 /**
  * Created by Tudor on 4/8/2016.
  * Used to render models onto a @{StreamingTexture} using the render thread
  * The renderer should only be created once we have a running camera
  */
-public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, StreamingTexture.ISurfaceListener ,FaceTrackerAR.TrackerCallback {
+public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, StreamingTexture.ISurfaceListener, FaceTrackerAR.TrackerCallback {
 	private static final String TAG = "***********";
 	private static final int CAMERA_Z = 10;
 	private final Object mLock = new Object();
@@ -56,7 +50,6 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	private Object3D loadedObject = null;
 	private Face mFace;
 	private ASingleTexture aSingleTexture; /* GIF */
-	private Handler handler;
 	private FaceRendererCallback callback;
 	/******************
 	 * Camera preview *
@@ -67,12 +60,12 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	public FaceRenderer(Context context) {
 		this(context, null);
 	}
-	public FaceRenderer(Context context,FaceRendererCallback faceRendererCallback) {
+
+	public FaceRenderer(Context context, FaceRendererCallback faceRendererCallback) {
 		super(context);
 		this.callback = faceRendererCallback;
 		setFrameRate(60);
-		handler = new Handler();
-		screenQuad = new ScreenQuad();
+		screenQuad = new ScreenQuad(1,1,true,false,false);
 		mCameraStreamingTexture = new StreamingTexture("Preview", this);
 	}
 
@@ -83,6 +76,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	@Override
 	protected void initScene() {
 		screenQuad.rotate(Vector3.Axis.Z, -90);
+
 
 		directionalLight = new DirectionalLight(0f, 0f, -1.0f);
 		directionalLight.setColor(1.0f, 1.0f, 1.0f);
@@ -101,56 +95,40 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	@Override
-	public void onModelLoadComplete(ALoader loader) {
+	public void onModelLoadComplete(final ALoader loader) {
 		Log.d(TAG, "onModelLoadComplete: ");
-		final AMeshLoader obj;
-		if (loader instanceof Loader3DSMax) {
-			Log.d(TAG, "onModelLoadComplete: ");
-			obj = ((Loader3DSMax) loader);
-			try {
-				((Loader3DSMax) obj).build();
-			} catch (ATexture.TextureException e) {
-				e.printStackTrace();
+		mLoaderExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				final AMeshLoader obj = ((AMeshLoader) loader);
+
+				final Object3D parsedObject = obj.getParsedObject();
+				parsedObject.setPosition(Vector3.ZERO);
+
+				if (loadedObject != null) {
+					getCurrentScene().removeChild(loadedObject);
+					loadedObject = null;
+				}
+				loadedObject = parsedObject;
+
+				getCurrentScene().addChild(loadedObject);
 			}
-		} else
-			obj = ((AMeshLoader) loader);
-
-		final Object3D parsedObject = obj.getParsedObject();
-		parsedObject.setPosition(Vector3.ZERO);
-
-		if (loadedObject != null) {
-			getCurrentScene().removeChild(loadedObject);
-//				loadedObject.destroy();
-//				loadedObject = null;
-		}
-		loadedObject = parsedObject;
-
-		getCurrentScene().addChild(loadedObject);
+		});
 	}
+
 
 
 	@Override
 	public void onFavoriteClicked(final FaceObject object) {
-		Observable.create(new Observable.OnSubscribe<ALoader>() {
-			@Override
-			public void call(Subscriber<? super ALoader> subscriber) {
-				loadModel(object.getLoader(), FaceRenderer.this, object.getResId());
-			}
-		})
-				.subscribeOn(Schedulers.trampoline())
-				.subscribe();
-	}
-
-	@Override
-	public void onPause() {
-//		try {
-//			getTextureManager().reset();
-//		} catch (Exception e) {/* if texManager != null is not working ? */}
-		super.onPause();
-
+		loadModel(object.getLoader(), FaceRenderer.this, object.getResId());
+		if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
+			mWidthScaleFactor = (float) mCurrentViewportWidth / (float) mPreviewWidth;
+			mHeightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
+		}
 	}
 
 	@Override
@@ -160,25 +138,6 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 			mCameraStreamingTexture.update();
 		} catch (RuntimeException e) {
 			e.printStackTrace(); //
-		}
-	}
-
-	@Override
-	public void onModelLoadFailed(ALoader loader) {
-		Log.d(TAG, "onModelLoadFailed: ");
-		onDone();
-	}
-
-	public void isSmiling() {
-
-	}
-
-	@Override
-	protected void onRender(long ellapsedRealtime, double deltaTime) {
-		super.onRender(ellapsedRealtime, deltaTime);
-		if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
-			mWidthScaleFactor = (float) mCurrentViewportWidth / (float) mPreviewWidth;
-			mHeightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
 		}
 		if (mFace != null && loadedObject != null) {
 			scale(loadedObject, mFace);
@@ -194,6 +153,11 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		}
 	}
 
+	@Override
+	public void onModelLoadFailed(ALoader loader) {
+		Log.d(TAG, "onModelLoadFailed: ");
+		onDone();
+	}
 	/**
 	 * Scale the object based on face size
 	 *
