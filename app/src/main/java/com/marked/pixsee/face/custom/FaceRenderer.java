@@ -36,7 +36,7 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, StreamingTexture.ISurfaceListener, FaceTrackerAR.TrackerCallback {
 	private static final String TAG = "***********";
-	private static final int CAMERA_Z = 10;
+	private static final int CAMERA_Z = 6;
 	private final Object mLock = new Object();
 	private DirectionalLight directionalLight;
 
@@ -48,7 +48,6 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	private float mHeightScaleFactor = 1.0f;
 
 	private Object3D loadedObject = null;
-	private Face mFace;
 	private ASingleTexture aSingleTexture; /* GIF */
 	private FaceRendererCallback callback;
 	/******************
@@ -120,8 +119,6 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		});
 	}
 
-
-
 	@Override
 	public void onFavoriteClicked(final FaceObject object) {
 		loadModel(object.getLoader(), FaceRenderer.this, object.getResId());
@@ -139,11 +136,6 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		} catch (RuntimeException e) {
 			e.printStackTrace(); //
 		}
-		if (mFace != null && loadedObject != null) {
-			scale(loadedObject, mFace);
-			rotate(loadedObject, mFace);
-			translation(loadedObject, mFace);
-		}
 		if (aSingleTexture != null) {
 			try {
 				((AnimatedGIFTexture) aSingleTexture).update();
@@ -151,6 +143,26 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 				e.printStackTrace();
 			}
 		}
+	}
+	@Override
+	public void onNewItem(int id, Face face) {
+		if (loadedObject != null)
+			loadedObject.setVisible(true);
+	}
+
+	@Override
+	public void onUpdate(Detector.Detections<Face> detections, Face face) {
+		if (loadedObject != null && face != null) {
+			scale(loadedObject, face);
+			rotate(loadedObject, face);
+			translation(loadedObject, face);
+		}
+	}
+
+	@Override
+	public void onDone() {
+		if (loadedObject != null)
+			loadedObject.setVisible(false);
 	}
 
 	@Override
@@ -170,7 +182,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 		float x2 = face.getWidth();
 		float y2 = face.getHeight();
 		double dist = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-		double scaleValue = dist / mDefaultViewportWidth + 0.4;
+		double scaleValue = dist / mDefaultViewportWidth;
 		object3D.setScale(scaleValue);
 	}
 
@@ -182,9 +194,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	 */
 	private void rotate(@NotNull Object3D object3D, @NotNull Face face) {
 		float eulerZ = face.getEulerZ();
-		float eulerY = face.getEulerY();
 		object3D.rotateAround(Vector3.Y, eulerZ, false);
-		object3D.rotateAround(Vector3.Z, eulerZ, false);
 	}
 
 	/**
@@ -196,30 +206,7 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	private void translation(@NotNull Object3D object, @NotNull Face face) {
 		float x = translateX(face.getPosition().x + face.getWidth() / 2);
 		float y = translateY(face.getPosition().y + face.getHeight() / 2);
-		try {
-			object.setScreenCoordinates(x, y, mCurrentViewportWidth, mCurrentViewportHeight, CAMERA_Z);
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void onNewItem(int id, Face face) {
-		this.mFace = face;
-		if (loadedObject != null)
-			loadedObject.setVisible(true);
-	}
-
-	@Override
-	public void onUpdate(Detector.Detections<Face> detections, Face face) {
-		this.mFace = face;
-	}
-
-	@Override
-	public void onDone() {
-		this.mFace = null;
-		if (loadedObject != null)
-			loadedObject.setVisible(false);
+		object.setScreenCoordinates(x, y, mCurrentViewportWidth, mCurrentViewportHeight, CAMERA_Z);
 	}
 
 	/**

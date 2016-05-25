@@ -96,7 +96,7 @@ public class FaceObject {
 		}
 
 		public FaceBuilder withTexture(ASingleTexture texture,boolean isAnimated) {
-			withTexture(texture, isAnimated, 256);
+			withTexture(texture, isAnimated, 512);
 			return this;
 		}
 
