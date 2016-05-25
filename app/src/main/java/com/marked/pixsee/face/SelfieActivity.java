@@ -136,7 +136,6 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 						startCameraSource();
 						break;
 					case 1:
-
 						mBottomLayout.setVisibility(View.GONE);
 						break;
 				}
@@ -149,7 +148,6 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 					@Override
 					public void call(Boolean granted) {
 						if (granted) { // Always true pre-M
-							mSelfieComponent.inject(mCameraSource);
 							// I can control the camera now
 						} else {
 							// Oups permission denied
@@ -165,6 +163,8 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	@Override
 	protected void onResume() {
 		super.onResume();
+		mSelfieComponent.inject(mCameraSource);
+
 		startCameraSource();
 		/* if we resume and the user had the fragment screen, make him take another picture*/
 		if (getSupportFragmentManager().getBackStackEntryCount() > 0)
@@ -178,8 +178,14 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mCameraPreview.stop();
+		mCameraPreview.release();
 		Log.d(TAG, "onPause: ");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
 	}
 
 	@Override

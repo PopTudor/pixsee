@@ -145,16 +145,10 @@ public class FaceRenderer extends Renderer implements IAsyncLoaderCallback, OnFa
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-
-	}
-
-	@Override
 	public void onPause() {
-		try {
-			getTextureManager().reset();
-		} catch (Exception e) {/* if texManager != null is not working ? */}
+//		try {
+//			getTextureManager().reset();
+//		} catch (Exception e) {/* if texManager != null is not working ? */}
 		super.onPause();
 
 	}

@@ -16,7 +16,6 @@ import android.support.annotation.RequiresPermission;
 import android.support.annotation.StringDef;
 import android.util.Log;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -274,12 +273,10 @@ public class CameraSource {
 	 */
 	public void release() {
 		synchronized (mCameraLock) {
-//			stop();
-			if (mCamera != null)
+			stop();
+			if (mCamera != null) {
 				mCamera.release();
-			if (mFrameProcessor != null) {
-				mFrameProcessor.setActive(false);
-				mFrameProcessor.release();
+				mCamera = null;
 			}
 		}
 	}
@@ -319,43 +316,11 @@ public class CameraSource {
 		return this;
 	}
 
-
-	/**
-	 * Opens the camera and starts sending preview frames to the underlying detector.  The supplied
-	 * surface holder is used for the preview so frames can be displayed to the user.
-	 *
-	 * @param surfaceHolder the surface holder to use for the preview frames
-	 * @throws IOException if the supplied surface holder could not be used as the preview display
-	 */
-	@RequiresPermission(Manifest.permission.CAMERA)
-	public CameraSource start(SurfaceHolder surfaceHolder) throws IOException {
-		synchronized (mCameraLock) {
-			if (mCamera != null) {
-				return this;
-			}
-			try {
-				mCamera = createCamera();
-
-			} catch (RuntimeException e) {
-				release();
-				Toast.makeText(mContext, "Camera could not be opened. You might need to restart the device !", Toast.LENGTH_LONG);
-			}
-			mCamera.setPreviewDisplay(surfaceHolder);
-			mCamera.startPreview();
-
-			mProcessingThread = new Thread(mFrameProcessor);
-			mFrameProcessor.setActive(true);
-			mProcessingThread.start();
-		}
-		return this;
-	}
-
 	/**
 	 * Closes the camera and stops sending frames to the underlying frame detector.
 	 * <p/>
 	 * This camera source may be restarted again by calling
 	 * {@link #start(SurfaceTexture surfaceTexture)} or
-	 * {@link #start(SurfaceHolder)}.
 	 * <p/>
 	 * Call {@link #release()} instead to completely shut down this camera source and release the
 	 * resources of the underlying detector.
@@ -396,8 +361,9 @@ public class CameraSource {
 				} catch (Exception e) {
 					Log.e(TAG, "Failed to clear camera preview: " + e);
 				}
-//				mCamera.release();
-//				mCamera = null;
+
+				mCamera.release();
+				mCamera = null;
 			}
 		}
 	}
@@ -452,7 +418,7 @@ public class CameraSource {
 
 	/**
 	 * Initiates taking a picture, which happens asynchronously.  The camera source should have been
-	 * activated previously with {@link #start(SurfaceTexture)} or {@link #start(SurfaceHolder)}.  The camera
+	 * activated previously with {@link #start(SurfaceTexture)} .  The camera
 	 * preview is suspended while the picture is being taken, but will resume once picture taking is
 	 * done.
 	 *
@@ -557,7 +523,7 @@ public class CameraSource {
 	/**
 	 * Starts camera auto-focus and registers a callback function to run when
 	 * the camera is focused.  This method is only valid when preview is active
-	 * (between {@link #start(SurfaceTexture)} or {@link #start(SurfaceHolder)} and before {@link #stop()} or {@link #release()}).
+	 * (between {@link #start(SurfaceTexture)} and before {@link #stop()} or {@link #release()}).
 	 * <p/>
 	 * <p>Callers should check
 	 * {@link #getFocusMode()} to determine if

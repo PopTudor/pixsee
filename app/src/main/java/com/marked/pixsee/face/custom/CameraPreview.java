@@ -8,22 +8,18 @@ import android.graphics.SurfaceTexture;
 import android.support.v4.app.ActivityCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
 
 import org.jetbrains.annotations.NotNull;
-import org.rajawali3d.view.TextureView;
 
 import java.io.IOException;
 
-public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
+public class CameraPreview extends ViewGroup {
 	private static final String TAG = "CameraSourcePreview";
 
 	private Context mContext;
-	private SurfaceView mSurfaceView;
 	private boolean mStartRequested;
 	private boolean mSurfaceAvailable;
 	private CameraSource mCameraSource;
@@ -33,16 +29,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
 	public CameraPreview(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mContext = context;
-		mStartRequested = false;
-		mSurfaceAvailable = false;
-
-//		setSurfaceView(new SurfaceView(context));
-//		addView(mSurfaceView);
-	}
-
-	void setSurfaceView(SurfaceView surfaceView) {
-		mSurfaceView = surfaceView;
-		mSurfaceView.getHolder().addCallback(this);
 	}
 
 	public void setSurfaceTexture(SurfaceTexture surfaceTexture) {
@@ -64,13 +50,17 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
 	public void stop() {
 		if (mFaceRenderer != null) {
 			mFaceRenderer.onPause(); /* calls renderer.stopRendering() */
-			mFaceRenderer = null;
 		}
 		if (mCameraSource != null) {
 			mCameraSource.stop();
-			mCameraSource.release();
-			mCameraSource = null;
 		}
+	}
+	public void release(){
+		stop();
+		mFaceRenderer = null;
+		mCameraSource.release();
+		mCameraSource = null;
+		mSurfaceAvailable = false;
 	}
 
 	private void startIfReady() throws IOException {
@@ -85,7 +75,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
 				// for ActivityCompat#requestPermissions for more details.
 				return;
 			}
-//			mCameraSource.start(mSurfaceView.getHolder());
 			mCameraSource.start(surfaceTexture);
 			if (mFaceRenderer != null) {
 				Size size = mCameraSource.getPreviewSize();
@@ -100,54 +89,6 @@ public class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
 				}
 			}
 			mStartRequested = false;
-		}
-	}
-
-	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
-		mSurfaceAvailable = true;
-		try {
-			startIfReady();
-		} catch (IOException e) {
-			Log.e(TAG, "Could not start camera source.", e);
-		}
-	}
-
-	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-	}
-
-	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		mSurfaceAvailable = false;
-	}
-
-	private class TextureCallback implements TextureView.SurfaceTextureListener {
-		@Override
-		public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-			mSurfaceAvailable = true;
-			try {
-				startIfReady();
-			} catch (IOException e) {
-				Log.e(TAG, "Could not start camera source.", e);
-			}
-		}
-
-		@Override
-		public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-		}
-
-		@Override
-		public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-			mSurfaceAvailable = false;
-			return false;
-		}
-
-		@Override
-		public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
 		}
 	}
 
