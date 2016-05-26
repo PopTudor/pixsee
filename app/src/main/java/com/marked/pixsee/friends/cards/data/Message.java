@@ -142,36 +142,36 @@ public class Message implements MessageConstants {
 		return date;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder("Message(");
-		if (collapseKey != null) {
-			builder.append(MessageConstants.COLLAPSE_OPTION + "=").append(collapseKey).append(", ");
-		}
-		if (timeToLive != null) {
-			builder.append(MessageConstants.TIME_TO_LIVE_OPTION + "=").append(timeToLive).append(", ");
-		}
-		if (isDelayWhileIdle != null) {
-			builder.append(MessageConstants.DELAY_WHILE_IDLE_OPTION + "=").append(isDelayWhileIdle).append(", ");
-		}
-		if (restrictedPackageName != null) {
-			builder.append(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION + "=").append(restrictedPackageName).append(", ");
-		}
-		if (to != null) {
-			builder.append(MessageConstants.TO + "=").append(to).append(", ");
-		}
-		if (from != null) {
-			builder.append(MessageConstants.FROM + "=").append(from).append(", ");
-		}
-		appendMap(builder, "data", data);
-		appendMap(builder, "notificationParams", notificationParams);
-		// Remove trailing ", "
-		if (builder.charAt(builder.length() - 1) == ' ') {
-			builder.delete(builder.length() - 2, builder.length());
-		}
-		builder.append(")");
-		return builder.toString();
-	}
+//	@Override
+//	public String toString() {
+//		StringBuilder builder = new StringBuilder("Message(");
+//		if (collapseKey != null) {
+//			builder.append(MessageConstants.COLLAPSE_OPTION + "=").append(collapseKey).append(", ");
+//		}
+//		if (timeToLive != null) {
+//			builder.append(MessageConstants.TIME_TO_LIVE_OPTION + "=").append(timeToLive).append(", ");
+//		}
+//		if (isDelayWhileIdle != null) {
+//			builder.append(MessageConstants.DELAY_WHILE_IDLE_OPTION + "=").append(isDelayWhileIdle).append(", ");
+//		}
+//		if (restrictedPackageName != null) {
+//			builder.append(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION + "=").append(restrictedPackageName).append(", ");
+//		}
+//		if (to != null) {
+//			builder.append(MessageConstants.TO + "=").append(to).append(", ");
+//		}
+//		if (from != null) {
+//			builder.append(MessageConstants.FROM + "=").append(from).append(", ");
+//		}
+//		appendMap(builder, "data", data);
+//		appendMap(builder, "notificationParams", notificationParams);
+//		// Remove trailing ", "
+//		if (builder.charAt(builder.length() - 1) == ' ') {
+//			builder.delete(builder.length() - 2, builder.length());
+//		}
+//		builder.append(")");
+//		return builder.toString();
+//	}
 
 	private void appendMap(StringBuilder builder, String name, Map<String, String> map) {
 		if (!map.isEmpty()) {

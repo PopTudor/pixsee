@@ -4,6 +4,18 @@ package com.marked.pixsee.friends.cards.data;
 /**
  * Created by Tudor Pop on 06-Dec-15.
  * https://developers.google.com/cloud-messaging/http-server-ref#downstream
+ * {
+ * "to" : "APA91bHun4MxP5egoKMwt2KZFBaFUH-1RYqx...",
+ * "notification" : {
+ * "body" : "great match!",
+ * "title" : "Portugal vs. Denmark",
+ * "icon" : "myicon"
+ * },
+ * "data" : {
+ * "Nick" : "Mario",
+ * "Room" : "PortugalVSDenmark"
+ * }
+ * }
  */
 public interface MessageConstants {
 	String TO = "to"; /* message destination, (destination is a better name but GCM uses to)*/
@@ -15,7 +27,8 @@ public interface MessageConstants {
 	String TIME_TO_LIVE_OPTION = "timeToLive";
 	String DELAY_WHILE_IDLE_OPTION = "delayWhileIdle";
 	String RESTRICTED_PACKAGE_NAME_OPTION = "restrictedPackageName";
-	/* This parameter specifies the predefined key-value pairs of the data payload */ String DATA_PAYLOAD = "data"; /* JSON object that holds the body */
+	/* This parameter specifies the predefined key-value pairs of the data payload */
+	String DATA_PAYLOAD = "data"; /* JSON object that holds the body {data: {"body": "some nice text" }  } */
 	String DATA_BODY = "body";
 	String CHAT_ROOM = "room";
 	String CREATION_DATE = "date";
@@ -45,7 +58,7 @@ public interface MessageConstants {
 	interface MessageType {
 		int ME_MESSAGE = 0;
 		int YOU_MESSAGE = 1;
-		int ME_IMAGE= 2;
+		int ME_IMAGE = 2;
 		int YOU_IMAGE = 3;
 		int TYPING = 4;
 	}

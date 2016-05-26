@@ -15,7 +15,7 @@ public class MessageToCVMapper implements Mapper<Message, ContentValues> {
 	public ContentValues map(Message message) {
 		String collapseKey = message.getCollapseKey();
 		Integer timeToLive = message.getTimeToLive();
-		boolean isDelayWhileIdle = message.getDelayWhileIdle();
+		Boolean isDelayWhileIdle = message.getDelayWhileIdle();
 		String restrictedPackageName = message.getRestrictedPackageName();
 		Map<String,String> data = message.getData();
 		String to = message.getTo();
@@ -28,7 +28,7 @@ public class MessageToCVMapper implements Mapper<Message, ContentValues> {
 			values.put(MessageConstants.COLLAPSE_OPTION, collapseKey);
 		if (timeToLive != null)
 			values.put(MessageConstants.TIME_TO_LIVE_OPTION, timeToLive);
-		if (isDelayWhileIdle)
+		if (isDelayWhileIdle!=null)
 			values.put(MessageConstants.DELAY_WHILE_IDLE_OPTION, isDelayWhileIdle);
 		if (restrictedPackageName != null && !restrictedPackageName.isEmpty())
 			values.put(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION, restrictedPackageName);
