@@ -21,7 +21,6 @@
             android:id="@+id/friendsRecyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:scrollbars="vertical"
             />
         <!--<com.github.clans.fab.FloatingActionMenu-->
@@ -42,16 +41,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-    <TextView
-        android:id="@+id/info_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/secondary_text"
-        android:textSize="18sp"
-        />
 
     <!--</com.github.clans.fab.FloatingActionMenu>-->
 </FrameLayout>

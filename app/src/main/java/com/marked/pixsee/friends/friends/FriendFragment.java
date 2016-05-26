@@ -89,7 +89,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 
 	@Override
 	public void showNoFriends() {
-
+		
 	}
 
 	@Override
