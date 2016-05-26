@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.IntentCompat;
 
-import com.marked.pixsee.friends.FriendsActivity;
+import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.networking.HTTPStatusCodes;
 import com.marked.pixsee.utility.GCMConstants;
 
@@ -25,7 +25,7 @@ public class RegistrationBroadcastReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Intent toStart = new Intent(context, FriendsActivity.class);
+		Intent toStart = new Intent(context, MainActivity.class);
 		String action = intent.getAction();
 		if (action.equals(GCMConstants.ACTION_LOGIN) || action.equals(GCMConstants.ACTION_SIGNUP)) {
 			toStart.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

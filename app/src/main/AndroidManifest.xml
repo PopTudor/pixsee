@@ -105,23 +105,6 @@
                 <data android:scheme="com.marked.pixsee://"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".friends.FriendsActivity"
-            android:label="@string/title_contact_list"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
-        </activity>
-        <activity
-            android:name=".frienddetail.FriendDetailActivity"
-            android:label="@string/title_contact_detail"
-            android:parentActivityName=".friends.FriendsActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".frienddetail.FriendDetailActivity"/>
-        </activity>
 
         <!-- [START gcm_receiver] -->
         <receiver

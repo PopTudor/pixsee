@@ -3,9 +3,9 @@ package com.marked.pixsee.friends.friends;
 import android.view.View;
 
 import com.marked.pixsee.commands.Command;
+import com.marked.pixsee.main.commands.SelfieCommand;
 import com.marked.pixsee.friends.friends.data.User;
 import com.marked.pixsee.friends.commands.FabCommand;
-import com.marked.pixsee.friends.commands.OpenCameraCommand;
 import com.marked.pixsee.friends.friends.data.FriendsDatasource;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +35,7 @@ public class FriendPresenter implements FriendsContract.Presenter {
 	}
 
 	@Inject
-	OpenCameraCommand openCamera;
+	SelfieCommand openCamera;
 	@Inject
 	FabCommand fabCommand;
 

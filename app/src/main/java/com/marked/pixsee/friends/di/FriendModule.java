@@ -36,7 +36,7 @@ public class FriendModule {
 
 	@Provides
 	@PerFragment
-	FriendPresenter provideFriendPresenter(FriendRepository repository) {
+	FriendsContract.Presenter provideFriendPresenter(FriendRepository repository) {
 		return new FriendPresenter(friendFragment, repository);
 	}
 

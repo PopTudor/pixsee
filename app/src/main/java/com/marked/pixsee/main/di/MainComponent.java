@@ -1,6 +1,7 @@
 package com.marked.pixsee.main.di;
 
 import com.marked.pixsee.injection.scopes.PerActivity;
+import com.marked.pixsee.main.MainActivity;
 
 import dagger.Component;
 
@@ -10,4 +11,5 @@ import dagger.Component;
 @Component(modules = MainModule.class)
 @PerActivity
 public interface MainComponent {
+	void inject(MainActivity mainActivity);
 }

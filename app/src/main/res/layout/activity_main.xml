@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:orientation="horizontal"
-        android:background="@color/primary"
+        android:background="#EEEEEE"
         android:weightSum="3"
         android:id="@+id/toolbarMenuContainer"
         android:layout_alignParentBottom="true"
@@ -32,7 +32,8 @@
             android:layout_weight="1"
             android:clickable="true"
             android:src="@drawable/ic_photo_camera_24dp"
-            android:background="@color/transparent"/>
+            android:background="@color/transparent"
+            android:alpha="0.30"/>
 
         <ImageButton
             android:layout_width="0dp"
@@ -41,14 +42,36 @@
             android:layout_weight="1"
             android:clickable="true"
             android:src="@drawable/ic_person_24dp"
-            android:background="@color/transparent"/>
+            android:background="@color/transparent"
+            android:alpha="0.30"/>
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/toolbarMenuContainer"
-        android:id="@+id/mainContainer">
-    </FrameLayout>
+        android:layout_above="@+id/toolbarMenuContainer">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/toolbarMenuContainer"
+            android:id="@+id/mainContainer"
+            android:layout_weight="1">
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/cardFragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="0dp"
+            android:layout_weight="4">
+
+        </FrameLayout>
+    </LinearLayout>
+
 </RelativeLayout>

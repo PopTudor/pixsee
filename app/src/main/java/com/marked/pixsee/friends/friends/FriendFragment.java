@@ -25,11 +25,18 @@ import android.widget.Toast;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.commons.SpaceItemDecorator;
+import com.marked.pixsee.friends.di.DaggerFriendsComponent;
+import com.marked.pixsee.friends.di.FriendModule;
 import com.marked.pixsee.friends.friends.data.User;
+import com.marked.pixsee.injection.components.ActivityComponent;
+import com.marked.pixsee.injection.components.DaggerActivityComponent;
+import com.marked.pixsee.injection.modules.ActivityModule;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 
 /**
@@ -45,7 +52,8 @@ import java.util.List;
 public class FriendFragment extends Fragment implements FriendsContract.View {
 	public static int REQUEST_INVITE = 11;
 
-	private FriendsContract.Presenter mPresenter;
+	@Inject
+	FriendsContract.Presenter mPresenter;
 
 	private RecyclerView mFriendsRecyclerview;
 	private FriendsAdapter mFriendsAdapter;
@@ -109,6 +117,10 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mFriendsAdapter = new FriendsAdapter(mCallback);
+		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule((AppCompatActivity) getContext())).build();
+
+		DaggerFriendsComponent.builder().activityComponent(activityComponent)
+				.friendModule(new FriendModule(this)).build().inject(this);
 		if (mPresenter != null)
 			mPresenter.loadMore(true, 50);
 	}
