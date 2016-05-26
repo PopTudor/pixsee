@@ -42,9 +42,10 @@ public class SelfieModule {
 
 	@Provides
 	public CameraSource provideCameraSource(FaceRenderer faceRenderer) {
-		FaceDetector faceDetector = new FaceDetector.Builder(mSelfieActivity).setTrackingEnabled(true)
+		FaceDetector faceDetector = new FaceDetector.Builder(mSelfieActivity)
+				                            .setTrackingEnabled(true)
 				                            .setProminentFaceOnly(true)
-				                            .setClassificationType(FaceDetector.ACCURATE_MODE)
+				                            .setClassificationType(FaceDetector.FAST_MODE)
 				                            .setLandmarkType(0)
 				                            .build();
 		FaceTrackerAR faceTracker = new FaceTrackerAR(faceRenderer);
