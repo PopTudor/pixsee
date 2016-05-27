@@ -101,7 +101,7 @@ public class MessageDataset extends ArrayList<Message> {
 			Message message = new Message.Builder()
 					                  .addData(MessageConstants.DATA_BODY, bodyColName)
 					                  .messageType(Integer.parseInt(typeColName))
-					                  .date(Long.parseLong(dateColName))
+					                  .date(dateColName)
 					                  .to(toColName).build();
 			super.add(message);
 		}

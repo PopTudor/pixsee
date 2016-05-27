@@ -54,7 +54,7 @@ public class Message implements MessageConstants {
 	private String from;
 	private Integer messageType;
 
-	private Long date;
+	private String date;
 	private String id = UUID.randomUUID().toString();
 
 	public JSONObject toJSON() {
@@ -105,7 +105,7 @@ public class Message implements MessageConstants {
 			bundle.putString(MessageConstants.TO, to);
 		if (from != null && !from.isEmpty())
 			bundle.putString(MessageConstants.FROM, from);
-		bundle.putLong(MessageConstants.CREATION_DATE, date);
+		bundle.putString(MessageConstants.CREATION_DATE, date);
 
 		return bundle;
 	}
@@ -138,7 +138,7 @@ public class Message implements MessageConstants {
 		return from;
 	}
 
-	public Long getDate() {
+	public String getDate() {
 		return date;
 	}
 
@@ -197,7 +197,7 @@ public class Message implements MessageConstants {
 		private String from;
 		private String room;
 
-		private Long date = new Date().getTime();
+		private String date = String.valueOf(new Date());
 		private int messageType = 0;
 
 		{
@@ -231,7 +231,7 @@ public class Message implements MessageConstants {
 			return this;
 		}
 
-		Builder date(Long date) {
+		Builder date(String date) {
 			this.date = date;
 			return this;
 		}

@@ -1,5 +1,6 @@
 package com.marked.pixsee.friends.cards;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -20,9 +21,11 @@ public class CardVH extends RecyclerView.ViewHolder {
 	private ImageButton moreImageButton;
 	private ImageButton favoriteImageButton;
 	private ImageButton replyImageButton;
+	private Context context;
 
 	public CardVH(View itemView, CardAdapter.MessageInteraction messageInteraction) {
 		super(itemView);
+		context = itemView.getContext();
 		this.messageInteraction = messageInteraction;
 		titleTextView = (TextView) itemView.findViewById(R.id.titleTextVIew);
 		bodyTextView = (TextView) itemView.findViewById(R.id.bodyTextView);
@@ -32,7 +35,9 @@ public class CardVH extends RecyclerView.ViewHolder {
 	}
 
 	public void bind(final Message message) {
-		titleTextView.setText(DateUtils.formatElapsedTime(message.getDate()));
+		titleTextView.setText(DateUtils.formatDateTime(context,Long.parseLong(message.getDate()),DateUtils.FORMAT_SHOW_DATE|
+				                                                                                         DateUtils.FORMAT_24HOUR|
+				                                                                                         DateUtils.FORMAT_SHOW_TIME));
 		bodyTextView.setText(message.getData().get(MessageConstants.DATA_BODY));
 		moreImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override

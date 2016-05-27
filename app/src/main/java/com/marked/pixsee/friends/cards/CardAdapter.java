@@ -14,7 +14,7 @@ import java.util.List;
  * Created by Tudor on 2016-05-19.
  */
 public class CardAdapter extends RecyclerView.Adapter<CardVH> {
-	private List<Message> mDataset;
+	private final List<Message> mDataset;
 	private MessageInteraction messageInteraction;
 
 	public CardAdapter(List<Message> mDataset, MessageInteraction messageInteraction) {
@@ -40,7 +40,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardVH> {
 
 	@Override
 	public int getItemCount() {
-		return 0;
+		return mDataset.size();
 	}
 	interface MessageInteraction{
 		void messageClicked(Message message);

@@ -80,7 +80,7 @@ public class DatabaseContract {
 				                                          COLUMN_ID + " TEXT,"
 				                                          + COLUMN_DATA_BODY + " TEXT,"
 				                                          + COLUMN_TYPE + " INTEGER,"
-				                                          + COLUMN_DATE + " INTEGER,"
+				                                          + COLUMN_DATE + " TEXT,"
 				                                          + COLUMN_TO + " TEXT, FOREIGN KEY( "
 				                                          + COLUMN_TO + ")" + " REFERENCES "
 				                                          + Friend.TABLE_NAME + "("

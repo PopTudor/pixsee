@@ -11,8 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.friends.friends.data.User;
+import com.marked.pixsee.commons.SpaceItemDecorator;
 import com.marked.pixsee.friends.cards.data.Message;
+import com.marked.pixsee.friends.friends.data.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,10 @@ public class CardFragment extends Fragment implements CardContract.View {
 			mFriend = getArguments().getParcelable(ARG_FRIEND);
 		}
 		mCardAdapter = new CardAdapter(new ArrayList<Message>(), mPresenter);
-		mPresenter.loadMore(10, mFriend.getUserID());
+		if (mPresenter != null) {
+
+			mPresenter.loadMore(10, mFriend.getUserID());
+		}
 	}
 
 	@Override
@@ -69,6 +73,7 @@ public class CardFragment extends Fragment implements CardContract.View {
 		View rootView = inflater.inflate(R.layout.fragment_messages, container, false);
 		mCardRecyclerView = (RecyclerView) rootView.findViewById(R.id.cardRecyclerView);
 		mCardRecyclerView.setAdapter(mCardAdapter);
+		mCardRecyclerView.addItemDecoration(new SpaceItemDecorator(getActivity(),R.dimen.item_spacing_chat));
 		mCardRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 		return rootView;
 	}

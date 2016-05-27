@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 	@Override
 	public void displayChat(boolean show) {
 		Fragment fragment = FriendFragment.newInstance();
-		getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, fragment).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, fragment).commit();
 	}
 
 	@Override

@@ -21,7 +21,7 @@ public class MessageToCVMapper implements Mapper<Message, ContentValues> {
 		String to = message.getTo();
 		String id = message.getId();
 		Integer messageType = message.getMessageType();
-		Long date = message.getDate();
+		String date = message.getDate();
 
 		ContentValues values = new ContentValues();
 		if (collapseKey != null && !collapseKey.isEmpty())

@@ -4,6 +4,7 @@ import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.friends.cards.data.Message;
 import com.marked.pixsee.friends.cards.data.CardDatasource;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -14,13 +15,13 @@ import rx.schedulers.Schedulers;
  * Created by Tudor on 2016-05-19.
  */
 public class CardPresenter implements CardContract.Presenter {
+	private WeakReference<CardContract.View> mView;
 	private CardDatasource mRepository;
-	private CardContract.View mView;
 
 	public CardPresenter(CardContract.View mView, CardDatasource mRepository) {
 		this.mRepository = mRepository;
-		this.mView = mView;
-		this.mView.setPresenter(this);
+		this.mView = new WeakReference<>(mView);
+		this.mView.get().setPresenter(this);
 	}
 
 	@Override
@@ -41,12 +42,12 @@ public class CardPresenter implements CardContract.Presenter {
 				.subscribe(new Action1<List<Message>>() {
 					@Override
 					public void call(List<Message> messages) {
-						mView.showCards(messages);
+						mView.get().showCards(messages);
 					}
 				}, new Action1<Throwable>() {
 					@Override
 					public void call(Throwable throwable) {
-						mView.showNoCards();
+						mView.get().showNoCards();
 					}
 				});
 	}
