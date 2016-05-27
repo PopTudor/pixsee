@@ -17,9 +17,11 @@ public final class User implements Parcelable {
 	String password;
 	String cover;
 
+	String lastMessage;
+
 	String icon;
 
-	public User(String userID, String name, String email, String token, String password, String cover, String icon) {
+	public User(String userID, String name, String email, String token, String password, String cover, String icon, String lastMessage) {
 		this.userID = userID;
 		this.name = name;
 		this.email = email;
@@ -27,14 +29,24 @@ public final class User implements Parcelable {
 		this.password = password;
 		this.cover = cover;
 		this.icon = icon;
+		this.lastMessage = lastMessage;
+	}
+
+	public User(String userID, String name, String email, String token, String password, String cover, String icon) {
+		this(userID, name, email, token, password, cover, icon, null);
 	}
 
 
+	public User(String userID, String name, String email, String token, String password, String cover) {
+		this(userID, name, email, token, password, cover, null);
+	}
+
+	public User(String userID, String name, String email, String token, String password) {
+		this(userID, name, email, token,password,null);
+	}
+
 	public User(String userID, String name, String email, String token) {
-		this.userID = userID;
-		this.name = name;
-		this.email = email;
-		this.token = token;
+		this(userID, name, email, token, null, null, null, null);
 	}
 
 	public User(Parcel parcelIn) {
@@ -53,11 +65,6 @@ public final class User implements Parcelable {
 
 	public String getIcon() {
 		return icon;
-	}
-
-	public User(String userID, String name, String email, String token, String password) {
-		this(userID, name, email, token);
-		this.password = password;
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator<User>() {
@@ -125,5 +132,13 @@ public final class User implements Parcelable {
 
 	public String getEmail() {
 		return email;
+	}
+
+	public String getLastMessage() {
+		return lastMessage;
+	}
+
+	public void setLastMessage(String lastMessage) {
+		this.lastMessage = lastMessage;
 	}
 }

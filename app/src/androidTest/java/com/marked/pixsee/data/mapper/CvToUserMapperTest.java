@@ -3,8 +3,8 @@ package com.marked.pixsee.data.mapper;
 import android.content.ContentValues;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.marked.pixsee.friends.data.DatabaseFriendContract;
 import com.marked.pixsee.friends.data.User;
-import com.marked.pixsee.data.database.DatabaseContract;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,10 +27,10 @@ public class CvToUserMapperTest {
 		String email = "dawnflame@gmai.com";
 		String token = "321321";
 
-		mContentValues.put(DatabaseContract.Friend.COLUMN_ID, id);
-		mContentValues.put(DatabaseContract.Friend.COLUMN_NAME, name);
-		mContentValues.put(DatabaseContract.Friend.COLUMN_EMAIL, email);
-		mContentValues.put(DatabaseContract.Friend.COLUMN_TOKEN, token);
+		mContentValues.put(DatabaseFriendContract.COLUMN_ID, id);
+		mContentValues.put(DatabaseFriendContract.COLUMN_NAME, name);
+		mContentValues.put(DatabaseFriendContract.COLUMN_EMAIL, email);
+		mContentValues.put(DatabaseFriendContract.COLUMN_TOKEN, token);
 
 		User user = mUserToCvMapper.map(mContentValues);
 

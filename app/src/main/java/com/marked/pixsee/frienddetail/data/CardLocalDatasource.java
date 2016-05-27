@@ -10,6 +10,7 @@ import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.mapper.CursorToMessageMapper;
 import com.marked.pixsee.data.mapper.Mapper;
 import com.marked.pixsee.data.mapper.MessageToCVMapper;
+import com.marked.pixsee.friends.data.DatabaseFriendContract;
 import com.marked.pixsee.friends.specifications.GetMessagesByGroupedByDate;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.List;
 
 import rx.Observable;
 
-import static com.marked.pixsee.data.database.DatabaseContract.Friend.TABLE_NAME;
+import static com.marked.pixsee.friends.data.DatabaseFriendContract.TABLE_NAME;
 
 /**
  * Created by Tudor on 2016-05-20.
@@ -51,7 +52,7 @@ public class CardLocalDatasource implements CardDatasource {
 
 	@Override
 	public Observable<Message> getMessage(@NonNull Message messageId) {
-		Cursor cursor = database.getReadableDatabase().query(TABLE_NAME, DatabaseContract.Friend.ALL_TABLES, "WHERE "+messageId.getId()+"=?",
+		Cursor cursor = database.getReadableDatabase().query(TABLE_NAME, DatabaseFriendContract.ALL_TABLES, "WHERE "+messageId.getId()+"=?",
 				new String[]{messageId.getId()}, null, null, null);
 		cursor.moveToFirst();
 		return Observable.just(cursorToMessageMapper.map(cursor));

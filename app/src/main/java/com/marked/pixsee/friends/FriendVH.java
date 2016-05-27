@@ -44,7 +44,7 @@ class FriendVH extends RecyclerView.ViewHolder {
 		if (friend.getIcon() != null)
 			simpleDraweeView.setImageURI(Uri.parse(friend.getIcon()));
 		friendNameTextView.setText(friend.getName());
-//		friendBodyTextView.setText(friend);
+		friendBodyTextView.setText(friend.getLastMessage());
 	}
 
 }

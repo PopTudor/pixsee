@@ -20,7 +20,7 @@ import static com.facebook.common.internal.Preconditions.checkNotNull;
  * Created by Tudor Pop on 30-Nov-15.
  */
 class FriendsAdapter extends RecyclerView.Adapter<FriendVH> {
-	private List<User> mDataSet;
+	private final List<User> mDataSet;
 	private FriendFragment.FriendFragmentInteractionListener friendFragmentInteractionListener;
 
 	FriendsAdapter(@NotNull FriendFragment.FriendFragmentInteractionListener friendFragmentInteractionListener) {

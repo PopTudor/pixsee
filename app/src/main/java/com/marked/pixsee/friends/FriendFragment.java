@@ -66,6 +66,37 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 	//	lateinit private var mFabMenu: FloatingActionMenu
 
 	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+		mLayoutManager = new LinearLayoutManager(getActivity());
+		mFriendsAdapter = new FriendsAdapter(mCallback);
+		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule((AppCompatActivity) getContext())).build();
+
+		DaggerFriendsComponent.builder().activityComponent(activityComponent)
+				.friendModule(new FriendModule(this)).build().inject(this);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		mPresenter.start();
+	}
+
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_friend, container, false);
+		mFriendsRecyclerview = (RecyclerView) rootView.findViewById(R.id.friendsRecyclerview);
+		setUpRecyclerView();
+		//		setUpFab();
+		setupListeners(rootView);
+
+		((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
+		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
+
+		return rootView;
+	}
+
+	@Override
 	public void setRecyclerViewVisibility(int viewVisibility) {
 		if (mFriendsRecyclerview != null)
 			mFriendsRecyclerview.setVisibility(viewVisibility);
@@ -96,7 +127,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 
 	@Override
 	public void showNoFriends() {
-		
+
 	}
 
 	@Override
@@ -109,20 +140,6 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 		}
 	}
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
-		mLayoutManager = new LinearLayoutManager(getActivity());
-		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-		mFriendsAdapter = new FriendsAdapter(mCallback);
-		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule((AppCompatActivity) getContext())).build();
-
-		DaggerFriendsComponent.builder().activityComponent(activityComponent)
-				.friendModule(new FriendModule(this)).build().inject(this);
-		if (mPresenter != null)
-			mPresenter.loadMore(true, 50);
-	}
 
 	public void setupListeners(View rootView) {
 //		mBinding.vuforiaCamera.setOnClickListener(new View.OnClickListener() {
@@ -131,20 +148,6 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 //				mPresenter.getOpenCamera().execute();
 //			}
 //		});
-	}
-
-
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_friend, container, false);
-		mFriendsRecyclerview = (RecyclerView) rootView.findViewById(R.id.friendsRecyclerview);
-		setUpRecyclerView();
-		//		setUpFab();
-		setupListeners(rootView);
-
-		((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
-		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
-
-		return rootView;
 	}
 
 	void setUpRecyclerView() {

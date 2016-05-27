@@ -8,6 +8,8 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.marked.pixsee.data.database.PixyDatabase;
+import com.marked.pixsee.friends.data.datasource.FriendsDiskDatasource;
+import com.marked.pixsee.friends.data.datasource.FriendsNetworkDatasource;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,9 +31,9 @@ public class FriendRepositoryTest {
 	void setupViewModel() {
 		context = InstrumentationRegistry.getTargetContext();
 		pixydb = PixyDatabase.getInstance(context);
-		FriendsLocalDatasource friendsLocalDatasource = new FriendsLocalDatasource(pixydb);
-		FriendsRemoteDatasource friendsRemoteDatasource = new FriendsRemoteDatasource(PreferenceManager.getDefaultSharedPreferences(context));
-		friendRepository = new FriendRepository(friendsLocalDatasource, friendsRemoteDatasource);
+		FriendsDiskDatasource friendsDiskDatasource = new FriendsDiskDatasource(pixydb);
+		FriendsNetworkDatasource friendsNetworkDatasource = new FriendsNetworkDatasource(PreferenceManager.getDefaultSharedPreferences(context));
+		friendRepository = new FriendRepository(friendsDiskDatasource, friendsNetworkDatasource);
 	}
 
 	@Test

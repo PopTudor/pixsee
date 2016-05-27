@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.marked.pixsee.data.mapper.CursorToUserMapper;
 import com.marked.pixsee.data.mapper.Mapper;
 import com.marked.pixsee.data.mapper.UserToCvMapper;
+import com.marked.pixsee.friends.data.datasource.FriendsDatasource;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,6 +18,7 @@ import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 
 /**
@@ -26,7 +28,7 @@ import rx.functions.Func1;
 public class FriendRepository implements FriendsDatasource {
 	private FriendsDatasource disk;
 	private FriendsDatasource network;
-	final List<User> cache = new ArrayList<>();
+	final List<User> cache = new ArrayList<>(10);
 	private boolean dirtyCache;
 
 	public FriendRepository(@NotNull FriendsDatasource disk, @NotNull FriendsDatasource network) {
@@ -59,7 +61,6 @@ public class FriendRepository implements FriendsDatasource {
 						cache.addAll(users);
 					}
 				});
-
 		Observable<List<User>> remote = network.getUsers()
 				.flatMap(new Func1<List<User>, Observable<User>>() {
 					@Override
@@ -81,10 +82,15 @@ public class FriendRepository implements FriendsDatasource {
 						dirtyCache = false;
 					}
 				}).toList();
-		if (cache.size()==0)
-			return remote;
-		else
-			return local;
+
+		return Observable.concat(Observable.just(cache), local, remote)
+				       .first(new Func1<List<User>, Boolean>() {
+			@Override
+			public Boolean call(List<User> users) {
+				return users.size() > 0;
+			}
+		})
+				       .subscribeOn(Schedulers.io());
 	}
 
 	@Override
@@ -121,25 +127,5 @@ public class FriendRepository implements FriendsDatasource {
 		disk.deleteUsers(userId);
 		network.deleteUsers(userId);
 	}
-//	fun JSONArray.contactListfromJSONArray(startingIndex:Int=0):List<User>{
-//			                                                                      val contacts=ArrayList<User>()
-//
-//					                                                                                                  var result:JSONObject
-//					                                                                                                  var id:String
-//					                                                                                                  var name:String
-//					                                                                                                  var email:String
-//					                                                                                                  var token:String
-//					                                                                                                  for(i in startingIndex..length()-1){
-//					                                                                                                  result=getJSONObject(i)
-//					                                                                                                  id=result.getString(FriendConstants.ID)
-//					                                                                                                  name=result.getString(FriendConstants.NAME)
-//					                                                                                                  email=result.getString(FriendConstants.EMAIL)
-//					                                                                                                  token=result.getString(FriendConstants.TOKEN)
-//
-//					                                                                                                  contacts.add(User(id,name,email,token))
-//					                                                                                                  }
-//
-//					                                                                                                  return contacts
-//					                                                                                                  }
 }
 

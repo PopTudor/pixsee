@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.data;
+package com.marked.pixsee.friends.data.datasource;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -7,7 +7,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.marked.pixsee.data.database.DatabaseContract;
+import com.marked.pixsee.friends.data.DatabaseFriendContract;
+import com.marked.pixsee.friends.data.FriendsAPI;
+import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.utility.GCMConstants;
 
@@ -26,14 +28,14 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Tudor on 2016-05-20.
  */
-public class FriendsRemoteDatasource implements FriendsDatasource{
+public class FriendsNetworkDatasource implements FriendsDatasource {
 	private final HttpLoggingInterceptor loggingInterceptor;
 	private final OkHttpClient httpClient ;
 	private final Retrofit retrofit ;
 	private final String userid;
 	private final Gson gson = new Gson();
 
-	public FriendsRemoteDatasource(SharedPreferences sharedPreferences) {
+	public FriendsNetworkDatasource(SharedPreferences sharedPreferences) {
 		loggingInterceptor = new HttpLoggingInterceptor();
 		loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 		httpClient = new OkHttpClient.Builder()
@@ -57,7 +59,7 @@ public class FriendsRemoteDatasource implements FriendsDatasource{
 				.map(new Func1<JsonObject, JsonArray>() {
 					@Override
 					public JsonArray call(JsonObject jsonObject) {
-						return jsonObject.getAsJsonArray(DatabaseContract.Friend.TABLE_NAME);
+						return jsonObject.getAsJsonArray(DatabaseFriendContract.TABLE_NAME);
 					}
 				})
 				.map(new Func1<JsonArray, List<User>>() {

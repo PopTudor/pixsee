@@ -2,8 +2,8 @@ package com.marked.pixsee.data.mapper;
 
 import android.database.Cursor;
 
+import com.marked.pixsee.friends.data.DatabaseFriendContract;
 import com.marked.pixsee.friends.data.User;
-import com.marked.pixsee.data.database.DatabaseContract;
 
 /**
  * Created by Tudor Pop on 29-Mar-16.
@@ -27,10 +27,10 @@ public class CursorToUserMapper implements Mapper<Cursor, User> {
 	 * @param cursor the cursor
 	 */
 	private void readColumnIndex(Cursor cursor){
-		id = cursor.getColumnIndex(DatabaseContract.Friend.COLUMN_ID);
-		name = cursor.getColumnIndex(DatabaseContract.Friend.COLUMN_NAME);
-		email = cursor.getColumnIndex(DatabaseContract.Friend.COLUMN_EMAIL);
-		token = cursor.getColumnIndex(DatabaseContract.Friend.COLUMN_TOKEN);
+		id = cursor.getColumnIndex(DatabaseFriendContract.COLUMN_ID);
+		name = cursor.getColumnIndex(DatabaseFriendContract.COLUMN_NAME);
+		email = cursor.getColumnIndex(DatabaseFriendContract.COLUMN_EMAIL);
+		token = cursor.getColumnIndex(DatabaseFriendContract.COLUMN_TOKEN);
 		hasIndexses = true;
 	}
 }

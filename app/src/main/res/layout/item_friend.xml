@@ -53,7 +53,8 @@
             android:text="Medium Text"
             android:id="@+id/friendBodyTextView"
             android:layout_below="@+id/friendNameTextView"
-            style="@style/TextAppearance.AppCompat.Body1"/>
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:lines="2"/>
     </LinearLayout>
 
 </RelativeLayout>

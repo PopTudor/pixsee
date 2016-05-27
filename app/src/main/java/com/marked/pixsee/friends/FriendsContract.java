@@ -5,8 +5,6 @@ import com.marked.pixsee.BaseView;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.friends.data.User;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 /**
@@ -21,7 +19,7 @@ public interface FriendsContract {
 
 		void execute(Command command);
 
-		void loadMore(@NotNull int num);
+		void loadMore( int num);
 
 		void loadMore(String text, int limit);
 

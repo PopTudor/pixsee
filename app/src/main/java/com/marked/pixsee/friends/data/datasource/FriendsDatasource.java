@@ -1,6 +1,8 @@
-package com.marked.pixsee.friends.data;
+package com.marked.pixsee.friends.data.datasource;
 
 import android.support.annotation.NonNull;
+
+import com.marked.pixsee.friends.data.User;
 
 import java.util.List;
 

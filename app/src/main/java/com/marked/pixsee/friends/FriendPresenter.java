@@ -1,15 +1,12 @@
-package com.marked.pixsee.friends.di;
+package com.marked.pixsee.friends;
 
 import android.view.View;
 
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.friends.FriendsContract;
-import com.marked.pixsee.main.commands.SelfieCommand;
-import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.friends.commands.FabCommand;
-import com.marked.pixsee.friends.data.FriendsDatasource;
-
-import org.jetbrains.annotations.NotNull;
+import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.friends.data.datasource.FriendsDatasource;
+import com.marked.pixsee.main.commands.SelfieCommand;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -24,7 +21,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Tudor Pop on 23-Mar-16.
  */
-class FriendPresenter implements FriendsContract.Presenter {
+public class FriendPresenter implements FriendsContract.Presenter {
 	private FriendsDatasource repository;
 	private FriendsContract.View mView;
 
@@ -76,7 +73,7 @@ class FriendPresenter implements FriendsContract.Presenter {
 						           public void call(List<User> users) {
 							           if (users.size() > 0) {
 								           mView.setRecyclerViewVisibility(View.VISIBLE);
-								           mView.onFriendsInsert(users, 0, users.size());
+								           mView.onFriendsReplace(users);
 								           size = users.size();
 							           }
 						           }
@@ -106,7 +103,7 @@ class FriendPresenter implements FriendsContract.Presenter {
 
 	@Override
 	public void start() {
-
+		loadMore(true,25);
 	}
 
 	@Override
@@ -119,7 +116,7 @@ class FriendPresenter implements FriendsContract.Presenter {
 		return null;
 	}
 	@Override
-	public void loadMore(@NotNull int num) {
+	public void loadMore(int num) {
 		loadMore(false, num);
 	}
 
