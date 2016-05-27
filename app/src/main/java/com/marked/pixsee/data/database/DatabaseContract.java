@@ -2,8 +2,8 @@ package com.marked.pixsee.data.database;
 
 import android.provider.BaseColumns;
 
-import com.marked.pixsee.friends.cards.data.MessageConstants;
-import com.marked.pixsee.friends.friends.data.FriendConstants;
+import com.marked.pixsee.frienddetail.data.MessageConstants;
+import com.marked.pixsee.friends.data.FriendConstants;
 
 /**
  * Created by Tudor Pop on 26-Jan-16.

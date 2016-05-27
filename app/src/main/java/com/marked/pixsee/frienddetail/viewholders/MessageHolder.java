@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.friends.cards.data.Message;
-import com.marked.pixsee.friends.cards.data.MessageConstants;
+import com.marked.pixsee.frienddetail.data.Message;
+import com.marked.pixsee.frienddetail.data.MessageConstants;
 
 
 /**

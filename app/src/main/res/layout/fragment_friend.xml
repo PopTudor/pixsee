@@ -1,14 +1,15 @@
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:name="com.marked.pixsee.fragments.ContactListFragment"
+    android:name="com.marked.pixsee.friends.FriendFragment"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_material_light"
+        android:background="#fff"
         app:elevation="5dp">
 
         <android.support.v7.widget.Toolbar
@@ -19,12 +20,7 @@
 
         </android.support.v7.widget.Toolbar>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/friendsRecyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            />
+
         <!--<com.github.clans.fab.FloatingActionMenu-->
         <!--android:id="@+id/fabMenu"-->
         <!--android:layout_width="match_parent"-->
@@ -42,7 +38,12 @@
         <!--**************   BUTTONS   ****************-->
 
     </android.support.design.widget.AppBarLayout>
-
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/friendsRecyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        />
 
     <!--</com.github.clans.fab.FloatingActionMenu>-->
-</FrameLayout>
+</LinearLayout>

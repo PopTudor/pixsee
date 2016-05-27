@@ -1,10 +1,10 @@
-package com.marked.pixsee.friends.cards.data;
+package com.marked.pixsee.frienddetail.data;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.marked.pixsee.friends.friends.data.User;
+import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.mapper.MessageToCVMapper;

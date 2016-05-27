@@ -16,7 +16,7 @@ import android.widget.EditText;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.marked.pixsee.R;
-import com.marked.pixsee.friends.cards.data.MessageConstants;
+import com.marked.pixsee.frienddetail.data.MessageConstants;
 
 /**
  * An activity representing a single Contact detail screen. This

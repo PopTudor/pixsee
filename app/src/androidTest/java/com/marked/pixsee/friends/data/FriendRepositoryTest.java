@@ -8,9 +8,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.marked.pixsee.data.database.PixyDatabase;
-import com.marked.pixsee.friends.friends.data.FriendRepository;
-import com.marked.pixsee.friends.friends.data.FriendsLocalDatasource;
-import com.marked.pixsee.friends.friends.data.FriendsRemoteDatasource;
 
 import org.junit.Assert;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.cards;
+package com.marked.pixsee.frienddetail.cards;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.friends.cards.data.Message;
+import com.marked.pixsee.frienddetail.data.Message;
 
 import java.util.List;
 

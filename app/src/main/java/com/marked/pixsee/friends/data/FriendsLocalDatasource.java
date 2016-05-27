@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.friends.data;
+package com.marked.pixsee.friends.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;

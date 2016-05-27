@@ -1,9 +1,9 @@
-package com.marked.pixsee.friends.friends;
+package com.marked.pixsee.friends;
 
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.friends.friends.data.User;
+import com.marked.pixsee.friends.data.User;
 
 import org.jetbrains.annotations.NotNull;
 

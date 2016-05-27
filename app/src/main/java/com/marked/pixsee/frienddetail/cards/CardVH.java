@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.cards;
+package com.marked.pixsee.frienddetail.cards;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,8 +8,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.friends.cards.data.Message;
-import com.marked.pixsee.friends.cards.data.MessageConstants;
+import com.marked.pixsee.frienddetail.data.Message;
+import com.marked.pixsee.frienddetail.data.MessageConstants;
 
 /**
  * Created by Tudor on 2016-05-19.
@@ -28,7 +28,7 @@ public class CardVH extends RecyclerView.ViewHolder {
 		context = itemView.getContext();
 		this.messageInteraction = messageInteraction;
 		titleTextView = (TextView) itemView.findViewById(R.id.titleTextVIew);
-		bodyTextView = (TextView) itemView.findViewById(R.id.bodyTextView);
+		bodyTextView = (TextView) itemView.findViewById(R.id.friendBodyTextView);
 		moreImageButton = (ImageButton) itemView.findViewById(R.id.moreImageButton);
 		favoriteImageButton = (ImageButton) itemView.findViewById(R.id.favoriteImageButton);
 		replyImageButton = (ImageButton) itemView.findViewById(R.id.quickReplyImageButton);

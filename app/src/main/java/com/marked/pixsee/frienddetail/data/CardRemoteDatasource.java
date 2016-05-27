@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.cards.data;
+package com.marked.pixsee.frienddetail.data;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;

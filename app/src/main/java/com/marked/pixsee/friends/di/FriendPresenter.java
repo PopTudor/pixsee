@@ -1,12 +1,13 @@
-package com.marked.pixsee.friends.friends;
+package com.marked.pixsee.friends.di;
 
 import android.view.View;
 
 import com.marked.pixsee.commands.Command;
+import com.marked.pixsee.friends.FriendsContract;
 import com.marked.pixsee.main.commands.SelfieCommand;
-import com.marked.pixsee.friends.friends.data.User;
+import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.friends.commands.FabCommand;
-import com.marked.pixsee.friends.friends.data.FriendsDatasource;
+import com.marked.pixsee.friends.data.FriendsDatasource;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Tudor Pop on 23-Mar-16.
  */
-public class FriendPresenter implements FriendsContract.Presenter {
+class FriendPresenter implements FriendsContract.Presenter {
 	private FriendsDatasource repository;
 	private FriendsContract.View mView;
 

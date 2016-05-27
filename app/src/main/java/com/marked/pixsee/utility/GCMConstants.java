@@ -1,6 +1,6 @@
 package com.marked.pixsee.utility;
 
-import com.marked.pixsee.friends.friends.data.FriendConstants;
+import com.marked.pixsee.friends.data.FriendConstants;
 
 public interface GCMConstants {
 	String PACKAGE_NAME = "com.marked.vifo.extras";

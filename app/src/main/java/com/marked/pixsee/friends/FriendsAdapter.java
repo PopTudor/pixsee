@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.friends;
+package com.marked.pixsee.friends;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.friends.friends.data.User;
+import com.marked.pixsee.friends.data.User;
 
 import org.jetbrains.annotations.NotNull;
 

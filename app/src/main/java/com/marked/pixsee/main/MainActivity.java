@@ -1,8 +1,6 @@
 package com.marked.pixsee.main;
 
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -10,21 +8,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.database.PixyDatabase;
-import com.marked.pixsee.friends.cards.CardFragment;
-import com.marked.pixsee.friends.cards.CardPresenter;
-import com.marked.pixsee.friends.cards.data.CardLocalDatasource;
-import com.marked.pixsee.friends.cards.data.CardRemoteDatasource;
-import com.marked.pixsee.friends.cards.data.CardRepository;
-import com.marked.pixsee.friends.friends.FriendFragment;
-import com.marked.pixsee.friends.friends.data.User;
+import com.marked.pixsee.friends.FriendFragment;
+import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.main.commands.SelfieCommand;
 import com.marked.pixsee.main.di.DaggerMainComponent;
 import com.marked.pixsee.main.di.MainModule;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View,FriendFragment.FriendFragmentInteractionListener,CardFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements MainContract.View,FriendFragment.FriendFragmentInteractionListener {
 	@Inject
 	MainContract.Presenter mPresenter;
 
@@ -79,15 +71,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 	@Override
 	public void onFriendClick(User friend) {
-		CardFragment fragment = CardFragment.newInstance(friend);
-		CardLocalDatasource localDatasource = new CardLocalDatasource(PixyDatabase.getInstance(this));
-		CardRemoteDatasource remoteDatasource = new CardRemoteDatasource(PreferenceManager.getDefaultSharedPreferences(this));
-		fragment.setPresenter(new CardPresenter(fragment, new CardRepository(localDatasource,remoteDatasource)));
-		getSupportFragmentManager().beginTransaction().replace(R.id.cardFragmentContainer, fragment).commit();
-	}
-
-	@Override
-	public void onFragmentInteraction(Uri uri) {
-
+//		CardFragment fragment = CardFragment.newInstance(friend);
+//		CardLocalDatasource localDatasource = new CardLocalDatasource(PixyDatabase.getInstance(this));
+//		CardRemoteDatasource remoteDatasource = new CardRemoteDatasource(PreferenceManager.getDefaultSharedPreferences(this));
+//		fragment.setPresenter(new CardPresenter(fragment, new CardRepository(localDatasource,remoteDatasource)));
+//		getSupportFragmentManager().beginTransaction().replace(R.id.cardFragmentContainer, fragment).commit();
 	}
 }

@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.cards;
+package com.marked.pixsee.frienddetail.cards;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.commons.SpaceItemDecorator;
-import com.marked.pixsee.friends.cards.data.Message;
-import com.marked.pixsee.friends.friends.data.User;
+import com.marked.pixsee.frienddetail.data.Message;
+import com.marked.pixsee.friends.data.User;
 
 import java.util.ArrayList;
 import java.util.List;

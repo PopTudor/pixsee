@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.friends;
+package com.marked.pixsee.friends;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
-import com.marked.pixsee.friends.friends.data.User;
+import com.marked.pixsee.friends.data.User;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,12 +16,14 @@ import org.jetbrains.annotations.NotNull;
  */
 class FriendVH extends RecyclerView.ViewHolder {
 	private SimpleDraweeView simpleDraweeView;
-	private TextView textView;
+	private TextView friendNameTextView;
+	private TextView friendBodyTextView;
 
 	public FriendVH(@NotNull View binding) {
 		super(binding);
 		simpleDraweeView = (SimpleDraweeView) binding.findViewById(R.id.friendIconImageView);
-		textView = (TextView) binding.findViewById(R.id.friendNameTextView);
+		friendNameTextView = (TextView) binding.findViewById(R.id.friendNameTextView);
+		friendBodyTextView = (TextView) binding.findViewById(R.id.friendBodyTextView);
 	}
 
 
@@ -41,7 +43,8 @@ class FriendVH extends RecyclerView.ViewHolder {
 		//todo get in parse a contact's profile image
 		if (friend.getIcon() != null)
 			simpleDraweeView.setImageURI(Uri.parse(friend.getIcon()));
-		textView.setText(friend.getName());
+		friendNameTextView.setText(friend.getName());
+//		friendBodyTextView.setText(friend);
 	}
 
 }

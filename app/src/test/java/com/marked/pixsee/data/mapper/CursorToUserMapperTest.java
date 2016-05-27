@@ -3,7 +3,7 @@ package com.marked.pixsee.data.mapper;
 import android.test.mock.MockCursor;
 
 import com.google.common.collect.Lists;
-import com.marked.pixsee.friends.friends.data.User;
+import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.data.database.DatabaseContract;
 
 import org.junit.Assert;

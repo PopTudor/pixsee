@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.friends;
+package com.marked.pixsee.friends;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -24,10 +24,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.commons.SpaceItemDecorator;
+import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
-import com.marked.pixsee.friends.friends.data.User;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
@@ -149,7 +148,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 	}
 
 	void setUpRecyclerView() {
-		mFriendsRecyclerview.addItemDecoration(new SpaceItemDecorator(getActivity(), R.dimen.item_spacing_chat));
+//		mFriendsRecyclerview.addItemDecoration(new SpaceItemDecorator(getActivity(), R.dimen.item_spacing_chat));
 		mFriendsRecyclerview.setAdapter(mFriendsAdapter);
 		mFriendsRecyclerview.setLayoutManager(mLayoutManager);
 		mFriendsRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
