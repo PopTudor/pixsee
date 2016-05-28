@@ -89,7 +89,7 @@ public class MessageDataset extends ArrayList<Message> {
 						DatabaseContract.Message.COLUMN_TYPE,
 						DatabaseContract.Message.COLUMN_DATE,
 						DatabaseContract.Message.COLUMN_TO},
-				DatabaseContract.Message.COLUMN_TO + " = " + friend.getUserID(),
+				DatabaseContract.Message.COLUMN_TO + " = \"" + friend.getUserID()+"\"",
 				null, null, null, null, String.valueOf(limit)
 		);
 		cursor.moveToFirst();
@@ -105,5 +105,6 @@ public class MessageDataset extends ArrayList<Message> {
 					                  .to(toColName).build();
 			super.add(message);
 		}
+		cursor.close();
 	}
 }

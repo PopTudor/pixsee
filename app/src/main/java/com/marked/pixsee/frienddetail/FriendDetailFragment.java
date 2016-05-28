@@ -152,7 +152,7 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 		mSocket.connect();
 
 		try {
-			mSocket.emit(FriendDetailFragment.ON_NEW_ROOM, new JSONObject("{from:%s,to:%s}".format(mThisUser, mThatUser.getUserID())));
+			mSocket.emit(FriendDetailFragment.ON_NEW_ROOM, new JSONObject(String.format("{from:%s,to:%s}",mThisUser, mThatUser.getUserID())));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -172,7 +172,6 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_contact_detail, container, false);
-		mThatUser = getArguments().getParcelable(FriendDetailActivity.EXTRA_CONTACT);
 		messagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.messagesRecyclerView);
 		messagesRecyclerView.setLayoutManager(mLinearLayoutManager);
 		messagesRecyclerView.addItemDecoration(new SpaceItemDecorator(15));
@@ -244,6 +243,7 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 		try {
 			mCallback = (ContactDetailFragmentInteraction) context;
 			mContext = getActivity();
+			mThatUser = getArguments().getParcelable(FriendDetailActivity.EXTRA_CONTACT);
 
 			mThisUser = PreferenceManager.getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null);
 		} catch (ClassCastException e) {
@@ -255,7 +255,8 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 
 	public void onTyping(boolean typing) {
 		try {
-			mSocket.emit(FriendDetailFragment.ON_TYPING, new JSONObject("{from:%s,to:%s,typing:%s}".format(mThisUser, mThatUser.getUserID(), typing)));
+			mSocket.emit(FriendDetailFragment.ON_TYPING, new JSONObject(String.format("{from:%s,to:%s,typing:%s}",mThisUser, mThatUser.getUserID(),
+					typing)));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

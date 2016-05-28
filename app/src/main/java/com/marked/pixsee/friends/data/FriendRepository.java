@@ -65,13 +65,13 @@ public class FriendRepository implements FriendsDatasource {
 				.flatMap(new Func1<List<User>, Observable<User>>() {
 					@Override
 					public Observable<User> call(List<User> users) {
+						disk.saveUser(users);
 						return Observable.from(users);
 					}
 				})
 				.doOnNext(new Action1<User>() {
 					@Override
 					public void call(User user) {
-						disk.saveUser(user);
 						cache.clear();
 						cache.add(user);
 					}

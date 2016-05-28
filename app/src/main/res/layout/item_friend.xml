@@ -31,20 +31,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="72dp">
-
-        <TextView
-            android:id="@+id/friendNameTextView"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:inputType="textCapWords|textCapSentences|textPersonName"
-            android:singleLine="true"
-            android:textColor="@color/accent_dark"
-            android:text="Name"
-            android:layout_alignParentTop="true"
-            />
+        android:layout_marginLeft="72dp"
+        android:id="@+id/linearLayout3">
 
         <TextView
             android:layout_width="wrap_content"
@@ -54,7 +42,23 @@
             android:id="@+id/friendBodyTextView"
             android:layout_below="@+id/friendNameTextView"
             style="@style/TextAppearance.AppCompat.Body1"
-            android:lines="2"/>
+            android:lines="2"
+            android:visibility="gone"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/friendNameTextView"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:inputType="textCapWords|textCapSentences|textPersonName"
+        android:singleLine="true"
+        android:textColor="@color/accent_dark"
+        android:text="Name"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/linearLayout3"
+        android:layout_alignStart="@+id/linearLayout3"
+        android:clickable="true"/>
 
 </RelativeLayout>

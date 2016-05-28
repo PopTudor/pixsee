@@ -59,12 +59,6 @@ public class FriendPresenter implements FriendsContract.Presenter {
 
 	@Override
 	public void loadMore(boolean forceUpdate, final int limit) {
-//		repository.add(new User("123", "Pop Tudor", "tudor08pop@yahoo.com", "dea"));
-//		repository.add(new User("124", "Sima Ioana", "skumpic_ioana@yahoo.com", "asd"));
-//		repository.add(new User("125", "Popa Cristian", "cristipopa@ymail.com", "dsa"));
-//		repository.add(new User("126", "Marcel Mirel", "cristipopa@ymail.com", "zxc"));
-//		repository.add(new User("127", "Milica Ionut", "cristipopa@ymail.com", "cxz"));
-//		repository.add(new User("128", "Andrei Bogdan", "cristipopa@ymail.com", "xcv"));
 		if (forceUpdate) {
 			final Subscription subscription = repository.getUsers()
 													  .observeOn(AndroidSchedulers.mainThread())

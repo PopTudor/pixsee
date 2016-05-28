@@ -156,6 +156,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
             android:theme="@style/FullscreenTheme"/>
+        <activity android:name=".frienddetail.FriendDetailActivity"
+                  android:label="FriendDetailActivity"
+                  android:screenOrientation="portrait"
+            />
         <activity
             android:name=".face.SelfieActivity"
             android:hardwareAccelerated="true"
