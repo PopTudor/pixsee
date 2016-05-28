@@ -67,7 +67,7 @@ public class ChatPresenter implements ChatContract.Presenter {
 				                  .to(from)
 				                  .build();
 		mRepository.saveMessage(message);
-
+		mView.get().addMessage(message);
 	}
 
 	@Override

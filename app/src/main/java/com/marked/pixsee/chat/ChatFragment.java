@@ -54,7 +54,7 @@ import rx.schedulers.Schedulers;
  * in two-pane mode (on tablets) or a [ChatDetailActivity]
  * on handsets.
  */
-public class ChatFragment extends Fragment implements GCMListenerService.Callbacks, ChatContract.View {
+public class ChatFragment extends Fragment implements ChatContract.View {
 	private String mThisUser;
 	private User mThatUser;
 
@@ -104,17 +104,6 @@ public class ChatFragment extends Fragment implements GCMListenerService.Callbac
 	}
 
 	/**
-	 * This is used to receive messages from socket.io
-	 *
-	 * @param from
-	 * @param data
-	 */
-	@Override
-	public void receiveMessage(String from, Bundle data) {
-		presenter.receiveMessage(from,data);
-	}
-
-	/**
 	 * Add message to dataset and notify the adapter of the change
 	 *
 	 * @param message the message to add
@@ -129,7 +118,7 @@ public class ChatFragment extends Fragment implements GCMListenerService.Callbac
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		GCMListenerService.setCallbacks(this);
+		GCMListenerService.setCallbacks(presenter);
 		mChatAdapter = new ChatAdapter(presenter);
 		mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule((AppCompatActivity) getActivity()))
@@ -270,7 +259,7 @@ public class ChatFragment extends Fragment implements GCMListenerService.Callbac
 							Bundle bundle = new Bundle();
 							bundle.putInt(MessageConstants.MESSAGE_TYPE, type);
 							bundle.putString(MessageConstants.DATA_BODY, body);
-							receiveMessage(from, bundle);
+							presenter.receiveMessage(from, bundle);
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
