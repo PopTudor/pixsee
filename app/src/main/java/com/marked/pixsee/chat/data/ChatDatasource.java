@@ -14,7 +14,7 @@ import rx.Observable;
  * <p/>
  */
 public interface ChatDatasource {
-	Observable<List<Message>> getMessagesOfFriend(User friend);
+	Observable<List<Message>> getMessages(User friend);
 
 	Observable<Message> getMessage(@NonNull Message messageId);
 

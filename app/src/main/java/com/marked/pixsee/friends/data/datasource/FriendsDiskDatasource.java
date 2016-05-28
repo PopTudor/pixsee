@@ -80,11 +80,13 @@ public class FriendsDiskDatasource implements FriendsDatasource {
 	@Override
 	public void saveUser(@NonNull List<User> users) {
 		db.getWritableDatabase().beginTransaction();
-		{
+		try {
 			for (User element : users) {
-				db.getWritableDatabase().insertWithOnConflict(TABLE_NAME, null, userToCvMapper.map(element), SQLiteDatabase.CONFLICT_IGNORE);
+				db.getWritableDatabase().insertWithOnConflict(TABLE_NAME, null, userToCvMapper.map(element), SQLiteDatabase.CONFLICT_REPLACE);
 			}
+			db.getWritableDatabase().setTransactionSuccessful();
+		} finally {
+			db.getWritableDatabase().endTransaction();
 		}
-		db.getWritableDatabase().setTransactionSuccessful();
 	}
 }

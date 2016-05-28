@@ -12,6 +12,7 @@ import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Tudor on 2016-05-19.
@@ -22,39 +23,47 @@ public class ChatRepository implements ChatDatasource {
 	private List<Message> cache = new ArrayList<>();
 	private boolean dirtyCache;
 
+	/**
+	 * Repository to retrieve data
+	 * @param disk must be @{link ChatDiskDatasource} or something that implements @{link ChatDatasource}
+	 * @param network must be @{link ChatNetworkDatasource} or something that implements @{link ChatDatasource}
+	 */
 	public ChatRepository(ChatDatasource disk, ChatDatasource network) {
 		this.disk = disk;
 		this.network = network;
 	}
 
+	/**
+	 * Get messages of the requested friend
+	 * @param friendId
+	 * @return
+	 */
 	@Override
-	public Observable<List<Message>> getMessagesOfFriend(User friendId) {
+	public Observable<List<Message>> getMessages(User friendId) {
 		if (cache.size() != 0 && !dirtyCache)
 			return Observable.just(cache);
 		
 		// Query the local storage if available. If not, query the network.
-		disk.getMessagesOfFriend(friendId).doOnNext(new Action1<List<Message>>() {
+		Observable<List<Message>> local= disk.getMessages(friendId)
+				.doOnNext(new Action1<List<Message>>() {
 			@Override
 			public void call(List<Message> message) {
 				cache.clear();
 				cache.addAll(message);
 			}
-		}).subscribe();
+		});
 		
-		if (cache.size() != 0)
-			return Observable.just(cache);
-		else
-			return network.getMessagesOfFriend(friendId)
+		Observable<List<Message>> remote = network.getMessages(friendId)
 					       .flatMap(new Func1<List<Message>, Observable<Message>>() {
 						       @Override
-						       public Observable<Message> call(List<Message> messagess) {
-							       return Observable.from(messagess);
+						       public Observable<Message> call(List<Message> messages) {
+							       disk.saveMessage(messages);
+							       return Observable.from(messages);
 						       }
 					       })
 					       .doOnNext(new Action1<Message>() {
 						       @Override
 						       public void call(Message messages) {
-							       disk.saveMessage(messages);
 							       cache.clear();
 							       cache.add(messages);
 						       }
@@ -65,6 +74,15 @@ public class ChatRepository implements ChatDatasource {
 							       dirtyCache = false;
 						       }
 					       }).toList();
+		/* http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/ */
+		return Observable.concat(Observable.just(cache), local, remote)
+				       .first(new Func1<List<Message>, Boolean>() {
+					       @Override
+					       public Boolean call(List<Message> users) {
+						       return users.size() > 0;
+					       }
+				       })
+				       .subscribeOn(Schedulers.io());
 	}
 
 	@Override

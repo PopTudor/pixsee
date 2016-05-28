@@ -27,12 +27,12 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Tudor on 2016-05-20.
  */
-public class ChatRemoteDatasource implements ChatDatasource {
+public class ChatNetworkDatasource implements ChatDatasource {
 	private final Retrofit retrofit;
 	private final String userid;
 	private final Gson gson = new Gson();
 
-	public ChatRemoteDatasource(SharedPreferences sharedPreferences) {
+	public ChatNetworkDatasource(SharedPreferences sharedPreferences) {
 		HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
 		loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 		OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -49,7 +49,7 @@ public class ChatRemoteDatasource implements ChatDatasource {
 	}
 
 	@Override
-	public Observable<List<Message>> getMessagesOfFriend(User friendId) {
+	public Observable<List<Message>> getMessages(User friendId) {
 		return retrofit.create(MessageAPI.class)
 				       .getMessagesOfFriend(userid, friendId.getUserID())
 				       .subscribeOn(Schedulers.io())

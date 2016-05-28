@@ -41,7 +41,7 @@ public class ChatPresenter implements ChatContract.Presenter {
 
 	@Override
 	public void loadMore(int limit, User friendId) {
-		mRepository.getMessagesOfFriend(friendId)
+		mRepository.getMessages(friendId)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Action1<List<Message>>() {

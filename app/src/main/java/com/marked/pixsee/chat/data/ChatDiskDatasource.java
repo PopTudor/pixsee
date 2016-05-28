@@ -24,10 +24,10 @@ import static com.marked.pixsee.friends.data.DatabaseFriendContract.TABLE_NAME;
 /**
  * Created by Tudor on 2016-05-20.
  */
-public class ChatLocalDatasource implements ChatDatasource {
+public class ChatDiskDatasource implements ChatDatasource {
 	private PixyDatabase database;
 
-	public ChatLocalDatasource(PixyDatabase database) {
+	public ChatDiskDatasource(PixyDatabase database) {
 		this.database = database;
 	}
 
@@ -35,7 +35,7 @@ public class ChatLocalDatasource implements ChatDatasource {
 	Mapper<Message, ContentValues> messageToCVMapper = new MessageToCVMapper();
 
 	@Override
-	public Observable<List<Message>> getMessagesOfFriend(User friend) {
+	public Observable<List<Message>> getMessages(User friend) {
 		List<Message> users = new ArrayList<>();
 		database.getReadableDatabase().beginTransaction();
 		Cursor cursor = database.getReadableDatabase().rawQuery(new GetMessagesByGroupedByDate(friend.getUserID()).createQuery(), null);
@@ -82,8 +82,8 @@ public class ChatLocalDatasource implements ChatDatasource {
 		writableDatabase.beginTransaction();
 		for (Message message : messages)
 			writableDatabase.insertWithOnConflict(DatabaseContract.Message.TABLE_NAME, null, messageToCVMapper.map(message), SQLiteDatabase.CONFLICT_REPLACE);
-		writableDatabase.endTransaction();
 		writableDatabase.setTransactionSuccessful();
+		writableDatabase.endTransaction();
 	}
 
 	@Override

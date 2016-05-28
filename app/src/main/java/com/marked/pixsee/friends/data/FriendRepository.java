@@ -40,10 +40,6 @@ public class FriendRepository implements FriendsDatasource {
 	private Mapper<User, ContentValues> userToCvMapper = new UserToCvMapper();
 
 	public int length() {
-		int size;
-//		Cursor cursor = db.getReadableDatabase().query(TABLE_NAME, null, null, null, null, null, null);
-//		size = cursor.getCount();
-//		cursor.close();
 		return cache.size();
 	}
 
@@ -82,7 +78,7 @@ public class FriendRepository implements FriendsDatasource {
 						dirtyCache = false;
 					}
 				}).toList();
-
+	/* http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/ */
 		return Observable.concat(Observable.just(cache), local, remote)
 				       .first(new Func1<List<User>, Boolean>() {
 			@Override
