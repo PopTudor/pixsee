@@ -3,6 +3,8 @@ package com.marked.pixsee.chat.data;
 import android.support.annotation.NonNull;
 
 
+import com.marked.pixsee.friends.data.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,19 +16,19 @@ import rx.functions.Func1;
 /**
  * Created by Tudor on 2016-05-19.
  */
-public class CardRepository implements CardDatasource {
-	private CardDatasource disk;
-	private CardDatasource network;
+public class ChatRepository implements ChatDatasource {
+	private ChatDatasource disk;
+	private ChatDatasource network;
 	private List<Message> cache = new ArrayList<>();
 	private boolean dirtyCache;
 
-	public CardRepository(CardDatasource disk, CardDatasource network) {
+	public ChatRepository(ChatDatasource disk, ChatDatasource network) {
 		this.disk = disk;
 		this.network = network;
 	}
 
 	@Override
-	public Observable<List<Message>> getMessagesOfFriend(String friendId) {
+	public Observable<List<Message>> getMessagesOfFriend(User friendId) {
 		if (cache.size() != 0 && !dirtyCache)
 			return Observable.just(cache);
 		

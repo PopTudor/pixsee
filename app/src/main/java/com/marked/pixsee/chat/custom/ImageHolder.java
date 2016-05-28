@@ -1,4 +1,4 @@
-package com.marked.pixsee.chat.viewholders;
+package com.marked.pixsee.chat.custom;
 
 import android.content.Context;
 import android.content.Intent;

@@ -11,6 +11,7 @@ import com.marked.pixsee.data.mapper.CursorToMessageMapper;
 import com.marked.pixsee.data.mapper.Mapper;
 import com.marked.pixsee.data.mapper.MessageToCVMapper;
 import com.marked.pixsee.friends.data.DatabaseFriendContract;
+import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.friends.specifications.GetMessagesByGroupedByDate;
 
 import java.util.ArrayList;
@@ -23,10 +24,10 @@ import static com.marked.pixsee.friends.data.DatabaseFriendContract.TABLE_NAME;
 /**
  * Created by Tudor on 2016-05-20.
  */
-public class CardLocalDatasource implements CardDatasource {
+public class ChatLocalDatasource implements ChatDatasource {
 	private PixyDatabase database;
 
-	public CardLocalDatasource(PixyDatabase database) {
+	public ChatLocalDatasource(PixyDatabase database) {
 		this.database = database;
 	}
 
@@ -34,14 +35,14 @@ public class CardLocalDatasource implements CardDatasource {
 	Mapper<Message, ContentValues> messageToCVMapper = new MessageToCVMapper();
 
 	@Override
-	public Observable<List<Message>> getMessagesOfFriend(String friendId) {
+	public Observable<List<Message>> getMessagesOfFriend(User friend) {
 		List<Message> users = new ArrayList<>();
 		database.getReadableDatabase().beginTransaction();
-		Cursor cursor = database.getReadableDatabase().rawQuery(new GetMessagesByGroupedByDate(friendId).createQuery(), null);
+		Cursor cursor = database.getReadableDatabase().rawQuery(new GetMessagesByGroupedByDate(friend.getUserID()).createQuery(), null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Message friend = cursorToMessageMapper.map(cursor);
-			users.add(friend);
+			Message message = cursorToMessageMapper.map(cursor);
+			users.add(message);
 			cursor.moveToNext();
 		}
 		database.getReadableDatabase().setTransactionSuccessful();

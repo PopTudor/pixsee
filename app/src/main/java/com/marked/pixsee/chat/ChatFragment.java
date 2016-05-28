@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,11 +17,16 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.marked.pixsee.R;
-import com.marked.pixsee.commons.SpaceItemDecorator;
-import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.chat.custom.ChatAdapter;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
-import com.marked.pixsee.chat.data.MessageDataset;
+import com.marked.pixsee.chat.di.ChatModule;
+import com.marked.pixsee.chat.di.DaggerChatComponent;
+import com.marked.pixsee.commons.SpaceItemDecorator;
+import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.injection.components.ActivityComponent;
+import com.marked.pixsee.injection.components.DaggerActivityComponent;
+import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.service.GCMListenerService;
 import com.marked.pixsee.utility.GCMConstants;
@@ -30,7 +36,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.UUID;
+
+import javax.inject.Inject;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -45,22 +54,20 @@ import rx.schedulers.Schedulers;
  * in two-pane mode (on tablets) or a [ChatDetailActivity]
  * on handsets.
  */
-public class ChatFragment extends Fragment implements GCMListenerService.Callbacks {
-	private Context mContext;
-
+public class ChatFragment extends Fragment implements GCMListenerService.Callbacks, ChatContract.View {
 	private String mThisUser;
 	private User mThatUser;
 
-	private MessageDataset mMessagesInstance;
 	private ChatAdapter mChatAdapter;
-
 	private LinearLayoutManager mLinearLayoutManager;
 
 	private Socket mSocket;
-	private ChatFragment.ContactDetailFragmentInteraction mCallback;
 
 	private Emitter.Listener onMessage;
 	private Emitter.Listener onTyping;
+
+	@Inject
+	ChatContract.Presenter presenter;
 
 
 	public void sendMessage(String messageText, int messageType) {
@@ -104,9 +111,7 @@ public class ChatFragment extends Fragment implements GCMListenerService.Callbac
 	 */
 	@Override
 	public void receiveMessage(String from, Bundle data) {
-		int messageType = data.getInt("type", MessageConstants.MessageType.YOU_MESSAGE);
-		Message message = new Message.Builder().addData(data).messageType(messageType).from(mThatUser.getUserID()).to(mThatUser.getUserID()).build();
-		addMessage(message);
+		presenter.receiveMessage(from,data);
 	}
 
 	/**
@@ -114,35 +119,27 @@ public class ChatFragment extends Fragment implements GCMListenerService.Callbac
 	 *
 	 * @param message the message to add
 	 */
-	private void addMessage(Message message) {
-		mMessagesInstance.add(message);
-		mChatAdapter.notifyItemInserted(mMessagesInstance.size() - 1);
-		messagesRecyclerView.scrollToPosition(mMessagesInstance.size() - 1);
-	}
-
-	/**
-	 * Remove message from dataset and notify the adapter
-	 */
-	private void removeMessage() {
-		if (mMessagesInstance.isEmpty())
-			return;
-		mMessagesInstance.remove(mMessagesInstance.size() - 1);
-		mChatAdapter.notifyItemRemoved(mMessagesInstance.size());
-		messagesRecyclerView.scrollToPosition(mMessagesInstance.size());
+	@Override
+	public void addMessage(Message message) {
+		mChatAdapter.getDataset().add(message);
+		mChatAdapter.notifyItemInserted(mChatAdapter.getItemCount()-1);
+		messagesRecyclerView.scrollToPosition(mChatAdapter.getItemCount()-1);
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		GCMListenerService.setCallbacks(this);
-		mLinearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+		mChatAdapter = new ChatAdapter(presenter);
+		mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule((AppCompatActivity) getActivity()))
+				                                      .build();
+		DaggerChatComponent.builder().activityComponent(activityComponent).chatModule(new ChatModule(this)).build().inject(this);
 		try {
 			mSocket = IO.socket(ServerConstants.SERVER);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		mMessagesInstance = MessageDataset.getInstance(mContext);
-		mChatAdapter = new ChatAdapter(mMessagesInstance);
 		onMessage = onNewMessage();
 		onTyping = onTyping();
 
@@ -185,7 +182,7 @@ public class ChatFragment extends Fragment implements GCMListenerService.Callbac
 	 * @param message The message to send
 	 */
 	private void doGcmSendUpstreamMessage(Message message) {
-		final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(mContext);
+		final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getActivity());
 		final String senderId = getString(R.string.gcm_defaultSenderId);
 		final String msgId = UUID.randomUUID().toString();
 		String token = mThatUser.getToken();
@@ -214,7 +211,7 @@ public class ChatFragment extends Fragment implements GCMListenerService.Callbac
 
 					@Override
 					public void onError(Throwable e) {
-						Toast.makeText(mContext, "Send message failed", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getActivity(), "Send message failed", Toast.LENGTH_SHORT).show();
 					}
 
 					@Override
@@ -224,33 +221,28 @@ public class ChatFragment extends Fragment implements GCMListenerService.Callbac
 	}
 
 	@Override
+	public void onStart() {
+		super.onStart();
+		presenter.start();
+	}
+
+	@Override
 	public void onPause() {
 		super.onPause();
-		ChatFragment.isInForeground = false;
-		mMessagesInstance.clear();
+		isInForeground = false;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		ChatFragment.isInForeground = true;
-		mMessagesInstance.loadMore(mThatUser, 50);
+		isInForeground = true;
 	}
 
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		try {
-			mCallback = (ContactDetailFragmentInteraction) context;
-			mContext = getActivity();
 			mThatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
-
-			mThisUser = PreferenceManager.getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null);
-		} catch (ClassCastException e) {
-			throw new ClassCastException(context.toString() + " must implement " +
-					                             ContactDetailFragmentInteraction.class);
-		}
-
+			mThisUser = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(GCMConstants.USER_ID, null);
 	}
 
 	public void onTyping(boolean typing) {
@@ -296,14 +288,7 @@ public class ChatFragment extends Fragment implements GCMListenerService.Callbac
 					@Override
 					public void run() {
 						boolean typing = (boolean) args[0];
-						if (typing)
-							if (!mMessagesInstance.isEmpty() && mMessagesInstance.get(mMessagesInstance.size() - 1).getMessageType()
-									                                    == MessageConstants.MessageType.TYPING) {
-
-								addMessage(new Message.Builder().messageType(MessageConstants.MessageType.TYPING).build());
-							} else if (!mMessagesInstance.isEmpty())
-								// !typing
-								removeMessage();
+						presenter.isTyping(typing);
 					}
 				});
 
@@ -313,7 +298,12 @@ public class ChatFragment extends Fragment implements GCMListenerService.Callbac
 		return onTyping;
 	}
 
-	interface ContactDetailFragmentInteraction {
+	@Override
+	public void pop() {
+		if (mChatAdapter.getDataset().size()<=0)
+			return;
+		mChatAdapter.getDataset().remove(mChatAdapter.getDataset().size() - 1);
+		mChatAdapter.notifyItemRemoved(mChatAdapter.getDataset().size());
 	}
 
 	public static final String ON_NEW_MESSAGE = "onMessage";
@@ -337,4 +327,18 @@ public class ChatFragment extends Fragment implements GCMListenerService.Callbac
 		return fragment;
 	}
 
+	@Override
+	public void showCards(List<Message> cards) {
+
+	}
+
+	@Override
+	public void showNoChats() {
+
+	}
+
+	@Override
+	public void setPresenter(ChatContract.Presenter presenter) {
+
+	}
 }

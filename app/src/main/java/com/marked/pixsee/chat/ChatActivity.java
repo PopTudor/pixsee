@@ -27,7 +27,7 @@ import com.marked.pixsee.chat.data.MessageConstants;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link ChatFragment}.
  */
-public class ChatActivity extends AppCompatActivity implements ChatFragment.ContactDetailFragmentInteraction {
+public class ChatActivity extends AppCompatActivity {
 	public static final String EXTRA_CONTACT = "com.marked.vifo.ui.activity.EXTRA_CONTACT";
 
 	private ChatFragment mFragment;

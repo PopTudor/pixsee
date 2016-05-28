@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.database.DatabaseContract;
+import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.utility.GCMConstants;
 
@@ -26,12 +27,12 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Tudor on 2016-05-20.
  */
-public class CardRemoteDatasource implements CardDatasource {
+public class ChatRemoteDatasource implements ChatDatasource {
 	private final Retrofit retrofit;
 	private final String userid;
 	private final Gson gson = new Gson();
 
-	public CardRemoteDatasource(SharedPreferences sharedPreferences) {
+	public ChatRemoteDatasource(SharedPreferences sharedPreferences) {
 		HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
 		loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 		OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -48,9 +49,9 @@ public class CardRemoteDatasource implements CardDatasource {
 	}
 
 	@Override
-	public Observable<List<Message>> getMessagesOfFriend(String friendId) {
+	public Observable<List<Message>> getMessagesOfFriend(User friendId) {
 		return retrofit.create(MessageAPI.class)
-				       .getMessagesOfFriend(userid, friendId)
+				       .getMessagesOfFriend(userid, friendId.getUserID())
 				       .subscribeOn(Schedulers.io())
 				       .map(new Func1<JsonObject, JsonArray>() {
 					       @Override

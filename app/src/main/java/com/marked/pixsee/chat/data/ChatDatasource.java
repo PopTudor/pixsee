@@ -2,6 +2,8 @@ package com.marked.pixsee.chat.data;
 
 import android.support.annotation.NonNull;
 
+import com.marked.pixsee.friends.data.User;
+
 import java.util.List;
 
 import rx.Observable;
@@ -11,8 +13,8 @@ import rx.Observable;
  * Main entry point for accessing Message data.
  * <p/>
  */
-public interface CardDatasource {
-	Observable<List<Message>> getMessagesOfFriend(String friendId);
+public interface ChatDatasource {
+	Observable<List<Message>> getMessagesOfFriend(User friend);
 
 	Observable<Message> getMessage(@NonNull Message messageId);
 

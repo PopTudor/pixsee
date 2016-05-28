@@ -1,4 +1,4 @@
-package com.marked.pixsee.chat;
+package com.marked.pixsee.chat.custom;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
-import com.marked.pixsee.chat.viewholders.ImageHolder;
-import com.marked.pixsee.chat.viewholders.MessageHolder;
-import com.marked.pixsee.chat.viewholders.TypingHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,10 +17,12 @@ import java.util.List;
  * Created by Tudor Pop on 04-Dec-15.
  */
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-	private List<Message> dataset;
+	private final List<Message> dataset;
+	private final ChatInteraction chatInteraction;
 
-	public ChatAdapter(List<Message> dataset) {
-		this.dataset = dataset;
+	public ChatAdapter(ChatInteraction chatInteraction) {
+		this.dataset = new ArrayList<>();
+		this.chatInteraction = chatInteraction;
 	}
 
 	@Override
@@ -32,11 +32,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 		switch (viewType) {
 			case MessageConstants.MessageType.ME_MESSAGE :
 				v = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_mine_text, parent, false);
-				return new MessageHolder(v, parent.getContext());
+				return new MessageHolder(v);
 
 			case MessageConstants.MessageType.YOU_MESSAGE :
 				v = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_other_text, parent, false);
-				return new MessageHolder(v, parent.getContext());
+				return new MessageHolder(v);
 
 			case MessageConstants.MessageType.ME_IMAGE :
 				v = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_mine_image, parent, false);
@@ -52,7 +52,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 			default:
 				v = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_other_text, parent, false);
-				return new MessageHolder(v, parent.getContext());
+				return new MessageHolder(v);
 
 		}
 	}
@@ -60,7 +60,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		if (holder instanceof MessageHolder){
-			((MessageHolder)holder).bindMessage(dataset.get(position));
+			((MessageHolder)holder).bindMessage(dataset.get(position),chatInteraction);
 		}else if (holder instanceof ImageHolder){
 			((ImageHolder)holder).bindMessage(dataset.get(position));
 		}else if (holder instanceof TypingHolder){
@@ -94,5 +94,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	@Override
 	public int getItemCount() {
 		return dataset.size();
+	}
+
+	public List<Message> getDataset() {
+		return dataset;
+	}
+
+	public interface ChatInteraction {
+		void chatClicked(Message message);
 	}
 }

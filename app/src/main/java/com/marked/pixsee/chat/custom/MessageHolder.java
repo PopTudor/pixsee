@@ -1,6 +1,5 @@
-package com.marked.pixsee.chat.viewholders;
+package com.marked.pixsee.chat.custom;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -14,15 +13,20 @@ import com.marked.pixsee.chat.data.MessageConstants;
  * Created by Tudor Pop on 04-Dec-15.
  */
 public class MessageHolder extends RecyclerView.ViewHolder {
-	private Context context;
 	private TextView mMessageTextView ;
-	public MessageHolder(View itemView, Context context) {
+
+	public MessageHolder(View itemView) {
 		super(itemView);
-		this.context = context;
 		mMessageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
 	}
 
-	public void bindMessage(Message message) {
+	public void bindMessage(final Message message, final ChatAdapter.ChatInteraction chatInteraction) {
+		itemView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				chatInteraction.chatClicked(message);
+			}
+		});
 		mMessageTextView.setText(message.getData().get(MessageConstants.DATA_BODY));
 	}
 }
