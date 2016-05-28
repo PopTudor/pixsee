@@ -1,8 +1,8 @@
-package com.marked.pixsee.frienddetail.cards;
+package com.marked.pixsee.chat.cards;
 
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.frienddetail.data.Message;
-import com.marked.pixsee.frienddetail.data.CardDatasource;
+import com.marked.pixsee.chat.data.Message;
+import com.marked.pixsee.chat.data.CardDatasource;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

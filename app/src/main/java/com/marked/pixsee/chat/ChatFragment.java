@@ -1,4 +1,4 @@
-package com.marked.pixsee.frienddetail;
+package com.marked.pixsee.chat;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,9 +18,9 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.marked.pixsee.R;
 import com.marked.pixsee.commons.SpaceItemDecorator;
 import com.marked.pixsee.friends.data.User;
-import com.marked.pixsee.frienddetail.data.Message;
-import com.marked.pixsee.frienddetail.data.MessageConstants;
-import com.marked.pixsee.frienddetail.data.MessageDataset;
+import com.marked.pixsee.chat.data.Message;
+import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.chat.data.MessageDataset;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.service.GCMListenerService;
 import com.marked.pixsee.utility.GCMConstants;
@@ -45,19 +45,19 @@ import rx.schedulers.Schedulers;
  * in two-pane mode (on tablets) or a [ChatDetailActivity]
  * on handsets.
  */
-public class FriendDetailFragment extends Fragment implements GCMListenerService.Callbacks {
+public class ChatFragment extends Fragment implements GCMListenerService.Callbacks {
 	private Context mContext;
 
 	private String mThisUser;
 	private User mThatUser;
 
 	private MessageDataset mMessagesInstance;
-	private MessageAdapter mMessageAdapter;
+	private ChatAdapter mChatAdapter;
 
 	private LinearLayoutManager mLinearLayoutManager;
 
 	private Socket mSocket;
-	private FriendDetailFragment.ContactDetailFragmentInteraction mCallback;
+	private ChatFragment.ContactDetailFragmentInteraction mCallback;
 
 	private Emitter.Listener onMessage;
 	private Emitter.Listener onTyping;
@@ -73,7 +73,7 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 		//		doGcmSendUpstreamMessage(message);
 		JSONObject jsonObject = message.toJSON();
 
-		mSocket.emit(FriendDetailFragment.ON_NEW_MESSAGE, jsonObject);
+		mSocket.emit(ChatFragment.ON_NEW_MESSAGE, jsonObject);
 		message.setMessageType(reverseMessageType(messageType)); /* after the message is sent with message type 1 (to appear on the left for the other user)
 		 we want to
 	    appear on the right for this user*/
@@ -116,7 +116,7 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 	 */
 	private void addMessage(Message message) {
 		mMessagesInstance.add(message);
-		mMessageAdapter.notifyItemInserted(mMessagesInstance.size() - 1);
+		mChatAdapter.notifyItemInserted(mMessagesInstance.size() - 1);
 		messagesRecyclerView.scrollToPosition(mMessagesInstance.size() - 1);
 	}
 
@@ -127,7 +127,7 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 		if (mMessagesInstance.isEmpty())
 			return;
 		mMessagesInstance.remove(mMessagesInstance.size() - 1);
-		mMessageAdapter.notifyItemRemoved(mMessagesInstance.size());
+		mChatAdapter.notifyItemRemoved(mMessagesInstance.size());
 		messagesRecyclerView.scrollToPosition(mMessagesInstance.size());
 	}
 
@@ -142,17 +142,17 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 			e.printStackTrace();
 		}
 		mMessagesInstance = MessageDataset.getInstance(mContext);
-		mMessageAdapter = new MessageAdapter(mMessagesInstance);
+		mChatAdapter = new ChatAdapter(mMessagesInstance);
 		onMessage = onNewMessage();
 		onTyping = onTyping();
 
-		mSocket.on(FriendDetailFragment.ON_NEW_MESSAGE, onMessage);
-		mSocket.on(FriendDetailFragment.ON_TYPING, onTyping);
+		mSocket.on(ChatFragment.ON_NEW_MESSAGE, onMessage);
+		mSocket.on(ChatFragment.ON_TYPING, onTyping);
 
 		mSocket.connect();
 
 		try {
-			mSocket.emit(FriendDetailFragment.ON_NEW_ROOM, new JSONObject(String.format("{from:%s,to:%s}",mThisUser, mThatUser.getUserID())));
+			mSocket.emit(ChatFragment.ON_NEW_ROOM, new JSONObject(String.format("{from:%s,to:%s}",mThisUser, mThatUser.getUserID())));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -162,8 +162,8 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mSocket.off(FriendDetailFragment.ON_NEW_MESSAGE, onMessage);
-		mSocket.off(FriendDetailFragment.ON_TYPING, onTyping);
+		mSocket.off(ChatFragment.ON_NEW_MESSAGE, onMessage);
+		mSocket.off(ChatFragment.ON_TYPING, onTyping);
 		mSocket.disconnect();
 	}
 
@@ -175,7 +175,7 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 		messagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.messagesRecyclerView);
 		messagesRecyclerView.setLayoutManager(mLinearLayoutManager);
 		messagesRecyclerView.addItemDecoration(new SpaceItemDecorator(15));
-		messagesRecyclerView.setAdapter(mMessageAdapter);
+		messagesRecyclerView.setAdapter(mChatAdapter);
 		return rootView;
 	}
 
@@ -226,14 +226,14 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 	@Override
 	public void onPause() {
 		super.onPause();
-		FriendDetailFragment.isInForeground = false;
+		ChatFragment.isInForeground = false;
 		mMessagesInstance.clear();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		FriendDetailFragment.isInForeground = true;
+		ChatFragment.isInForeground = true;
 		mMessagesInstance.loadMore(mThatUser, 50);
 	}
 
@@ -243,7 +243,7 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 		try {
 			mCallback = (ContactDetailFragmentInteraction) context;
 			mContext = getActivity();
-			mThatUser = getArguments().getParcelable(FriendDetailActivity.EXTRA_CONTACT);
+			mThatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
 
 			mThisUser = PreferenceManager.getDefaultSharedPreferences(mContext).getString(GCMConstants.USER_ID, null);
 		} catch (ClassCastException e) {
@@ -255,7 +255,7 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 
 	public void onTyping(boolean typing) {
 		try {
-			mSocket.emit(FriendDetailFragment.ON_TYPING, new JSONObject(String.format("{from:%s,to:%s,typing:%s}",mThisUser, mThatUser.getUserID(),
+			mSocket.emit(ChatFragment.ON_TYPING, new JSONObject(String.format("{from:%s,to:%s,typing:%s}",mThisUser, mThatUser.getUserID(),
 					typing)));
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -329,10 +329,10 @@ public class FriendDetailFragment extends Fragment implements GCMListenerService
 	 */
 	public static boolean isInForeground = false;
 
-	public static FriendDetailFragment newInstance(Parcelable parcelable) {
+	public static ChatFragment newInstance(Parcelable parcelable) {
 		Bundle bundle = new Bundle();
-		bundle.putParcelable(FriendDetailActivity.EXTRA_CONTACT, parcelable);
-		FriendDetailFragment fragment = new FriendDetailFragment();
+		bundle.putParcelable(ChatActivity.EXTRA_CONTACT, parcelable);
+		ChatFragment fragment = new ChatFragment();
 		fragment.setArguments(bundle);
 		return fragment;
 	}

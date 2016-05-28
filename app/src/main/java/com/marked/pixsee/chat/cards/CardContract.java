@@ -1,9 +1,9 @@
-package com.marked.pixsee.frienddetail.cards;
+package com.marked.pixsee.chat.cards;
 
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.frienddetail.data.Message;
+import com.marked.pixsee.chat.data.Message;
 
 import java.util.List;
 

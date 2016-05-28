@@ -1,4 +1,4 @@
-package com.marked.pixsee.frienddetail;
+package com.marked.pixsee.chat;
 
 
 import android.animation.Animator;

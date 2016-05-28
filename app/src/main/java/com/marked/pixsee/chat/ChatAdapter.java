@@ -1,4 +1,4 @@
-package com.marked.pixsee.frienddetail;
+package com.marked.pixsee.chat;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,11 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.frienddetail.data.Message;
-import com.marked.pixsee.frienddetail.data.MessageConstants;
-import com.marked.pixsee.frienddetail.viewholders.ImageHolder;
-import com.marked.pixsee.frienddetail.viewholders.MessageHolder;
-import com.marked.pixsee.frienddetail.viewholders.TypingHolder;
+import com.marked.pixsee.chat.data.Message;
+import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.chat.viewholders.ImageHolder;
+import com.marked.pixsee.chat.viewholders.MessageHolder;
+import com.marked.pixsee.chat.viewholders.TypingHolder;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ import java.util.List;
 /**
  * Created by Tudor Pop on 04-Dec-15.
  */
-public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	private List<Message> dataset;
 
-	public MessageAdapter(List<Message> dataset) {
+	public ChatAdapter(List<Message> dataset) {
 		this.dataset = dataset;
 	}
 

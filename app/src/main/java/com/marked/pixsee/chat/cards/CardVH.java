@@ -1,4 +1,4 @@
-package com.marked.pixsee.frienddetail.cards;
+package com.marked.pixsee.chat.cards;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,8 +8,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.frienddetail.data.Message;
-import com.marked.pixsee.frienddetail.data.MessageConstants;
+import com.marked.pixsee.chat.data.Message;
+import com.marked.pixsee.chat.data.MessageConstants;
 
 /**
  * Created by Tudor on 2016-05-19.

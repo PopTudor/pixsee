@@ -152,11 +152,11 @@
             android:value="578f43a0aa4a22391ecc912451e1514f1af55ce4"/>
 
         <activity
-            android:name=".frienddetail.ImageFullscreenActivity"
+            android:name=".chat.ImageFullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
             android:theme="@style/FullscreenTheme"/>
-        <activity android:name=".frienddetail.FriendDetailActivity"
+        <activity android:name=".chat.ChatActivity"
                   android:label="FriendDetailActivity"
                   android:screenOrientation="portrait"
             />

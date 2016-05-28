@@ -1,4 +1,4 @@
-package com.marked.pixsee.frienddetail.viewholders;
+package com.marked.pixsee.chat.viewholders;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +15,8 @@ import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.marked.pixsee.R;
-import com.marked.pixsee.frienddetail.data.Message;
-import com.marked.pixsee.frienddetail.ImageFullscreenActivity;
+import com.marked.pixsee.chat.data.Message;
+import com.marked.pixsee.chat.ImageFullscreenActivity;
 
 import java.io.File;
 

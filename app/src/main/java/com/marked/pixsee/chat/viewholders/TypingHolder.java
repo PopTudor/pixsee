@@ -1,4 +1,4 @@
-package com.marked.pixsee.frienddetail.viewholders;
+package com.marked.pixsee.chat.viewholders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.frienddetail.FriendDetailActivity;
+import com.marked.pixsee.chat.ChatActivity;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.main.commands.SelfieCommand;
@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 	@Override
 	public void onFriendClick(User friend) {
-		Intent intent = new Intent(this, FriendDetailActivity.class);
-		intent.putExtra(FriendDetailActivity.EXTRA_CONTACT, friend);
+		Intent intent = new Intent(this, ChatActivity.class);
+		intent.putExtra(ChatActivity.EXTRA_CONTACT, friend);
 		startActivity(intent);
 //		CardFragment fragment = CardFragment.newInstance(friend);
 //		CardLocalDatasource localDatasource = new CardLocalDatasource(PixyDatabase.getInstance(this));

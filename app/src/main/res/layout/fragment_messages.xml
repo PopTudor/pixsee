@@ -3,7 +3,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              xmlns:card="http://schemas.android.com/apk/res-auto"
-             tools:context=".frienddetail.cards.CardFragment"
+             tools:context=".chat.cards.CardFragment"
              >
 
     <android.support.v7.widget.RecyclerView

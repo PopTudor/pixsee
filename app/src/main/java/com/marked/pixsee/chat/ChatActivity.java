@@ -1,4 +1,4 @@
-package com.marked.pixsee.frienddetail;
+package com.marked.pixsee.chat;
 
 
 import android.graphics.drawable.Drawable;
@@ -16,7 +16,7 @@ import android.widget.EditText;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.marked.pixsee.R;
-import com.marked.pixsee.frienddetail.data.MessageConstants;
+import com.marked.pixsee.chat.data.MessageConstants;
 
 /**
  * An activity representing a single Contact detail screen. This
@@ -25,12 +25,12 @@ import com.marked.pixsee.frienddetail.data.MessageConstants;
  * in a {@link com.marked.pixsee.main.MainActivity}.
  * <p/>
  * This activity is mostly just a 'shell' activity containing nothing
- * more than a {@link FriendDetailFragment}.
+ * more than a {@link ChatFragment}.
  */
-public class FriendDetailActivity extends AppCompatActivity implements FriendDetailFragment.ContactDetailFragmentInteraction {
+public class ChatActivity extends AppCompatActivity implements ChatFragment.ContactDetailFragmentInteraction {
 	public static final String EXTRA_CONTACT = "com.marked.vifo.ui.activity.EXTRA_CONTACT";
 
-	private FriendDetailFragment mFragment;
+	private ChatFragment mFragment;
 	private EditText messageEditText;
 
 	@Override
@@ -41,7 +41,7 @@ public class FriendDetailActivity extends AppCompatActivity implements FriendDet
 			getWindow().setAllowEnterTransitionOverlap(false);
 		}
 		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-		mFragment = FriendDetailFragment.newInstance(getIntent().getParcelableExtra(EXTRA_CONTACT));
+		mFragment = ChatFragment.newInstance(getIntent().getParcelableExtra(EXTRA_CONTACT));
 
 		/*send the clicked contact to the fragment*/
 		getSupportFragmentManager().beginTransaction()
