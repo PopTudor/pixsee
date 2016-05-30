@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.0'
-        classpath 'com.google.gms:google-services:2.0.0-alpha3'
+        classpath 'com.google.gms:google-services:3.0.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
@@ -41,7 +41,7 @@ ext {
     fabVersion = '1.6.2'
     frescoVersion = '0.9.0'
     retrofitVersion = '2.0.0-beta4'
-    playServicesVersion = '8.4.0'
+    playServicesVersion = '9.0.1'
     scaleImageVersion = '3.4.1'
     glassFishVersion = '10.0-b28'
     rajawali = '1.1.505-SNAPSHOT@aar'
@@ -76,7 +76,7 @@ ext {
             retrofitRX           : "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}",
             okHttpLogger         : "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
             subSamplingScaleImage: "com.davemorrissey.labs:subsampling-scale-image-view:${scaleImageVersion}",
-            gcmService           : "com.google.android.gms:play-services-gcm:${playServicesVersion}",
+            gcmService           : "com.google.firebase:firebase-messaging:${playServicesVersion}",
             visionService        : "com.google.android.gms:play-services-vision:${playServicesVersion}",
             glassFishAnnotations : "org.glassfish:javax.annotation:${glassFishVersion}",
             rajawali             : "org.rajawali3d:rajawali:${rajawali}",

@@ -20,28 +20,23 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.google.android.gms.gcm.GcmListenerService;
-import com.marked.pixsee.R;
-import com.marked.pixsee.entry.EntryActivity;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.chat.ChatFragment;
+import com.marked.pixsee.entry.EntryActivity;
 
 import static android.app.PendingIntent.getActivity;
 import static android.media.RingtoneManager.TYPE_NOTIFICATION;
 import static android.media.RingtoneManager.getDefaultUri;
-import static com.marked.pixsee.chat.data.MessageConstants.DATA_BODY;
-import static com.marked.pixsee.chat.data.MessageConstants.NOTIFICATION_PAYLOAD_BODY;
-import static com.marked.pixsee.chat.data.MessageConstants.NOTIFICATION_PAYLOAD_TITLE;
 
 /**
  * Receives messages sent by GCM server
  */
-public class GCMListenerService extends GcmListenerService {
+public class GCMListenerService extends FirebaseMessagingService {
 
 	private static final String TAG = "MyGcmListenerService";
 	static Callbacks mCallbacks;
@@ -50,24 +45,19 @@ public class GCMListenerService extends GcmListenerService {
 		mCallbacks = callbacks;
 	}
 
-	/**
-	 * Called when message is received.
-	 *
-	 * @param from    SenderID of the app.
-	 * @param payload Data bundle containing message data as key/value pairs.
-	 *                For Set of keys use data.keySet().
-	 */
 	@Override
-	public void onMessageReceived(String from, Bundle payload) {
-		String text = payload.getString(DATA_BODY);
-		Log.d(TAG, "Message: " + text);
-		for (String s : payload.keySet())
+	public void onMessageReceived(RemoteMessage remoteMessage) {
+		Log.d(TAG, "Message: " + remoteMessage.getData());
+		Bundle payload = new Bundle();
+		for (String s : remoteMessage.getData().keySet()) {
 			Log.d("***", "onMessageReceived " + s);
+			payload.putString(s,remoteMessage.getData().get(s));
+		}
 
 		if (mCallbacks != null)
-			mCallbacks.receiveMessage(from, payload);
+			mCallbacks.receiveMessage(remoteMessage.getFrom(), payload);
 
-		if (from.startsWith("/topics/")) {
+		if (remoteMessage.getFrom().startsWith("/topics/")) {
 			// message received from some topic.
 		} else {
 			// normal downstream message.
@@ -100,18 +90,18 @@ public class GCMListenerService extends GcmListenerService {
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			PendingIntent pendingIntent = getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
 			Uri defaultSoundUri = getDefaultUri(TYPE_NOTIFICATION);
-			NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_chat_24dp)
-			                                                                                     .setWhen(0)
-			                                                                                     .setLargeIcon(BitmapFactory
-					                                                             .decodeResource(getResources(), R.mipmap.ic_launcher))
-			                                                                                     .setContentTitle(bundle.getString(NOTIFICATION_PAYLOAD_TITLE))
-			                                                                                     .setContentText(bundle.getString(NOTIFICATION_PAYLOAD_BODY))
-			                                                                                     .setAutoCancel(true)
-			                                                                                     .setSound(defaultSoundUri)
-			                                                                                     .setContentIntent(pendingIntent);
+//			NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_chat_24dp)
+//			                                                                                     .setWhen(0)
+//			                                                                                     .setLargeIcon(BitmapFactory
+//					                                                             .decodeResource(getResources(), R.mipmap.ic_launcher))
+//			                                                                                     .setContentTitle(bundle.getString(NOTIFICATION_PAYLOAD_TITLE))
+//			                                                                                     .setContentText(bundle.getString(NOTIFICATION_PAYLOAD_BODY))
+//			                                                                                     .setAutoCancel(true)
+//			                                                                                     .setSound(defaultSoundUri)
+//			                                                                                     .setContentIntent(pendingIntent);
 
 			NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+//			notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 		}
 	}
 
@@ -124,16 +114,10 @@ public class GCMListenerService extends GcmListenerService {
 	public void onMessageSent(String msgId) {
 		super.onMessageSent(msgId);
 	}
-
-	/**
-	 * Called when there was an error sending an upstream message.
-	 *
-	 * @param msgId of the upstream message sent using send(String, String, Bundle).
-	 * @param error description of the error.
-	 */
+	/* called when there was an error sending the upstream message */
 	@Override
-	public void onSendError(String msgId, String error) {
-		super.onSendError(msgId, error);
+	public void onSendError(String s, Exception e) {
+		super.onSendError(s, e);
 	}
 
 	public interface Callbacks {

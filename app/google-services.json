@@ -1,35 +1,49 @@
 {
   "project_info": {
-    "project_id": "pixsee-1",
     "project_number": "146881901643",
-    "name": "Pixsee"
+    "firebase_url": "https://pixsee-1.firebaseio.com",
+    "project_id": "pixsee-1",
+    "storage_bucket": "pixsee-1.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:146881901643:android:a718e712c964e67b",
-        "client_id": "android:com.marked.pixsee",
-        "client_type": 1,
         "android_client_info": {
           "package_name": "com.marked.pixsee"
         }
       },
-      "oauth_client": [],
-      "api_key": [],
+      "oauth_client": [
+        {
+          "client_id": "146881901643-5uvqlpbm16lig3jjerd2ot7slqbkk6q6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.marked.pixsee",
+            "certificate_hash": "B1C09157870A022C485E512D8A077609EC6EF0DC"
+          }
+        },
+        {
+          "client_id": "146881901643-4ts470ls7a0nppe69j8kjgun0fcr0l66.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByj7S8oXpQkfhMQQDS6ImLQeYrMNQtcB4"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 1
         },
-        "cloud_messaging_service": {
-          "status": 2,
-          "apns_config": []
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "google_signin_service": {
-          "status": 1
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146881901643-4ts470ls7a0nppe69j8kjgun0fcr0l66.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 1
@@ -37,6 +51,5 @@
       }
     }
   ],
-  "client_info": [],
-  "ARTIFACT_VERSION": "1"
+  "configuration_version": "1"
 }

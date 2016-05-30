@@ -25,14 +25,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.widget.Toast;
 
-import com.google.android.gms.gcm.GcmPubSub;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.marked.pixsee.R;
 import com.marked.pixsee.login.LoginAPI;
 import com.marked.pixsee.networking.HTTPStatusCodes;
 import com.marked.pixsee.networking.ServerConstants;
@@ -72,21 +69,9 @@ public class LogInRegistrationIntentService extends IntentService {
 			// R.string.gcm_defaultSenderId (the Sender ID) is typically derived from google-services.json.
 			// See https://developers.google.com/cloud-messaging/android/start for details on this file.
 
-			InstanceID instanceID = InstanceID.getInstance(this);
-			String scope = GoogleCloudMessaging.INSTANCE_ID_SCOPE;
+			String scope = FirebaseMessaging.INSTANCE_ID_SCOPE;
 			Bundle extras = null;
-			String token = null;
-			try {
-				token = instanceID.getToken(getString(R.string.gcm_defaultSenderId), scope, extras);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (token == null){
-				// if google services had some troubles
-				Toast.makeText(getApplicationContext(), "We could not register you, please update your system !", Toast.LENGTH_SHORT);
-				return;
-			}
-			getDefaultSharedPreferences(this).edit().putString(GCMConstants.TOKEN, token).apply();
+			getDefaultSharedPreferences(this).edit().putString(GCMConstants.TOKEN, FirebaseInstanceId.getInstance().getToken()).apply();
 
 			switch (intent.getAction()) {
 				case LogInRegistrationIntentService.ACTION_LOGIN: {
@@ -94,7 +79,7 @@ public class LogInRegistrationIntentService extends IntentService {
 							.getStringExtra(LogInRegistrationIntentService.EXTRA_PARAM_EMAIL);
 					String param2 = intent
 							.getStringExtra(LogInRegistrationIntentService.EXTRA_PARAM_PASSWORD);
-					handleActionLogin(param1, param2, token);
+					handleActionLogin(param1, param2, FirebaseInstanceId.getInstance().getToken());
 					break;
 				}
 				case LogInRegistrationIntentService.ACTION_SIGNUP: {
@@ -104,18 +89,18 @@ public class LogInRegistrationIntentService extends IntentService {
 							.getStringExtra(LogInRegistrationIntentService.EXTRA_PARAM_EMAIL);
 					String param3 = intent
 							.getStringExtra(LogInRegistrationIntentService.EXTRA_PARAM_PASSWORD);
-					handleActionSignup(param1, param2, param3, token);
+					handleActionSignup(param1, param2, param3, FirebaseInstanceId.getInstance().getToken());
 					break;
 				}
 				case LogInRegistrationIntentService.ACTION_RECOVERY: {
 					String param1 = intent
 							.getStringExtra(LogInRegistrationIntentService.EXTRA_PARAM_EMAIL);
-					handleActionRecovery(param1, token);
+					handleActionRecovery(param1, FirebaseInstanceId.getInstance().getToken());
 					break;
 				}
 			}
 			// Subscribe to topic channels
-			subscribeTopics(token);
+			subscribeTopics(FirebaseInstanceId.getInstance().getToken());
 			// [END register_for_gcm]
 		} catch (IOException e) {
 
@@ -138,9 +123,8 @@ public class LogInRegistrationIntentService extends IntentService {
 	 */
 	// [START subscribe_topics]
 	private void subscribeTopics(String token) throws IOException {
-		GcmPubSub pubSub = GcmPubSub.getInstance(this);
 		for (String topic : LogInRegistrationIntentService.TOPICS) {
-			pubSub.subscribe(token, "/topics/" + topic, null);
+			FirebaseMessaging.getInstance().subscribeToTopic("/topics/" + topic);
 		}
 	}
 
