@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.custom.ChatAdapter;
 import com.marked.pixsee.chat.data.Message;
@@ -34,7 +34,6 @@ import com.marked.pixsee.utility.GCMConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
@@ -157,7 +156,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_contact_detail, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
 		messagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.messagesRecyclerView);
 		messagesRecyclerView.setLayoutManager(mLinearLayoutManager);
 		messagesRecyclerView.addItemDecoration(new SpaceItemDecorator(15));
@@ -171,7 +170,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 	 * @param message The message to send
 	 */
 	private void doGcmSendUpstreamMessage(Message message) {
-		final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getActivity());
+		final FirebaseMessaging gcm = FirebaseMessaging.getInstance();
 		final String senderId = getString(R.string.gcm_defaultSenderId);
 		final String msgId = UUID.randomUUID().toString();
 		String token = mThatUser.getToken();
@@ -183,12 +182,13 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 		rx.Observable.create(new Observable.OnSubscribe<String>() {
 			@Override
 			public void call(Subscriber<? super String> subscriber) {
-				try {
-					gcm.send(senderId + GCMConstants.SERVER_UPSTREAM_ADRESS, msgId, data);
+//				try {
+//					RemoteMessage remoteMessage = new RemoteMessage();
+//					gcm.send(senderId + GCMConstants.SERVER_UPSTREAM_ADRESS, msgId, data);
 					subscriber.onCompleted();
-				} catch (IOException e) {
-					subscriber.onError(e);
-				}
+//				} catch (IOException e) {
+//					subscriber.onError(e);
+//				}
 			}
 		})
 				.subscribeOn(Schedulers.computation())

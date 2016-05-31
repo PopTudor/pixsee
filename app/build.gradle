@@ -116,6 +116,7 @@ dependencies {
     compile app.rajawali
     compile app.rxPermissions
     compile app.facebook
+    compile 'com.aurelhubert:ahbottomnavigation:1.2.3'
 
 
     apt app.daggerCompiler

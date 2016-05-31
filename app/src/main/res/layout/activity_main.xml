@@ -1,67 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     tools:context=".main.MainActivity">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_above="@+id/toolbarMenuContainer">
 
         <FrameLayout
+            android:id="@+id/mainContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_centerHorizontal="true"
             android:layout_above="@+id/toolbarMenuContainer"
-            android:id="@+id/mainContainer"
-            android:layout_weight="1">
-        </FrameLayout>
+            android:layout_centerHorizontal="true"
+            android:layout_weight="0.94"></FrameLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:orientation="horizontal"
-        android:background="@color/primary"
-        android:weightSum="3"
-        android:id="@+id/toolbarMenuContainer"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
 
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:id="@+id/chatImageButton"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:src="@drawable/ic_chat_24dp"
-            android:background="@color/transparent"/>
+        <LinearLayout
+            android:id="@+id/toolbarMenuContainer"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="#fff"
+            android:orientation="horizontal"
+            android:weightSum="3">
 
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:id="@+id/selfieImageButton"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:src="@drawable/ic_photo_camera_24dp"
-            android:background="@color/transparent"
-            android:alpha="0.66"
-            />
+            <ImageButton
+                android:id="@+id/chatImageButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:src="@drawable/ic_chat_24dp" />
 
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:id="@+id/profileImageButton"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:src="@drawable/ic_person_24dp"
-            android:background="@color/transparent"
-            android:alpha="0.66"/>
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/selfieImageButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:alpha="0.30"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:src="@drawable/ic_photo_camera_24dp" />
 
+            <ImageButton
+                android:id="@+id/profileImageButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:alpha="0.30"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:src="@drawable/ic_person_24dp" />
+        </LinearLayout>
 </RelativeLayout>

@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.data.MessageConstants;
 
@@ -36,7 +35,7 @@ public class ChatActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_contact_detail);
+		setContentView(R.layout.activity_chat);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			getWindow().setAllowEnterTransitionOverlap(false);
 		}
@@ -86,13 +85,6 @@ public class ChatActivity extends AppCompatActivity {
 	void sendPixsee(View view) {
 		mFragment.sendMessage("http://www.ghacks.net/wp-content/themes/magatheme/img/mozilla-firefox.png", MessageConstants.MessageType.YOU_IMAGE);
 		//		TODO("This operation should launch the camera to take a photo")
-	}
-
-	@Override
-	protected void onStop() {
-		//		Must be called when your application is done using GCM, to release internal resources.
-		GoogleCloudMessaging.getInstance(this).close();
-		super.onStop();
 	}
 
 	@Override

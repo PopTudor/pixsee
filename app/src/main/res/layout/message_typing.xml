@@ -12,8 +12,8 @@
 	app:cmv_arrowMargin="3dp"
 	app:cmv_backgroundColor="@color/primary"
 	app:cmv_backgroundColorPressed="@color/primary_dark"
-	app:cmv_contentPadding="10dp"
-	app:cmv_cornerRadius="3dp"
+	app:cmv_contentPadding="12dp"
+	app:cmv_cornerRadius="6dp"
 	app:cmv_showArrow="true"
 >
 

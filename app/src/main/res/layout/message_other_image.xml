@@ -10,7 +10,7 @@
 	android:layout_gravity="center"
 
 	app:cmv_arrowPosition="left"
-	app:cmv_arrowGravity="start"
+	app:cmv_arrowGravity="center"
 	app:cmv_arrowMargin="3dp"
 	app:cmv_backgroundColor="@color/primary"
 	app:cmv_backgroundColorPressed="@color/primary_dark"

@@ -8,16 +8,14 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
-
 		android:maxWidth="200dp"
-
-		app:cmv_arrowGravity="start"
 		app:cmv_arrowMargin="3dp"
 		app:cmv_arrowPosition="left"
+		app:cmv_arrowGravity="center"
 		app:cmv_backgroundColor="@color/primary"
 		app:cmv_backgroundColorPressed="@color/primary_dark"
 		app:cmv_contentPadding="6dp"
-		app:cmv_cornerRadius="3dp"
+		app:cmv_cornerRadius="6dp"
 		app:cmv_showArrow="true"
 	>
 		<TextView
@@ -30,6 +28,8 @@
 			android:clickable="true"
 			android:longClickable="true"
 			android:text="Hello"
+			android:paddingLeft="6dp"
+			android:paddingRight="6dp"
 			android:textColor="#fff"
 			android:textIsSelectable="true"
 			android:textSize="17sp"

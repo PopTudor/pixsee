@@ -11,7 +11,7 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center|right"
 
-		app:cmv_arrowGravity="start"
+		app:cmv_arrowGravity="center"
 		app:cmv_arrowMargin="3dp"
 		app:cmv_arrowPosition="right"
 		app:cmv_backgroundColor="#ffffff"
