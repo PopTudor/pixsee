@@ -51,14 +51,16 @@
         style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:gravity="center"
         android:inputType="textCapWords|textCapSentences|textPersonName"
         android:singleLine="true"
         android:textColor="@color/accent_dark"
         android:text="Name"
+        android:duplicateParentState="true"
         android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/linearLayout3"
         android:layout_alignStart="@+id/linearLayout3"
-        android:clickable="true"/>
+/>
 
 </RelativeLayout>

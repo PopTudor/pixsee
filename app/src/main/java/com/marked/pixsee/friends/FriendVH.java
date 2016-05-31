@@ -18,12 +18,16 @@ class FriendVH extends RecyclerView.ViewHolder {
 	private SimpleDraweeView simpleDraweeView;
 	private TextView friendNameTextView;
 	private TextView friendBodyTextView;
+	private FriendFragment.FriendFragmentInteractionListener friendFragmentInteractionListener;
+	private static FriendClick FRIEND_CLICK;
 
-	public FriendVH(@NotNull View binding) {
+	public FriendVH(@NotNull View binding, FriendFragment.FriendFragmentInteractionListener interactionListener) {
 		super(binding);
 		simpleDraweeView = (SimpleDraweeView) binding.findViewById(R.id.friendIconImageView);
 		friendNameTextView = (TextView) binding.findViewById(R.id.friendNameTextView);
 		friendBodyTextView = (TextView) binding.findViewById(R.id.friendBodyTextView);
+		friendFragmentInteractionListener = interactionListener;
+
 	}
 
 
@@ -37,14 +41,29 @@ class FriendVH extends RecyclerView.ViewHolder {
 	//            });
 
 
-	public void bindFriend(User friend) {
+	public void bindFriend(final User friend) {
 		//		val uri = Uri.parse(contact);
 		//		mFriendIconImageView.setImageURI(uri, context);
 		//todo get in parse a contact's profile image
+		FRIEND_CLICK = new FriendClick(friend);
 		if (friend.getIcon() != null)
 			simpleDraweeView.setImageURI(Uri.parse(friend.getIcon()));
 		friendNameTextView.setText(friend.getName());
 		friendBodyTextView.setText(friend.getLastMessage());
+		itemView.setOnClickListener(FRIEND_CLICK); // // TODO: 31.05.2016 how can this be done with a single line of code ?
+		friendNameTextView.setOnClickListener(FRIEND_CLICK);
+	}
+	private class FriendClick implements View.OnClickListener{
+		private User friend;
+
+		public FriendClick(User friend) {
+			this.friend = friend;
+		}
+
+		@Override
+		public void onClick(View v) {
+			friendFragmentInteractionListener.onFriendClick(friend);
+		}
 	}
 
 }

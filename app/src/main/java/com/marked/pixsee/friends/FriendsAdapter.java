@@ -32,7 +32,7 @@ class FriendsAdapter extends RecyclerView.Adapter<FriendVH> {
 	public FriendVH onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_friend, parent, false);
 
-		return new FriendVH(v);
+		return new FriendVH(v,friendFragmentInteractionListener);
 	}
 
 	public void setDataSet(List<User> dataSet) {
@@ -44,15 +44,6 @@ class FriendsAdapter extends RecyclerView.Adapter<FriendVH> {
 	public void onBindViewHolder(FriendVH holder, int position) {
 		final User friend = mDataSet.get(position);
 		holder.bindFriend(friend);
-		holder.itemView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// itemView is a public member that points to the root element of the contactHolder (in the layout)
-				// TODO: 03-Dec-15 send contact detail from here to ContactDetailActivity
-				// send the clicked contact to detail activity
-				friendFragmentInteractionListener.onFriendClick(friend);
-			}
-		});
 	}
 
 	// Return the size of your mDataSet (invoked by the layout manager)

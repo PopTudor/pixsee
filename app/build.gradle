@@ -43,6 +43,7 @@ android {
         versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch * 10
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     archivesBaseName = rootProject.projectDir.getName()
     buildTypes {
