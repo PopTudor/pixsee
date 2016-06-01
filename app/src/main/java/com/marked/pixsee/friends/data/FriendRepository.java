@@ -69,7 +69,6 @@ public class FriendRepository implements FriendsDatasource {
                 .doOnNext(new Action1<User>() {
                     @Override
                     public void call(User user) {
-                        cache.clear();
                         cache.add(user);
                     }
                 })
