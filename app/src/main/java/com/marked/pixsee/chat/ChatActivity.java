@@ -8,14 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.friends.data.User;
 
 /**
  * An activity representing a single Contact detail screen. This
@@ -30,7 +26,6 @@ public class ChatActivity extends AppCompatActivity {
 	public static final String EXTRA_CONTACT = "com.marked.vifo.ui.activity.EXTRA_CONTACT";
 
 	private ChatFragment mFragment;
-	private EditText messageEditText;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,7 +35,9 @@ public class ChatActivity extends AppCompatActivity {
 			getWindow().setAllowEnterTransitionOverlap(false);
 		}
 		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-		mFragment = ChatFragment.newInstance(getIntent().getParcelableExtra(EXTRA_CONTACT));
+		User user = getIntent().getParcelableExtra(EXTRA_CONTACT);
+		mFragment = ChatFragment.newInstance(user);
+		getSupportActionBar().setTitle(user.getName());
 
 		/*send the clicked contact to the fragment*/
 		getSupportFragmentManager().beginTransaction()
@@ -52,39 +49,6 @@ public class ChatActivity extends AppCompatActivity {
 //		upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
 			getSupportActionBar().setHomeAsUpIndicator(upArrow);
 		}
-		messageEditText = (EditText) findViewById(R.id.messageEditText);
-		messageEditText.addTextChangedListener(new  TextWatcher (){
-			boolean mTyping = false;
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (!mTyping && count > 0) mTyping = true;
-				if (mTyping && count == 0) mTyping = false;
-				mFragment.onTyping(mTyping);
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-
-		});
-	}
-
-	void sendMessage(View view) {
-		String message = messageEditText.getText().toString();
-		messageEditText.setText("");
-		if (!message.isEmpty())
-			mFragment.sendMessage(message, MessageConstants.MessageType.YOU_MESSAGE);
-	}
-
-	void sendPixsee(View view) {
-		mFragment.sendMessage("http://www.ghacks.net/wp-content/themes/magatheme/img/mozilla-firefox.png", MessageConstants.MessageType.YOU_IMAGE);
-		//		TODO("This operation should launch the camera to take a photo")
 	}
 
 	@Override

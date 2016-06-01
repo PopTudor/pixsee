@@ -1,18 +1,24 @@
 package com.marked.pixsee.chat;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -69,6 +75,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
     @Inject
     ChatContract.Presenter mPresenter;
 
+	private EditText messageEditText;
 
 	public void sendMessage(String messageText, int messageType) {
 		Message message = new Message.Builder()
@@ -155,6 +162,18 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	private RecyclerView messagesRecyclerView;
 
+	void sendPixsee(View view) {
+		sendMessage("http://www.ghacks.net/wp-content/themes/magatheme/img/mozilla-firefox.png", MessageConstants.MessageType.YOU_IMAGE);
+		//		TODO("This operation should launch the camera to take a photo")
+	}
+
+	void sendMessage(View view) {
+		String message = messageEditText.getText().toString();
+		messageEditText.setText("");
+		if (!message.isEmpty())
+			sendMessage(message, MessageConstants.MessageType.YOU_MESSAGE);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
@@ -162,6 +181,36 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		messagesRecyclerView.setLayoutManager(mLinearLayoutManager);
 		messagesRecyclerView.addItemDecoration(new SpaceItemDecorator(15));
 		messagesRecyclerView.setAdapter(mChatAdapter);
+		messageEditText = (EditText) rootView.findViewById(R.id.messageEditText);
+		messageEditText.addTextChangedListener(new  TextWatcher(){
+			boolean mTyping = false;
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if (!mTyping && count > 0) mTyping = true;
+				if (mTyping && count == 0) mTyping = false;
+				onTyping(mTyping);
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+		});
+		rootView.findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sendMessage(v);
+			}
+		});
+		((FloatingActionButton)rootView.findViewById(R.id.sendButton))
+				.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(),R.color.transparent)));
+
 		return rootView;
 	}
 

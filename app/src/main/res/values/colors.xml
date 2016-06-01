@@ -7,6 +7,9 @@
     <color name="accent_dark">#000000</color>
     <color name="accent_light">#FFD180</color>
 
+    <!-- CHAT COLORS -->
+    <color name="teal">#009688</color>
+    <color name="teal_dark">#00796B</color>
 
     <color name="white_transparent">#50ffffff</color>
     <color name="white_transparent_pressed">#3cffffff</color>

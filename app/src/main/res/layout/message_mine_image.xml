@@ -9,8 +9,8 @@
     app:cmv_arrowGravity="center"
     app:cmv_arrowMargin="8dp"
     app:cmv_arrowPosition="left"
-    app:cmv_backgroundColor="#ffffff"
-    app:cmv_backgroundColorPressed="#FFEAF5FF"
+    app:cmv_backgroundColor="#009688"
+    app:cmv_backgroundColorPressed="#00796B"
     app:cmv_contentPadding="8dp"
     app:cmv_cornerRadius="6dp"
     app:cmv_showArrow="true">

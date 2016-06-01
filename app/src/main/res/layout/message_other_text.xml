@@ -9,8 +9,8 @@
     app:cmv_arrowGravity="center"
     app:cmv_arrowMargin="8dp"
     app:cmv_arrowPosition="left"
-    app:cmv_backgroundColor="@color/primary"
-    app:cmv_backgroundColorPressed="@color/primary_dark"
+    app:cmv_backgroundColor="#E0E0E0"
+    app:cmv_backgroundColorPressed="#BDBDBD"
     app:cmv_contentPadding="6dp"
     app:cmv_cornerRadius="6dp"
     app:cmv_showArrow="true">
@@ -28,7 +28,7 @@
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
         android:text="Hello"
-        android:textColor="#fff"
+        android:textColor="#000000"
         android:textIsSelectable="false"
         android:textSize="17sp"
         android:textStyle="normal" />
