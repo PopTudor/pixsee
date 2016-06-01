@@ -119,6 +119,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 	public void onFriendsReplace(List<User> friends) {
 		mFriendsAdapter.setDataSet(friends);
 		mFriendsAdapter.notifyDataSetChanged();
+		/* if mPresenter.start() is moved from onStart/onResume, we need to add here a null check for swipeRefresh*/
 		mSwipeRefreshLayout.setRefreshing(false);
 	}
 
@@ -136,7 +137,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 
 	@Override
 	public void showNoFriends() {
-
+		mSwipeRefreshLayout.setRefreshing(false);
 	}
 
 	@Override
@@ -176,6 +177,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 				}
 			}
 		});
+		mFriendsRecyclerview.addItemDecoration(new LineDiverDecoration(getActivity()));
 	}
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Tudor Pop on 28-Nov-15.
  */
-public final class User implements Parcelable {
+public final class User implements Parcelable,Comparable<User> {
 	@SerializedName(value = "userID", alternate = {"_id"})
 	String userID;
 	String name;
@@ -140,5 +140,10 @@ public final class User implements Parcelable {
 
 	public void setLastMessage(String lastMessage) {
 		this.lastMessage = lastMessage;
+	}
+
+	@Override
+	public int compareTo(User another) {
+		return this.name.compareTo(another.getName());
 	}
 }
