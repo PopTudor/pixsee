@@ -58,11 +58,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	}
 
 	@Override
-	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+	public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 		if (holder instanceof MessageHolder){
 			((MessageHolder)holder).bindMessage(dataset.get(position),chatInteraction);
 		}else if (holder instanceof ImageHolder){
-			((ImageHolder)holder).bindMessage(dataset.get(position));
+			((ImageHolder)holder).bindMessage(dataset.get(position),chatInteraction);
 		}else if (holder instanceof TypingHolder){
 			((TypingHolder)holder).start();
 		}
@@ -101,6 +101,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	}
 
 	public interface ChatInteraction {
-		void chatClicked(Message message);
+		void chatClicked(View view,Message message,int position);
 	}
 }

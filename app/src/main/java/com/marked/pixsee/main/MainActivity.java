@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 	@Override
 	public void onFriendClick(User friend) {
+
 		Intent intent = new Intent(this, ChatActivity.class);
 		intent.putExtra(ChatActivity.EXTRA_CONTACT, friend);
 		startActivity(intent);

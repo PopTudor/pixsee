@@ -4,15 +4,10 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.utility.GCMConstants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -21,8 +16,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Tudor on 2016-05-20.
@@ -99,18 +92,27 @@ public class ChatNetworkDatasource implements ChatDatasource {
 
 	}
 
+	/**
+	 * get all messages from the server
+	 */
 	@Override
 	public void refreshMessages() {
 
 	}
 
+	/**
+	 * delete all messages
+	 */
 	@Override
 	public void deleteAllMessages() {
-
+		// TODO: 6/1/2016 we don't need to delete messages on the server since we don't store any
 	}
 
+	/**
+	 * @param MessageId
+	 */
 	@Override
 	public void deleteMessages(@NonNull Message MessageId) {
-
+		// TODO: 6/1/2016 we don't need to delete messages on the server since we don't store any
 	}
 }

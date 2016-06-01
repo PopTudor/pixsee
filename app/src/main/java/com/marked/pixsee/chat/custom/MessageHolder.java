@@ -13,20 +13,22 @@ import com.marked.pixsee.chat.data.MessageConstants;
  * Created by Tudor Pop on 04-Dec-15.
  */
 public class MessageHolder extends RecyclerView.ViewHolder {
-	private TextView mMessageTextView ;
+	private TextView mMessageTextView;
 
 	public MessageHolder(View itemView) {
 		super(itemView);
 		mMessageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
+
 	}
 
 	public void bindMessage(final Message message, final ChatAdapter.ChatInteraction chatInteraction) {
 		itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				chatInteraction.chatClicked(message);
+				chatInteraction.chatClicked(v, message, getAdapterPosition());
 			}
 		});
 		mMessageTextView.setText(message.getData().get(MessageConstants.DATA_BODY));
 	}
+
 }

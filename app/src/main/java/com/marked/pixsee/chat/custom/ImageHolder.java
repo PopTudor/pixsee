@@ -34,8 +34,14 @@ public class ImageHolder extends RecyclerView.ViewHolder{
 		this.mImage = (SimpleDraweeView) itemView.findViewById(R.id.imageNetwork);
 	}
 
-    public void bindMessage(Message message) {
+    public void bindMessage(final Message message, final ChatAdapter.ChatInteraction chatInteraction) {
 //		val url = Uri.parse(message.data.get(MessageConstants.DATA_BODY));
+	    itemView.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+			    chatInteraction.chatClicked(v, message, getAdapterPosition());
+		    }
+	    });
 		final Uri url = Uri.parse("http://www.online-image-editor.com//styles/2014/images/example_image.png");
 		mImage.setImageURI(url,context);
         mImage.setOnClickListener(new View.OnClickListener() {

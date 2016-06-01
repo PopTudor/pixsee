@@ -7,7 +7,6 @@ import android.os.Looper;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,6 +46,7 @@ import io.socket.emitter.Emitter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
+import tyrantgit.explosionfield.ExplosionField;
 
 /**
  * A fragment representing a single Contact detail screen.
@@ -54,13 +54,14 @@ import rx.schedulers.Schedulers;
  * in two-pane mode (on tablets) or a [ChatDetailActivity]
  * on handsets.
  */
-public class ChatFragment extends Fragment implements ChatContract.View {
+public class ChatFragment extends Fragment implements ChatContract.View, ChatAdapter.ChatInteraction {
 	private String mThisUser;
 	private User mThatUser;
 
 	private ChatAdapter mChatAdapter;
 	private LinearLayoutManager mLinearLayoutManager;
 
+	private ExplosionField mExplosionField;
 	private Socket mSocket;
 
     private Emitter.Listener onMessage;
@@ -118,7 +119,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		GCMListenerService.setCallbacks(mPresenter);
-		mChatAdapter = new ChatAdapter(mPresenter);
+		mChatAdapter = new ChatAdapter(this);
 		mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule((AppCompatActivity) getActivity()))
 				                                      .build();
@@ -230,8 +231,10 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-			mThatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
-			mThisUser = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(GCMConstants.USER_ID, null);
+		mThatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
+		mThisUser = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(GCMConstants.USER_ID, null);
+		mExplosionField = ExplosionField.attach2Window(getActivity());;
+
 	}
 
 	public void onTyping(boolean typing) {
@@ -329,5 +332,13 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 	@Override
 	public void setPresenter(ChatContract.Presenter presenter) {
 
+	}
+
+	@Override
+	public void chatClicked(View view, Message message,int position) {
+		mPresenter.chatClicked(message);
+		mExplosionField.explode(view);
+		mChatAdapter.getDataset().remove(message);
+		mChatAdapter.notifyItemRemoved(position);
 	}
 }

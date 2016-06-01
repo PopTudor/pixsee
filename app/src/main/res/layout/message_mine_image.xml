@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+<me.himanshusoni.chatmessageview.ChatMessageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="left"
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:minHeight="20dp"
-	xmlns:fresco="http://schemas.android.com/tools">
-	<me.himanshusoni.chatmessageview.ChatMessageView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center|right"
+    app:cmv_arrowGravity="center"
+    app:cmv_arrowMargin="8dp"
+    app:cmv_arrowPosition="left"
+    app:cmv_backgroundColor="#ffffff"
+    app:cmv_backgroundColorPressed="#FFEAF5FF"
+    app:cmv_contentPadding="8dp"
+    app:cmv_cornerRadius="6dp"
+    app:cmv_showArrow="true">
 
-		app:cmv_arrowGravity="center"
-		app:cmv_arrowMargin="3dp"
-		app:cmv_arrowPosition="right"
-		app:cmv_backgroundColor="#ffffff"
-		app:cmv_backgroundColorPressed="#FFEAF5FF"
-		app:cmv_contentPadding="6dp"
-		app:cmv_cornerRadius="3dp"
-		app:cmv_showArrow="true"
-	>
-		<com.facebook.drawee.view.SimpleDraweeView
-			android:id="@+id/imageNetwork"
-			android:layout_width="80dp"
-			android:layout_height="80dp"
-			android:clickable="true"
-			android:longClickable="true"
-		/>
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/imageNetwork"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:clickable="true"
+        android:longClickable="true" />
 
-	</me.himanshusoni.chatmessageview.ChatMessageView>
-</FrameLayout>
+</me.himanshusoni.chatmessageview.ChatMessageView>

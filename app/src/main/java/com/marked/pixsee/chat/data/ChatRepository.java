@@ -20,7 +20,7 @@ import rx.schedulers.Schedulers;
 public class ChatRepository implements ChatDatasource {
 	private ChatDatasource disk;
 	private ChatDatasource network;
-	private List<Message> cache = new ArrayList<>();
+	private final List<Message> cache = new ArrayList<>();
 	private boolean dirtyCache;
 
 	/**
@@ -116,7 +116,8 @@ public class ChatRepository implements ChatDatasource {
 	}
 
 	@Override
-	public void deleteMessages(@NonNull Message MessageId) {
-
+	public void deleteMessages(@NonNull Message message) {
+		cache.remove(message);
+		disk.deleteMessages(message);
 	}
 }

@@ -2,9 +2,8 @@ package com.marked.pixsee.chat;
 
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
-import com.marked.pixsee.chat.custom.ChatAdapter;
-import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.chat.data.Message;
+import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.service.GCMListenerService;
 
@@ -15,7 +14,7 @@ import java.util.List;
  */
 public interface ChatContract {
 
-	interface Presenter extends BasePresenter, ChatAdapter.ChatInteraction,GCMListenerService.Callbacks{
+	interface Presenter extends BasePresenter, GCMListenerService.Callbacks{
 		void loadMore(int limit);
 
 		void loadMore(int limit, boolean forceUpdate);
@@ -25,6 +24,8 @@ public interface ChatContract {
 		void execute(Command command);
 
 		void isTyping(boolean typing);
+
+		void chatClicked(Message message);
 
 	}
 

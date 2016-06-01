@@ -2,6 +2,7 @@ package com.marked.pixsee.chat.data
 		;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +17,7 @@ import java.util.UUID;
  * Created by Tudor Pop on 04-Dec-15.
  */
 
-public class Message implements MessageConstants {
+public class Message implements MessageConstants,Comparable<Message> {
 	private Message(Builder builder) {
 		data = Collections.unmodifiableMap(builder.data);
 		notificationParams = Collections.unmodifiableMap(builder.notificationParams);
@@ -183,6 +184,11 @@ public class Message implements MessageConstants {
 			builder.delete(builder.length() - 1, builder.length());
 			builder.append("}, ");
 		}
+	}
+
+	@Override
+	public int compareTo(@NonNull Message another) {
+		return id.compareTo(another.getId());
 	}
 
 	public static class Builder {

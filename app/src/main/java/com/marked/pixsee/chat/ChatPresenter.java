@@ -71,11 +71,6 @@ public class ChatPresenter implements ChatContract.Presenter {
 	}
 
 	@Override
-	public void chatClicked(Message message) {
-
-	}
-
-	@Override
 	public void isTyping(boolean typing) {
 		if (typing && mShowTypingAnimation){
 			mShowTypingAnimation = false;
@@ -88,6 +83,11 @@ public class ChatPresenter implements ChatContract.Presenter {
 			mView.get().pop();
 			mShowTypingAnimation = true;
 		}
+	}
+
+	@Override
+	public void chatClicked(Message message) {
+		mRepository.deleteMessages(message);
 	}
 
 	@Override
