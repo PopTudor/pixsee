@@ -87,7 +87,7 @@ public class ChatRepository implements ChatDatasource {
 
 	@Override
 	public Observable<Message> getMessage(@NonNull Message MessageId) {
-		return null;
+		return Observable.empty();
 	}
 
 	@Override

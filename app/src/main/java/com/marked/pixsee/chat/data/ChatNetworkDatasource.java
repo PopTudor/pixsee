@@ -48,32 +48,40 @@ public class ChatNetworkDatasource implements ChatDatasource {
 		userid = sharedPreferences.getString(GCMConstants.USER_ID, "");
 	}
 
-	@Override
-	public Observable<List<Message>> getMessages(User friendId) {
-		return retrofit.create(MessageAPI.class)
-				       .getMessagesOfFriend(userid, friendId.getUserID())
-				       .subscribeOn(Schedulers.io())
-				       .map(new Func1<JsonObject, JsonArray>() {
-					       @Override
-					       public JsonArray call(JsonObject jsonObject) {
-						       return jsonObject.getAsJsonArray(DatabaseContract.Message.TABLE_NAME);
-					       }
-				       })
-				       .map(new Func1<JsonArray, List<Message>>() {
-					       @Override
-					       public List<Message> call(JsonArray jsonElements) {
-						       final List<Message> cache = new ArrayList<>();
-						       for (JsonElement it : jsonElements){
-							       cache.add(gson.fromJson(it.toString(), Message.class));
-						       }
-						       return cache;
-					       }
-				       });
+    /**
+     * //todo not needed now since we don't want to store messages on the server
+     * Get messages for a given {@link User} from the server
+     * Messages represent the conversation between this user and it's friend
+     * @param friend who's messages to get
+     * @return return messages
+     */
+    @Override
+	public Observable<List<Message>> getMessages(User friend) {
+//		return retrofit.create(MessageAPI.class)
+//				       .getMessagesOfFriend(userid, friendId.getUserID())
+//				       .subscribeOn(Schedulers.io())
+//				       .map(new Func1<JsonObject, JsonArray>() {
+//					       @Override
+//					       public JsonArray call(JsonObject jsonObject) {
+//						       return jsonObject.getAsJsonArray(DatabaseContract.Message.TABLE_NAME);
+//					       }
+//				       })
+//				       .map(new Func1<JsonArray, List<Message>>() {
+//					       @Override
+//					       public List<Message> call(JsonArray jsonElements) {
+//						       final List<Message> cache = new ArrayList<>();
+//						       for (JsonElement it : jsonElements){
+//							       cache.add(gson.fromJson(it.toString(), Message.class));
+//						       }
+//						       return cache;
+//					       }
+//				       });
+		return Observable.empty();
 	}
 
 	@Override
 	public Observable<Message> getMessage(@NonNull Message MessageId) {
-		return null;
+		return Observable.empty();
 	}
 
 	@Override

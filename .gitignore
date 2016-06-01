@@ -15,4 +15,8 @@
 bin/
 gen/
 *.iml
+*.apk
+*.jks
 obj/
+app/build/
+build/
