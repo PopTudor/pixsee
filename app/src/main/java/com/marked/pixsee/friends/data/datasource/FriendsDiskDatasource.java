@@ -12,6 +12,7 @@ import com.marked.pixsee.data.mapper.UserToCvMapper;
 import com.marked.pixsee.friends.data.DatabaseFriendContract;
 import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.friends.specifications.GetFriendsSpecification;
+import com.marked.pixsee.friends.specifications.GetFriendsStartingWith;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,8 +70,30 @@ public class FriendsDiskDatasource implements FriendsDatasource {
 	}
 
 	@Override
+	public void clear() {
+
+	}
+
+	@Override
 	public void deleteAllUsers() {
 		db.getWritableDatabase().delete(TABLE_NAME, null, null);
+	}
+
+	@Override
+	public Observable<List<User>> getUsers(String byName) {
+		List<User> users = new ArrayList<>();
+		db.getReadableDatabase().beginTransaction();
+		Cursor cursor = db.getReadableDatabase().rawQuery(new GetFriendsStartingWith(byName,0, -1).createQuery(), null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			User friend = cursorToUserMapper.map(cursor);
+			users.add(friend);
+			cursor.moveToNext();
+		}
+		db.getReadableDatabase().setTransactionSuccessful();
+		db.getReadableDatabase().endTransaction();
+		cursor.close();
+		return Observable.just(users);
 	}
 
 	@Override

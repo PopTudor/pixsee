@@ -15,6 +15,7 @@ import rx.Observable;
  */
 public interface FriendsDatasource {
 	Observable<List<User>> getUsers();
+	Observable<List<User>> getUsers(String byName);
 
 	Observable<User> getUser(@NonNull User userId);
 
@@ -26,4 +27,6 @@ public interface FriendsDatasource {
 	void deleteAllUsers();
 
 	void deleteUsers(@NonNull User userId);
+
+	void clear();
 }

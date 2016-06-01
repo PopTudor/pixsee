@@ -48,6 +48,7 @@ public class FriendRepository implements FriendsDatasource {
         if (cache.size() != 0 && !dirtyCache)
             return Observable.just(cache);
 
+
         // Query the local storage if available. If not, query the network.
         Observable<List<User>> local = disk.getUsers()
                 .doOnNext(new Action1<List<User>>() {
@@ -86,12 +87,12 @@ public class FriendRepository implements FriendsDatasource {
                         return users.size() > 0;
                     }
                 })
-                .flatMap(new Func1<List<User>, Observable<List<User>>>() {
-                    @Override
-                    public Observable<List<User>> call(List<User> users) {return Observable.from(users).toSortedList();
-                    }
-                })
                 .subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<List<User>> getUsers(String byName) {
+        return disk.getUsers(byName);
     }
 
     @Override
@@ -103,8 +104,7 @@ public class FriendRepository implements FriendsDatasource {
 
     @Override
     public Observable<List<User>> refreshUsers() {
-        dirtyCache = true;
-        cache.clear();
+        clear();
         disk.deleteAllUsers();
         return getUsers();
     }
@@ -130,6 +130,12 @@ public class FriendRepository implements FriendsDatasource {
     public void deleteUsers(@NonNull User userId) {
         disk.deleteUsers(userId);
         network.deleteUsers(userId);
+    }
+
+    @Override
+    public void clear() {
+        dirtyCache = true;
+        cache.clear();
     }
 }
 

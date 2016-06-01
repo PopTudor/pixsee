@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -85,7 +86,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 	@Override
 	public void onStart() {
 		super.onStart();
-		mPresenter.start();
+		mPresenter.start();/* onStart is called twice */
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,6 +103,12 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
 
 		return rootView;
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		mPresenter.clear();
 	}
 
 	@Override
@@ -187,19 +194,33 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 		final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 		searchView.setOnQueryTextListener(onQueryTextListener);
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+		MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), expandListener);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
+	MenuItemCompat.OnActionExpandListener expandListener = new MenuItemCompat.OnActionExpandListener() {
+		@Override
+		public boolean onMenuItemActionExpand(MenuItem item) {
+			return true;
+		}
+
+		@Override
+		public boolean onMenuItemActionCollapse(MenuItem item) {
+			mPresenter.loadMore(50);
+			return true;
+		}
+	};
 
 	private SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
 		@Override
 		public boolean onQueryTextSubmit(String query) {
-
+			mPresenter.loadMore(10, query);
 			return false;
 		}
 
 		@Override
-		public boolean onQueryTextChange(String newText) {
-			mPresenter.loadMore(10, newText);
+		public boolean onQueryTextChange(String query) {
+			mPresenter.loadMore(10, query);
 			return false;
 		}
 	};

@@ -13,7 +13,6 @@ import java.util.List;
  */
 public interface FriendsContract {
 	interface Presenter extends BasePresenter {
-		List<User> getFriends();
 
 		void loadMore(final int limit,boolean forceUpdate);
 

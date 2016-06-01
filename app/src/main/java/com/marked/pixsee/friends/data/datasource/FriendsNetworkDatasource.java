@@ -52,6 +52,16 @@ public class FriendsNetworkDatasource implements FriendsDatasource {
 	}
 
 	@Override
+	public Observable<List<User>> getUsers(String byName) {
+		return Observable.empty();
+	}
+
+	@Override
+	public void clear() {
+
+	}
+
+	@Override
 	public Observable<List<User>> getUsers() {
 		return retrofit.create(FriendsAPI.class)
 				.getFriendsOfUser(userid)
