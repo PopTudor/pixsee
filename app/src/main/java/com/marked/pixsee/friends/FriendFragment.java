@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,7 +49,7 @@ import javax.inject.Inject;
  * Activities containing this fragment MUST implement the [Callbacks]
  * interface.
  */
-public class FriendFragment extends Fragment implements FriendsContract.View {
+public class FriendFragment extends Fragment implements FriendsContract.View , SwipeRefreshLayout.OnRefreshListener {
 	public static int REQUEST_INVITE = 11;
 
 	@Inject
@@ -57,6 +58,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 	private RecyclerView mFriendsRecyclerview;
 	private FriendsAdapter mFriendsAdapter;
 	private LinearLayoutManager mLayoutManager;
+	private SwipeRefreshLayout mSwipeRefreshLayout;
 
 	/**
 	 * Used to open a friend's cards collection
@@ -76,7 +78,10 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 		DaggerFriendsComponent.builder().activityComponent(activityComponent)
 				.friendModule(new FriendModule(this)).build().inject(this);
 	}
-
+	@Override
+	public void onRefresh() {
+		mPresenter.loadMore(50, true);
+	}
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -89,6 +94,9 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 		setUpRecyclerView();
 		//		setUpFab();
 		setupListeners(rootView);
+
+		mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
+		mSwipeRefreshLayout.setOnRefreshListener(this);
 
 		((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
@@ -111,6 +119,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 	public void onFriendsReplace(List<User> friends) {
 		mFriendsAdapter.setDataSet(friends);
 		mFriendsAdapter.notifyDataSetChanged();
+		mSwipeRefreshLayout.setRefreshing(false);
 	}
 
 	@UiThread
@@ -188,7 +197,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View {
 
 		@Override
 		public boolean onQueryTextChange(String newText) {
-			mPresenter.loadMore(newText, 10);
+			mPresenter.loadMore(10, newText);
 			return false;
 		}
 	};

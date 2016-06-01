@@ -96,9 +96,17 @@ public class FriendRepository implements FriendsDatasource {
 		cache.addAll(users);
 	}
 
+    @Override
+    public Observable<List<User>>  refreshUsers() {
+        dirtyCache = true;
+        cache.clear();
+        disk.deleteAllUsers();
+        return getUsers();
+    }
+
 	@Override
 	public Observable<User> getUser(@NonNull User userId) {
-		return null;
+		return Observable.empty();
 	}
 
 	@Override
@@ -106,11 +114,6 @@ public class FriendRepository implements FriendsDatasource {
 		network.saveUser(item);
 		disk.saveUser(item);
 		cache.set(cache.indexOf(item), item);
-	}
-
-	@Override
-	public void refreshUsers() {
-
 	}
 
 	@Override

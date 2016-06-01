@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,11 +63,10 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 
 	private Socket mSocket;
 
-	private Emitter.Listener onMessage;
-	private Emitter.Listener onTyping;
-
-	@Inject
-	ChatContract.Presenter presenter;
+    private Emitter.Listener onMessage;
+    private Emitter.Listener onTyping;
+    @Inject
+    ChatContract.Presenter mPresenter;
 
 
 	public void sendMessage(String messageText, int messageType) {
@@ -117,8 +117,8 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		GCMListenerService.setCallbacks(presenter);
-		mChatAdapter = new ChatAdapter(presenter);
+		GCMListenerService.setCallbacks(mPresenter);
+		mChatAdapter = new ChatAdapter(mPresenter);
 		mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule((AppCompatActivity) getActivity()))
 				                                      .build();
@@ -212,7 +212,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 	@Override
 	public void onStart() {
 		super.onStart();
-		presenter.start();
+		mPresenter.start();
 	}
 
 	@Override
@@ -243,49 +243,49 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 		}
 	}
 
-	private Emitter.Listener onNewMessage() {
-		return new Emitter.Listener() {
-			@Override
-			public void call(final Object... args) {
-				new Handler(Looper.getMainLooper()).post(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							JSONObject json = new JSONObject(args[0].toString());
-							JSONObject data = json.getJSONObject(MessageConstants.DATA_PAYLOAD);
-							String body = data.getString(MessageConstants.DATA_BODY);
-							Integer type = json.getInt(MessageConstants.MESSAGE_TYPE); // MessageConstants.MessageType.ME_MESSAGE
-							String from = json.getString(MessageConstants.FROM);
-							Bundle bundle = new Bundle();
-							bundle.putInt(MessageConstants.MESSAGE_TYPE, type);
-							bundle.putString(MessageConstants.DATA_BODY, body);
-							presenter.receiveMessage(from, bundle);
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-					}
-				});
-			}
-		};
-	}
+    private Emitter.Listener onNewMessage() {
+        return new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject json = new JSONObject(args[0].toString());
+                            JSONObject data = json.getJSONObject(MessageConstants.DATA_PAYLOAD);
+                            String body = data.getString(MessageConstants.DATA_BODY);
+                            Integer type = json.getInt(MessageConstants.MESSAGE_TYPE); // MessageConstants.MessageType.ME_MESSAGE
+                            String from = json.getString(MessageConstants.FROM);
+                            Bundle bundle = new Bundle();
+                            bundle.putInt(MessageConstants.MESSAGE_TYPE, type);
+                            bundle.putString(MessageConstants.DATA_BODY, body);
+                            mPresenter.receiveMessage(from, bundle);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        };
+    }
 
-	public Emitter.Listener onTyping() {
-		Emitter.Listener onTyping = new Emitter.Listener() {
-			@Override
-			public void call(final Object... args) {
-				new Handler(Looper.getMainLooper()).post(new Runnable() {
-					@Override
-					public void run() {
-						boolean typing = (boolean) args[0];
-						presenter.isTyping(typing);
-					}
-				});
+    public Emitter.Listener onTyping() {
+        Emitter.Listener onTyping = new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean typing = (boolean) args[0];
+                        mPresenter.isTyping(typing);
+                    }
+                });
 
-			}
-		};
+            }
+        };
 
-		return onTyping;
-	}
+        return onTyping;
+    }
 
 	@Override
 	public void pop() {

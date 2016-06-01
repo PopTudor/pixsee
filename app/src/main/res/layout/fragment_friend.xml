@@ -1,10 +1,9 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:name="com.marked.pixsee.friends.FriendFragment"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -37,12 +36,19 @@
         <!--**************   BUTTONS   ****************-->
 
     </android.support.design.widget.AppBarLayout>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/friendsRecyclerview"
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:layout_marginTop="8dp"/>
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/friendsRecyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:scrollbars="vertical" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <!--</com.github.clans.fab.FloatingActionMenu>-->
 </LinearLayout>

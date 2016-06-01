@@ -38,7 +38,7 @@ public class FriendPresenter implements FriendsContract.Presenter {
 	FabCommand fabCommand;
 
 	@Override
-	public void loadMore(String text, int limit) {
+	public void loadMore(int limit, String text) {
 		repository.getUsers()
 				.debounce(300, TimeUnit.MILLISECONDS)
 				.subscribeOn(Schedulers.io())
@@ -58,9 +58,9 @@ public class FriendPresenter implements FriendsContract.Presenter {
 	}
 
 	@Override
-	public void loadMore(boolean forceUpdate, final int limit) {
+	public void loadMore(final int limit, boolean forceUpdate) {
 		if (forceUpdate) {
-			final Subscription subscription = repository.getUsers()
+			final Subscription subscription = repository.refreshUsers()
 													  .observeOn(AndroidSchedulers.mainThread())
 					.subscribe(new Action1<List<User>>() {
 						           @Override
@@ -79,25 +79,30 @@ public class FriendPresenter implements FriendsContract.Presenter {
 								}
 							});
 		} else {
-			repository.getUsers()
-					//                    .flatMap { Observable.from(it) }
-					//                    .skip(size)
-					//                    .take(limit) /* take unsubscribes automatically */
-					//                    .toList()
+			final Subscription subscription = repository.getUsers()
+					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(new Action1<List<User>>() {
-						           @Override
-						           public void call(List<User> users) {
-							           mView.onFriendsInsert(users, size, limit);
-							           size += users.size();
-						           }
-					           }
-					);
+								   @Override
+								   public void call(List<User> users) {
+									   if (users.size() > 0) {
+										   mView.setRecyclerViewVisibility(View.VISIBLE);
+										   mView.onFriendsReplace(users);
+										   size = users.size();
+									   }
+								   }
+							   }
+							, new Action1<Throwable>() {
+								@Override
+								public void call(Throwable throwable) {
+									mView.showNoFriends();
+								}
+							});
 		}
 	}
 
 	@Override
 	public void start() {
-		loadMore(true,25);
+		loadMore(25, false);
 	}
 
 	@Override
@@ -111,7 +116,7 @@ public class FriendPresenter implements FriendsContract.Presenter {
 	}
 	@Override
 	public void loadMore(int num) {
-		loadMore(false, num);
+		loadMore(num, false);
 	}
 
 	@Override

@@ -6,7 +6,7 @@
                 android:layout_height="match_parent"
                 android:paddingTop="16dp"
                 android:textIsSelectable="true"
-                tools:context=".ui.fragment.messaging.ContactDetailFragment">
+                tools:context=".chat.ChatFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messagesRecyclerView"

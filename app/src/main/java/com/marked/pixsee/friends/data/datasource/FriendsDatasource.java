@@ -21,7 +21,7 @@ public interface FriendsDatasource {
 	void saveUser(@NonNull User user);
 	void saveUser(@NonNull List<User> user);
 
-	void refreshUsers();
+	Observable<List<User>> refreshUsers();
 
 	void deleteAllUsers();
 

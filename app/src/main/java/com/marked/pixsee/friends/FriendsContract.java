@@ -15,13 +15,13 @@ public interface FriendsContract {
 	interface Presenter extends BasePresenter {
 		List<User> getFriends();
 
-		void loadMore(boolean forceUpdate, final int limit);
+		void loadMore(final int limit,boolean forceUpdate);
 
 		void execute(Command command);
 
-		void loadMore( int num);
+		void loadMore(int num);
 
-		void loadMore(String text, int limit);
+		void loadMore(final int limit,String text);
 
 		void clear();
 

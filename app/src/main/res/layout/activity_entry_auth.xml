@@ -1,11 +1,10 @@
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:animateLayoutChanges="true"
-    tools:context=".activity.AuthActivity"
-    >
+    tools:context=".entry.AuthActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,12 +19,12 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal|top"
             android:layout_marginTop="20dp"
-            android:background="@mipmap/ic_launcher"
+            app:srcCompat="@drawable/ic_pixsee_logo_2"
             />
 
 

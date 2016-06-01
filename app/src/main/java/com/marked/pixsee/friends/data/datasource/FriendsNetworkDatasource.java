@@ -90,8 +90,8 @@ public class FriendsNetworkDatasource implements FriendsDatasource {
 	}
 
 	@Override
-	public void refreshUsers() {
-
+	public Observable<List<User>> refreshUsers() {
+		return getUsers();
 	}
 
 	@Override
