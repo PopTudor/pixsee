@@ -2,14 +2,12 @@ package com.marked.pixsee.chat.data;
 
 import android.support.annotation.NonNull;
 
-
 import com.marked.pixsee.friends.data.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -47,35 +45,35 @@ public class ChatRepository implements ChatDatasource {
 		Observable<List<Message>> local= disk.getMessages(friendId)
 				.doOnNext(new Action1<List<Message>>() {
 			@Override
-			public void call(List<Message> message) {
+			public void call(List<Message> messages) {
 				cache.clear();
-				cache.addAll(message);
+				cache.addAll(messages);
 			}
 		});
 		
-		Observable<List<Message>> remote = network.getMessages(friendId)
-					       .flatMap(new Func1<List<Message>, Observable<Message>>() {
-						       @Override
-						       public Observable<Message> call(List<Message> messages) {
-							       disk.saveMessage(messages);
-							       return Observable.from(messages);
-						       }
-					       })
-					       .doOnNext(new Action1<Message>() {
-						       @Override
-						       public void call(Message messages) {
-							       cache.clear();
-							       cache.add(messages);
-						       }
-					       })
-					       .doOnCompleted(new Action0() {
-						       @Override
-						       public void call() {
-							       dirtyCache = false;
-						       }
-					       }).toList();
+//		Observable<List<Message>> remote = network.getMessages(friendId)
+//					       .flatMap(new Func1<List<Message>, Observable<Message>>() {
+//						       @Override
+//						       public Observable<Message> call(List<Message> messages) {
+//							       disk.saveMessage(messages);
+//							       return Observable.from(messages);
+//						       }
+//					       })
+//					       .doOnNext(new Action1<Message>() {
+//						       @Override
+//						       public void call(Message messages) {
+//							       cache.clear();
+//							       cache.add(messages);
+//						       }
+//					       })
+//					       .doOnCompleted(new Action0() {
+//						       @Override
+//						       public void call() {
+//							       dirtyCache = false;
+//						       }
+//					       }).toList();
 		/* http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/ */
-		return Observable.concat(Observable.just(cache), local, remote)
+		return Observable.concat(Observable.just(cache), local)
 				       .first(new Func1<List<Message>, Boolean>() {
 					       @Override
 					       public Boolean call(List<Message> users) {
@@ -91,8 +89,9 @@ public class ChatRepository implements ChatDatasource {
 	}
 
 	@Override
-	public void saveMessage(@NonNull Message Message) {
-
+	public void saveMessage(@NonNull Message message) {
+		cache.add(message);
+		disk.saveMessage(message);
 	}
 
 	@Override

@@ -79,13 +79,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 			holder.setIsRecyclable(true);
 	}
 
-	/** If the message has the flag MessageConstants.MessageType.ME_MESSAGE then the message will be printed to the right
-	 * else if the message has the flag MessageConstants.MessageType.YOU_MESSAGE then the message will be positioned to the left
-	 * or if the MessageConstants.MessageType.Typing then the message will be positioned on the left as in You are typing and
-	 * I wait for you to finish
-	 * @param position
-	 * @return
-	 */
 	@Override
 	public int getItemViewType(int position) {
 		return dataset.get(position).getMessageType();

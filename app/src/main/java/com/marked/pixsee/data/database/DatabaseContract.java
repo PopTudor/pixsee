@@ -47,6 +47,7 @@ public class DatabaseContract {
 		public static final String COLUMN_ID = MessageConstants.ID;
 		public static final String COLUMN_DATA_BODY = MessageConstants.DATA_BODY;
 		public static final String COLUMN_TYPE = MessageConstants.MESSAGE_TYPE;
+		public static final String COLUMN_DELAY_WITH_IDLE = MessageConstants.DELAY_WHILE_IDLE_OPTION;
 		public static final String COLUMN_DATE = MessageConstants.CREATION_DATE;
 		public static final String COLUMN_TO = "_" + MessageConstants.TO;
 
@@ -57,6 +58,7 @@ public class DatabaseContract {
 				                                          COLUMN_ID + " TEXT,"
 				                                          + COLUMN_DATA_BODY + " TEXT,"
 				                                          + COLUMN_TYPE + " INTEGER,"
+				                                          + COLUMN_DELAY_WITH_IDLE + " INTEGER,"
 				                                          + COLUMN_DATE + " TEXT,"
 				                                          + COLUMN_TO + " TEXT, FOREIGN KEY( "
 				                                          + COLUMN_TO + ")" + " REFERENCES "

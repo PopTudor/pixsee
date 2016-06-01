@@ -77,39 +77,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	private EditText messageEditText;
 
-	public void sendMessage(String messageText, int messageType) {
-		Message message = new Message.Builder()
-				                  .addData(MessageConstants.DATA_BODY, messageText)
-				                  .messageType(messageType)
-				                  .from(mThisUser)
-				                  .to(mThatUser.getUserID())
-				                  .build();
-		//		doGcmSendUpstreamMessage(message);
-		JSONObject jsonObject = message.toJSON();
-
-		mSocket.emit(ChatFragment.ON_NEW_MESSAGE, jsonObject);
-		message.setMessageType(reverseMessageType(messageType)); /* after the message is sent with message type 1 (to appear on the left for the other user)
-		 we want to
-	    appear on the right for this user*/
-		addMessage(message);
-
-	}
-
-	public int reverseMessageType(int aInt) {
-		switch (aInt) {
-			case MessageConstants.MessageType.YOU_MESSAGE:
-				return MessageConstants.MessageType.ME_MESSAGE;
-			case MessageConstants.MessageType.YOU_IMAGE:
-				return MessageConstants.MessageType.ME_IMAGE;
-			case MessageConstants.MessageType.ME_MESSAGE:
-				return MessageConstants.MessageType.YOU_MESSAGE;
-			case MessageConstants.MessageType.ME_IMAGE:
-				return MessageConstants.MessageType.YOU_IMAGE;
-			default:
-				return MessageConstants.MessageType.TYPING;
-		}
-	}
-
 	/**
 	 * Add message to dataset and notify the adapter of the change
 	 *
@@ -152,27 +119,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		mSocket.off(ChatFragment.ON_NEW_MESSAGE, onMessage);
-		mSocket.off(ChatFragment.ON_TYPING, onTyping);
-		mSocket.disconnect();
-	}
-
 	private RecyclerView messagesRecyclerView;
-
-	void sendPixsee(View view) {
-		sendMessage("http://www.ghacks.net/wp-content/themes/magatheme/img/mozilla-firefox.png", MessageConstants.MessageType.YOU_IMAGE);
-		//		TODO("This operation should launch the camera to take a photo")
-	}
-
-	void sendMessage(View view) {
-		String message = messageEditText.getText().toString();
-		messageEditText.setText("");
-		if (!message.isEmpty())
-			sendMessage(message, MessageConstants.MessageType.YOU_MESSAGE);
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -205,7 +152,20 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		rootView.findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sendMessage(v);
+				String text = messageEditText.getText().toString();
+				messageEditText.setText("");
+				if (!text.isEmpty()){
+					Message message = new Message.Builder()
+							.addData(MessageConstants.DATA_BODY, text)
+							.messageType(MessageConstants.MessageType.ME_MESSAGE)
+							.from(mThisUser)
+							.to(mThatUser.getUserID())
+							.build();
+
+					//		doGcmSendUpstreamMessage(message);
+					mSocket.emit(ChatFragment.ON_NEW_MESSAGE,  message.toJSON());
+					mPresenter.sendMessage(message);
+				}
 			}
 		});
 		((FloatingActionButton)rootView.findViewById(R.id.sendButton))
@@ -263,6 +223,13 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	public void onStart() {
 		super.onStart();
 		mPresenter.start();
+		mPresenter.loadMore(50,mThatUser);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		isInForeground = true;
 	}
 
 	@Override
@@ -272,9 +239,11 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		isInForeground = true;
+	public void onDestroy() {
+		super.onDestroy();
+		mSocket.off(ChatFragment.ON_NEW_MESSAGE, onMessage);
+		mSocket.off(ChatFragment.ON_TYPING, onTyping);
+		mSocket.disconnect();
 	}
 
 	@Override
@@ -370,7 +339,9 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	@Override
 	public void showCards(List<Message> cards) {
-
+		mChatAdapter.getDataset().clear();
+		mChatAdapter.getDataset().addAll(cards);
+		mChatAdapter.notifyDataSetChanged();
 	}
 
 	@Override

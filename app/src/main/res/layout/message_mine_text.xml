@@ -13,8 +13,8 @@
     app:cmv_arrowPosition="left"
     app:cmv_backgroundColor="@color/teal"
     app:cmv_backgroundColorPressed="@color/teal_dark"
-    app:cmv_contentPadding="8dp"
-    app:cmv_cornerRadius="8dp"
+    app:cmv_contentPadding="6dp"
+    app:cmv_cornerRadius="6dp"
     app:cmv_showArrow="true">
 
     <TextView

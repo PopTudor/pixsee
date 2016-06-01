@@ -203,7 +203,7 @@ public class Message implements MessageConstants,Comparable<Message> {
 		private String from;
 		private String room;
 
-		private String date = String.valueOf(new Date());
+		private String date = String.valueOf(new Date().getTime());
 		private int messageType = 0;
 
 		{
@@ -237,7 +237,7 @@ public class Message implements MessageConstants,Comparable<Message> {
 			return this;
 		}
 
-		Builder date(String date) {
+		public Builder date(String date) {
 			this.date = date;
 			return this;
 		}
@@ -245,7 +245,7 @@ public class Message implements MessageConstants,Comparable<Message> {
 		/**
 		 * Sets the collapseKey property.
 		 */
-		Builder collapseKey(String value) {
+		public Builder collapseKey(String value) {
 			collapseKey = value;
 			return this;
 		}
@@ -283,7 +283,7 @@ public class Message implements MessageConstants,Comparable<Message> {
 		/**
 		 * Sets the delayWhileIdle property (default value is false).
 		 */
-		Builder delayWhileIdle(boolean value) {
+		public Builder delayWhileIdle(boolean value) {
 			delayWhileIdle = value;
 			return this;
 		}

@@ -8,6 +8,8 @@ import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.friends.data.User;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -59,13 +61,18 @@ public class ChatPresenter implements ChatContract.Presenter {
 
 	@Override
 	public void receiveMessage(String from, Bundle data) {
-		int messageType = data.getInt("type", MessageConstants.MessageType.YOU_MESSAGE);
 		Message message = new Message.Builder()
 				                  .addData(data)
-				                  .messageType(messageType)
+				                  .messageType(MessageConstants.MessageType.YOU_MESSAGE)
 				                  .from(from)
 				                  .to(from)
 				                  .build();
+		mRepository.saveMessage(message);
+		mView.get().addMessage(message);
+	}
+
+	@Override
+	public void sendMessage(@NotNull Message message) {
 		mRepository.saveMessage(message);
 		mView.get().addMessage(message);
 	}

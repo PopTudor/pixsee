@@ -7,6 +7,8 @@ import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.service.GCMListenerService;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 /**
@@ -27,6 +29,7 @@ public interface ChatContract {
 
 		void chatClicked(Message message);
 
+		void sendMessage(@NotNull Message message);
 	}
 
 	interface View extends BaseView<Presenter> {

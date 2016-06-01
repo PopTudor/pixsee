@@ -10,16 +10,12 @@ import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.mapper.CursorToMessageMapper;
 import com.marked.pixsee.data.mapper.Mapper;
 import com.marked.pixsee.data.mapper.MessageToCVMapper;
-import com.marked.pixsee.friends.data.DatabaseFriendContract;
 import com.marked.pixsee.friends.data.User;
-import com.marked.pixsee.friends.specifications.GetMessagesByGroupedByDate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-
-import static com.marked.pixsee.friends.data.DatabaseFriendContract.TABLE_NAME;
 
 /**
  * Created by Tudor on 2016-05-20.
@@ -31,14 +27,16 @@ public class ChatDiskDatasource implements ChatDatasource {
 		this.database = database;
 	}
 
-	Mapper<Cursor, Message> cursorToMessageMapper = new CursorToMessageMapper();
+	Mapper<Cursor, Message> cursorToMessageMapper;
 	Mapper<Message, ContentValues> messageToCVMapper = new MessageToCVMapper();
 
 	@Override
 	public Observable<List<Message>> getMessages(User friend) {
 		List<Message> users = new ArrayList<>();
 		database.getReadableDatabase().beginTransaction();
-		Cursor cursor = database.getReadableDatabase().rawQuery(new GetMessagesByGroupedByDate(friend.getUserID()).createQuery(), null);
+		Cursor cursor = database.getReadableDatabase().query(DatabaseContract.Message.TABLE_NAME, null, "_to=?",
+				new String[]{friend.getUserID()}, null, null, null);
+		cursorToMessageMapper = new CursorToMessageMapper(cursor);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			Message message = cursorToMessageMapper.map(cursor);
@@ -53,7 +51,7 @@ public class ChatDiskDatasource implements ChatDatasource {
 
 	@Override
 	public Observable<Message> getMessage(@NonNull Message messageId) {
-		Cursor cursor = database.getReadableDatabase().query(TABLE_NAME, DatabaseFriendContract.ALL_TABLES, "WHERE "+messageId.getId()+"=?",
+		Cursor cursor = database.getReadableDatabase().query(DatabaseContract.Message.TABLE_NAME, null,"_id=?",
 				new String[]{messageId.getId()}, null, null, null);
 		cursor.moveToFirst();
 		return Observable.just(cursorToMessageMapper.map(cursor));
