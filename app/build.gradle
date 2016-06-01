@@ -118,6 +118,7 @@ dependencies {
     compile app.rxPermissions
     compile app.facebook
     compile 'com.aurelhubert:ahbottomnavigation:1.2.3'
+    compile 'tyrantgit:explosionfield:1.0.1'
 
 
     apt app.daggerCompiler
