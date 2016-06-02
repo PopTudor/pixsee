@@ -3,13 +3,12 @@ package com.marked.pixsee.friends;
 import android.view.View;
 
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.friends.commands.FabCommand;
 import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.friends.data.datasource.FriendsDatasource;
-import com.marked.pixsee.main.commands.SelfieCommand;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -27,19 +26,14 @@ import rx.schedulers.Schedulers;
  */
 public class FriendPresenter implements FriendsContract.Presenter {
     private FriendsDatasource repository;
-    private FriendsContract.View mView;
-
+    private WeakReference<FriendsContract.View> mView;
+    private int size = 0;
     @Inject
     public FriendPresenter(FriendsContract.View view, FriendsDatasource repository) {
         this.repository = repository;
-        this.mView = view;
-        this.mView.setPresenter(this);
+        this.mView = new WeakReference<FriendsContract.View>(view);
+        this.mView.get().setPresenter(this);
     }
-
-    @Inject
-    SelfieCommand openCamera;
-    @Inject
-    FabCommand fabCommand;
 
     @Override
     public void loadMore(int limit,@NotNull String text) {
@@ -52,12 +46,10 @@ public class FriendPresenter implements FriendsContract.Presenter {
                 .subscribe(new Action1<List<User>>() {
                     @Override
                     public void call(List<User> users) {
-                        mView.onFriendsReplace(users);
+                        mView.get().onFriendsReplace(users);
                     }
                 });
     }
-
-    int size = 0;
 
     public int getSize() {
         return size;
@@ -78,8 +70,8 @@ public class FriendPresenter implements FriendsContract.Presenter {
                                    @Override
                                    public void call(List<User> users) {
                                        if (users.size() > 0) {
-                                           mView.setRecyclerViewVisibility(View.VISIBLE);
-                                           mView.onFriendsReplace(users);
+                                           mView.get().setRecyclerViewVisibility(View.VISIBLE);
+                                           mView.get().onFriendsReplace(users);
                                            size = users.size();
                                        }
                                    }
@@ -87,7 +79,7 @@ public class FriendPresenter implements FriendsContract.Presenter {
                             , new Action1<Throwable>() {
                                 @Override
                                 public void call(Throwable throwable) {
-                                    mView.showNoFriends();
+                                    mView.get().showNoFriends();
                                 }
                             });
         } else {
@@ -103,8 +95,8 @@ public class FriendPresenter implements FriendsContract.Presenter {
                                    @Override
                                    public void call(List<User> users) {
                                        if (users.size() > 0) {
-                                           mView.setRecyclerViewVisibility(View.VISIBLE);
-                                           mView.onFriendsReplace(users);
+                                           mView.get().setRecyclerViewVisibility(View.VISIBLE);
+                                           mView.get().onFriendsReplace(users);
                                            size = users.size();
                                        }
                                    }
@@ -112,7 +104,7 @@ public class FriendPresenter implements FriendsContract.Presenter {
                             , new Action1<Throwable>() {
                                 @Override
                                 public void call(Throwable throwable) {
-                                    mView.showNoFriends();
+                                    mView.get().showNoFriends();
                                 }
                             });
         }
@@ -137,5 +129,10 @@ public class FriendPresenter implements FriendsContract.Presenter {
     @Override
     public void clear() {
         repository.clear();
+    }
+
+    @Override
+    public void actionInviteClick() {
+        mView.get().showInviteFriends();
     }
 }

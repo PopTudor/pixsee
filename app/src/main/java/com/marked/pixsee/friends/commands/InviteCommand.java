@@ -12,21 +12,27 @@ import javax.inject.Inject;
 /**
  * Created by Tudor Pop on 26-Mar-16.
  */
-public class FabCommand extends ClickCommand {
-	Context context;
+public class InviteCommand extends ClickCommand {
+	private Context context;
+	private String appLinkUrl;
+	private String previewImageUrl;
+
+	/**
+	 * Create facebook invite dialog
+	 * @param context some context
+	 * @param appLinkUrl link to the app
+	 * @param previewImageUrl preview image
+	 */
 	@Inject
-	public FabCommand(Context context) {
+	public InviteCommand(Context context,String appLinkUrl,String previewImageUrl) {
 		super(context);
 		this.context = context;
+		this.appLinkUrl = appLinkUrl;
+		this.previewImageUrl = previewImageUrl;
 	}
 
 	@Override
 	public void execute() {
-		String appLinkUrl, previewImageUrl;
-
-		appLinkUrl = "https://fb.me/1707374479479383";
-		previewImageUrl = "https://www.mydomain.com/my_invite_image.jpg";
-
 		if (AppInviteDialog.canShow()) {
 			AppInviteContent content = new AppInviteContent.Builder()
 					                           .setApplinkUrl(appLinkUrl)

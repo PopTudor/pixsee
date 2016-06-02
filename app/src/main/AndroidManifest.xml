@@ -90,22 +90,18 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <!-- Accepts URIs "com.example.myapp://" -->
-                <data android:scheme="com.marked.pixsee://"/>
+                <data android:scheme="com.marked.pixsee"/>
             </intent-filter>
         </activity>
 
         <!-- [START gcm_listener] -->
-        <service
-            android:name=".service.GCMListenerService"
-            >
+        <service android:name=".service.GCMListenerService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <!-- [START instanceId_listener] -->
-        <service
-            android:name=".service.GCMInstanceIDListenerService"
-            >
+        <service android:name=".service.GCMInstanceIDListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
@@ -131,10 +127,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
             android:theme="@style/FullscreenTheme"/>
-        <activity android:name=".chat.ChatActivity"
-                  android:label="FriendDetailActivity"
-                  android:screenOrientation="portrait"
-            />
+        <activity
+            android:name=".chat.ChatActivity"
+            android:label="FriendDetailActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".face.SelfieActivity"
             android:hardwareAccelerated="true"
@@ -149,6 +145,8 @@
         <activity android:name=".shop.ShopActivity">
         </activity>
         <activity android:name=".main.MainActivity">
+        </activity>
+        <activity android:name=".inviteFriends.InviteFriends">
         </activity>
     </application>
 

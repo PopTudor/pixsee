@@ -32,8 +32,7 @@ import com.marked.pixsee.friends.di.FriendModule;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
-
-import org.jetbrains.annotations.NotNull;
+import com.marked.pixsee.inviteFriends.InviteFriends;
 
 import java.util.List;
 
@@ -139,8 +138,9 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 	}
 
 	@Override
-	public void showFriendDetailUI(@NotNull User friend) {
-
+	public void showInviteFriends() {
+		Intent intent = new Intent(getActivity(), InviteFriends.class);
+		getActivity().startActivity(intent);
 	}
 
 	@Override
@@ -228,6 +228,11 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()){
+			case R.id.action_invite:
+				mPresenter.actionInviteClick();
+				return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 

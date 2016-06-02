@@ -24,7 +24,7 @@ public interface FriendsContract {
 
 		void clear();
 
-
+		void actionInviteClick();
 	}
 
 	interface View extends BaseView<Presenter> {
@@ -34,12 +34,8 @@ public interface FriendsContract {
 
 		void onFriendsReplace(List<User> list);
 
-		/**
-		 * Open detail view for a [User]
-		 *
-		 * @param friend The [User] to show details of
-		 */
-		void showFriendDetailUI(User friend);
+		void showInviteFriends();
+
 		void showNoFriends();
 	}
 }
