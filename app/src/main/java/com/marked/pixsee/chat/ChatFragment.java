@@ -356,9 +356,13 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	@Override
 	public void chatClicked(View view, Message message,int position) {
-		mPresenter.chatClicked(message);
+		mPresenter.chatClicked(message,position);
 		mExplosionField.explode(view);
-		mChatAdapter.getDataset().remove(message);
+	}
+
+	@Override
+	public void remove(Message message,int position) {
+		mChatAdapter.getDataset().remove(position);
 		mChatAdapter.notifyItemRemoved(position);
 	}
 }

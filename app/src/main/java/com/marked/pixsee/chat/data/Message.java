@@ -18,6 +18,7 @@ import java.util.UUID;
  */
 
 public class Message implements MessageConstants,Comparable<Message> {
+
 	private Message(Builder builder) {
 		data = Collections.unmodifiableMap(builder.data);
 		notificationParams = Collections.unmodifiableMap(builder.notificationParams);
@@ -30,6 +31,7 @@ public class Message implements MessageConstants,Comparable<Message> {
 		to = builder.to;
 		from = builder.from;
 		date = builder.date;
+		id = builder.id;
 	}
 
 	private Message() {
@@ -202,6 +204,7 @@ public class Message implements MessageConstants,Comparable<Message> {
 		private String to;
 		private String from;
 		private String room;
+		private String id;
 
 		private String date = String.valueOf(new Date().getTime());
 		private int messageType = 0;
@@ -239,6 +242,10 @@ public class Message implements MessageConstants,Comparable<Message> {
 
 		public Builder date(String date) {
 			this.date = date;
+			return this;
+		}
+		public Builder id(String id) {
+			this.id = id;
 			return this;
 		}
 

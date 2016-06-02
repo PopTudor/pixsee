@@ -96,7 +96,7 @@ public class ChatDiskDatasource implements ChatDatasource {
 
 	@Override
 	public void deleteMessages(@NonNull Message messageId) {
-		database.getWritableDatabase().delete(DatabaseContract.Message.TABLE_NAME, DatabaseContract.Message._ID + " = ?",
+		database.getWritableDatabase().delete(DatabaseContract.Message.TABLE_NAME, DatabaseContract.Message.COLUMN_ID + " = ?",
 				new String[]{messageId.getId()});
 	}
 }

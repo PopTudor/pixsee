@@ -23,7 +23,7 @@ import rx.schedulers.Schedulers;
 public class ChatPresenter implements ChatContract.Presenter {
 	private WeakReference<ChatContract.View> mView;
 	private ChatDatasource mRepository;
-	private boolean mShowTypingAnimation =true;
+	private boolean mShowTypingAnimation = true;
 
 	public ChatPresenter(ChatContract.View mView, ChatDatasource mRepository) {
 		this.mRepository = mRepository;
@@ -62,11 +62,11 @@ public class ChatPresenter implements ChatContract.Presenter {
 	@Override
 	public void receiveMessage(String from, Bundle data) {
 		Message message = new Message.Builder()
-				                  .addData(data)
-				                  .messageType(MessageConstants.MessageType.YOU_MESSAGE)
-				                  .from(from)
-				                  .to(from)
-				                  .build();
+				.addData(data)
+				.messageType(MessageConstants.MessageType.YOU_MESSAGE)
+				.from(from)
+				.to(from)
+				.build();
 		mRepository.saveMessage(message);
 		mView.get().addMessage(message);
 	}
@@ -79,22 +79,23 @@ public class ChatPresenter implements ChatContract.Presenter {
 
 	@Override
 	public void isTyping(boolean typing) {
-		if (typing && mShowTypingAnimation){
+		if (typing && mShowTypingAnimation) {
 			mShowTypingAnimation = false;
 			Message typingMessage = new Message.Builder()
-					                        .messageType(MessageConstants.MessageType.TYPING)
-					                        .build();
+					.messageType(MessageConstants.MessageType.TYPING)
+					.build();
 			mView.get().addMessage(typingMessage);
 		}
-		if(!typing) {
+		if (!typing) {
 			mView.get().pop();
 			mShowTypingAnimation = true;
 		}
 	}
 
 	@Override
-	public void chatClicked(Message message) {
+	public void chatClicked(Message message, int position) {
 		mRepository.deleteMessages(message);
+		mView.get().remove(message, position);
 	}
 
 	@Override

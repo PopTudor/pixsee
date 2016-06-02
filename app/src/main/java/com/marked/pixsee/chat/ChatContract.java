@@ -27,7 +27,7 @@ public interface ChatContract {
 
 		void isTyping(boolean typing);
 
-		void chatClicked(Message message);
+		void chatClicked(Message message,int position);
 
 		void sendMessage(@NotNull Message message);
 	}
@@ -40,5 +40,7 @@ public interface ChatContract {
 		void addMessage(Message message);
 
 		void pop();
+
+		void remove(Message message, int position);
 	}
 }
