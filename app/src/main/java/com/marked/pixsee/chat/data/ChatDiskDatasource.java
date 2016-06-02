@@ -33,7 +33,7 @@ public class ChatDiskDatasource implements ChatDatasource {
 	public Observable<List<Message>> getMessages(User friend) {
 		List<Message> users = new ArrayList<>();
 		database.getReadableDatabase().beginTransaction();
-		Cursor cursor = database.getReadableDatabase().query(MessageContracte.MessageContract.TABLE_NAME, null, "_to=?",
+		Cursor cursor = database.getReadableDatabase().query(MessageContract.TABLE_NAME, null, "_to=?",
 				new String[]{friend.getUserID()}, null, null, null);
 		cursorToMessageMapper = new CursorToMessageMapper(cursor);
 		cursor.moveToFirst();
@@ -50,7 +50,7 @@ public class ChatDiskDatasource implements ChatDatasource {
 
 	@Override
 	public Observable<Message> getMessage(@NonNull Message messageId) {
-		Cursor cursor = database.getReadableDatabase().query(MessageContracte.MessageContract.TABLE_NAME, null,"_id=?",
+		Cursor cursor = database.getReadableDatabase().query(MessageContract.TABLE_NAME, null,"_id=?",
 				new String[]{messageId.getId()}, null, null, null);
 		cursor.moveToFirst();
 		return Observable.just(cursorToMessageMapper.map(cursor));
@@ -58,16 +58,16 @@ public class ChatDiskDatasource implements ChatDatasource {
 
 	@Override
 	public void updateMessage(@NonNull Message message) {
-		database.getWritableDatabase().update(MessageContracte.MessageContract.TABLE_NAME,
+		database.getWritableDatabase().update(MessageContract.TABLE_NAME,
 				messageToCVMapper.map(message),
-				MessageContracte.MessageContract._ID + " = ?",
+				MessageContract._ID + " = ?",
 				new String[]{message.getId()});
 	}
 
 	@Override
 	public void saveMessage(@NonNull Message message) {
 		database.getWritableDatabase()
-				.insertWithOnConflict(MessageContracte.MessageContract.TABLE_NAME,
+				.insertWithOnConflict(MessageContract.TABLE_NAME,
 						null,
 						messageToCVMapper.map(message),
 						SQLiteDatabase.CONFLICT_REPLACE);
@@ -78,7 +78,7 @@ public class ChatDiskDatasource implements ChatDatasource {
 		SQLiteDatabase writableDatabase = database.getWritableDatabase();
 		writableDatabase.beginTransaction();
 		for (Message message : messages)
-			writableDatabase.insertWithOnConflict(MessageContracte.MessageContract.TABLE_NAME, null, messageToCVMapper.map(message), SQLiteDatabase.CONFLICT_REPLACE);
+			writableDatabase.insertWithOnConflict(MessageContract.TABLE_NAME, null, messageToCVMapper.map(message), SQLiteDatabase.CONFLICT_REPLACE);
 		writableDatabase.setTransactionSuccessful();
 		writableDatabase.endTransaction();
 	}
@@ -96,7 +96,7 @@ public class ChatDiskDatasource implements ChatDatasource {
 	@Override
 	public void deleteMessages(@NonNull Message messageId) {
 		// FIXME: 6/2/2016 this get's called 2 times when chat bubble explodes, why ?
-		database.getWritableDatabase().delete(MessageContracte.MessageContract.TABLE_NAME, MessageContracte.MessageContract.COLUMN_ID + " = ?",
+		database.getWritableDatabase().delete(MessageContract.TABLE_NAME, MessageContract.COLUMN_ID + " = ?",
 				new String[]{messageId.getId()});
 	}
 }

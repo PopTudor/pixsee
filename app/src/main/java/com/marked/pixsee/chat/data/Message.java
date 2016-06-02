@@ -58,7 +58,7 @@ public class Message implements MessageConstants,Comparable<Message> {
 	private Integer messageType;
 
 	private String date;
-	private String id = UUID.randomUUID().toString();
+	private String id;
 
 	public JSONObject toJSON() {
 		JSONObject jsonObject = new JSONObject();
@@ -204,7 +204,7 @@ public class Message implements MessageConstants,Comparable<Message> {
 		private String to;
 		private String from;
 		private String room;
-		private String id;
+		private String id = UUID.randomUUID().toString();
 
 		private String date = String.valueOf(new Date().getTime());
 		private int messageType = 0;
