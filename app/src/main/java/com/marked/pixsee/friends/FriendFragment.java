@@ -101,6 +101,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 
 		((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
+		((Toolbar) rootView.findViewById(R.id.toolbar)).setLogo(R.drawable.ic_pixsee_logo_2);
 
 		return rootView;
 	}
