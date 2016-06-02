@@ -3,7 +3,7 @@ package com.marked.pixsee.data.mapper;
 import android.database.Cursor;
 
 import com.marked.pixsee.chat.data.Message;
-import com.marked.pixsee.data.database.DatabaseContract;
+import com.marked.pixsee.chat.data.MessageContract;
 
 /**
  * Created by Tudor on 2016-05-19.
@@ -17,12 +17,12 @@ public class CursorToMessageMapper implements Mapper<Cursor,Message> {
 	private final int id;
 
 	public CursorToMessageMapper(Cursor cursor){
-		bodyText = cursor.getColumnIndex(DatabaseContract.Message.COLUMN_DATA_BODY);
-		type = cursor.getColumnIndex(DatabaseContract.Message.COLUMN_TYPE);
-		delay = cursor.getColumnIndex(DatabaseContract.Message.COLUMN_DELAY_WITH_IDLE);
-		date = cursor.getColumnIndex(DatabaseContract.Message.COLUMN_DATE);
-		to = cursor.getColumnIndex(DatabaseContract.Message.COLUMN_TO);
-		id = cursor.getColumnIndex(DatabaseContract.Message.COLUMN_ID);
+		bodyText = cursor.getColumnIndex(MessageContract.COLUMN_DATA_BODY);
+		type = cursor.getColumnIndex(MessageContract.COLUMN_TYPE);
+		delay = cursor.getColumnIndex(MessageContract.COLUMN_DELAY_WITH_IDLE);
+		date = cursor.getColumnIndex(MessageContract.COLUMN_DATE);
+		to = cursor.getColumnIndex(MessageContract.COLUMN_TO);
+		id = cursor.getColumnIndex(MessageContract.COLUMN_ID);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class CursorToMessageMapper implements Mapper<Cursor,Message> {
 		return new Message.Builder()
 				.messageType(cursor.getInt(type))
 				.to(cursor.getString(to))
-				.addData(DatabaseContract.Message.COLUMN_DATA_BODY,cursor.getString(bodyText))
+				.addData(MessageContract.COLUMN_DATA_BODY,cursor.getString(bodyText))
 				.date(cursor.getString(date))
 				.id(cursor.getString(id))
 				.build();

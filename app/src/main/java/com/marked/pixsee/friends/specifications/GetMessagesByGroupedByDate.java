@@ -1,6 +1,6 @@
 package com.marked.pixsee.friends.specifications;
 
-import com.marked.pixsee.data.database.DatabaseContract;
+import com.marked.pixsee.chat.data.MessageContract;
 import com.marked.pixsee.data.repository.SQLSpecification;
 
 /**
@@ -24,13 +24,13 @@ public class GetMessagesByGroupedByDate implements SQLSpecification {
 	@Override
 	public String createQuery() {
 		if (offset < 0 || limit < 0)
-			return "SELECT * FROM " + DatabaseContract.Message.TABLE_NAME
-					       + " WHERE " + DatabaseContract.Message.COLUMN_ID + " = " + String.format("\'%s\'",friendID)
-					       + " GROUP BY " + DatabaseContract.Message.COLUMN_DATE;
+			return "SELECT * FROM " + MessageContract.TABLE_NAME
+					       + " WHERE " + MessageContract.COLUMN_ID + " = " + String.format("\'%s\'",friendID)
+					       + " GROUP BY " + MessageContract.COLUMN_DATE;
 		else
-			return "SELECT * FROM " + DatabaseContract.Message.TABLE_NAME
-					       + " WHERE " + DatabaseContract.Message.COLUMN_ID + " = " +  String.format("\'%s\'",friendID)
-					       + " GROUP BY " + DatabaseContract.Message.COLUMN_DATE
+			return "SELECT * FROM " + MessageContract.TABLE_NAME
+					       + " WHERE " + MessageContract.COLUMN_ID + " = " +  String.format("\'%s\'",friendID)
+					       + " GROUP BY " + MessageContract.COLUMN_DATE
 					       + " LIMIT " + limit
 					       + " OFFSET " + offset;
 	}
