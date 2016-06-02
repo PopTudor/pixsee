@@ -3,8 +3,9 @@ package com.marked.pixsee.data.mapper;
 import android.content.ContentValues;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.marked.pixsee.friends.data.DatabaseFriendContract;
+import com.marked.pixsee.friends.data.FriendContractDB;
 import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.friends.mapper.UserToCvMapper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,10 +24,10 @@ public class UserToCvMapperTest {
 	@Test
 	public void testMap() throws Exception {
 		ContentValues contentValues = mUserToCvMapper.map(mUser);
-		String id = contentValues.getAsString(DatabaseFriendContract.COLUMN_ID);
-		String name = contentValues.getAsString(DatabaseFriendContract.COLUMN_NAME);
-		String email = contentValues.getAsString(DatabaseFriendContract.COLUMN_EMAIL);
-		String token = contentValues.getAsString(DatabaseFriendContract.COLUMN_TOKEN);
+		String id = contentValues.getAsString(FriendContractDB.COLUMN_ID);
+		String name = contentValues.getAsString(FriendContractDB.COLUMN_NAME);
+		String email = contentValues.getAsString(FriendContractDB.COLUMN_EMAIL);
+		String token = contentValues.getAsString(FriendContractDB.COLUMN_TOKEN);
 
 		assertThat(mUser.getUserID(), equalTo(id));
 		assertThat(mUser.getName(), equalTo(name));

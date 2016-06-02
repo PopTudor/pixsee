@@ -22,14 +22,20 @@ package com.marked.pixsee.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.marked.pixsee.data.database.DatabaseContract;
+import com.marked.pixsee.data.database.PixyDatabase;
+import com.marked.pixsee.friends.mapper.UserToCvMapper;
+import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.login.LoginAPI;
 import com.marked.pixsee.networking.HTTPStatusCodes;
 import com.marked.pixsee.networking.ServerConstants;
@@ -56,7 +62,7 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
  * https://developers.google.com/cloud-messaging/android/client
  */
 public class LogInRegistrationIntentService extends IntentService {
-
+	private UserToCvMapper userToCvMapper = new UserToCvMapper();
 	public LogInRegistrationIntentService() {
 		super("RegIntentService");
 	}
@@ -155,11 +161,19 @@ public class LogInRegistrationIntentService extends IntentService {
 			@Override
 			public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 				if (response.isSuccess()) {
+					Gson gson = new Gson();
+					User user = gson.fromJson(response.body().get("user").getAsJsonObject(), User.class);
+					PixyDatabase.getInstance(LogInRegistrationIntentService.this)
+							.getWritableDatabase()
+							.insertWithOnConflict(
+									DatabaseContract.User.TABLE_NAME,
+									null,
+									userToCvMapper.map(user),
+									SQLiteDatabase.CONFLICT_REPLACE);
 				    /* You should store a boolean that indicates whether the generated token has been
 				             sent to your server. If the boolean is false, send the token to your server,
                              otherwise your server should have already received the token.
                              */
-					String userID = response.body().get(GCMConstants.USER_ID).getAsString();
 					JsonArray friends;
 					if (response.body().get(GCMConstants.FRIENDS).getAsJsonArray() == null)
 						friends = new JsonArray();
@@ -169,7 +183,7 @@ public class LogInRegistrationIntentService extends IntentService {
 					                                                                .putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true)
 					                                                                .apply();/* if sent_token_to_server == true, we are registered*/
 					getDefaultSharedPreferences(LogInRegistrationIntentService.this).edit()
-					                                                                .putString(GCMConstants.USER_ID, userID)
+					                                                                .putString(GCMConstants.USER_ID, user.getUserID())
 					                                                                .apply();
 					notifyBroadcastReceiver(GCMConstants.ACTION_LOGIN);
 					// // FIXME: 2016-05-13 store friends to db
@@ -212,6 +226,15 @@ public class LogInRegistrationIntentService extends IntentService {
 			        @Override
 			        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 				        if (response.isSuccess()) {
+					        Gson gson = new Gson();
+					        User user = gson.fromJson(response.body().get("user").getAsJsonObject(), User.class);
+					        PixyDatabase.getInstance(LogInRegistrationIntentService.this)
+							        .getWritableDatabase()
+							        .insertWithOnConflict(
+									        DatabaseContract.User.TABLE_NAME,
+									        null,
+									        userToCvMapper.map(user),
+									        SQLiteDatabase.CONFLICT_REPLACE);
 					        // You should store a boolean that indicates whether the generated token has been
 					        // sent to your server. If the boolean is false, send the token to your server,
 					        // otherwise your server should have already received the token.
@@ -222,9 +245,9 @@ public class LogInRegistrationIntentService extends IntentService {
 					        PreferenceManager
 							        .getDefaultSharedPreferences(LogInRegistrationIntentService.this)
 							        .edit()
-							        .putString(GCMConstants.USER_ID, response.body().get("_id")
-							                                                 .getAsString())
+							        .putString(GCMConstants.USER_ID, user.getUserID())
 							        .apply();
+
 					        notifyBroadcastReceiver(GCMConstants.ACTION_SIGNUP);
 				        } else {
 					        handleRegistrationError(response.raw().code());

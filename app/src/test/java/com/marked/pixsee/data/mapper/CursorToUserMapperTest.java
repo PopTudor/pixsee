@@ -3,8 +3,9 @@ package com.marked.pixsee.data.mapper;
 import android.test.mock.MockCursor;
 
 import com.google.common.collect.Lists;
-import com.marked.pixsee.friends.data.DatabaseFriendContract;
+import com.marked.pixsee.friends.data.FriendContractDB;
 import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.friends.mapper.CursorToUserMapper;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -60,13 +61,13 @@ public class CursorToUserMapperTest {
 
 		@Override
 		public int getColumnIndex(String columnName) {
-			if (columnName.equals(DatabaseFriendContract.COLUMN_ID))
+			if (columnName.equals(FriendContractDB.COLUMN_ID))
 				return 0;
-			else if ((columnName.equals(DatabaseFriendContract.COLUMN_NAME)))
+			else if ((columnName.equals(FriendContractDB.COLUMN_NAME)))
 				return 1;
-			else if (columnName.equals(DatabaseFriendContract.COLUMN_EMAIL))
+			else if (columnName.equals(FriendContractDB.COLUMN_EMAIL))
 				return 2;
-			else if (columnName.equals(DatabaseFriendContract.COLUMN_TOKEN))
+			else if (columnName.equals(FriendContractDB.COLUMN_TOKEN))
 				return 3;
 			else
 				return -1;

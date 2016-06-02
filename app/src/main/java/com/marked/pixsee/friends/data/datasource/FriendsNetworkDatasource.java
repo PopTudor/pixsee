@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.marked.pixsee.friends.data.DatabaseFriendContract;
+import com.marked.pixsee.friends.data.FriendContractDB;
 import com.marked.pixsee.friends.data.FriendsAPI;
 import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.networking.ServerConstants;
@@ -69,7 +69,7 @@ public class FriendsNetworkDatasource implements FriendsDatasource {
 				.map(new Func1<JsonObject, JsonArray>() {
 					@Override
 					public JsonArray call(JsonObject jsonObject) {
-						return jsonObject.getAsJsonArray(DatabaseFriendContract.TABLE_NAME);
+						return jsonObject.getAsJsonArray(FriendContractDB.TABLE_NAME);
 					}
 				})
 				.map(new Func1<JsonArray, List<User>>() {

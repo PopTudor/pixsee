@@ -46,10 +46,9 @@ class FriendVH extends RecyclerView.ViewHolder {
 		//		mFriendIconImageView.setImageURI(uri, context);
 		//todo get in parse a contact's profile image
 		FRIEND_CLICK = new FriendClick(friend);
-		if (friend.getIcon() != null)
-			simpleDraweeView.setImageURI(Uri.parse(friend.getIcon()));
+		if (friend.getIconUrl() != null)
+			simpleDraweeView.setImageURI(Uri.parse(friend.getIconUrl()));
 		friendNameTextView.setText(friend.getName());
-		friendBodyTextView.setText(friend.getLastMessage());
 		itemView.setOnClickListener(FRIEND_CLICK); // // TODO: 31.05.2016 how can this be done with a single line of code ?
 		friendNameTextView.setOnClickListener(FRIEND_CLICK);
 	}

@@ -1,7 +1,7 @@
 package com.marked.pixsee.friends.specifications;
 
 import com.marked.pixsee.data.repository.SQLSpecification;
-import com.marked.pixsee.friends.data.DatabaseFriendContract;
+import com.marked.pixsee.friends.data.FriendContractDB;
 
 /**
  * Created by Tudor on 2016-05-18.
@@ -19,8 +19,8 @@ public class GetFriendsStartingWith implements SQLSpecification {
 
 	@Override
 	public String createQuery() {
-		return "SELECT * FROM " + DatabaseFriendContract.TABLE_NAME
-				       +" WHERE " + DatabaseFriendContract.COLUMN_NAME
+		return "SELECT * FROM " + FriendContractDB.TABLE_NAME
+				       +" WHERE " + FriendContractDB.COLUMN_NAME
 					   +" LIKE "
 				       +'\'' + text +"%" +'\''
 				       + " LIMIT " + limit + " OFFSET " + offset;

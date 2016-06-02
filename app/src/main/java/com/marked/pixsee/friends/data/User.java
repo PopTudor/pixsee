@@ -2,47 +2,45 @@ package com.marked.pixsee.friends.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Tudor Pop on 28-Nov-15.
  */
-public final class User implements Parcelable,Comparable<User> {
+public final class User implements Parcelable, Comparable<User> {
 	@SerializedName(value = "userID", alternate = {"_id"})
 	String userID;
 	String name;
 	String email;
 	String token;
 	String password;
-	String cover;
+	String coverUrl;
+	String username;
+	String iconUrl;
 
-	String lastMessage;
-
-	String icon;
-
-	public User(String userID, String name, String email, String token, String password, String cover, String icon, String lastMessage) {
+	public User(String userID, String name, String email, String token, String password, String coverUrl, String iconUrl,  String username) {
 		this.userID = userID;
 		this.name = name;
 		this.email = email;
 		this.token = token;
 		this.password = password;
-		this.cover = cover;
-		this.icon = icon;
-		this.lastMessage = lastMessage;
+		this.coverUrl = coverUrl;
+		this.iconUrl = iconUrl;
+		this.username = username;
 	}
 
-	public User(String userID, String name, String email, String token, String password, String cover, String icon) {
-		this(userID, name, email, token, password, cover, icon, null);
+	public User(String userID, String name, String email, String token, String password, String coverUrl, String iconUrl) {
+		this(userID, name, email, token, password, coverUrl, iconUrl, null);
 	}
 
-
-	public User(String userID, String name, String email, String token, String password, String cover) {
-		this(userID, name, email, token, password, cover, null);
+	public User(String userID, String name, String email, String token, String password, String coverUrl) {
+		this(userID, name, email, token, password, coverUrl, null);
 	}
 
 	public User(String userID, String name, String email, String token, String password) {
-		this(userID, name, email, token,password,null);
+		this(userID, name, email, token, password, null);
 	}
 
 	public User(String userID, String name, String email, String token) {
@@ -55,17 +53,11 @@ public final class User implements Parcelable,Comparable<User> {
 		this.email = parcelIn.readString();
 		this.token = parcelIn.readString();
 		this.password = parcelIn.readString();
-		this.cover = parcelIn.readString();
-		this.icon = parcelIn.readString();
+		this.coverUrl = parcelIn.readString();
+		this.iconUrl = parcelIn.readString();
+		this.username = parcelIn.readString();
 	}
 
-	public String getCover() {
-		return cover;
-	}
-
-	public String getIcon() {
-		return icon;
-	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator<User>() {
 		@Override
@@ -94,8 +86,9 @@ public final class User implements Parcelable,Comparable<User> {
 		dest.writeString(email);
 		dest.writeString(token);
 		dest.writeString(password);
-		dest.writeString(cover);
-		dest.writeString(icon);
+		dest.writeString(coverUrl);
+		dest.writeString(iconUrl);
+		dest.writeString(username);
 	}
 
 	public void setUserID(String userID) {
@@ -134,16 +127,20 @@ public final class User implements Parcelable,Comparable<User> {
 		return email;
 	}
 
-	public String getLastMessage() {
-		return lastMessage;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setLastMessage(String lastMessage) {
-		this.lastMessage = lastMessage;
+	public String getCoverUrl() {
+		return coverUrl;
+	}
+
+	public String getIconUrl() {
+		return iconUrl;
 	}
 
 	@Override
-	public int compareTo(User another) {
-		return this.name.compareTo(another.getName());
+	public int compareTo(@NonNull User another) {
+		return this.email.compareTo(another.email);
 	}
 }

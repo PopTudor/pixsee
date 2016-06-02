@@ -1,12 +1,7 @@
 package com.marked.pixsee.friends.data;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 
-import com.marked.pixsee.data.mapper.CursorToUserMapper;
-import com.marked.pixsee.data.mapper.Mapper;
-import com.marked.pixsee.data.mapper.UserToCvMapper;
 import com.marked.pixsee.friends.data.datasource.FriendsDatasource;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,9 +30,6 @@ public class FriendRepository implements FriendsDatasource {
         this.disk = disk;
         this.network = network;
     }
-
-    private Mapper<Cursor, User> cursorToUserMapper = new CursorToUserMapper();
-    private Mapper<User, ContentValues> userToCvMapper = new UserToCvMapper();
 
     public int length() {
         return cache.size();

@@ -34,7 +34,6 @@ import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.networking.ServerConstants;
-import com.marked.pixsee.service.GCMListenerService;
 import com.marked.pixsee.utility.GCMConstants;
 
 import org.json.JSONException;

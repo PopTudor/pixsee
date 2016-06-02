@@ -9,4 +9,8 @@ public interface FriendConstants {
 	String EMAIL = "email";
 	String TOKEN = "token";
 	String PASSWORD = "password";
+	String USERNAME = "username";
+	String COVER_URL = "coverUrl";
+	String ICON_URL = "iconUrl";
+
 }

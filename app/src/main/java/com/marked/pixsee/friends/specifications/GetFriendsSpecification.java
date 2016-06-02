@@ -1,7 +1,7 @@
 package com.marked.pixsee.friends.specifications;
 
 import com.marked.pixsee.data.repository.SQLSpecification;
-import com.marked.pixsee.friends.data.DatabaseFriendContract;
+import com.marked.pixsee.friends.data.FriendContractDB;
 
 
 /**
@@ -17,16 +17,16 @@ public class GetFriendsSpecification implements SQLSpecification {
 	}
 
 	private String[] cols = {
-			DatabaseFriendContract.COLUMN_ID,
-			DatabaseFriendContract.COLUMN_NAME,
-			DatabaseFriendContract.COLUMN_EMAIL,
-			DatabaseFriendContract.COLUMN_TOKEN};
+			FriendContractDB.COLUMN_ID,
+			FriendContractDB.COLUMN_NAME,
+			FriendContractDB.COLUMN_EMAIL,
+			FriendContractDB.COLUMN_TOKEN};
 
 	@Override
 	public String createQuery() {
 		if (limit == -1)
-			return "SELECT * FROM " + DatabaseFriendContract.TABLE_NAME;
+			return "SELECT * FROM " + FriendContractDB.TABLE_NAME;
 		else
-			return "SELECT * FROM " + DatabaseFriendContract.TABLE_NAME + " LIMIT " + limit + " OFFSET " + offset;
+			return "SELECT * FROM " + FriendContractDB.TABLE_NAME + " LIMIT " + limit + " OFFSET " + offset;
 	}
 }

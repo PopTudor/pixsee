@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.marked.pixsee.service;
+package com.marked.pixsee.chat;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -26,7 +26,6 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.marked.pixsee.chat.ChatFragment;
 import com.marked.pixsee.entry.EntryActivity;
 
 import static android.app.PendingIntent.getActivity;

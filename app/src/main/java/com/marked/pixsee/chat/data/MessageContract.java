@@ -2,7 +2,7 @@ package com.marked.pixsee.chat.data;
 
 import android.provider.BaseColumns;
 
-import com.marked.pixsee.friends.data.DatabaseFriendContract;
+import com.marked.pixsee.friends.data.FriendContractDB;
 
 /**
  * Created by Tudor on 6/2/2016.
@@ -27,8 +27,8 @@ public class MessageContract implements BaseColumns {
 			+ COLUMN_DATE + " TEXT,"
 			+ COLUMN_TO + " TEXT, FOREIGN KEY( "
 			+ COLUMN_TO + ")" + " REFERENCES "
-			+ DatabaseFriendContract.TABLE_NAME + "("
-			+ DatabaseFriendContract.COLUMN_ID + ")"
+			+ FriendContractDB.TABLE_NAME + "("
+			+ FriendContractDB.COLUMN_ID + ")"
 			+ ")";
 
 
