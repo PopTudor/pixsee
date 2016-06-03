@@ -10,8 +10,11 @@ import java.util.List;
  * Created by Tudor on 03-Jun-16.
  */
 public interface AddUsernameContract {
-	interface Presenter extends BasePresenter{
+	interface Presenter extends BasePresenter, UsersAdapter.UserInteraction {
 		void search(String usernameOrEmail);
+
+		@Override
+		void onClick(User user, int position);
 	}
 
 	interface View extends BaseView<Presenter> {

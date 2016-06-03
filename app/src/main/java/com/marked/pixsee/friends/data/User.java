@@ -111,6 +111,18 @@ public final class User implements Parcelable, Comparable<User> {
 		this.password = password;
 	}
 
+	public void setCoverUrl(String coverUrl) {
+		this.coverUrl = coverUrl;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
+	}
+
 	public String getToken() {
 		return token;
 	}

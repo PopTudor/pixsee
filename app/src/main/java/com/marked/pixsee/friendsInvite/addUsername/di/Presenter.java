@@ -1,4 +1,7 @@
-package com.marked.pixsee.friendsInvite.addUsername;
+package com.marked.pixsee.friendsInvite.addUsername.di;
+
+import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
 
 import java.lang.ref.WeakReference;
 
@@ -20,6 +23,11 @@ class Presenter implements AddUsernameContract.Presenter {
 
 	@Override
 	public void search(String usernameOrEmail) {
+
+	}
+
+	@Override
+	public void onClick(User user, int position) {
 
 	}
 }

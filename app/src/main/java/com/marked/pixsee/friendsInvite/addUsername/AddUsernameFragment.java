@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,8 +17,12 @@ import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.friendsInvite.addUsername.di.AddUserModule;
+import com.marked.pixsee.friendsInvite.addUsername.di.DaggerAddUserComponent;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,7 +30,10 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnActionExpandListener, AddUsernameContract.View {
-	private AddUsernameContract.Presenter mPresenter;
+	@Inject
+	AddUsernameContract.Presenter mPresenter;
+	private RecyclerView mUsersRecyclerview;
+	private UsersAdapter mUsersAdapter;
 
 	public static AddUsernameFragment newInstance() {
 		AddUsernameFragment fragment = new AddUsernameFragment();
@@ -36,7 +45,7 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		mPresenter = new Presenter(this);
+		DaggerAddUserComponent.builder().addUserModule(new AddUserModule(this)).build().inject(this);
 	}
 
 	public AddUsernameFragment() {
@@ -47,6 +56,12 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_add_username, container, false);
+		mUsersRecyclerview = (RecyclerView) view.findViewById(R.id.usersRecyclerview);
+		mUsersRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+		mUsersAdapter = new UsersAdapter(mPresenter);
+		mUsersRecyclerview.setAdapter(mUsersAdapter);
+
 		setHasOptionsMenu(true);
 		return view;
 	}
