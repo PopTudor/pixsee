@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.marked.pixsee.inviteFriends.InviteFriends">
+    tools:context=".friendsInvite.FriendsInvite">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -13,5 +15,78 @@
         >
 
     </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:alpha="0.54"
+            android:tint="#000000"
+            app:srcCompat="@drawable/ic_search_24dp"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Add by Username"
+            android:id="@+id/addUsername"
+            android:gravity="left|center_vertical"
+            android:capitalize="none"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:clickable="false"
+            android:focusable="false"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_below="@+id/linearLayout4"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:alpha="0.54"
+            android:tint="#000000"
+            app:srcCompat="@drawable/ic_share_24dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Share Username"
+            android:id="@+id/shareUsername"
+            android:gravity="left|center_vertical"
+            android:capitalize="none"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:clickable="false"
+            android:enabled="true"
+            android:focusable="false"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+
+    </LinearLayout>
+
 
 </RelativeLayout>

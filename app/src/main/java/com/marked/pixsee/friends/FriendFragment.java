@@ -32,7 +32,7 @@ import com.marked.pixsee.friends.di.FriendModule;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
-import com.marked.pixsee.inviteFriends.InviteFriends;
+import com.marked.pixsee.friendsInvite.FriendsInvite;
 
 import java.util.List;
 
@@ -139,7 +139,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 
 	@Override
 	public void showInviteFriends() {
-		Intent intent = new Intent(getActivity(), InviteFriends.class);
+		Intent intent = new Intent(getActivity(), FriendsInvite.class);
 		getActivity().startActivity(intent);
 	}
 
