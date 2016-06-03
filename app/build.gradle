@@ -137,6 +137,7 @@ dependencies {
     androidTestCompile test.rules
     compile 'com.aurelhubert:ahbottomnavigation:1.2.3'
     compile 'tyrantgit:explosionfield:1.0.1'
+    compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
 }
 
 

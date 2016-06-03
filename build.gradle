@@ -31,8 +31,8 @@ ext {
     //Libraries
     daggerVersion = '2.2'
     supportLibraryVersion = '23.4.0'
-    rxJavaVersion = '1.1.0'
-    rxAndroidVersion = '1.1.0'
+    rxJavaVersion = '1.1.5'
+    rxAndroidVersion = '1.2.0'
     javaxAnnotationVersion = '1.0'
     gsonVersion = '2.6.2'
     okHttpVersion = '3.2.0'

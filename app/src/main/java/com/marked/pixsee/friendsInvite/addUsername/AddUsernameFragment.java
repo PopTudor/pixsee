@@ -15,25 +15,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.marked.pixsee.R;
 import com.marked.pixsee.friends.data.User;
 import com.marked.pixsee.friendsInvite.addUsername.di.AddUserModule;
 import com.marked.pixsee.friendsInvite.addUsername.di.DaggerAddUserComponent;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AddUsernameFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnActionExpandListener, AddUsernameContract.View, SearchView.OnQueryTextListener {
+public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnActionExpandListener, AddUsernameContract.View {
 	@Inject
 	AddUsernameContract.Presenter mPresenter;
 	private RecyclerView mUsersRecyclerview;
 	private UsersAdapter mUsersAdapter;
+	private Subscription subscription;
 
 	public static AddUsernameFragment newInstance() {
 		AddUsernameFragment fragment = new AddUsernameFragment();
@@ -71,11 +78,37 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.menu_add_username, menu);
 		MenuItem menuItem = menu.findItem(R.id.action_search);
-		MenuItemCompat.setOnActionExpandListener(menuItem,this);
+		MenuItemCompat.setOnActionExpandListener(menuItem, this);
 		menuItem.expandActionView();
 		SearchView searchView = ((SearchView) menuItem.getActionView());
 		searchView.setQueryHint("Username or email");
-		searchView.setOnQueryTextListener(this);
+//		searchView.setOnQueryTextListener(this);
+		subscription = RxSearchView.queryTextChanges(searchView)
+				// check if it’s not empty (user removed text), if it is
+				// observable chain will stop here until user enters something.
+				.filter(new Func1<CharSequence, Boolean>() {
+					@Override
+					public Boolean call(CharSequence charSequence) {
+						if (charSequence != null && charSequence.length() >= 2)
+							return true;
+						mUsersAdapter.getUsersList().clear();
+						mUsersAdapter.notifyDataSetChanged();
+						return false;
+					}
+				})
+				// to prevent making requests too fast (as user may type fast),
+				// throttleLast will emit last item during 100ms from the time
+				// first item is emitted
+				.throttleLast(300, TimeUnit.MILLISECONDS)
+				// debounce will emit item only 200ms after last item is emitted
+				// (after user types in last character)
+				.debounce(500, TimeUnit.MILLISECONDS)
+				.subscribe(new Action1<CharSequence>() {
+					           @Override
+					           public void call(CharSequence charSequence) {
+						           mPresenter.search(charSequence.toString());
+					           }
+				           });
 	}
 
 
@@ -86,6 +119,7 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 
 	@Override
 	public boolean onMenuItemActionCollapse(MenuItem item) {
+		subscription.unsubscribe();
 		/* when searchview is collapsed, exit this fragment and return to original invite screen*/
 		getActivity().onBackPressed();
 		return false;
@@ -101,21 +135,5 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 		mUsersAdapter.getUsersList().clear();
 		mUsersAdapter.getUsersList().addAll(users);
 		mUsersAdapter.notifyDataSetChanged();
-	}
-
-	@Override
-	public boolean onQueryTextSubmit(String query) {
-		if (query==null)
-			return false;
-		mPresenter.search(query);
-		return false;
-	}
-
-	@Override
-	public boolean onQueryTextChange(String newText) {
-		if (newText==null)
-			return false;
-		mPresenter.search(newText);
-		return false;
 	}
 }
