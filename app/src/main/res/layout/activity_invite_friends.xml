@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".friendsInvite.FriendsInvite">
+    tools:context=".friendsInvite.FriendsInviteActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -42,7 +42,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Add by Username"
+            android:text="Add Username or Email"
             android:id="@+id/addUsername"
             android:gravity="left|center_vertical"
             android:capitalize="none"
@@ -87,6 +87,14 @@
             style="@style/Base.Widget.AppCompat.Button.Borderless"/>
 
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/fragmentContainer"
+        android:layout_below="@+id/toolbar">
+    </FrameLayout>
 
 
 </RelativeLayout>

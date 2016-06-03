@@ -7,10 +7,10 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Tudor on 03-Jun-16.
  */
-public class FriendsInvitePresenter implements FriendsInviteContract.Presenter {
+class Presenter implements FriendsInviteContract.Presenter {
 	private WeakReference<FriendsInviteContract.View> mView;
 
-	public FriendsInvitePresenter(FriendsInviteContract.View mView) {
+	public Presenter(FriendsInviteContract.View mView) {
 		this.mView = new WeakReference<FriendsInviteContract.View>(mView);
 		mView.setPresenter(this);
 	}

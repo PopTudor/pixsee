@@ -146,7 +146,7 @@
         </activity>
         <activity android:name=".main.MainActivity">
         </activity>
-        <activity android:name=".friendsInvite.FriendsInvite">
+        <activity android:name=".friendsInvite.FriendsInviteActivity">
         </activity>
     </application>
 

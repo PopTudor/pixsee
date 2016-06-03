@@ -3,8 +3,6 @@ package com.marked.pixsee.friendsInvite;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,19 +10,20 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.marked.pixsee.R;
+import com.marked.pixsee.friendsInvite.addUsername.AddUsernameFragment;
 import com.marked.pixsee.friendsInvite.commands.ClickAddUser;
 
-public class FriendsInvite extends AppCompatActivity implements FriendsInviteContract.View,View.OnClickListener {
-	private Fragment mFragment;
+public class FriendsInviteActivity extends AppCompatActivity implements FriendsInviteContract.View,View.OnClickListener {
 	private FriendsInviteContract.Presenter mPresenter;
+	private Toolbar toolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_invite_friends);
-		mPresenter = new FriendsInvitePresenter(this);
+		mPresenter = new Presenter(this);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -45,7 +44,7 @@ public class FriendsInvite extends AppCompatActivity implements FriendsInviteCon
 		switch (item.getItemId()) {
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				NavUtils.navigateUpFromSameTask(this);
+				onBackPressed();
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -60,10 +59,10 @@ public class FriendsInvite extends AppCompatActivity implements FriendsInviteCon
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.addUsername:
-				mPresenter.execute(new ClickAddUser(this));
+				mPresenter.execute(new ClickAddUser(this,R.id.fragmentContainer, AddUsernameFragment.newInstance()));
 				break;
 			case R.id.shareUsername:
-				mPresenter.execute(new ClickAddUser(this));
+				mPresenter.execute(new ClickAddUser(this,R.id.fragmentContainer, AddUsernameFragment.newInstance()));
 				break;
 			default:
 				break;
