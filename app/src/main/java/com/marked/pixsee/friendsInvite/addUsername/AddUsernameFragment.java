@@ -29,7 +29,7 @@ import javax.inject.Inject;
  * Use the {@link AddUsernameFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnActionExpandListener, AddUsernameContract.View {
+public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnActionExpandListener, AddUsernameContract.View, SearchView.OnQueryTextListener {
 	@Inject
 	AddUsernameContract.Presenter mPresenter;
 	private RecyclerView mUsersRecyclerview;
@@ -75,6 +75,7 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 		menuItem.expandActionView();
 		SearchView searchView = ((SearchView) menuItem.getActionView());
 		searchView.setQueryHint("Username or email");
+		searchView.setOnQueryTextListener(this);
 	}
 
 
@@ -97,6 +98,24 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 
 	@Override
 	public void showUsers(List<User> users) {
+		mUsersAdapter.getUsersList().clear();
+		mUsersAdapter.getUsersList().addAll(users);
+		mUsersAdapter.notifyDataSetChanged();
+	}
 
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		if (query==null)
+			return false;
+		mPresenter.search(query);
+		return false;
+	}
+
+	@Override
+	public boolean onQueryTextChange(String newText) {
+		if (newText==null)
+			return false;
+		mPresenter.search(newText);
+		return false;
 	}
 }

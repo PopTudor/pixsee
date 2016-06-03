@@ -12,6 +12,7 @@ public interface ServerConstants {
 //				"http://46.101.182.220"; /* DIGITAL-OCEAN */
 	/* ENDPOINTS */
 	String USER = "user";
+	String USERS = "users";
 
 	String FRIENDS = "friends";
 	String MESSAGES = "messages";
