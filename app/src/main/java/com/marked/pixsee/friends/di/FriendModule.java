@@ -1,14 +1,7 @@
 package com.marked.pixsee.friends.di;
 
-import android.content.Context;
-import android.preference.PreferenceManager;
-
-import com.marked.pixsee.data.database.PixyDatabase;
-import com.marked.pixsee.data.repository.user.UserDatasource;
 import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.friends.FriendPresenter;
-import com.marked.pixsee.data.repository.user.UserDiskDatasource;
-import com.marked.pixsee.data.repository.user.UserNetworkDatasource;
 import com.marked.pixsee.friends.FriendsContract;
 import com.marked.pixsee.injection.scopes.PerFragment;
 
@@ -28,18 +21,7 @@ public class FriendModule {
 
 	@Provides
 	@PerFragment
-	UserRepository provideRepository(Context application) {
-		UserDatasource diskData = new UserDiskDatasource(PixyDatabase.getInstance(application));
-		UserDatasource networkData = new UserNetworkDatasource(PreferenceManager.getDefaultSharedPreferences(application));
-
-		return new UserRepository(diskData, networkData);
-	}
-
-	@Provides
-	@PerFragment
 	FriendsContract.Presenter provideFriendPresenter(UserRepository repository) {
 		return new FriendPresenter(friendFragment, repository);
 	}
-
-
 }
