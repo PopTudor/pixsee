@@ -65,7 +65,6 @@ public class FriendsDiskDatasource implements FriendsDatasource {
 
 	@Override
 	public Observable<List<User>> refreshUsers() {
-		deleteAllUsers();
 		return Observable.empty();
 	}
 

@@ -9,6 +9,7 @@ import com.marked.pixsee.friends.data.datasource.FriendsDatasource;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
+import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -79,7 +80,10 @@ public class FriendPresenter implements FriendsContract.Presenter {
                             , new Action1<Throwable>() {
                                 @Override
                                 public void call(Throwable throwable) {
-                                    mView.get().showNoFriends();
+                                    if (throwable instanceof SocketTimeoutException)
+                                        mView.get().showNoInternetConnection();
+                                    else
+                                        mView.get().showNoFriends();
                                 }
                             });
         } else {

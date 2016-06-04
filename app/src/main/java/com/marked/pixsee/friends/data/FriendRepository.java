@@ -96,8 +96,28 @@ public class FriendRepository implements FriendsDatasource {
     @Override
     public Observable<List<User>> refreshUsers() {
         clear();
-        disk.deleteAllUsers();
-        return getUsers();
+        return network.getUsers()
+		        .flatMap(new Func1<List<User>, Observable<User>>() {
+			        @Override
+			        public Observable<User> call(List<User> users) {
+				        disk.saveUser(users);
+				        return Observable.from(users);
+			        }
+		        })
+		        .doOnNext(new Action1<User>() {
+			        @Override
+			        public void call(User user) {
+				        cache.add(user);
+			        }
+		        })
+		        .doOnCompleted(new Action0() {
+			        @Override
+			        public void call() {
+				        dirtyCache = false;
+			        }
+		        })
+		        .subscribeOn(Schedulers.io())
+		        .toList();
     }
 
     @Override

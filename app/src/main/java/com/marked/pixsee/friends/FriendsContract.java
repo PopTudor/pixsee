@@ -37,5 +37,7 @@ public interface FriendsContract {
 		void showInviteFriends();
 
 		void showNoFriends();
+
+		void showNoInternetConnection();
 	}
 }

@@ -149,6 +149,12 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 	}
 
 	@Override
+	public void showNoInternetConnection() {
+		Toast.makeText(getActivity(), "No internet connection !", Toast.LENGTH_SHORT).show();
+		mSwipeRefreshLayout.setRefreshing(false);
+	}
+
+	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		try {
