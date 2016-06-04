@@ -4,11 +4,11 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 
 import com.marked.pixsee.data.database.PixyDatabase;
+import com.marked.pixsee.data.repository.user.UserDatasource;
+import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.friends.FriendPresenter;
-import com.marked.pixsee.friends.data.FriendRepository;
-import com.marked.pixsee.friends.data.datasource.FriendsDatasource;
-import com.marked.pixsee.friends.data.datasource.FriendsDiskDatasource;
-import com.marked.pixsee.friends.data.datasource.FriendsNetworkDatasource;
+import com.marked.pixsee.data.repository.user.UserDiskDatasource;
+import com.marked.pixsee.data.repository.user.UserNetworkDatasource;
 import com.marked.pixsee.friends.FriendsContract;
 import com.marked.pixsee.injection.scopes.PerFragment;
 
@@ -28,16 +28,16 @@ public class FriendModule {
 
 	@Provides
 	@PerFragment
-	FriendRepository provideRepository(Context application) {
-		FriendsDatasource diskData = new FriendsDiskDatasource(PixyDatabase.getInstance(application));
-		FriendsDatasource networkData = new FriendsNetworkDatasource(PreferenceManager.getDefaultSharedPreferences(application));
+	UserRepository provideRepository(Context application) {
+		UserDatasource diskData = new UserDiskDatasource(PixyDatabase.getInstance(application));
+		UserDatasource networkData = new UserNetworkDatasource(PreferenceManager.getDefaultSharedPreferences(application));
 
-		return new FriendRepository(diskData, networkData);
+		return new UserRepository(diskData, networkData);
 	}
 
 	@Provides
 	@PerFragment
-	FriendsContract.Presenter provideFriendPresenter(FriendRepository repository) {
+	FriendsContract.Presenter provideFriendPresenter(UserRepository repository) {
 		return new FriendPresenter(friendFragment, repository);
 	}
 

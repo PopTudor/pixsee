@@ -1,7 +1,7 @@
 package com.marked.pixsee.login;
 
 import com.google.gson.JsonObject;
-import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.networking.ServerConstants;
 
 import retrofit2.Call;

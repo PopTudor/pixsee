@@ -1,14 +1,14 @@
 package com.marked.pixsee.friendsInvite.addUsername.di;
 
-import android.util.Log;
-
-import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.repository.user.UserDatasource;
+import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
-import com.marked.pixsee.friendsInvite.addUsername.data.Repository;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -19,9 +19,9 @@ import rx.functions.Action1;
  */
 class Presenter implements AddUsernameContract.Presenter {
 	private WeakReference<AddUsernameContract.View> mView;
-	private Repository repository;
+	private UserDatasource repository;
 
-	public Presenter(AddUsernameContract.View view, Repository repository) {
+	public Presenter(AddUsernameContract.View view, UserRepository repository) {
 		mView = new WeakReference<>(view);
 		mView.get().setPresenter(this);
 		this.repository = repository;
@@ -46,7 +46,8 @@ class Presenter implements AddUsernameContract.Presenter {
 				}, new Action1<Throwable>() {
 					@Override
 					public void call(Throwable throwable) {
-						Log.d("***", "call: "+throwable);
+						if (throwable instanceof SocketTimeoutException)
+							mView.get().showNoInternetConnection();
 					}
 				});
 
@@ -54,6 +55,6 @@ class Presenter implements AddUsernameContract.Presenter {
 
 	@Override
 	public void onClick(User user, int position) {
-
+//		repository.get
 	}
 }

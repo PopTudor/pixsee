@@ -1,4 +1,4 @@
-package com.marked.pixsee.friends.data.datasource;
+package com.marked.pixsee.data.repository.user;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,11 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import com.marked.pixsee.data.database.PixyDatabase;
-import com.marked.pixsee.friends.mapper.CursorToUserMapper;
 import com.marked.pixsee.data.mapper.Mapper;
-import com.marked.pixsee.friends.mapper.UserToCvMapper;
 import com.marked.pixsee.friends.data.FriendContractDB;
-import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.friends.mapper.CursorToUserMapper;
+import com.marked.pixsee.friends.mapper.UserToCvMapper;
 import com.marked.pixsee.friends.specifications.GetFriendsSpecification;
 import com.marked.pixsee.friends.specifications.GetFriendsStartingWith;
 
@@ -24,12 +23,12 @@ import static com.marked.pixsee.friends.data.FriendContractDB.TABLE_NAME;
 /**
  * Created by Tudor on 2016-05-20.
  */
-public class FriendsDiskDatasource implements FriendsDatasource {
+public class UserDiskDatasource implements UserDatasource {
 	private PixyDatabase db;
 	private Mapper<Cursor, User> cursorToUserMapper = new CursorToUserMapper();
 	private Mapper<User, ContentValues> userToCvMapper = new UserToCvMapper();
 
-	public FriendsDiskDatasource(PixyDatabase db) {
+	public UserDiskDatasource(PixyDatabase db) {
 		this.db = db;
 	}
 
@@ -56,6 +55,12 @@ public class FriendsDiskDatasource implements FriendsDatasource {
 				new String[]{UserId.getUserID()}, null, null, null);
 		cursor.moveToFirst();
 		return Observable.just(cursorToUserMapper.map(cursor));
+	}
+	@Override
+	public User getUser(@NonNull String tablename) {
+		Cursor cursor = db.getReadableDatabase().query(tablename, null, null,null, null, null, null);
+		cursor.moveToFirst();
+		return cursorToUserMapper.map(cursor);
 	}
 
 	@Override

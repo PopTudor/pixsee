@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -14,12 +15,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.marked.pixsee.R;
-import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.friendsInvite.addUsername.di.AddUserModule;
 import com.marked.pixsee.friendsInvite.addUsername.di.DaggerAddUserComponent;
+import com.marked.pixsee.injection.components.ActivityComponent;
+import com.marked.pixsee.injection.components.DaggerActivityComponent;
+import com.marked.pixsee.injection.modules.ActivityModule;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +57,13 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		DaggerAddUserComponent.builder().addUserModule(new AddUserModule(this)).build().inject(this);
+		ActivityComponent component =  DaggerActivityComponent.builder()
+				.activityModule(new ActivityModule((AppCompatActivity) getActivity())).build();
+		DaggerAddUserComponent.builder()
+				.activityComponent(component)
+				.addUserModule(new AddUserModule(this))
+				.build()
+				.inject(this);
 	}
 
 	public AddUsernameFragment() {
@@ -82,7 +93,6 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 		menuItem.expandActionView();
 		SearchView searchView = ((SearchView) menuItem.getActionView());
 		searchView.setQueryHint("Username or email");
-//		searchView.setOnQueryTextListener(this);
 		subscription = RxSearchView.queryTextChanges(searchView)
 				// check if it’s not empty (user removed text), if it is
 				// observable chain will stop here until user enters something.
@@ -135,5 +145,10 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 		mUsersAdapter.getUsersList().clear();
 		mUsersAdapter.getUsersList().addAll(users);
 		mUsersAdapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void showNoInternetConnection() {
+		Toast.makeText(getActivity(), R.string.alert_internet_connection, Toast.LENGTH_SHORT).show();
 	}
 }

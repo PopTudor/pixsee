@@ -4,7 +4,7 @@ import android.test.mock.MockCursor;
 
 import com.google.common.collect.Lists;
 import com.marked.pixsee.friends.data.FriendContractDB;
-import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.friends.mapper.CursorToUserMapper;
 
 import org.junit.Assert;

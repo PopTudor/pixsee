@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
 import com.marked.pixsee.injection.components.ActivityComponent;
@@ -150,7 +150,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 
 	@Override
 	public void showNoInternetConnection() {
-		Toast.makeText(getActivity(), "Please check your internet connection !", Toast.LENGTH_SHORT).show();
+		Toast.makeText(getActivity(), R.string.alert_internet_connection, Toast.LENGTH_SHORT).show();
 		mSwipeRefreshLayout.setRefreshing(false);
 	}
 

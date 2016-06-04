@@ -70,6 +70,7 @@
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
     <string name="search_hint">Find a friend</string>
+    <string name="alert_internet_connection">Check your internet connection !</string>
 
 
 </resources>

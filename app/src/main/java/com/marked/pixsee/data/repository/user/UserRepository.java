@@ -1,8 +1,6 @@
-package com.marked.pixsee.friends.data;
+package com.marked.pixsee.data.repository.user;
 
 import android.support.annotation.NonNull;
-
-import com.marked.pixsee.friends.data.datasource.FriendsDatasource;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,13 +18,13 @@ import rx.schedulers.Schedulers;
  * Created by Tudor Pop on 12-Dec-15.
  * Singleton class used to keep all the friends of the user
  */
-public class FriendRepository implements FriendsDatasource {
-    private FriendsDatasource disk;
-    private FriendsDatasource network;
+public class UserRepository implements UserDatasource {
+    private UserDatasource disk;
+    private UserDatasource network;
     final List<User> cache = new ArrayList<>(10);
     private boolean dirtyCache;
 
-    public FriendRepository(@NotNull FriendsDatasource disk, @NotNull FriendsDatasource network) {
+    public UserRepository(@NotNull UserDatasource disk, @NotNull UserDatasource network) {
         this.disk = disk;
         this.network = network;
     }
@@ -125,7 +123,12 @@ public class FriendRepository implements FriendsDatasource {
         return Observable.empty();
     }
 
-    @Override
+	@Override
+	public User getUser(@NonNull String tablename) {
+		return disk.getUser(tablename);
+	}
+
+	@Override
     public void saveUser(@NonNull User item) {
         network.saveUser(item);
         disk.saveUser(item);

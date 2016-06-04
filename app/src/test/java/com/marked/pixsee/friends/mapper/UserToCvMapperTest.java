@@ -3,7 +3,7 @@ package com.marked.pixsee.friends.mapper;
 import android.content.ContentValues;
 
 import com.marked.pixsee.friends.data.FriendConstants;
-import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.data.repository.user.User;
 
 import org.junit.Assert;
 import org.junit.Before;

@@ -2,9 +2,14 @@ package com.marked.pixsee.injection.modules;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.marked.pixsee.data.database.PixyDatabase;
+import com.marked.pixsee.data.repository.user.UserDiskDatasource;
+import com.marked.pixsee.data.repository.user.UserNetworkDatasource;
+import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.injection.scopes.PerActivity;
 import com.marked.pixsee.service.RegistrationBroadcastReceiver;
 import com.marked.pixsee.signup.DialogRegistration;
@@ -56,5 +61,19 @@ public class ActivityModule {
 	@PerActivity
 	Context provideContext() {
 		return activity;
+	}
+
+	@Provides
+	@PerActivity
+	PixyDatabase provideDatabase() {
+		return PixyDatabase.getInstance(activity);
+	}
+
+	@Provides
+	@PerActivity
+	UserRepository provideUserRepository(PixyDatabase database) {
+		return new UserRepository(
+				new UserDiskDatasource(database),
+				new UserNetworkDatasource(PreferenceManager.getDefaultSharedPreferences(activity)));
 	}
 }

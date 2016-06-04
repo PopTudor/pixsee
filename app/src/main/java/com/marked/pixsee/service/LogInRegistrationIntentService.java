@@ -35,7 +35,7 @@ import com.google.gson.JsonObject;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.friends.mapper.UserToCvMapper;
-import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.login.LoginAPI;
 import com.marked.pixsee.networking.HTTPStatusCodes;
 import com.marked.pixsee.networking.ServerConstants;

@@ -1,8 +1,7 @@
 package com.marked.pixsee.friendsInvite.addUsername.di;
 
+import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
-import com.marked.pixsee.friendsInvite.addUsername.data.NetworkDatasource;
-import com.marked.pixsee.friendsInvite.addUsername.data.Repository;
 import com.marked.pixsee.injection.scopes.PerFragment;
 
 import dagger.Module;
@@ -21,8 +20,8 @@ public class AddUserModule {
 	}
 
 	@Provides
-	AddUsernameContract.Presenter providesPresenter() {
-		Repository repository = new Repository(new NetworkDatasource());
+	@PerFragment
+	AddUsernameContract.Presenter providesPresenter(UserRepository repository) {
 		return new Presenter(view, repository);
 	}
 }

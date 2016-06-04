@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.ChatActivity;
 import com.marked.pixsee.friends.FriendFragment;
-import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.main.commands.SelfieCommand;
 import com.marked.pixsee.main.di.DaggerMainComponent;
 import com.marked.pixsee.main.di.MainModule;

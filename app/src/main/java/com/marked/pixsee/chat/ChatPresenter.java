@@ -6,7 +6,7 @@ import com.marked.pixsee.chat.data.ChatDatasource;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.data.repository.user.User;
 
 import org.jetbrains.annotations.NotNull;
 

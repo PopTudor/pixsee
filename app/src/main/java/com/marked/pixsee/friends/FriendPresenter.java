@@ -3,8 +3,8 @@ package com.marked.pixsee.friends;
 import android.view.View;
 
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.friends.data.User;
-import com.marked.pixsee.friends.data.datasource.FriendsDatasource;
+import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.repository.user.UserDatasource;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,11 +26,11 @@ import rx.schedulers.Schedulers;
  * Created by Tudor Pop on 23-Mar-16.
  */
 public class FriendPresenter implements FriendsContract.Presenter {
-    private FriendsDatasource repository;
+    private UserDatasource repository;
     private WeakReference<FriendsContract.View> mView;
     private int size = 0;
     @Inject
-    public FriendPresenter(FriendsContract.View view, FriendsDatasource repository) {
+    public FriendPresenter(FriendsContract.View view, UserDatasource repository) {
         this.repository = repository;
         this.mView = new WeakReference<FriendsContract.View>(view);
         this.mView.get().setPresenter(this);

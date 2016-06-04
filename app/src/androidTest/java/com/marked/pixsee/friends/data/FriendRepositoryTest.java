@@ -8,8 +8,9 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.marked.pixsee.data.database.PixyDatabase;
-import com.marked.pixsee.friends.data.datasource.FriendsDiskDatasource;
-import com.marked.pixsee.friends.data.datasource.FriendsNetworkDatasource;
+import com.marked.pixsee.data.repository.user.UserRepository;
+import com.marked.pixsee.data.repository.user.UserDiskDatasource;
+import com.marked.pixsee.data.repository.user.UserNetworkDatasource;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +24,7 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class FriendRepositoryTest {
-	FriendRepository friendRepository;
+	UserRepository friendRepository;
 	Context context;
 	PixyDatabase pixydb;
 
@@ -31,9 +32,9 @@ public class FriendRepositoryTest {
 	void setupViewModel() {
 		context = InstrumentationRegistry.getTargetContext();
 		pixydb = PixyDatabase.getInstance(context);
-		FriendsDiskDatasource friendsDiskDatasource = new FriendsDiskDatasource(pixydb);
-		FriendsNetworkDatasource friendsNetworkDatasource = new FriendsNetworkDatasource(PreferenceManager.getDefaultSharedPreferences(context));
-		friendRepository = new FriendRepository(friendsDiskDatasource, friendsNetworkDatasource);
+		UserDiskDatasource friendsDiskDatasource = new UserDiskDatasource(pixydb);
+		UserNetworkDatasource friendsNetworkDatasource = new UserNetworkDatasource(PreferenceManager.getDefaultSharedPreferences(context));
+		friendRepository = new UserRepository(friendsDiskDatasource, friendsNetworkDatasource);
 	}
 
 	@Test

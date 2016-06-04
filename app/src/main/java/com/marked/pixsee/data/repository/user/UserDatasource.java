@@ -1,8 +1,6 @@
-package com.marked.pixsee.friends.data.datasource;
+package com.marked.pixsee.data.repository.user;
 
 import android.support.annotation.NonNull;
-
-import com.marked.pixsee.friends.data.User;
 
 import java.util.List;
 
@@ -13,11 +11,13 @@ import rx.Observable;
  * Main entry point for accessing user data.
  * <p>
  */
-public interface FriendsDatasource {
+public interface UserDatasource {
 	Observable<List<User>> getUsers();
 	Observable<List<User>> getUsers(String byName);
 
 	Observable<User> getUser(@NonNull User userId);
+
+	User getUser(@NonNull String tablename);
 
 	void saveUser(@NonNull User user);
 	void saveUser(@NonNull List<User> user);

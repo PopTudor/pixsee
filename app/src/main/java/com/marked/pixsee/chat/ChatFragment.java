@@ -29,7 +29,7 @@ import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.chat.di.ChatModule;
 import com.marked.pixsee.chat.di.DaggerChatComponent;
 import com.marked.pixsee.commons.SpaceItemDecorator;
-import com.marked.pixsee.friends.data.User;
+import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
