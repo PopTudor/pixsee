@@ -4,6 +4,7 @@ import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.data.repository.user.UserDatasource;
 import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
+import com.marked.pixsee.friendsInvite.addUsername.data.RequestService;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,8 +21,11 @@ import rx.functions.Action1;
 class Presenter implements AddUsernameContract.Presenter {
 	private WeakReference<AddUsernameContract.View> mView;
 	private UserDatasource repository;
+	private RequestService requestService;
 
-	public Presenter(AddUsernameContract.View view, UserRepository repository) {
+
+	public Presenter(AddUsernameContract.View view, UserRepository repository, RequestService requestService) {
+		this.requestService = requestService;
 		mView = new WeakReference<>(view);
 		mView.get().setPresenter(this);
 		this.repository = repository;
@@ -55,6 +59,6 @@ class Presenter implements AddUsernameContract.Presenter {
 
 	@Override
 	public void onClick(User user, int position) {
-//		repository.get
+		requestService.friendRequest(user);
 	}
 }

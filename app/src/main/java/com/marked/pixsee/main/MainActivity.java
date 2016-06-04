@@ -4,21 +4,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.ChatActivity;
+import com.marked.pixsee.chat.GCMListenerService;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.friends.data.FriendConstants;
 import com.marked.pixsee.main.commands.SelfieCommand;
 import com.marked.pixsee.main.di.DaggerMainComponent;
 import com.marked.pixsee.main.di.MainModule;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View,FriendFragment.FriendFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements MainContract.View,FriendFragment.FriendFragmentInteractionListener, GCMListenerService.Callback {
 	@Inject
 	MainContract.Presenter mPresenter;
 
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		GCMListenerService.addCallback(this);
 
 		DaggerMainComponent.builder().mainModule(new MainModule(this)).build().inject(this);
 		mainContainer = (FrameLayout) findViewById(R.id.mainContainer);
@@ -58,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 	protected void onStart() {
 		super.onStart();
 		mPresenter.start();
+		Toast.makeText(MainActivity.this, getIntent().getStringExtra(FriendConstants.USERNAME), Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -82,5 +89,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 //		CardRemoteDatasource remoteDatasource = new CardRemoteDatasource(PreferenceManager.getDefaultSharedPreferences(this));
 //		fragment.setPresenter(new CardPresenter(fragment, new CardRepository(localDatasource,remoteDatasource)));
 //		getSupportFragmentManager().beginTransaction().replace(R.id.cardFragmentContainer, fragment).commit();
+	}
+
+	@Override
+	public void receiveRemoteMessage(RemoteMessage message) {
+		Log.d("*** TAG ***", "receiveRemoteMessage: "+message.toString());
+	}
+
+	@Override
+	protected void onDestroy() {
+		GCMListenerService.clear();
+		super.onDestroy();
 	}
 }

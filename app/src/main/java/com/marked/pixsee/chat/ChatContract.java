@@ -1,5 +1,7 @@
 package com.marked.pixsee.chat;
 
+import android.os.Bundle;
+
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.chat.data.Message;
@@ -15,7 +17,7 @@ import java.util.List;
  */
 public interface ChatContract {
 
-	interface Presenter extends BasePresenter, GCMListenerService.Callbacks{
+	interface Presenter extends BasePresenter, GCMListenerService.Callback {
 		void loadMore(int limit);
 
 		void loadMore(int limit, boolean forceUpdate);
@@ -29,6 +31,8 @@ public interface ChatContract {
 		void chatClicked(Message message,int position);
 
 		void sendMessage(@NotNull Message message);
+
+		void receiveMessage(String message, Bundle bundle);
 	}
 
 	interface View extends BaseView<Presenter> {

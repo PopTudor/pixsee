@@ -17,20 +17,14 @@
 package com.marked.pixsee.chat;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.marked.pixsee.entry.EntryActivity;
 
-import static android.app.PendingIntent.getActivity;
-import static android.media.RingtoneManager.TYPE_NOTIFICATION;
-import static android.media.RingtoneManager.getDefaultUri;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Receives messages sent by GCM server
@@ -38,23 +32,17 @@ import static android.media.RingtoneManager.getDefaultUri;
 public class GCMListenerService extends FirebaseMessagingService {
 
 	private static final String TAG = "MyGcmListenerService";
-	static Callbacks mCallbacks;
+	private static List<Callback> mCallbacks=new ArrayList<>(3);
 
-	public static void setCallbacks(Callbacks callbacks) {
-		mCallbacks = callbacks;
+	public static void addCallback(Callback callback) {
+		mCallbacks.add(callback);
 	}
+	public static void clear(){mCallbacks.clear();}
 
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
-		Log.d(TAG, "Message: " + remoteMessage.getData());
-		Bundle payload = new Bundle();
-		for (String s : remoteMessage.getData().keySet()) {
-			Log.d("***", "onMessageReceived " + s);
-			payload.putString(s,remoteMessage.getData().get(s));
-		}
-
-		if (mCallbacks != null)
-			mCallbacks.receiveMessage(remoteMessage.getFrom(), payload);
+		for (Callback it:mCallbacks)
+			it.receiveRemoteMessage(remoteMessage);
 
 		if (remoteMessage.getFrom().startsWith("/topics/")) {
 			// message received from some topic.
@@ -62,7 +50,6 @@ public class GCMListenerService extends FirebaseMessagingService {
 			// normal downstream message.
 		}
 
-		// [START_EXCLUDE]
 		/**
 		 * Production applications would usually process the message here.
 		 * Eg: - Syncing with server.
@@ -72,7 +59,7 @@ public class GCMListenerService extends FirebaseMessagingService {
 
 		/*send notification only if the user is not inside the chatting fragment */
 		if (!ChatFragment.isInForeground)
-			sendNotification(payload);
+			sendNotification(new Bundle());
 		// [END_EXCLUDE]
 	}
 
@@ -85,10 +72,10 @@ public class GCMListenerService extends FirebaseMessagingService {
 	private void sendNotification(Bundle bundle) {
 		//		Bundle[{text=h, links=[null], notification=Bundle[{e=1, body=This is a notification that will be displayed ASAP., icon=ic_launcher, title=Hello, World}], collapse_key=com.marked.vifo}]
 		if (bundle != null) {
-			Intent intent = new Intent(this, EntryActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			PendingIntent pendingIntent = getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
-			Uri defaultSoundUri = getDefaultUri(TYPE_NOTIFICATION);
+//			Intent intent = new Intent(this, EntryActivity.class);
+//			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//			PendingIntent pendingIntent = getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
+//			Uri defaultSoundUri = getDefaultUri(TYPE_NOTIFICATION);
 //			NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_chat_24dp)
 //			                                                                                     .setWhen(0)
 //			                                                                                     .setLargeIcon(BitmapFactory
@@ -117,10 +104,11 @@ public class GCMListenerService extends FirebaseMessagingService {
 	@Override
 	public void onSendError(String s, Exception e) {
 		super.onSendError(s, e);
+		e.printStackTrace();
 	}
 
-	public interface Callbacks {
-		void receiveMessage(String from, Bundle data);
+	public interface Callback {
+		void receiveRemoteMessage(RemoteMessage message);
 	}
 
 }

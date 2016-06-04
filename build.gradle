@@ -41,7 +41,7 @@ ext {
     fabVersion = '1.6.2'
     frescoVersion = '0.9.0'
     retrofitVersion = '2.0.0-beta4'
-    playServicesVersion = '9.0.1'
+    playServicesVersion = '9.0.2'
     scaleImageVersion = '3.4.1'
     glassFishVersion = '10.0-b28'
     rajawali = '1.1.505-SNAPSHOT@aar'

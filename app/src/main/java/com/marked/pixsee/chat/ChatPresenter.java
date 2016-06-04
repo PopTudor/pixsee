@@ -2,6 +2,7 @@ package com.marked.pixsee.chat;
 
 import android.os.Bundle;
 
+import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.chat.data.ChatDatasource;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
@@ -57,6 +58,11 @@ public class ChatPresenter implements ChatContract.Presenter {
 						mView.get().showNoChats();
 					}
 				});
+	}
+
+	@Override
+	public void receiveRemoteMessage(RemoteMessage remoteMessage) {
+
 	}
 
 	@Override

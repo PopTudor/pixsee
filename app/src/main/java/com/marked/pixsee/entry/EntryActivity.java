@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.friends.data.FriendConstants;
 import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.utility.GCMConstants;
 
@@ -30,8 +32,12 @@ public class EntryActivity extends AppCompatActivity {
 		super.onResume();
 		Intent intent;
 //		intent = new Intent(this, SelfieActivity.class);
+
+
 		if (mUserRegistered) {
 			intent = new Intent(this, MainActivity.class);
+			intent.putExtra(MessageConstants.FROM, getIntent().getStringExtra(MessageConstants.FROM));
+			intent.putExtra(FriendConstants.USERNAME, getIntent().getStringExtra(FriendConstants.USERNAME));
 		} else {
 			intent = new Intent(this, AuthActivity.class);
 		}

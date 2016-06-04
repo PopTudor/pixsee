@@ -81,7 +81,7 @@ public class UserRepository implements UserDatasource {
 
     @Override
     public Observable<List<User>> getUsers(String byName) {
-        return disk.getUsers(byName);
+        return network.getUsers(byName);
     }
 
     @Override

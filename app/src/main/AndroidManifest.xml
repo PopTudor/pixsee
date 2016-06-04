@@ -21,6 +21,7 @@
     <!-- <uses-permission android:name="android.permission.USE_CREDENTIALS"/> -->
     <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS"/> -->
     <!-- <uses-permission android:name="android.permission.READ_PROFILE"/> -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -80,6 +81,12 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+                <!--
+                this is used by the server and FCM in the notification when the notification is clicked, it sends the data as an
+                extra in the activities intent
+                https://firebase.google.com/docs/cloud-messaging/downstream#sample-receive
+                -->
+                <action android:name="com.marked.pixsee.FRIEND_REQUEST" />
 
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
