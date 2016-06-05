@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.marked.pixsee.R;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
@@ -42,7 +43,7 @@ public class EntryActivity extends AppCompatActivity {
 			intent = new Intent(this, AuthActivity.class);
 		}
 		/* the intent was sent from FCM for a friend request, add the following extras */
-		if (getIntent().getAction().equals("com.marked.pixsee.FRIEND_REQUEST")) {
+		if (getIntent().getAction().equals(getString(R.string.FRIEND_REQUEST))) {
 			User user = new User(getIntent().getStringExtra(FriendConstants.ID),
 					getIntent().getStringExtra(FriendConstants.NAME),
 					getIntent().getStringExtra(FriendConstants.EMAIL),

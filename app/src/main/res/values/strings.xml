@@ -71,6 +71,7 @@
     <string name="title_item_detail">Item Detail</string>
     <string name="search_hint">Find a friend</string>
     <string name="alert_internet_connection">Check your internet connection !</string>
+    <string name="FRIEND_REQUEST">com.marked.pixsee.FRIEND_REQUEST</string>
 
 
 </resources>

@@ -1,11 +1,14 @@
 package com.marked.pixsee.main;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -18,13 +21,17 @@ import com.marked.pixsee.chat.GCMListenerService;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.entry.EntryActivity;
 import com.marked.pixsee.friends.FriendFragment;
+import com.marked.pixsee.friends.data.FriendConstants;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.main.commands.SelfieCommand;
 import com.marked.pixsee.main.di.DaggerMainComponent;
 import com.marked.pixsee.main.di.MainModule;
 
 import javax.inject.Inject;
+
+import static android.support.v4.app.NotificationCompat.Builder;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View, FriendFragment.FriendFragmentInteractionListener, GCMListenerService.Callback {
 	@Inject
@@ -70,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 	protected void onStart() {
 		super.onStart();
 		mPresenter.start();
+		/* this will enter when the user is not using the app and get's a friend request from FCM */
 		if (getIntent().getIntExtra(MessageConstants.MESSAGE_TYPE, 0) == MessageConstants.MessageType.FRIEND_REQUEST) {
 			User user = getIntent().getParcelableExtra(DatabaseContract.User.TABLE_NAME);
 			mPresenter.friendRequest(user);
@@ -100,9 +108,46 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 //		getSupportFragmentManager().beginTransaction().replace(R.id.cardFragmentContainer, fragment).commit();
 	}
 
+	/**
+	 * This get's called when the user is in the app and get's a notification(friend request)
+	 *
+	 * @param message
+	 */
 	@Override
 	public void receiveRemoteMessage(RemoteMessage message) {
-		Log.d("*** TAG ***", "receiveRemoteMessage: " + message.toString());
+		if (message.getNotification().getClickAction().equals(getString(R.string.FRIEND_REQUEST))) {
+			User user = new User(message.getData().get(FriendConstants.ID),
+					message.getData().get(FriendConstants.NAME),
+					message.getData().get(FriendConstants.EMAIL),
+					message.getData().get(MessageConstants.FROM), null, null,
+					message.getData().get(FriendConstants.ICON_URL),
+					message.getData().get(FriendConstants.USERNAME));
+			Bundle bundle = new Bundle();
+
+			bundle.putInt(MessageConstants.MESSAGE_TYPE,MessageConstants.MessageType.FRIEND_REQUEST);
+			bundle.putParcelable(DatabaseContract.User.TABLE_NAME, user);
+			Builder mBuilder =new NotificationCompat
+							.Builder(this)
+							.setSmallIcon(R.drawable.pixsee_v2)
+							.setContentTitle("My notification")
+							.setContentText("Hello World!");
+			Intent resultIntent = new Intent(this, EntryActivity.class);
+			PendingIntent resultPendingIntent =
+					PendingIntent.getActivity(
+							this,
+							0,
+							resultIntent,
+							PendingIntent.FLAG_UPDATE_CURRENT
+					);
+			int mNotificationId = 001;
+			// Gets an instance of the NotificationManager service
+			NotificationManager mNotifyMgr =
+					(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+// Builds the notification and issues it.
+			mNotifyMgr.notify(mNotificationId, mBuilder.build());
+
+			Log.d("*** TAG ***", "receiveRemoteMessage: " + message.toString());
+		}
 	}
 
 	@Override
