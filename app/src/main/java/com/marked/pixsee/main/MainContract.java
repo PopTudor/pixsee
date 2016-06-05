@@ -3,18 +3,24 @@ package com.marked.pixsee.main;
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.commands.Command;
+import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.friendsInvite.addUsername.data.RequestService;
 
 /**
  * Created by Tudor on 2016-05-27.
  */
 public interface MainContract {
-	interface Presenter extends BasePresenter {
+	interface Presenter extends BasePresenter,RequestService {
 		void execute(Command command);
 
 		void chatClicked();
+
+		void friendRequest(User user, boolean b);
 	}
 
 	interface View extends BaseView<Presenter> {
 		void displayChat(boolean show);
+
+		void showFriendRequestDialog(User user);
 	}
 }

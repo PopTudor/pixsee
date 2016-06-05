@@ -91,6 +91,13 @@ public class UserRepository implements UserDatasource {
         cache.addAll(users);
     }
 
+	@Override
+	public Observable saveUser(@NonNull User item) {
+		cache.add(item);
+		disk.saveUser(item);
+		return network.saveUser(item);
+	}
+
     @Override
     public Observable<List<User>> refreshUsers() {
         clear();
@@ -127,13 +134,6 @@ public class UserRepository implements UserDatasource {
 	public User getUser(@NonNull String tablename) {
 		return disk.getUser(tablename);
 	}
-
-	@Override
-    public void saveUser(@NonNull User item) {
-        network.saveUser(item);
-        disk.saveUser(item);
-        cache.set(cache.indexOf(item), item);
-    }
 
     @Override
     public void deleteAllUsers() {

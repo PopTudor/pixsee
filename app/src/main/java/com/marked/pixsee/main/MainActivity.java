@@ -1,29 +1,32 @@
 package com.marked.pixsee.main;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.ChatActivity;
 import com.marked.pixsee.chat.GCMListenerService;
-import com.marked.pixsee.friends.FriendFragment;
+import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
-import com.marked.pixsee.friends.data.FriendConstants;
+import com.marked.pixsee.friends.FriendFragment;
+import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.main.commands.SelfieCommand;
 import com.marked.pixsee.main.di.DaggerMainComponent;
 import com.marked.pixsee.main.di.MainModule;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View,FriendFragment.FriendFragmentInteractionListener, GCMListenerService.Callback {
+public class MainActivity extends AppCompatActivity implements MainContract.View, FriendFragment.FriendFragmentInteractionListener, GCMListenerService.Callback {
 	@Inject
 	MainContract.Presenter mPresenter;
 
@@ -39,12 +42,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		setContentView(R.layout.activity_main);
 		GCMListenerService.addCallback(this);
 
-		DaggerMainComponent.builder().mainModule(new MainModule(this)).build().inject(this);
+		DaggerMainComponent.builder()
+				.activityModule(new ActivityModule(this))
+				.mainModule(new MainModule(this))
+				.build()
+				.inject(this);
 		mainContainer = (FrameLayout) findViewById(R.id.mainContainer);
 		mChatImageButton = (ImageButton) findViewById(R.id.chatImageButton);
 		mSelfieImageButton = (ImageButton) findViewById(R.id.selfieImageButton);
 		mProfileImageButton = (ImageButton) findViewById(R.id.profileImageButton);
-
 
 		mChatImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -64,7 +70,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 	protected void onStart() {
 		super.onStart();
 		mPresenter.start();
-		Toast.makeText(MainActivity.this, getIntent().getStringExtra(FriendConstants.USERNAME), Toast.LENGTH_SHORT).show();
+		if (getIntent().getIntExtra(MessageConstants.MESSAGE_TYPE, 0) == MessageConstants.MessageType.FRIEND_REQUEST) {
+			User user = getIntent().getParcelableExtra(DatabaseContract.User.TABLE_NAME);
+			mPresenter.friendRequest(user);
+		}
 	}
 
 	@Override
@@ -93,7 +102,28 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 	@Override
 	public void receiveRemoteMessage(RemoteMessage message) {
-		Log.d("*** TAG ***", "receiveRemoteMessage: "+message.toString());
+		Log.d("*** TAG ***", "receiveRemoteMessage: " + message.toString());
+	}
+
+	@Override
+	public void showFriendRequestDialog(final User user) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this)
+				.setCancelable(false)
+				.setTitle("Friend Request")
+				.setMessage(String.format("Accept friend request from %s?", user.getName()));
+
+		builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				mPresenter.friendRequest(user, true);
+			}
+		});
+		builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				mPresenter.friendRequest(user, false);
+			}
+		});
+		AlertDialog dialog = builder.create();
+		dialog.show();
 	}
 
 	@Override

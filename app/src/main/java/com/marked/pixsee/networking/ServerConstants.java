@@ -15,6 +15,8 @@ public interface ServerConstants {
 	String USERS = "users";
 
 	String FRIENDS = "friends";
+	String FRIENDS_ACCEPTED = FRIENDS+"/accepted";
+	String FRIENDS_REJECTED = FRIENDS+"/rejected";
 	String MESSAGES = "messages";
 	String USER_FRIENDS = USER +"/"+"friends";
 	String RECOVERY = "recovery";

@@ -2,6 +2,7 @@ package com.marked.pixsee.data.repository.user;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -30,8 +31,8 @@ import rx.schedulers.Schedulers;
  */
 public class UserNetworkDatasource implements UserDatasource {
 	private final HttpLoggingInterceptor loggingInterceptor;
-	private final OkHttpClient httpClient ;
-	private final Retrofit retrofit ;
+	private final OkHttpClient httpClient;
+	private final Retrofit retrofit;
 	private final String userid;
 	private final Gson gson = new Gson();
 
@@ -39,14 +40,14 @@ public class UserNetworkDatasource implements UserDatasource {
 		loggingInterceptor = new HttpLoggingInterceptor();
 		loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 		httpClient = new OkHttpClient.Builder()
-				               .addInterceptor(loggingInterceptor)
-				               .build();
+				.addInterceptor(loggingInterceptor)
+				.build();
 		retrofit = new Retrofit.Builder()
-				  .baseUrl(ServerConstants.SERVER)
-				  .addConverterFactory(GsonConverterFactory.create())
-				  .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-				  .client(httpClient)
-				  .build();
+				.baseUrl(ServerConstants.SERVER)
+				.addConverterFactory(GsonConverterFactory.create())
+				.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+				.client(httpClient)
+				.build();
 
 		userid = sharedPreferences.getString(GCMConstants.USER_ID, "");
 	}
@@ -55,7 +56,7 @@ public class UserNetworkDatasource implements UserDatasource {
 	 * Get users by email that start with the parameter
 	 *
 	 * @param startingWith the email starts with this string
-	 * */
+	 */
 	@Override
 	public Observable<List<User>> getUsers(String startingWith) {
 		return retrofit.create(AddUserAPI.class)
@@ -101,7 +102,7 @@ public class UserNetworkDatasource implements UserDatasource {
 				.map(new Func1<JsonArray, List<User>>() {
 					@Override
 					public List<User> call(JsonArray jsonElements) {
-						final List<User> cache=new ArrayList<User>();
+						final List<User> cache = new ArrayList<User>();
 						for (JsonElement it : jsonElements)
 							cache.add(gson.fromJson(it.toString(), User.class));
 						return cache;
@@ -122,8 +123,17 @@ public class UserNetworkDatasource implements UserDatasource {
 
 
 	@Override
-	public void saveUser(@NonNull User User) {
-
+	public Observable saveUser(@NonNull User user) {
+		return retrofit.create(FriendsAPI.class)
+				.friendAccepted(user.getUserID(),userid)
+				.subscribeOn(Schedulers.io())
+				.map(new Func1<JsonObject, Object>() {
+					@Override
+					public Object call(JsonObject jsonObject) {
+						Log.d("*** TAG ***", "call: " + jsonObject.getAsString());
+						return null;
+					}
+				});
 	}
 
 	@Override

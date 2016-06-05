@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.data.database.DatabaseContract;
+import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.friends.data.FriendConstants;
 import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.utility.GCMConstants;
@@ -36,10 +38,20 @@ public class EntryActivity extends AppCompatActivity {
 
 		if (mUserRegistered) {
 			intent = new Intent(this, MainActivity.class);
-			intent.putExtra(MessageConstants.FROM, getIntent().getStringExtra(MessageConstants.FROM));
-			intent.putExtra(FriendConstants.USERNAME, getIntent().getStringExtra(FriendConstants.USERNAME));
 		} else {
 			intent = new Intent(this, AuthActivity.class);
+		}
+		/* the intent was sent from FCM for a friend request, add the following extras */
+		if (getIntent().getAction().equals("com.marked.pixsee.FRIEND_REQUEST")) {
+			User user = new User(getIntent().getStringExtra(FriendConstants.ID),
+					getIntent().getStringExtra(FriendConstants.NAME),
+					getIntent().getStringExtra(FriendConstants.EMAIL),
+					getIntent().getStringExtra(MessageConstants.FROM), null, null,
+					getIntent().getStringExtra(FriendConstants.ICON_URL),
+					getIntent().getStringExtra(FriendConstants.USERNAME));
+
+			intent.putExtra(MessageConstants.MESSAGE_TYPE, MessageConstants.MessageType.FRIEND_REQUEST);
+			intent.putExtra(DatabaseContract.User.TABLE_NAME, user);
 		}
 		startActivity(intent);
 		finish();

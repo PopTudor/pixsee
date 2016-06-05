@@ -4,7 +4,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.data.repository.user.User;
-import com.marked.pixsee.friends.data.FriendContractDB;
+import com.marked.pixsee.friends.data.FriendConstants;
 
 import java.util.UUID;
 
@@ -33,7 +33,11 @@ class NetworkService implements com.marked.pixsee.friendsInvite.addUsername.data
 		RemoteMessage remoteMessage = new RemoteMessage.Builder(senderID + "@gcm.googleapis.com")
 				.setMessageId(msgId)
 				.setMessageType("friend_request")
-				.addData(FriendContractDB.COLUMN_USERNAME,thisUser.getUsername())
+				.addData(FriendConstants.ID,thisUser.getUserID())
+				.addData(FriendConstants.USERNAME,thisUser.getUsername())
+				.addData(FriendConstants.ICON_URL,thisUser.getIconUrl())
+				.addData(FriendConstants.NAME,thisUser.getName())
+				.addData(FriendConstants.EMAIL,thisUser.getEmail())
 				.addData(Message.TO,token)
 				.build();
 		fm.send(remoteMessage);

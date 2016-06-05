@@ -7,4 +7,5 @@ import com.marked.pixsee.data.repository.user.User;
  */
 public interface RequestService {
 	void friendRequest(User user);
+
 }

@@ -61,5 +61,7 @@ public interface MessageConstants {
 		int ME_IMAGE = 2;
 		int YOU_IMAGE = 3;
 		int TYPING = 4;
+
+		int FRIEND_REQUEST = 5;
 	}
 }
