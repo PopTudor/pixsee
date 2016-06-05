@@ -39,5 +39,7 @@ public interface FriendsContract {
 		void showNoFriends();
 
 		void showNoInternetConnection();
+
+		void hideLoading();
 	}
 }

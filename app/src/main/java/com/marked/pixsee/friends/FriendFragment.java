@@ -145,12 +145,19 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 
 	@Override
 	public void showNoFriends() {
+		Toast.makeText(getActivity(),"Life is more fun with friends...invite some !",Toast.LENGTH_SHORT).show();
+		mFriendsAdapter.notifyDataSetChanged();
 		mSwipeRefreshLayout.setRefreshing(false);
 	}
 
 	@Override
 	public void showNoInternetConnection() {
 		Toast.makeText(getActivity(), R.string.alert_internet_connection, Toast.LENGTH_SHORT).show();
+		mSwipeRefreshLayout.setRefreshing(false);
+	}
+
+	@Override
+	public void hideLoading() {
 		mSwipeRefreshLayout.setRefreshing(false);
 	}
 

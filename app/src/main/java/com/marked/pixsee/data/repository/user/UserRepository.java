@@ -105,7 +105,6 @@ public class UserRepository implements UserDatasource {
 		        .flatMap(new Func1<List<User>, Observable<User>>() {
 			        @Override
 			        public Observable<User> call(List<User> users) {
-				        disk.saveUser(users);
 				        return Observable.from(users);
 			        }
 		        })
@@ -119,6 +118,8 @@ public class UserRepository implements UserDatasource {
 			        @Override
 			        public void call() {
 				        dirtyCache = false;
+				        disk.deleteAllUsers();
+				        disk.saveUser(cache);
 			        }
 		        })
 		        .subscribeOn(Schedulers.io())
