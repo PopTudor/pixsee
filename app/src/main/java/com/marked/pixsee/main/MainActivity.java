@@ -1,14 +1,15 @@
 package com.marked.pixsee.main;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -31,7 +32,7 @@ import com.marked.pixsee.main.di.MainModule;
 
 import javax.inject.Inject;
 
-import static android.support.v4.app.NotificationCompat.Builder;
+import static android.support.v4.app.NotificationCompat.FLAG_AUTO_CANCEL;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View, FriendFragment.FriendFragmentInteractionListener, GCMListenerService.Callback {
 	@Inject
@@ -122,31 +123,43 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 					message.getData().get(MessageConstants.FROM), null, null,
 					message.getData().get(FriendConstants.ICON_URL),
 					message.getData().get(FriendConstants.USERNAME));
-			Bundle bundle = new Bundle();
 
-			bundle.putInt(MessageConstants.MESSAGE_TYPE,MessageConstants.MessageType.FRIEND_REQUEST);
-			bundle.putParcelable(DatabaseContract.User.TABLE_NAME, user);
-			Builder mBuilder =new NotificationCompat
-							.Builder(this)
-							.setSmallIcon(R.drawable.pixsee_v2)
-							.setContentTitle("My notification")
-							.setContentText("Hello World!");
 			Intent resultIntent = new Intent(this, EntryActivity.class);
-			PendingIntent resultPendingIntent =
-					PendingIntent.getActivity(
-							this,
-							0,
-							resultIntent,
-							PendingIntent.FLAG_UPDATE_CURRENT
-					);
-			int mNotificationId = 001;
+			resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+			resultIntent.setAction(getString(R.string.FRIEND_REQUEST));
+			resultIntent.putExtra(FriendConstants.ID, user.getUserID());
+			resultIntent.putExtra(FriendConstants.NAME, user.getName());
+			resultIntent.putExtra(FriendConstants.EMAIL, user.getEmail());
+			resultIntent.putExtra(MessageConstants.FROM, user.getToken());
+			resultIntent.putExtra(FriendConstants.ICON_URL, user.getIconUrl());
+			resultIntent.putExtra(FriendConstants.USERNAME, user.getUsername());
+
+			PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+			NotificationCompat.Builder mBuilder = new NotificationCompat
+					.Builder(this)
+					.setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE|FLAG_AUTO_CANCEL)
+					.setAutoCancel(true)
+					.setSmallIcon(R.drawable.pixsee_v2)
+					.setContentTitle(message.getNotification().getTitle())
+					.setContentText(message.getNotification().getBody());
+			mBuilder.setContentIntent(resultPendingIntent);
+
 			// Gets an instance of the NotificationManager service
-			NotificationManager mNotifyMgr =
-					(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-// Builds the notification and issues it.
-			mNotifyMgr.notify(mNotificationId, mBuilder.build());
+			NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			// Builds the notification and issues it.
+			mNotifyMgr.notify(1, mBuilder.build());
 
 			Log.d("*** TAG ***", "receiveRemoteMessage: " + message.toString());
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		if (getIntent().getIntExtra(MessageConstants.MESSAGE_TYPE, 0) == MessageConstants.MessageType.FRIEND_REQUEST) {
+			User user = getIntent().getParcelableExtra(DatabaseContract.User.TABLE_NAME);
+			mPresenter.friendRequest(user);
 		}
 	}
 
@@ -160,11 +173,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				mPresenter.friendRequest(user, true);
+				finish();
 			}
 		});
 		builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				mPresenter.friendRequest(user, false);
+				finish();
 			}
 		});
 		AlertDialog dialog = builder.create();

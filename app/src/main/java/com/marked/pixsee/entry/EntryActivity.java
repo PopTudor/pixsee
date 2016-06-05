@@ -39,6 +39,7 @@ public class EntryActivity extends AppCompatActivity {
 
 		if (mUserRegistered) {
 			intent = new Intent(this, MainActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		} else {
 			intent = new Intent(this, AuthActivity.class);
 		}

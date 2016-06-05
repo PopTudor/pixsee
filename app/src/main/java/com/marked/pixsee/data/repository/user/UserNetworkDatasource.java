@@ -2,7 +2,6 @@ package com.marked.pixsee.data.repository.user;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -126,14 +125,7 @@ public class UserNetworkDatasource implements UserDatasource {
 	public Observable saveUser(@NonNull User user) {
 		return retrofit.create(FriendsAPI.class)
 				.friendAccepted(user.getUserID(),userid)
-				.subscribeOn(Schedulers.io())
-				.map(new Func1<JsonObject, Object>() {
-					@Override
-					public Object call(JsonObject jsonObject) {
-						Log.d("*** TAG ***", "call: " + jsonObject.getAsString());
-						return null;
-					}
-				});
+				.subscribeOn(Schedulers.io());
 	}
 
 	@Override
