@@ -73,13 +73,11 @@ public class FriendPresenter implements FriendsContract.Presenter {
 					.subscribe(new Action1<List<User>>() {
 						           @Override
 						           public void call(List<User> users) {
-							           if (users.size()==0)
+							           if (users.size() == 0)
 								           mView.get().showNoFriends();
-							           else {
-								           mView.get().setRecyclerViewVisibility(View.VISIBLE);
-								           mView.get().onFriendsReplace(users);
-								           size = users.size();
-							           }
+							           mView.get().setRecyclerViewVisibility(View.VISIBLE);
+							           mView.get().onFriendsReplace(users);
+							           size = users.size();
 						           }
 					           }
 							, new Action1<Throwable>() {
