@@ -30,16 +30,13 @@ def versionMinor = 0
 def versionPatch = 0
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    sourceSets.main {
-        jni.srcDirs = []
-        jniLibs.srcDir "$VUFORIA_SDK_DIR/$NATIVE_LIB_DIR/"
-    }
+    compileSdkVersion 23
+    buildToolsVersion '23.0.3'
+
     defaultConfig {
         applicationId 'com.marked.pixsee'
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion 16
+        targetSdkVersion 23
         versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch * 10
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -86,9 +83,6 @@ android {
 }
 
 dependencies {
-    def dependency = rootProject.ext
-    def app = dependency.dependencies
-    def test = dependency.testDependencies
     compile('io.socket:socket.io-client:0.6.3') {
         exclude group: 'org.json', module: 'json'
     }
@@ -96,49 +90,52 @@ dependencies {
         transitive = true;
     }
 
-    compile app.supportAppcompat
-    compile app.gcmService
-    compile app.visionService
-    compile app.supportRecyclerView
-    compile app.supportDesign
-    compile app.chatMessageView
-    compile app.dilatingProgressBar
-    compile app.fab
-    compile app.fresco
-    compile app.frescoImgPipeline
-    compile app.rxAndroid
-    compile app.retrofit
-    compile app.retrofitConverterGson
-    compile app.retrofitRX
-    compile app.okHttpLogger
-    compile app.subSamplingScaleImage
-    compile app.visionService
-    compile app.dagger
-    compile app.rajawali
-    compile app.rxPermissions
-    compile app.facebook
+    compile "com.android.support:appcompat-v7:23.4.0"
+    compile "com.android.support:recyclerview-v7:23.4.0"
+    compile "com.android.support:design:23.4.0"
+    compile "com.google.firebase:firebase-messaging:9.0.2"
+    compile "com.google.android.gms:play-services-vision:9.0.2"
+    compile "me.himanshusoni.chatmessageview:chat-message-view:1.0.3"
+    compile "com.github.justzak:dilatingdotsprogressbar:1.0.1"
+    compile "com.github.clans:fab:1.6.2"
+    compile "com.facebook.fresco:fresco:0.9.0"
+    compile "com.facebook.fresco:imagepipeline-okhttp:0.9.0"
+    compile "io.reactivex:rxjava:1.1.5"
+    compile "io.reactivex:rxandroid:1.2.0"
+    compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
+    compile "com.squareup.retrofit2:retrofit:2.0.0-beta4"
+    compile "com.squareup.retrofit2:converter-gson:2.0.0-beta4"
+    compile "com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4"
+    compile "com.squareup.okhttp3:logging-interceptor:3.2.0"
+    compile "com.davemorrissey.labs:subsampling-scale-image-view:3.4.1"
+    compile "com.google.dagger:dagger:2.2"
 
+    compile "org.rajawali3d:rajawali:1.1.505-SNAPSHOT@aar"
+    compile "com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar"
+    compile "com.facebook.android:facebook-android-sdk:[4,5]"
 
-    apt app.daggerCompiler
-    provided app.daggerCompiler
-    provided app.glassFishAnnotations
-
-    //testing
-    testCompile test.jUnit
-    testCompile test.mockito
-    testCompile test.hamcrest
-    // Espresso UI Testing dependencies.
-    androidTestCompile test.espressoCore
-    androidTestCompile test.espressoIntents
-    androidTestCompile test.espressoContrib
-    androidTestCompile test.mockito
-    androidTestCompile test.supportAnnotation
-    androidTestCompile test.runner
-    androidTestCompile test.rules
     compile 'com.aurelhubert:ahbottomnavigation:1.2.3'
     compile 'tyrantgit:explosionfield:1.0.1'
-    compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
 
+    apt "com.google.dagger:dagger-compiler:2.2"
+    provided "com.google.dagger:dagger-compiler:2.2"
+    provided "org.glassfish:javax.annotation:10.0-b28"
+
+    //testing
+    testCompile "junit:junit:4.12"
+    testCompile "org.mockito:mockito-core:1.10.19"
+    testCompile "org.hamcrest:hamcrest-core:1.3"
+    // Espresso UI Testing dependencies.
+    androidTestCompile "com.android.support.test:runner:0.5"
+    androidTestCompile "com.android.support.test:rules:0.5"
+    androidTestCompile "com.android.support:support-annotations:23.4.0"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:2.2.2"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:2.2.2"
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.2'){
+        exclude group: 'com.android.support'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'support-annotations'
+    }
 }
 
 
