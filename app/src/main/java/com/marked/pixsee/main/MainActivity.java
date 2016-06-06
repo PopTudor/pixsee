@@ -5,17 +5,18 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.ChatActivity;
@@ -46,12 +47,6 @@ public class MainActivity
 	@Inject
 	MainContract.Presenter mPresenter;
 
-	private FrameLayout mainContainer;
-	private ImageButton mChatImageButton;
-	private ImageButton mSelfieImageButton;
-	private ImageButton mProfileImageButton;
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,27 +58,41 @@ public class MainActivity
 				.mainModule(new MainModule(this))
 				.build()
 				.inject(this);
-		mainContainer = (FrameLayout) findViewById(R.id.mainContainer);
-		mChatImageButton = (ImageButton) findViewById(R.id.chatImageButton);
-		mSelfieImageButton = (ImageButton) findViewById(R.id.selfieImageButton);
-		mProfileImageButton = (ImageButton) findViewById(R.id.profileImageButton);
+		AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.toolbarMenuContainer);
+		// Create items
+		AHBottomNavigationItem item1 = new AHBottomNavigationItem(
+				"Chats", ContextCompat.getDrawable(this, R.drawable.ic_chat_24dp), ContextCompat.getColor(this, R.color.white));
+		AHBottomNavigationItem item2 = new AHBottomNavigationItem(
+				"Camera",ContextCompat.getDrawable(this,  R.drawable.ic_photo_camera_24dp), ContextCompat.getColor(this, R.color.white));
+		AHBottomNavigationItem item3 = new AHBottomNavigationItem(
+				"Profile", ContextCompat.getDrawable(this,R.drawable.ic_person_24dp), ContextCompat.getColor(this, R.color.white));
 
-		mChatImageButton.setOnClickListener(new View.OnClickListener() {
+		// Add items
+		bottomNavigation.addItem(item1);
+		bottomNavigation.addItem(item2);
+		bottomNavigation.addItem(item3);
+
+		bottomNavigation.setDefaultBackgroundColor(Color.WHITE);
+		bottomNavigation.setAccentColor(ContextCompat.getColor(this,R.color.primary));
+		bottomNavigation.setInactiveColor(ContextCompat.getColor(this,R.color.dark_inactive_icons));
+
+		bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 			@Override
-			public void onClick(View v) {
-				mPresenter.chatClicked();
-			}
-		});
-		mSelfieImageButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mPresenter.cameraClicked(-1);
-			}
-		});
-		mProfileImageButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mPresenter.profileClicked();
+			public void onTabSelected(int position, boolean wasSelected) {
+				switch (position){
+					case 0:
+						if (!wasSelected)
+							mPresenter.chatClicked();
+						break;
+					case 1:
+						if (!wasSelected)
+							mPresenter.cameraClicked(-1);
+						break;
+					case 2:
+						if (!wasSelected)
+							mPresenter.profileClicked();
+						break;
+				}
 			}
 		});
 		mPresenter.start();
@@ -111,7 +120,7 @@ public class MainActivity
 	public void showCamera(int requestCode) {
 		Intent intent = new Intent(this, SelfieActivity.class);
 		intent.putExtra(START_CAMERA_REQUEST_CODE_EXTRA, requestCode);
-		startActivityForResult(intent,requestCode);
+		startActivityForResult(intent, requestCode);
 	}
 
 	@Override
@@ -124,7 +133,7 @@ public class MainActivity
 		if (requestCode == START_CAMERA_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 
-			}else {
+			} else {
 				Toast.makeText(this, "The picture could not be taken !", Toast.LENGTH_SHORT).show();
 			}
 		}
@@ -175,10 +184,10 @@ public class MainActivity
 			resultIntent.putExtra(FriendConstants.ICON_URL, user.getIconUrl());
 			resultIntent.putExtra(FriendConstants.USERNAME, user.getUsername());
 
-			PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+			PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			NotificationCompat.Builder mBuilder = new NotificationCompat
 					.Builder(this)
-					.setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE|FLAG_AUTO_CANCEL)
+					.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | FLAG_AUTO_CANCEL)
 					.setAutoCancel(true)
 					.setSmallIcon(R.drawable.pixsee_v2)
 					.setContentTitle(message.getNotification().getTitle())

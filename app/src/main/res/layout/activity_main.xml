@@ -24,47 +24,11 @@
 
     </LinearLayout>
 
-
-    <LinearLayout
+    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/toolbarMenuContainer"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="#fff"
-        android:orientation="horizontal"
-        android:weightSum="3">
-
-        <ImageButton
-            android:id="@+id/chatImageButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/transparent"
-            android:clickable="true"
-            android:src="@drawable/ic_chat_24dp"
-            android:tint="@color/primary"/>
-
-        <ImageButton
-            android:id="@+id/selfieImageButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:alpha="0.30"
-            android:background="@color/transparent"
-            android:clickable="true"
-            android:src="@drawable/ic_photo_camera_24dp"
-            android:tint="@color/primary"/>
-
-        <ImageButton
-            android:id="@+id/profileImageButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:alpha="0.30"
-            android:background="@color/transparent"
-            android:clickable="true"
-            android:src="@drawable/ic_person_24dp"
-            android:tint="@color/primary"/>
-    </LinearLayout>
+        />
 </RelativeLayout>

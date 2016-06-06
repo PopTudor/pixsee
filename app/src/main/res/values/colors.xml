@@ -31,6 +31,11 @@
     <color name="black_overlay">#66000000</color>
     <color name="secondary_text">#727272</color>
 
+    <color name="black">#000000</color>
+    <!-- https://www.google.com/design/spec/style/color.html#color-text-background-colors -->
+    <color name="dark_active_icons">#8a000000</color>
+    <color name="dark_inactive_icons">#61000000</color>
+
 
 
 </resources>
