@@ -5,7 +5,7 @@
     <color name="primary_dark">#4A148C</color>
     <color name="accent">#ffcf40</color>
     <color name="accent_dark">#000000</color>
-    <color name="accent_light">#FFD180</color>
+    <color name="accent_light">#ffd180</color>
 
     <!-- CHAT COLORS -->
     <color name="teal">#009688</color>

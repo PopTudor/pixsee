@@ -1,13 +1,91 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.marked.pixsee.profile.ProfileFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:animateLayoutChanges="true"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                tools:context="com.marked.pixsee.profile.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        android:elevation="0dp"
+        app:elevation="0dp"
+        android:layout_height="200dp">
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:id="@+id/toolbar"
+            android:background="@color/primary"
+            android:elevation="0dp"
+            app:elevation="0dp"
+            android:layout_height="56dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp">
 
-</FrameLayout>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        fresco:roundAsCircle="true"
+        fresco:placeholderImage="@drawable/ic_photo_camera_24dp"
+        fresco:roundingBorderWidth="4dp"
+        fresco:roundingBorderColor="#FAFAFA"
+        fresco:backgroundImage="@color/light_gray"
+        android:id="@+id/view3"
+        android:layout_below="@+id/app_bar"
+        android:layout_marginTop="-60dp"
+        android:layout_marginLeft="16dp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Log out"
+        android:id="@+id/logoutButton"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:text="Name"
+        android:id="@+id/nameTextview"
+        android:layout_alignLeft="@+id/view3"
+        android:layout_alignStart="@+id/view3"
+        android:layout_alignRight="@+id/view3"
+        android:layout_alignEnd="@+id/view3"
+        android:layout_below="@+id/view3"
+        android:layout_marginTop="8dp"
+        android:maxLines="2"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="username"
+        android:id="@+id/usernameTextview"
+        android:layout_below="@+id/nameTextview"
+        android:layout_alignLeft="@+id/nameTextview"
+        android:layout_alignStart="@+id/nameTextview"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/inviteFriendsImageButton"
+        android:layout_alignBottom="@+id/view3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:elevation="0dp"
+        android:src="@drawable/ic_person_add_24dp"
+        android:layout_marginRight="16dp"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:background="@drawable/round_corner_button"/>
+
+</RelativeLayout>

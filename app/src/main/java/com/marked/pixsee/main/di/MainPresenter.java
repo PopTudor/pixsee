@@ -1,6 +1,7 @@
 package com.marked.pixsee.main.di;
 
 import com.marked.pixsee.commands.Command;
+import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.data.repository.user.UserDatasource;
 import com.marked.pixsee.data.repository.user.UserRepository;
@@ -61,5 +62,11 @@ class MainPresenter implements MainContract.Presenter {
 	@Override
 	public void execute(Command command) {
 		command.execute();
+	}
+
+	@Override
+	public void profileClicked() {
+		User user = mRepository.getUser(DatabaseContract.User.TABLE_NAME);
+		mWeakView.get().showProfile(user);
 	}
 }

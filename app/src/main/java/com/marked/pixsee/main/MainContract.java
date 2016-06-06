@@ -15,12 +15,17 @@ public interface MainContract {
 
 		void chatClicked();
 
+		void profileClicked();
+
 		void friendRequest(User user, boolean b);
+
 	}
 
 	interface View extends BaseView<Presenter> {
 		void displayChat(boolean show);
 
 		void showFriendRequestDialog(User user);
+
+		void showProfile(User user);
 	}
 }

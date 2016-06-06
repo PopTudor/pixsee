@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    tools:context=".main.MainActivity">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
+                tools:context=".main.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_above="@+id/toolbarMenuContainer">
+        android:layout_above="@+id/toolbarMenuContainer"
+        android:orientation="vertical">
 
         <FrameLayout
             android:id="@+id/mainContainer"
@@ -24,46 +25,46 @@
     </LinearLayout>
 
 
-        <LinearLayout
-            android:id="@+id/toolbarMenuContainer"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="#fff"
-            android:orientation="horizontal"
-            android:weightSum="3">
+    <LinearLayout
+        android:id="@+id/toolbarMenuContainer"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#fff"
+        android:orientation="horizontal"
+        android:weightSum="3">
 
-            <ImageButton
-                android:id="@+id/chatImageButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/transparent"
-                android:clickable="true"
-                android:src="@drawable/ic_chat_24dp"
-                android:tint="@color/primary" />
+        <ImageButton
+            android:id="@+id/chatImageButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:src="@drawable/ic_chat_24dp"
+            android:tint="@color/primary"/>
 
-            <ImageButton
-                android:id="@+id/selfieImageButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:alpha="0.30"
-                android:background="@color/transparent"
-                android:clickable="true"
-                android:src="@drawable/ic_photo_camera_24dp"
-                android:tint="@color/primary" />
+        <ImageButton
+            android:id="@+id/selfieImageButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alpha="0.30"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:src="@drawable/ic_photo_camera_24dp"
+            android:tint="@color/primary"/>
 
-            <ImageButton
-                android:id="@+id/profileImageButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:alpha="0.30"
-                android:background="@color/transparent"
-                android:clickable="true"
-                android:src="@drawable/ic_person_24dp"
-                android:tint="@color/primary" />
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/profileImageButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alpha="0.30"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:src="@drawable/ic_person_24dp"
+            android:tint="@color/primary"/>
+    </LinearLayout>
 </RelativeLayout>

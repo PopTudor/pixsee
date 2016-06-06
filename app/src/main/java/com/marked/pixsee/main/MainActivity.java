@@ -29,12 +29,14 @@ import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.main.commands.SelfieCommand;
 import com.marked.pixsee.main.di.DaggerMainComponent;
 import com.marked.pixsee.main.di.MainModule;
+import com.marked.pixsee.profile.ProfileFragment;
 
 import javax.inject.Inject;
 
 import static android.support.v4.app.NotificationCompat.FLAG_AUTO_CANCEL;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View, FriendFragment.FriendFragmentInteractionListener, GCMListenerService.Callback {
+public class MainActivity extends AppCompatActivity implements MainContract.View, FriendFragment
+.FriendFragmentInteractionListener, GCMListenerService.Callback {
 	@Inject
 	MainContract.Presenter mPresenter;
 
@@ -72,17 +74,31 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 				mPresenter.execute(new SelfieCommand(MainActivity.this));
 			}
 		});
+		mProfileImageButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mPresenter.profileClicked();
+			}
+		});
+		mPresenter.start();
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		mPresenter.start();
 		/* this will enter when the user is not using the app and get's a friend request from FCM */
 		if (getIntent().getIntExtra(MessageConstants.MESSAGE_TYPE, 0) == MessageConstants.MessageType.FRIEND_REQUEST) {
 			User user = getIntent().getParcelableExtra(DatabaseContract.User.TABLE_NAME);
 			mPresenter.friendRequest(user);
 		}
+	}
+
+	@Override
+	public void showProfile(User user) {
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.mainContainer, ProfileFragment.newInstance(user))
+				.commit();
 	}
 
 	@Override
@@ -191,4 +207,5 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		GCMListenerService.clear();
 		super.onDestroy();
 	}
+
 }
