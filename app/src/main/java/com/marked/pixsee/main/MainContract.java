@@ -19,13 +19,16 @@ public interface MainContract {
 
 		void friendRequest(User user, boolean b);
 
+		void cameraClicked(int requestCode);
 	}
 
 	interface View extends BaseView<Presenter> {
-		void displayChat(boolean show);
+		void showChat(boolean show);
 
 		void showFriendRequestDialog(User user);
 
 		void showProfile(User user);
+
+		void showCamera(int requestCode);
 	}
 }

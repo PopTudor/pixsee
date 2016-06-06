@@ -3,8 +3,10 @@ package com.marked.pixsee.profile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -12,12 +14,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.entry.EntryActivity;
 import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
+import com.marked.pixsee.main.MainActivity;
 
 public class ProfileFragment extends Fragment {
 	private static String USER_EXTRA = "PROFILE_FRAGMENT_USER";
@@ -46,6 +52,11 @@ public class ProfileFragment extends Fragment {
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
+		try {
+			mProfileInteraction = (ProfileInteraction) context;
+		}catch (ClassCastException e){
+			e.printStackTrace();
+		}
 		mUser = getArguments().getParcelable(USER_EXTRA);
 	}
 
@@ -67,9 +78,32 @@ public class ProfileFragment extends Fragment {
 				getActivity().startActivity(intent);
 			}
 		});
+		((SimpleDraweeView)rootView.findViewById(R.id.iconSimpleDraweeView)).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mProfileInteraction.onCameraClick(MainActivity.START_CAMERA_REQUEST_CODE);
+			}
+		});
+		((Button)rootView.findViewById(R.id.logoutButton)).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+				SharedPreferences.Editor editor = preferences.edit();
+				editor.clear();
+				editor.commit();
+				Intent intent = new Intent(getActivity(), EntryActivity.class);
+				getActivity().startActivity(intent);
+				getActivity().finish();
+			}
+		});
 
 		// Inflate the layout for this fragment
 		return rootView ;
 	}
 
+	private ProfileInteraction mProfileInteraction;
+
+	public interface ProfileInteraction{
+		void onCameraClick(int requestCode);
+	}
 }

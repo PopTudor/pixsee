@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.R;
@@ -23,10 +24,10 @@ import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.entry.EntryActivity;
+import com.marked.pixsee.face.SelfieActivity;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.friends.data.FriendConstants;
 import com.marked.pixsee.injection.modules.ActivityModule;
-import com.marked.pixsee.main.commands.SelfieCommand;
 import com.marked.pixsee.main.di.DaggerMainComponent;
 import com.marked.pixsee.main.di.MainModule;
 import com.marked.pixsee.profile.ProfileFragment;
@@ -35,8 +36,13 @@ import javax.inject.Inject;
 
 import static android.support.v4.app.NotificationCompat.FLAG_AUTO_CANCEL;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View, FriendFragment
-.FriendFragmentInteractionListener, GCMListenerService.Callback {
+public class MainActivity
+		extends AppCompatActivity
+		implements MainContract.View,
+		FriendFragment.FriendFragmentInteractionListener,
+		GCMListenerService.Callback, ProfileFragment.ProfileInteraction {
+	public static final int START_CAMERA_REQUEST_CODE = 100;
+	public static final String START_CAMERA_REQUEST_CODE_EXTRA = "request_code_extra";
 	@Inject
 	MainContract.Presenter mPresenter;
 
@@ -71,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		mSelfieImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mPresenter.execute(new SelfieCommand(MainActivity.this));
+				mPresenter.cameraClicked(-1);
 			}
 		});
 		mProfileImageButton.setOnClickListener(new View.OnClickListener() {
@@ -102,12 +108,30 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 	}
 
 	@Override
+	public void showCamera(int requestCode) {
+		Intent intent = new Intent(this, SelfieActivity.class);
+		intent.putExtra(START_CAMERA_REQUEST_CODE_EXTRA, requestCode);
+		startActivityForResult(intent,requestCode);
+	}
+
+	@Override
 	public void setPresenter(MainContract.Presenter presenter) {
 		mPresenter = presenter;
 	}
 
 	@Override
-	public void displayChat(boolean show) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == START_CAMERA_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+
+			}else {
+				Toast.makeText(this, "The picture could not be taken !", Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
+
+	@Override
+	public void showChat(boolean show) {
 		Fragment fragment = FriendFragment.newInstance();
 		getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, fragment).commit();
 	}
@@ -208,4 +232,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		super.onDestroy();
 	}
 
+	@Override
+	public void onCameraClick(int requestCode) {
+		mPresenter.cameraClicked(requestCode);
+	}
 }

@@ -26,7 +26,7 @@ class MainPresenter implements MainContract.Presenter {
 
 	@Override
 	public void chatClicked() {
-		mWeakView.get().displayChat(true);
+		mWeakView.get().showChat(true);
 	}
 
 	@Override
@@ -47,6 +47,11 @@ class MainPresenter implements MainContract.Presenter {
 		} else {
 
 		}
+	}
+
+	@Override
+	public void cameraClicked(int requestCode) {
+		mWeakView.get().showCamera(requestCode);
 	}
 
 	@Override

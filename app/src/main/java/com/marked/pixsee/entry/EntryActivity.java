@@ -34,9 +34,6 @@ public class EntryActivity extends AppCompatActivity {
 	public void onResume() {
 		super.onResume();
 		Intent intent;
-//		intent = new Intent(this, SelfieActivity.class);
-
-
 		if (mUserRegistered) {
 			intent = new Intent(this, MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -44,7 +41,7 @@ public class EntryActivity extends AppCompatActivity {
 			intent = new Intent(this, AuthActivity.class);
 		}
 		/* the intent was sent from FCM for a friend request, add the following extras */
-		if (getIntent().getAction().equals(getString(R.string.FRIEND_REQUEST))) {
+		if (getIntent().getAction() != null && getIntent().getAction().equals(getString(R.string.FRIEND_REQUEST))) {
 			User user = new User(getIntent().getStringExtra(FriendConstants.ID),
 					getIntent().getStringExtra(FriendConstants.NAME),
 					getIntent().getStringExtra(FriendConstants.EMAIL),
