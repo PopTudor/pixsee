@@ -9,7 +9,7 @@ import android.view.Surface;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.face.Face;
-import com.marked.pixsee.face.SelfieActivity.OnFavoritesListener;
+import com.marked.pixsee.face.SelfieFragment.OnFavoritesListener;
 import com.marked.pixsee.face.data.FaceObject;
 
 import org.jetbrains.annotations.NotNull;

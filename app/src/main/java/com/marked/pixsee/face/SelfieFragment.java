@@ -1,16 +1,17 @@
 package com.marked.pixsee.face;
 
 import android.Manifest;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 
@@ -37,10 +38,10 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-import static com.marked.pixsee.face.DetailFragment.OnFragmentInteractionListener;
+import static com.marked.pixsee.face.DetailFragment.OnDetailInteractionListener;
 
-public class SelfieActivity extends AppCompatActivity implements OnFragmentInteractionListener,FaceContract.View {
-	private static final String TAG = SelfieActivity.class + "***";
+public class SelfieFragment extends Fragment implements OnDetailInteractionListener,FaceContract.View {
+	private static final String TAG = SelfieFragment.class + "***";
 	public static final String PHOTO_EXTRA = "PHOTO";
 	public static final String PHOTO_RENDERER_EXTRA = "PHOTO_RENDERER";
 	private static final int RC_HANDLE_CAMERA_PERM = 2;
@@ -68,52 +69,72 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 		}
 	};
 
+	public static SelfieFragment newInstance() {
+
+		Bundle args = new Bundle();
+
+		SelfieFragment fragment = new SelfieFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.activity_face);
+		getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// DI
 		mSelfieComponent = DaggerSelfieComponent.builder()
-				                   .selfieModule(new SelfieModule(this))
-				                   .build();
+				.selfieModule(new SelfieModule(this))
+				.build();
 		mSelfieComponent.inject(this);
 
-		mCameraPreview = (CameraPreview) findViewById(R.id.preview);
-		mBottomLayout = (ViewGroup) findViewById(R.id.bottomLayout);
+		// Must be done during an initialization phase like onCreate
+		RxPermissions.getInstance(getActivity())
+				.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+				.subscribe(new Action1<Boolean>() {
+					@Override
+					public void call(Boolean granted) {
+						if (granted) { // Always true pre-M
+							// I can control the camera now
+						} else {
+							// Oups permission denied
+							getActivity().onBackPressed();
+						}
+					}
+				});
+	}
 
-		mFaceTextureView = (TextureView) findViewById(R.id.texture_view);
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.activity_face, container, false);
+		mCameraPreview = (CameraPreview) rootView.findViewById(R.id.preview);
+		mBottomLayout = (ViewGroup) rootView.findViewById(R.id.bottomLayout);
+
+		mFaceTextureView = (TextureView) rootView.findViewById(R.id.texture_view);
 		mFaceTextureView.setEGLContextClientVersion(2);
 		mFaceTextureView.setSurfaceRenderer(mFaceRenderer); /* the surface where the renderer should display it's scene*/
 		mFaceRenderer.setCallback(faceRendererCallback);
 
-		findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
+		rootView.findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mFacePresenter.execute(new FavOneClick(SelfieActivity.this,mFaceRenderer));
+				mFacePresenter.execute(new FavOneClick(getContext(),mFaceRenderer));
 			}
 		});
-		findViewById(R.id.favorite2).setOnClickListener(new View.OnClickListener() {
+		rootView.findViewById(R.id.favorite2).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mFacePresenter.execute(new FavTwoClick(SelfieActivity.this,mFaceRenderer));
+				mFacePresenter.execute(new FavTwoClick(getContext(),mFaceRenderer));
 			}
 		});
-		findViewById(R.id.favorite3).setOnClickListener(new View.OnClickListener() {
+		rootView.findViewById(R.id.favorite3).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mFacePresenter.execute(new FavThreeClick(SelfieActivity.this,mFaceRenderer));
+				mFacePresenter.execute(new FavThreeClick(getContext(),mFaceRenderer));
 			}
 		});
-//		findViewById(R.id.shopImageButton).setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				mFacePresenter.execute(new ShopImageButtonClick(SelfieActivity.this));
-//			}
-//		});
 
-		mCameraButton = (ImageButton) findViewById(R.id.camera_button);
+		mCameraButton = (ImageButton) rootView.findViewById(R.id.camera_button);
 		mCameraButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View cameraButton) {
@@ -126,49 +147,41 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 				});
 			}
 		});
-		getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-			@Override
-			public void onBackStackChanged() {
-				switch (getSupportFragmentManager().getBackStackEntryCount()) {
-					case 0:
-						mBottomLayout.setVisibility(View.VISIBLE);
-						mCameraButton.setEnabled(true);
-						startCameraSource();
-						break;
-					case 1:
-						mBottomLayout.setVisibility(View.GONE);
-						break;
-				}
-			}
-		});
-		// Must be done during an initialization phase like onCreate
-		RxPermissions.getInstance(this)
-				.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-				.subscribe(new Action1<Boolean>() {
-					@Override
-					public void call(Boolean granted) {
-						if (granted) { // Always true pre-M
-							// I can control the camera now
-						} else {
-							// Oups permission denied
-							finish();
-						}
-					}
-				});
+//		getActivity().getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+//			@Override
+//			public void onBackStackChanged() {
+//				switch (getActivity().getSupportFragmentManager().getBackStackEntryCount()) {
+//					case 1:
+//						mBottomLayout.setVisibility(View.VISIBLE);
+//						mCameraButton.setEnabled(true);
+//						startCameraSource();
+//						break;
+//					case 2:
+//						mBottomLayout.setVisibility(View.GONE);
+//						break;
+//				}
+//			}
+//		});
+		return rootView;
 	}
 
 	/**
 	 * Restarts the camera.
 	 */
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		mSelfieComponent.inject(mCameraSource);
 
 		startCameraSource();
 		/* if we resume and the user had the fragment screen, make him take another picture*/
-		if (getSupportFragmentManager().getBackStackEntryCount() > 0)
-			getSupportFragmentManager().popBackStack();
+		if (getActivity().getSupportFragmentManager().getBackStackEntryCount() > 0)
+			getActivity().getSupportFragmentManager().popBackStack();
+	}
+
+	@Override
+	public void showTakenPictureActions() {
+		mOnSelfieInteractionListener.showTakenPictureActions();
 	}
 
 	/**
@@ -176,24 +189,10 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	 * rest of the processing pipeline.
 	 */
 	@Override
-	protected void onPause() {
+	public void onPause() {
 		super.onPause();
 		mCameraPreview.release();
 		Log.d(TAG, "onPause: ");
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-
-	}
-
-	@Override
-	public void onShutter() {
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.fragmentContainer, DetailFragment.newInstance())
-				.addToBackStack(null)
-				.commit();
 	}
 
 	@Override
@@ -204,11 +203,45 @@ public class SelfieActivity extends AppCompatActivity implements OnFragmentInter
 	public interface OnFavoritesListener {
 		void onFavoriteClicked(FaceObject object);
 	}
+	public interface OnSelfieInteractionListener{
+		void showTakenPictureActions();
+
+		void selfieFragmentDesroyed();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mOnSelfieInteractionListener.selfieFragmentDesroyed();
+	}
+
+	private OnSelfieInteractionListener mOnSelfieInteractionListener;
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		try {
+			mOnSelfieInteractionListener = (OnSelfieInteractionListener) context;
+		} catch (ClassCastException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mOnSelfieInteractionListener = null;
+	}
+
 
 	@NonNull
 	@Override
 	public Observable<Bitmap> onButtonClicked() {
 		return Observable.just(mFaceTextureView.getBitmap()).subscribeOn(Schedulers.computation());
+	}
+
+	@Override
+	public void hideTakenPictureActions() {
+		startCameraSource();
 	}
 
 	//==============================================================================================

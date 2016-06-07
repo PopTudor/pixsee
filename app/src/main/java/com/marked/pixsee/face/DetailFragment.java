@@ -42,7 +42,7 @@ import rx.functions.Func1;
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [DetailFragment.OnFragmentInteractionListener] interface
+ * [DetailFragment.OnDetailInteractionListener] interface
  * to handle interaction events.
  */
 public class DetailFragment extends Fragment {
@@ -76,7 +76,7 @@ public class DetailFragment extends Fragment {
 		}
 	};
 
-	private OnFragmentInteractionListener mListener;
+	private OnDetailInteractionListener mOnDetailInteractionListener;
 	private AppBarLayout mAppbar;
 
 	private FacebookCallback<Sharer.Result> facebookCallback = new FacebookCallback<Sharer.Result>() {
@@ -111,7 +111,7 @@ public class DetailFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				if (ShareDialog.canShow(SharePhotoContent.class)) {
-					mListener.onButtonClicked()
+					mOnDetailInteractionListener.onButtonClicked()
 							.map(new Func1<Bitmap, Bitmap>() {
 								@Override
 								public Bitmap call(Bitmap bitmap) {
@@ -155,7 +155,7 @@ public class DetailFragment extends Fragment {
 		sendFacebookImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mListener.onButtonClicked()
+				mOnDetailInteractionListener.onButtonClicked()
 						.map(new Func1<Bitmap, Bitmap>() {
 							@Override
 							public Bitmap call(Bitmap bitmap) {
@@ -216,32 +216,38 @@ public class DetailFragment extends Fragment {
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		if (context instanceof OnFragmentInteractionListener) {
-			mListener = (DetailFragment.OnFragmentInteractionListener) context;
+		if (context instanceof OnDetailInteractionListener) {
+			mOnDetailInteractionListener = (OnDetailInteractionListener) context;
 			callbackManager = com.facebook.CallbackManager.Factory.create();
 			shareDialog = new ShareDialog(this);
 		} else {
-			throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+			throw new RuntimeException(context.toString() + " must implement OnDetailInteractionListener");
 		}
 	}
+
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mListener = null;
+		mOnDetailInteractionListener = null;
 	}
 
-	/**
-	 * This interface must be implemented by activities that contain this
-	 * fragment to allow an interaction in this fragment to be communicated
-	 * to the activity and potentially other fragments contained in that
-	 * activity.
-	 * <p/>
-	 * <p/>
-	 * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
-	 */
-	interface OnFragmentInteractionListener {
+	@Override
+	public void onStop() {
+		super.onStop();
+		mOnDetailInteractionListener.hideTakenPictureActions();
+	}
+
+	public interface OnDetailInteractionListener {
 		Observable<Bitmap> onButtonClicked();
+
+		/**
+		 * This should get start when the image is frozen and {@link DetailFragment} is active to show the user what
+		 * actions can he take with the taken picture.
+		 * When the user hits the back button, this will notify the activity that it should
+		 * start/unfreeze the preview fragment
+		 */
+		void hideTakenPictureActions();
 	}
 
 	void showAnimation() {

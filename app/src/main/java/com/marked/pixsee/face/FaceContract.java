@@ -14,6 +14,6 @@ public interface FaceContract {
 	}
 
 	interface View extends BaseView<Presenter> {
-		void onShutter();
+		void showTakenPictureActions();
 	}
 }

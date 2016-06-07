@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -25,25 +28,31 @@ import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.entry.EntryActivity;
-import com.marked.pixsee.face.SelfieActivity;
+import com.marked.pixsee.face.DetailFragment;
+import com.marked.pixsee.face.DetailFragment.OnDetailInteractionListener;
+import com.marked.pixsee.face.SelfieFragment;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.friends.data.FriendConstants;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.main.di.DaggerMainComponent;
 import com.marked.pixsee.main.di.MainModule;
 import com.marked.pixsee.profile.ProfileFragment;
+import com.marked.pixsee.profile.ProfileFragment.ProfileInteraction;
+
+import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
+import rx.Observable;
+
 import static android.support.v4.app.NotificationCompat.FLAG_AUTO_CANCEL;
+import static com.marked.pixsee.face.SelfieFragment.*;
 
 public class MainActivity
 		extends AppCompatActivity
-		implements MainContract.View,
-		FriendFragment.FriendFragmentInteractionListener,
-		GCMListenerService.Callback, ProfileFragment.ProfileInteraction {
+		implements MainContract.View,FriendFragment.FriendFragmentInteractionListener,GCMListenerService.Callback,
+		ProfileInteraction,OnDetailInteractionListener,OnSelfieInteractionListener {
 	public static final int START_CAMERA_REQUEST_CODE = 100;
-	public static final String START_CAMERA_REQUEST_CODE_EXTRA = "request_code_extra";
 	@Inject
 	MainContract.Presenter mPresenter;
 
@@ -58,7 +67,7 @@ public class MainActivity
 				.mainModule(new MainModule(this))
 				.build()
 				.inject(this);
-		AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.toolbarMenuContainer);
+		AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 		// Create items
 		AHBottomNavigationItem item1 = new AHBottomNavigationItem(
 				"Chats", ContextCompat.getDrawable(this, R.drawable.ic_chat_24dp), ContextCompat.getColor(this, R.color.white));
@@ -76,27 +85,10 @@ public class MainActivity
 		bottomNavigation.setAccentColor(ContextCompat.getColor(this,R.color.primary));
 		bottomNavigation.setInactiveColor(ContextCompat.getColor(this,R.color.dark_inactive_icons));
 
-		bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-			@Override
-			public void onTabSelected(int position, boolean wasSelected) {
-				switch (position){
-					case 0:
-						if (!wasSelected)
-							mPresenter.chatClicked();
-						break;
-					case 1:
-						if (!wasSelected)
-							mPresenter.cameraClicked(-1);
-						break;
-					case 2:
-						if (!wasSelected)
-							mPresenter.profileClicked();
-						break;
-				}
-			}
-		});
+		bottomNavigation.setOnTabSelectedListener(new OnTabSelectedHandler(mPresenter));
 		mPresenter.start();
 	}
+
 
 	@Override
 	protected void onStart() {
@@ -116,12 +108,6 @@ public class MainActivity
 				.commit();
 	}
 
-	@Override
-	public void showCamera(int requestCode) {
-		Intent intent = new Intent(this, SelfieActivity.class);
-		intent.putExtra(START_CAMERA_REQUEST_CODE_EXTRA, requestCode);
-		startActivityForResult(intent, requestCode);
-	}
 
 	@Override
 	public void setPresenter(MainContract.Presenter presenter) {
@@ -146,16 +132,44 @@ public class MainActivity
 	}
 
 	@Override
-	public void onFriendClick(User friend) {
+	public void showCamera(int requestCode) {
+		Fragment fragment = newInstance();
+		getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, fragment,"camera").addToBackStack(null).commit();
+	}
 
-		Intent intent = new Intent(this, ChatActivity.class);
-		intent.putExtra(ChatActivity.EXTRA_CONTACT, friend);
-		startActivity(intent);
-//		CardFragment fragment = CardFragment.newInstance(friend);
-//		CardLocalDatasource localDatasource = new CardLocalDatasource(PixyDatabase.getInstance(this));
-//		CardRemoteDatasource remoteDatasource = new CardRemoteDatasource(PreferenceManager.getDefaultSharedPreferences(this));
-//		fragment.setPresenter(new CardPresenter(fragment, new CardRepository(localDatasource,remoteDatasource)));
-//		getSupportFragmentManager().beginTransaction().replace(R.id.cardFragmentContainer, fragment).commit();
+	@Override
+	public void hideBottomNavigation() {
+		findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
+	}
+
+	@Override
+	public void selfieFragmentDesroyed() {
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		AHBottomNavigation navigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
+		navigation.setCurrentItem(0);
+		navigation.setVisibility(View.VISIBLE);
+		mPresenter.chatClicked();
+
+	}
+
+	@Override
+	public Observable<Bitmap> onButtonClicked() {
+		return ((SelfieFragment) getSupportFragmentManager().findFragmentById(R.id.mainContainer)).onButtonClicked();
+	}
+	@Override
+	public void showTakenPictureActions() {
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.mainContainer2, DetailFragment.newInstance())
+				.addToBackStack(null)
+				.commit();
+	}
+
+	/**
+	 * This get
+	 */
+	@Override
+	public void hideTakenPictureActions() {
+		((SelfieFragment) getSupportFragmentManager().findFragmentByTag("camera")).hideTakenPictureActions();
 	}
 
 	/**
@@ -202,16 +216,6 @@ public class MainActivity
 			Log.d("*** TAG ***", "receiveRemoteMessage: " + message.toString());
 		}
 	}
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		if (getIntent().getIntExtra(MessageConstants.MESSAGE_TYPE, 0) == MessageConstants.MessageType.FRIEND_REQUEST) {
-			User user = getIntent().getParcelableExtra(DatabaseContract.User.TABLE_NAME);
-			mPresenter.friendRequest(user);
-		}
-	}
-
 	@Override
 	public void showFriendRequestDialog(final User user) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this)
@@ -236,6 +240,13 @@ public class MainActivity
 	}
 
 	@Override
+	public void onFriendClick(User friend) {
+		Intent intent = new Intent(this, ChatActivity.class);
+		intent.putExtra(ChatActivity.EXTRA_CONTACT, friend);
+		startActivity(intent);
+	}
+
+	@Override
 	protected void onDestroy() {
 		GCMListenerService.clear();
 		super.onDestroy();
@@ -244,5 +255,33 @@ public class MainActivity
 	@Override
 	public void onCameraClick(int requestCode) {
 		mPresenter.cameraClicked(requestCode);
+	}
+
+
+
+	private static class OnTabSelectedHandler implements AHBottomNavigation.OnTabSelectedListener{
+		private WeakReference<MainContract.Presenter> mPresenterWeakReference;
+
+		public OnTabSelectedHandler(MainContract.Presenter presenterWeakReference) {
+			mPresenterWeakReference = new WeakReference<MainContract.Presenter>(presenterWeakReference);
+		}
+
+		@Override
+		public void onTabSelected(int position, boolean wasSelected) {
+			switch (position){
+				case 0:
+					if (!wasSelected)
+						mPresenterWeakReference.get().chatClicked();
+					break;
+				case 1:
+					if (!wasSelected)
+						mPresenterWeakReference.get().cameraClicked(-1);
+					break;
+				case 2:
+					if (!wasSelected)
+						mPresenterWeakReference.get().profileClicked();
+					break;
+			}
+		}
 	}
 }

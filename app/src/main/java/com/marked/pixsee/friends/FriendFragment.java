@@ -57,7 +57,6 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 
 	private RecyclerView mFriendsRecyclerview;
 	private FriendsAdapter mFriendsAdapter;
-	private LinearLayoutManager mLayoutManager;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 
 	/**
@@ -71,7 +70,6 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		mLayoutManager = new LinearLayoutManager(getActivity());
 		mFriendsAdapter = new FriendsAdapter(mCallback);
 		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule((AppCompatActivity) getContext())).build();
 
@@ -184,14 +182,14 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 	void setUpRecyclerView() {
 //		mFriendsRecyclerview.addItemDecoration(new SpaceItemDecorator(getActivity(), R.dimen.item_spacing_chat));
 		mFriendsRecyclerview.setAdapter(mFriendsAdapter);
-		mFriendsRecyclerview.setLayoutManager(mLayoutManager);
+		mFriendsRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mFriendsRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
 				if (dy > 0 && recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-					int s = mLayoutManager.getChildCount();
-					int x = mLayoutManager.findFirstVisibleItemPosition();
+					int s = recyclerView.getLayoutManager().getChildCount();
+					int x = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
 					if (x + s >= recyclerView.getLayoutManager().getItemCount()) {
 						mPresenter.loadMore(50);
 					}

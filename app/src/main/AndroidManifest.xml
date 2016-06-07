@@ -139,7 +139,7 @@
             android:label="FriendDetailActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".face.SelfieActivity"
+            android:name=".face.SelfieFragment"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait">
         </activity>

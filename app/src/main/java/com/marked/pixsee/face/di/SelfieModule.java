@@ -5,13 +5,15 @@ import android.util.Log;
 
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
+import com.marked.pixsee.face.SelfieFragment;
 import com.marked.pixsee.face.custom.CameraSource;
 import com.marked.pixsee.face.FaceContract;
 import com.marked.pixsee.face.FacePresenter;
 import com.marked.pixsee.face.custom.FaceRenderer;
 import com.marked.pixsee.face.custom.FaceTrackerAR;
-import com.marked.pixsee.face.SelfieActivity;
 import com.marked.pixsee.injection.scopes.PerActivity;
+
+import java.lang.ref.WeakReference;
 
 import dagger.Module;
 import dagger.Provides;
@@ -22,27 +24,27 @@ import dagger.Provides;
 @Module
 public class SelfieModule {
 	private static final String TAG = "SELFIE_MODULE";
-	private SelfieActivity mSelfieActivity;
+	private WeakReference<SelfieFragment> mSelfieFragment;
 
-	public SelfieModule(SelfieActivity selfieActivity) {
-		this.mSelfieActivity = selfieActivity;
+	public SelfieModule(SelfieFragment selfieFragment) {
+		this.mSelfieFragment = new WeakReference<SelfieFragment>(selfieFragment);
 	}
 
 	@Provides
 	@PerActivity
 	public FaceContract.Presenter provideFacePresenter() {
-		return new FacePresenter(mSelfieActivity);
+		return new FacePresenter(mSelfieFragment.get());
 	}
 
 	@Provides
 	@PerActivity
 	public FaceRenderer provideFaceRenderer() {
-		return new FaceRenderer(mSelfieActivity);
+		return new FaceRenderer(mSelfieFragment.get().getActivity());
 	}
 
 	@Provides
 	public CameraSource provideCameraSource(FaceRenderer faceRenderer) {
-		FaceDetector faceDetector = new FaceDetector.Builder(mSelfieActivity)
+		FaceDetector faceDetector = new FaceDetector.Builder(mSelfieFragment.get().getContext())
 				                            .setTrackingEnabled(true)
 				                            .setProminentFaceOnly(true)
 				                            .setClassificationType(FaceDetector.FAST_MODE)
@@ -61,7 +63,7 @@ public class SelfieModule {
 			// download completes on device.
 			Log.w(TAG, "Face faceDetector dependencies are not yet available.");
 		}
-		return new CameraSource.Builder(mSelfieActivity, faceDetector).setRequestedFps(30.0f)
+		return new CameraSource.Builder(mSelfieFragment.get().getContext(), faceDetector).setRequestedFps(30.0f)
 				       .setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO)
 				       .setFacing(com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT)
 				       .build();

@@ -30,5 +30,7 @@ public interface MainContract {
 		void showProfile(User user);
 
 		void showCamera(int requestCode);
+
+		void hideBottomNavigation();
 	}
 }

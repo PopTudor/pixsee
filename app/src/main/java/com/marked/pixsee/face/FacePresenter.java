@@ -25,6 +25,6 @@ public class FacePresenter implements FaceContract.Presenter {
 
 	@Override
 	public void onShutter() {
-		view.onShutter(); /* when the user touches the selfie button */
+		view.showTakenPictureActions(); /* when the user touches the selfie button */
 	}
 }
