@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -169,7 +170,12 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		});
 		((FloatingActionButton)rootView.findViewById(R.id.sendButton))
 				.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(),R.color.transparent)));
-
+		((ImageButton)rootView.findViewById(R.id.filtersImageButton)).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mPresenter.filtersButtonClicked();
+			}
+		});
 		return rootView;
 	}
 
@@ -363,5 +369,9 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	public void remove(Message message,int position) {
 		mChatAdapter.getDataset().remove(position);
 		mChatAdapter.notifyItemRemoved(position);
+	}
+	@Override
+	public void showFilters() {
+
 	}
 }

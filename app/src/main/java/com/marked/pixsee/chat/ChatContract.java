@@ -33,6 +33,8 @@ public interface ChatContract {
 		void sendMessage(@NotNull Message message);
 
 		void receiveMessage(String message, Bundle bundle);
+
+		void filtersButtonClicked();
 	}
 
 	interface View extends BaseView<Presenter> {
@@ -45,5 +47,7 @@ public interface ChatContract {
 		void pop();
 
 		void remove(Message message, int position);
+
+		void showFilters();
 	}
 }

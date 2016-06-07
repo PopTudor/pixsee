@@ -105,6 +105,11 @@ public class ChatPresenter implements ChatContract.Presenter {
 	}
 
 	@Override
+	public void filtersButtonClicked() {
+		mView.get().showFilters();
+	}
+
+	@Override
 	public void loadMore(int limit, boolean forceUpdate) {
 
 	}

@@ -42,10 +42,10 @@
             android:paddingLeft="8dp" android:background="@color/white"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_above="@+id/imageButton" />
+            android:layout_above="@+id/filtersImageButton" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/filtersImageButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center_vertical"

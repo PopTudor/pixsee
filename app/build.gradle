@@ -26,7 +26,7 @@ repositories {
 }
 // Manifest version information!
 def versionMajor = 1
-def versionMinor = 0
+def versionMinor = 1
 def versionPatch = 0
 
 android {
@@ -104,6 +104,7 @@ dependencies {
     compile 'com.aurelhubert:ahbottomnavigation:1.2.3' // Bottom navigation
     compile "com.github.clans:fab:1.6.2" // Fab
     compile 'tyrantgit:explosionfield:1.0.1' // Explosion field
+    compile "com.github.zzz40500:AndroidSweetSheet:1.1.0"
 
     // FACEBOOK
     compile "com.facebook.fresco:fresco:0.9.0" // Fresco
