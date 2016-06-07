@@ -223,7 +223,7 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 	}
 
 	@Override
-	public void hideTakenPictureActions() {
+	public void hiddenDetailPictureActions() {
 		mFacePresenter.displayActions(true);
 		startCameraSource();
 	}

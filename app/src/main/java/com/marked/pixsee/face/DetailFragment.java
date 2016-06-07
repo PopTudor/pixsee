@@ -235,7 +235,7 @@ public class DetailFragment extends Fragment {
 	@Override
 	public void onStop() {
 		super.onStop();
-		mOnDetailInteractionListener.hideTakenPictureActions();
+		mOnDetailInteractionListener.hiddenDetailPictureActions();
 	}
 
 	public interface OnDetailInteractionListener {
@@ -247,7 +247,7 @@ public class DetailFragment extends Fragment {
 		 * When the user hits the back button, this will notify the activity that it should
 		 * start/unfreeze the preview fragment
 		 */
-		void hideTakenPictureActions();
+		void hiddenDetailPictureActions();
 	}
 
 	void showAnimation() {

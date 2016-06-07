@@ -50,9 +50,9 @@ class MainPresenter implements MainContract.Presenter {
 	}
 
 	@Override
-	public void cameraClicked(int requestCode) {
+	public void cameraClicked() {
 		mWeakView.get().hideBottomNavigation();
-		mWeakView.get().showCamera(requestCode);
+		mWeakView.get().showCamera();
 	}
 
 	@Override

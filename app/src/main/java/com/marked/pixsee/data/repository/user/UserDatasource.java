@@ -20,6 +20,9 @@ public interface UserDatasource {
 	User getUser(@NonNull String tablename);
 
 	Observable saveUser(@NonNull User user);
+
+	Observable saveAppUser(@NonNull User user);
+
 	void saveUser(@NonNull List<User> user);
 
 	Observable<List<User>> refreshUsers();

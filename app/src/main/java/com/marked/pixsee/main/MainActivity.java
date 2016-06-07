@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -38,7 +37,9 @@ import com.marked.pixsee.main.di.DaggerMainComponent;
 import com.marked.pixsee.main.di.MainModule;
 import com.marked.pixsee.profile.ProfileFragment;
 import com.marked.pixsee.profile.ProfileFragment.ProfileInteraction;
+import com.marked.pixsee.profile.ProfilePictureDetail;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
@@ -46,12 +47,13 @@ import javax.inject.Inject;
 import rx.Observable;
 
 import static android.support.v4.app.NotificationCompat.FLAG_AUTO_CANCEL;
-import static com.marked.pixsee.face.SelfieFragment.*;
+import static com.marked.pixsee.face.SelfieFragment.OnSelfieInteractionListener;
+import static com.marked.pixsee.face.SelfieFragment.newInstance;
 
 public class MainActivity
 		extends AppCompatActivity
-		implements MainContract.View,FriendFragment.FriendFragmentInteractionListener,GCMListenerService.Callback,
-		ProfileInteraction,OnDetailInteractionListener,OnSelfieInteractionListener {
+		implements MainContract.View, FriendFragment.FriendFragmentInteractionListener, GCMListenerService.Callback,
+		ProfileInteraction, OnDetailInteractionListener, OnSelfieInteractionListener, ProfilePictureDetail.OnProfilePictureDetailListener {
 	public static final int START_CAMERA_REQUEST_CODE = 100;
 	@Inject
 	MainContract.Presenter mPresenter;
@@ -72,9 +74,9 @@ public class MainActivity
 		AHBottomNavigationItem item1 = new AHBottomNavigationItem(
 				"Chats", ContextCompat.getDrawable(this, R.drawable.ic_chat_24dp), ContextCompat.getColor(this, R.color.white));
 		AHBottomNavigationItem item2 = new AHBottomNavigationItem(
-				"Camera",ContextCompat.getDrawable(this,  R.drawable.ic_photo_camera_24dp), ContextCompat.getColor(this, R.color.white));
+				"Camera", ContextCompat.getDrawable(this, R.drawable.ic_photo_camera_24dp), ContextCompat.getColor(this, R.color.white));
 		AHBottomNavigationItem item3 = new AHBottomNavigationItem(
-				"Profile", ContextCompat.getDrawable(this,R.drawable.ic_person_24dp), ContextCompat.getColor(this, R.color.white));
+				"Profile", ContextCompat.getDrawable(this, R.drawable.ic_person_24dp), ContextCompat.getColor(this, R.color.white));
 
 		// Add items
 		bottomNavigation.addItem(item1);
@@ -82,8 +84,8 @@ public class MainActivity
 		bottomNavigation.addItem(item3);
 
 		bottomNavigation.setDefaultBackgroundColor(Color.WHITE);
-		bottomNavigation.setAccentColor(ContextCompat.getColor(this,R.color.primary));
-		bottomNavigation.setInactiveColor(ContextCompat.getColor(this,R.color.dark_inactive_icons));
+		bottomNavigation.setAccentColor(ContextCompat.getColor(this, R.color.primary));
+		bottomNavigation.setInactiveColor(ContextCompat.getColor(this, R.color.dark_inactive_icons));
 
 		bottomNavigation.setOnTabSelectedListener(new OnTabSelectedHandler(mPresenter));
 		mPresenter.start();
@@ -104,7 +106,7 @@ public class MainActivity
 	public void showProfile(User user) {
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.mainContainer, ProfileFragment.newInstance(user))
+				.replace(R.id.mainContainer, ProfileFragment.newInstance(user), "profile")
 				.commit();
 	}
 
@@ -115,26 +117,15 @@ public class MainActivity
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == START_CAMERA_REQUEST_CODE) {
-			if (resultCode == RESULT_OK) {
-
-			} else {
-				Toast.makeText(this, "The picture could not be taken !", Toast.LENGTH_SHORT).show();
-			}
-		}
-	}
-
-	@Override
 	public void showChat(boolean show) {
 		Fragment fragment = FriendFragment.newInstance();
 		getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, fragment).commit();
 	}
 
 	@Override
-	public void showCamera(int requestCode) {
+	public void showCamera() {
 		Fragment fragment = newInstance();
-		getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, fragment,"camera").addToBackStack(null).commit();
+		getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, fragment, "camera").addToBackStack(null).commit();
 	}
 
 	@Override
@@ -146,9 +137,8 @@ public class MainActivity
 	public void selfieFragmentDesroyed() {
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		AHBottomNavigation navigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
-		navigation.setCurrentItem(0);
 		navigation.setVisibility(View.VISIBLE);
-		mPresenter.chatClicked();
+//		mPresenter.chatClicked();
 
 	}
 
@@ -156,21 +146,44 @@ public class MainActivity
 	public Observable<Bitmap> onButtonClicked() {
 		return ((SelfieFragment) getSupportFragmentManager().findFragmentById(R.id.mainContainer)).onButtonClicked();
 	}
+
+	@Override
+	public void hiddenProfilePictureDetailActions() {
+		((SelfieFragment) getSupportFragmentManager().findFragmentByTag("camera")).hiddenDetailPictureActions();
+	}
+
+	@Override
+	public void pictureTaken(File picture) {
+		if (getSupportFragmentManager().findFragmentByTag("profile")!=null) {
+			getSupportFragmentManager().popBackStackImmediate(); // pop the camera fragment
+			((ProfileFragment) getSupportFragmentManager().findFragmentByTag("profile")).setProfilePicture(picture);
+		}
+	}
+
 	@Override
 	public void showTakenPictureActions() {
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.mainContainer2, DetailFragment.newInstance())
-				.addToBackStack(null)
-				.commit();
+		// if we take a picture from Profile fragment, we want to see the profile picture actions to save a new profile
+		// picture for tha account
+		if (getSupportFragmentManager().findFragmentByTag("profile") != null)
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.mainContainer2, ProfilePictureDetail.newInstance())
+					.addToBackStack(null)
+					.commit();
+		else// the picture is taken with click on camera button
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.mainContainer2, DetailFragment.newInstance())
+					.addToBackStack(null)
+					.commit();
 	}
 
 	/**
 	 * This get
 	 */
 	@Override
-	public void hideTakenPictureActions() {
-		((SelfieFragment) getSupportFragmentManager().findFragmentByTag("camera")).hideTakenPictureActions();
+	public void hiddenDetailPictureActions() {
+		((SelfieFragment) getSupportFragmentManager().findFragmentByTag("camera")).hiddenDetailPictureActions();
 	}
+
 
 	/**
 	 * This get's called when the user is in the app and get's a notification(friend request)
@@ -216,6 +229,7 @@ public class MainActivity
 			Log.d("*** TAG ***", "receiveRemoteMessage: " + message.toString());
 		}
 	}
+
 	@Override
 	public void showFriendRequestDialog(final User user) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this)
@@ -253,13 +267,11 @@ public class MainActivity
 	}
 
 	@Override
-	public void onCameraClick(int requestCode) {
-		mPresenter.cameraClicked(requestCode);
+	public void onCameraClick() {
+		mPresenter.cameraClicked();
 	}
 
-
-
-	private static class OnTabSelectedHandler implements AHBottomNavigation.OnTabSelectedListener{
+	private static class OnTabSelectedHandler implements AHBottomNavigation.OnTabSelectedListener {
 		private WeakReference<MainContract.Presenter> mPresenterWeakReference;
 
 		public OnTabSelectedHandler(MainContract.Presenter presenterWeakReference) {
@@ -268,14 +280,14 @@ public class MainActivity
 
 		@Override
 		public void onTabSelected(int position, boolean wasSelected) {
-			switch (position){
+			switch (position) {
 				case 0:
 					if (!wasSelected)
 						mPresenterWeakReference.get().chatClicked();
 					break;
 				case 1:
 					if (!wasSelected)
-						mPresenterWeakReference.get().cameraClicked(-1);
+						mPresenterWeakReference.get().cameraClicked();
 					break;
 				case 2:
 					if (!wasSelected)

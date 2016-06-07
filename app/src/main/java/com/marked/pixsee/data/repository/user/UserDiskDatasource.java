@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
+import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.mapper.Mapper;
 import com.marked.pixsee.friends.data.FriendContractDB;
@@ -60,12 +61,20 @@ public class UserDiskDatasource implements UserDatasource {
 	public User getUser(@NonNull String tablename) {
 		Cursor cursor = db.getReadableDatabase().query(tablename, null, null,null, null, null, null);
 		cursor.moveToFirst();
-		return cursorToUserMapper.map(cursor);
+		User user = cursorToUserMapper.map(cursor);
+		cursor.close();
+		return user;
 	}
 
 	@Override
 	public Observable<Boolean> saveUser(@NonNull User user) {
 		db.getWritableDatabase().insertWithOnConflict(TABLE_NAME, null,userToCvMapper.map(user),SQLiteDatabase.CONFLICT_REPLACE);
+		return Observable.empty();
+	}
+
+	@Override
+	public Observable saveAppUser(@NonNull User user) {
+		db.getWritableDatabase().update(DatabaseContract.User.TABLE_NAME, userToCvMapper.map(user),null,null);
 		return Observable.empty();
 	}
 

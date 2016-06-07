@@ -19,7 +19,7 @@ public interface MainContract {
 
 		void friendRequest(User user, boolean b);
 
-		void cameraClicked(int requestCode);
+		void cameraClicked();
 	}
 
 	interface View extends BaseView<Presenter> {
@@ -29,7 +29,7 @@ public interface MainContract {
 
 		void showProfile(User user);
 
-		void showCamera(int requestCode);
+		void showCamera();
 
 		void hideBottomNavigation();
 	}

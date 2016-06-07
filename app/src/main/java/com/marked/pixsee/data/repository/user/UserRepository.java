@@ -98,7 +98,13 @@ public class UserRepository implements UserDatasource {
 		return network.saveUser(item);
 	}
 
-    @Override
+	@Override
+	public Observable saveAppUser(@NonNull User user) {
+		disk.saveAppUser(user);
+		return network.saveAppUser(user);
+	}
+
+	@Override
     public Observable<List<User>> refreshUsers() {
         clear();
         return network.getUsers()

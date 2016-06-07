@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -23,12 +25,21 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.entry.EntryActivity;
 import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
-import com.marked.pixsee.main.MainActivity;
+import com.marked.pixsee.injection.components.ActivityComponent;
+import com.marked.pixsee.injection.components.DaggerActivityComponent;
+import com.marked.pixsee.injection.modules.ActivityModule;
+import com.marked.pixsee.profile.di.DaggerProfileComponent;
+import com.marked.pixsee.profile.di.ProfileModule;
 
-public class ProfileFragment extends Fragment {
+import java.io.File;
+
+import javax.inject.Inject;
+
+public class ProfileFragment extends Fragment implements ProfileContract.View{
 	private static String USER_EXTRA = "PROFILE_FRAGMENT_USER";
 	private User mUser;
-
+	@Inject
+	ProfileContract.Presenter mPresenter;
 	/**
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
@@ -61,6 +72,19 @@ public class ProfileFragment extends Fragment {
 	}
 
 	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		ActivityComponent component = DaggerActivityComponent
+				.builder()
+				.activityModule(new ActivityModule((AppCompatActivity)getActivity()))
+				.build();
+		DaggerProfileComponent.builder().activityComponent(component)
+				.profileModule(new ProfileModule(this))
+				.build()
+				.inject(this);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 		((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
@@ -68,6 +92,8 @@ public class ProfileFragment extends Fragment {
 
 		((TextView)rootView.findViewById(R.id.nameTextview)).setText(mUser.getName());
 		((TextView)rootView.findViewById(R.id.usernameTextview)).setText(mUser.getUsername());
+		((SimpleDraweeView)rootView.findViewById(R.id.iconSimpleDraweeView)).setImageURI(Uri.parse(mUser.getIconUrl()));
+
 		ImageButton inviteFriendsImageButton = ((ImageButton)rootView.findViewById(R.id.inviteFriendsImageButton));
 		inviteFriendsImageButton.getDrawable()
 				.setColorFilter(ContextCompat.getColor(getActivity(),R.color.accent), PorterDuff.Mode.SRC_ATOP);
@@ -78,10 +104,11 @@ public class ProfileFragment extends Fragment {
 				getActivity().startActivity(intent);
 			}
 		});
+
 		((SimpleDraweeView)rootView.findViewById(R.id.iconSimpleDraweeView)).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mProfileInteraction.onCameraClick(MainActivity.START_CAMERA_REQUEST_CODE);
+				mProfileInteraction.onCameraClick();
 			}
 		});
 		((Button)rootView.findViewById(R.id.logoutButton)).setOnClickListener(new View.OnClickListener() {
@@ -101,9 +128,20 @@ public class ProfileFragment extends Fragment {
 		return rootView ;
 	}
 
+	public void setProfilePicture(File profilePicture) {
+		((SimpleDraweeView) getView().findViewById(R.id.iconSimpleDraweeView)).setImageURI(Uri.parse("file://"+profilePicture.getAbsolutePath()));
+		mUser.setIconUrl("file://"+profilePicture.getAbsolutePath());
+		mPresenter.saveAppUser(mUser);
+	}
+
 	private ProfileInteraction mProfileInteraction;
 
+	@Override
+	public void setPresenter(ProfileContract.Presenter presenter) {
+		mPresenter = presenter;
+	}
+
 	public interface ProfileInteraction{
-		void onCameraClick(int requestCode);
+		void onCameraClick();
 	}
 }
