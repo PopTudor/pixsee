@@ -11,9 +11,13 @@ import com.marked.pixsee.face.custom.CameraSource;
 public interface FaceContract {
 	interface Presenter extends BasePresenter, CameraSource.ShutterCallback {
 		void execute(Command command);
+
+		void displayActions(boolean b);
 	}
 
 	interface View extends BaseView<Presenter> {
 		void showTakenPictureActions();
+
+		void displayActions(boolean showSelfieActions);
 	}
 }

@@ -138,7 +138,7 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 		mCameraButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View cameraButton) {
-				cameraButton.setEnabled(false); /* disable the button because if the user double tapps the camera button(impatience), it would crash the app*/
+				mFacePresenter.displayActions(false);
 				mCameraSource.takePicture(mFacePresenter, new CameraSource.PictureCallback() {
 					@Override
 					public void onPictureTaken(final byte[] bytes) {
@@ -147,21 +147,6 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 				});
 			}
 		});
-//		getActivity().getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-//			@Override
-//			public void onBackStackChanged() {
-//				switch (getActivity().getSupportFragmentManager().getBackStackEntryCount()) {
-//					case 1:
-//						mBottomLayout.setVisibility(View.VISIBLE);
-//						mCameraButton.setEnabled(true);
-//						startCameraSource();
-//						break;
-//					case 2:
-//						mBottomLayout.setVisibility(View.GONE);
-//						break;
-//				}
-//			}
-//		});
 		return rootView;
 	}
 
@@ -184,6 +169,14 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 		mOnSelfieInteractionListener.showTakenPictureActions();
 	}
 
+	@Override
+	public void displayActions(boolean showSelfieActions) {
+		if (showSelfieActions)
+			mBottomLayout.setVisibility(View.VISIBLE);
+		else
+			mBottomLayout.setVisibility(View.GONE);
+	}
+
 	/**
 	 * Releases the resources associated with the camera source, the associated detector, and the
 	 * rest of the processing pipeline.
@@ -200,22 +193,12 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 		this.mFacePresenter = presenter;
 	}
 
-	public interface OnFavoritesListener {
-		void onFavoriteClicked(FaceObject object);
-	}
-	public interface OnSelfieInteractionListener{
-		void showTakenPictureActions();
-
-		void selfieFragmentDesroyed();
-	}
-
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		mOnSelfieInteractionListener.selfieFragmentDesroyed();
 	}
 
-	private OnSelfieInteractionListener mOnSelfieInteractionListener;
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
@@ -241,6 +224,7 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 
 	@Override
 	public void hideTakenPictureActions() {
+		mFacePresenter.displayActions(true);
 		startCameraSource();
 	}
 
@@ -262,4 +246,16 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 			mCameraSource = null;
 		}
 	}
+	// ===============================================================================================
+	// Interaction listener interfaces
+	// ===============================================================================================
+	public interface OnFavoritesListener {
+		void onFavoriteClicked(FaceObject object);
+	}
+	public interface OnSelfieInteractionListener{
+		void showTakenPictureActions();
+
+		void selfieFragmentDesroyed();
+	}
+	private OnSelfieInteractionListener mOnSelfieInteractionListener;
 }
