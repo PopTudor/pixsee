@@ -92,7 +92,8 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 
 		((TextView)rootView.findViewById(R.id.nameTextview)).setText(mUser.getName());
 		((TextView)rootView.findViewById(R.id.usernameTextview)).setText(mUser.getUsername());
-		((SimpleDraweeView)rootView.findViewById(R.id.iconSimpleDraweeView)).setImageURI(Uri.parse(mUser.getIconUrl()));
+		if (mUser.getIconUrl()!=null) // // TODO: 12-Jun-16 remove this and make mUser.getIconUrl() to always have an Url
+			((SimpleDraweeView)rootView.findViewById(R.id.iconSimpleDraweeView)).setImageURI(Uri.parse(mUser.getIconUrl()));
 
 		ImageButton inviteFriendsImageButton = ((ImageButton)rootView.findViewById(R.id.inviteFriendsImageButton));
 		inviteFriendsImageButton.getDrawable()

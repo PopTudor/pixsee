@@ -8,10 +8,15 @@ import com.marked.pixsee.commands.Command;
  * Created by Tudor on 03-Jun-16.
  */
 public interface FriendsInviteContract {
-	interface Presenter extends BasePresenter{
-		void execute(Command command);
+	interface Presenter extends BasePresenter,Command{
+		void addFriendClicked();
+
+		void shareUsernameClicked();
 	}
 	interface View extends BaseView<Presenter>{
 
+		void showAddFriend();
+
+		void showUsernameDirectShare();
 	}
 }

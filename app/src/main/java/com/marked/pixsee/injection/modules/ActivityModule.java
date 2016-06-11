@@ -6,7 +6,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.database.PixyDatabase;
+import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.data.repository.user.UserDiskDatasource;
 import com.marked.pixsee.data.repository.user.UserNetworkDatasource;
 import com.marked.pixsee.data.repository.user.UserRepository;
@@ -75,5 +77,10 @@ public class ActivityModule {
 		return new UserRepository(
 				new UserDiskDatasource(database),
 				new UserNetworkDatasource(PreferenceManager.getDefaultSharedPreferences(activity)));
+	}
+	@Provides
+	@PerActivity
+	User provideAppsUser(UserRepository repository){
+		return repository.getUser(DatabaseContract.User.TABLE_NAME);
 	}
 }

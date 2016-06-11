@@ -1,7 +1,5 @@
 package com.marked.pixsee.friendsInvite;
 
-import com.marked.pixsee.commands.Command;
-
 import java.lang.ref.WeakReference;
 
 /**
@@ -21,7 +19,17 @@ class Presenter implements FriendsInviteContract.Presenter {
 	}
 
 	@Override
-	public void execute(Command command) {
-		command.execute();
+	public void addFriendClicked() {
+		mView.get().showAddFriend();
+	}
+
+	@Override
+	public void execute() {
+
+	}
+
+	@Override
+	public void shareUsernameClicked() {
+		mView.get().showUsernameDirectShare();
 	}
 }

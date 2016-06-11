@@ -10,18 +10,24 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.marked.pixsee.R;
+import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameFragment;
 import com.marked.pixsee.friendsInvite.commands.ClickAddUser;
+import com.marked.pixsee.friendsInvite.commands.ClickShareUsername;
+import com.marked.pixsee.injection.components.DaggerActivityComponent;
+import com.marked.pixsee.injection.modules.ActivityModule;
 
 public class FriendsInviteActivity extends AppCompatActivity implements FriendsInviteContract.View,View.OnClickListener {
 	private FriendsInviteContract.Presenter mPresenter;
 	private Toolbar toolbar;
+	private User mAppsUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_invite_friends);
 		mPresenter = new Presenter(this);
+		mAppsUser = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build().provideUser();
 
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
@@ -59,14 +65,24 @@ public class FriendsInviteActivity extends AppCompatActivity implements FriendsI
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.addUsername:
-				mPresenter.execute(new ClickAddUser(this,R.id.fragmentContainer, AddUsernameFragment.newInstance()));
+				mPresenter.addFriendClicked();
 				break;
 			case R.id.shareUsername:
-				mPresenter.execute(new ClickAddUser(this,R.id.fragmentContainer, AddUsernameFragment.newInstance()));
+				mPresenter.shareUsernameClicked();
 				break;
 			default:
 				break;
 		}
 
+	}
+
+	@Override
+	public void showAddFriend() {
+		new ClickAddUser(this,R.id.fragmentContainer, AddUsernameFragment.newInstance()).execute();
+	}
+
+	@Override
+	public void showUsernameDirectShare() {
+		new ClickShareUsername(this,mAppsUser).execute();
 	}
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
 import com.marked.pixsee.data.database.PixyDatabase;
+import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.injection.scopes.PerActivity;
@@ -26,4 +27,6 @@ public interface ActivityComponent {
 	PixyDatabase provideDatabase();
 
 	UserRepository provideUserRepository();
+
+	User provideUser();
 }

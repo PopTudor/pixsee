@@ -118,6 +118,7 @@
             android:name=".service.LogInRegistrationIntentService"
             android:exported="false"/>
 
+
         <activity
             android:name=".signup.SignUpActivity"
             android:screenOrientation="portrait"/>
