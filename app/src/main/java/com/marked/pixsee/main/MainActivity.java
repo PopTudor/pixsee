@@ -27,9 +27,9 @@ import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.entry.EntryActivity;
-import com.marked.pixsee.face.DetailFragment;
-import com.marked.pixsee.face.DetailFragment.OnDetailInteractionListener;
-import com.marked.pixsee.face.SelfieFragment;
+import com.marked.pixsee.selfie.DetailFragment;
+import com.marked.pixsee.selfie.DetailFragment.OnDetailInteractionListener;
+import com.marked.pixsee.selfie.SelfieFragment;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.friends.data.FriendConstants;
 import com.marked.pixsee.injection.modules.ActivityModule;
@@ -47,8 +47,8 @@ import javax.inject.Inject;
 import rx.Observable;
 
 import static android.support.v4.app.NotificationCompat.FLAG_AUTO_CANCEL;
-import static com.marked.pixsee.face.SelfieFragment.OnSelfieInteractionListener;
-import static com.marked.pixsee.face.SelfieFragment.newInstance;
+import static com.marked.pixsee.selfie.SelfieFragment.OnSelfieInteractionListener;
+import static com.marked.pixsee.selfie.SelfieFragment.newInstance;
 
 public class MainActivity
 		extends AppCompatActivity

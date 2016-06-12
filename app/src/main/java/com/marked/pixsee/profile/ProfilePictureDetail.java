@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.face.DetailFragment;
+import com.marked.pixsee.selfie.DetailFragment;
 import com.marked.pixsee.utility.BitmapUtils;
 
 import java.io.File;

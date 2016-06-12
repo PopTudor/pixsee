@@ -1,11 +1,11 @@
-package com.marked.pixsee.face.commands;
+package com.marked.pixsee.selfie.commands;
 
 import android.content.Context;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.commands.ClickCommand;
-import com.marked.pixsee.face.data.FaceObject;
-import com.marked.pixsee.face.custom.FaceRenderer;
+import com.marked.pixsee.selfie.data.SelfieObject;
+import com.marked.pixsee.selfie.custom.SelfieRenderer;
 
 import java.lang.ref.WeakReference;
 
@@ -13,19 +13,19 @@ import java.lang.ref.WeakReference;
  * Created by Tudor on 2016-05-10.
  */
 public class FavThreeClick extends ClickCommand {
-	private WeakReference<FaceRenderer> mFaceRenderer;
+	private WeakReference<SelfieRenderer> mFaceRenderer;
 
-	public FavThreeClick(Context context, FaceRenderer mFaceRenderer) {
+	public FavThreeClick(Context context, SelfieRenderer mSelfieRenderer) {
 		super(context);
-		this.mFaceRenderer = new WeakReference<>(mFaceRenderer);
+		this.mFaceRenderer = new WeakReference<>(mSelfieRenderer);
 	}
 
 	@Override
 	public void execute() {
-		FaceObject faceObject = new FaceObject.FaceBuilder(mContext)
+		SelfieObject selfieObject = new SelfieObject.FaceBuilder(mContext)
 				                        .withTextureId(R.drawable.kiss)
 				                        .withRenderer(mFaceRenderer.get())
 				                        .build();
-		mFaceRenderer.get().onFavoriteClicked(faceObject);
+		mFaceRenderer.get().onFavoriteClicked(selfieObject);
 	}
 }

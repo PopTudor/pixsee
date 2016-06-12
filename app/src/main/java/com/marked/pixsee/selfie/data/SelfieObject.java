@@ -1,4 +1,4 @@
-package com.marked.pixsee.face.data;
+package com.marked.pixsee.selfie.data;
 
 import android.content.Context;
 
@@ -30,7 +30,7 @@ import java.util.Random;
 /**
  * Created by Tudor on 4/15/2016.
  */
-public class FaceObject {
+public class SelfieObject {
 	private final int drawingPosition; /* Left/Right eye etc...*/
 	private final Material material; /* one object has only one material */
 	private final ASingleTexture texture; /* GIF use case */
@@ -40,7 +40,7 @@ public class FaceObject {
 	private final int textureId,resId;
 
 
-	private FaceObject(FaceBuilder faceBuilder) {
+	private SelfieObject(FaceBuilder faceBuilder) {
 		drawingPosition = faceBuilder.position;
 		material = faceBuilder.material;
 		texture = faceBuilder.texture;
@@ -72,7 +72,7 @@ public class FaceObject {
 
 	public static class FaceBuilder {
 		private static final String TAG = "FACE_BUILDER";
-		private FaceObject faceObject;
+		private SelfieObject mSelfieObject;
 		private Material material;
 		private int position;
 		private ASingleTexture texture;
@@ -134,7 +134,7 @@ public class FaceObject {
 			this.objectFile = objectFile;
 			return this;
 		}
-		public FaceObject build() {
+		public SelfieObject build() {
 			if (resId != -1) {
 				buildResLoader();
 				resId = textureId;
@@ -144,8 +144,8 @@ public class FaceObject {
 			buildTexture();
 			buildMaterial();
 
-			faceObject = new FaceObject(this);
-			return faceObject;
+			mSelfieObject = new SelfieObject(this);
+			return mSelfieObject;
 		}
 
 		private void buildMaterial() {

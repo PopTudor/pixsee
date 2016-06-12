@@ -43,6 +43,9 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
     archivesBaseName = rootProject.projectDir.getName()
+    dexOptions {
+        incremental true
+    }
     buildTypes {
         release {
             debuggable false

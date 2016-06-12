@@ -1,4 +1,4 @@
-package com.marked.pixsee.face.commands;
+package com.marked.pixsee.selfie.commands;
 
 import android.content.Context;
 import android.content.Intent;

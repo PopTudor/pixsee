@@ -1,4 +1,4 @@
-package com.marked.pixsee.face.custom;
+package com.marked.pixsee.selfie.custom;
 
 import android.Manifest;
 import android.content.Context;
@@ -23,7 +23,7 @@ public class CameraPreview extends ViewGroup {
 	private boolean mStartRequested;
 	private boolean mSurfaceAvailable;
 	private CameraSource mCameraSource;
-	private FaceRenderer mFaceRenderer;
+	private SelfieRenderer mSelfieRenderer;
 	private SurfaceTexture surfaceTexture;
 
 	public CameraPreview(Context context, AttributeSet attrs) {
@@ -36,11 +36,11 @@ public class CameraPreview extends ViewGroup {
 		mSurfaceAvailable = true;
 	}
 
-	public void start(@NotNull CameraSource cameraSource, @NotNull FaceRenderer overlay) throws IOException {
+	public void start(@NotNull CameraSource cameraSource, @NotNull SelfieRenderer overlay) throws IOException {
 		mCameraSource = cameraSource;
-		mFaceRenderer = overlay;
+		mSelfieRenderer = overlay;
 
-		mFaceRenderer.onResume();
+		mSelfieRenderer.onResume();
 		if (mCameraSource != null) {
 			mStartRequested = true;
 			startIfReady();
@@ -48,8 +48,8 @@ public class CameraPreview extends ViewGroup {
 	}
 
 	public void stop() {
-		if (mFaceRenderer != null) {
-			mFaceRenderer.onPause(); /* calls renderer.stopRendering() */
+		if (mSelfieRenderer != null) {
+			mSelfieRenderer.onPause(); /* calls renderer.stopRendering() */
 		}
 		if (mCameraSource != null) {
 			mCameraSource.stop();
@@ -57,7 +57,7 @@ public class CameraPreview extends ViewGroup {
 	}
 	public void release(){
 		stop();
-		mFaceRenderer = null;
+		mSelfieRenderer = null;
 		mCameraSource.release();
 		mCameraSource = null;
 		mSurfaceAvailable = false;
@@ -76,16 +76,16 @@ public class CameraPreview extends ViewGroup {
 				return;
 			}
 			mCameraSource.start(surfaceTexture);
-			if (mFaceRenderer != null) {
+			if (mSelfieRenderer != null) {
 				Size size = mCameraSource.getPreviewSize();
 				int min = Math.min(size.getWidth(), size.getHeight());
 				int max = Math.max(size.getWidth(), size.getHeight());
 				if (isPortraitMode()) {
 					// Swap width and height sizes when in portrait, since it will be rotated by
 					// 90 degrees
-					mFaceRenderer.setCameraInfo(min, max, mCameraSource.getCameraFacing());
+					mSelfieRenderer.setCameraInfo(min, max, mCameraSource.getCameraFacing());
 				} else {
-					mFaceRenderer.setCameraInfo(max, min, mCameraSource.getCameraFacing());
+					mSelfieRenderer.setCameraInfo(max, min, mCameraSource.getCameraFacing());
 				}
 			}
 			mStartRequested = false;

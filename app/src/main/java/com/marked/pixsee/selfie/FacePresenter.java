@@ -1,4 +1,4 @@
-package com.marked.pixsee.face;
+package com.marked.pixsee.selfie;
 
 import com.marked.pixsee.commands.Command;
 

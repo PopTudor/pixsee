@@ -1,4 +1,4 @@
-package com.marked.pixsee.face;
+package com.marked.pixsee.selfie;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

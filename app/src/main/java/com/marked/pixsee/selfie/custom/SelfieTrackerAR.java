@@ -1,4 +1,4 @@
-package com.marked.pixsee.face.custom;
+package com.marked.pixsee.selfie.custom;
 
 import android.util.Log;
 
@@ -9,11 +9,11 @@ import com.google.android.gms.vision.face.Face;
 /**
  * Created by Tudor on 5/6/2016.
  */
-public class FaceTrackerAR extends Tracker<Face> {
+public class SelfieTrackerAR extends Tracker<Face> {
 	private static final String TAG = "FACE_TRACKER_***";
 	private TrackerCallback trackerCallback;
 
-	public FaceTrackerAR(TrackerCallback trackerCallback) {
+	public SelfieTrackerAR(TrackerCallback trackerCallback) {
 		this.trackerCallback = trackerCallback;
 	}
 

@@ -1,7 +1,7 @@
-package com.marked.pixsee.face.di;
+package com.marked.pixsee.selfie.di;
 
-import com.marked.pixsee.face.custom.CameraSource;
-import com.marked.pixsee.face.SelfieFragment;
+import com.marked.pixsee.selfie.custom.CameraSource;
+import com.marked.pixsee.selfie.SelfieFragment;
 import com.marked.pixsee.injection.scopes.PerActivity;
 
 import dagger.Component;

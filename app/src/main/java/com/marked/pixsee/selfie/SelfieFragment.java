@@ -1,4 +1,4 @@
-package com.marked.pixsee.face;
+package com.marked.pixsee.selfie;
 
 import android.Manifest;
 import android.content.Context;
@@ -16,16 +16,16 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.face.commands.FavOneClick;
-import com.marked.pixsee.face.commands.FavThreeClick;
-import com.marked.pixsee.face.commands.FavTwoClick;
-import com.marked.pixsee.face.custom.CameraPreview;
-import com.marked.pixsee.face.custom.CameraSource;
-import com.marked.pixsee.face.custom.FaceRenderer;
-import com.marked.pixsee.face.data.FaceObject;
-import com.marked.pixsee.face.di.DaggerSelfieComponent;
-import com.marked.pixsee.face.di.SelfieComponent;
-import com.marked.pixsee.face.di.SelfieModule;
+import com.marked.pixsee.selfie.commands.FavOneClick;
+import com.marked.pixsee.selfie.commands.FavThreeClick;
+import com.marked.pixsee.selfie.commands.FavTwoClick;
+import com.marked.pixsee.selfie.custom.CameraPreview;
+import com.marked.pixsee.selfie.custom.CameraSource;
+import com.marked.pixsee.selfie.custom.SelfieRenderer;
+import com.marked.pixsee.selfie.data.SelfieObject;
+import com.marked.pixsee.selfie.di.DaggerSelfieComponent;
+import com.marked.pixsee.selfie.di.SelfieComponent;
+import com.marked.pixsee.selfie.di.SelfieModule;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.rajawali3d.view.TextureView;
@@ -38,7 +38,7 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-import static com.marked.pixsee.face.DetailFragment.OnDetailInteractionListener;
+import static com.marked.pixsee.selfie.DetailFragment.OnDetailInteractionListener;
 
 public class SelfieFragment extends Fragment implements OnDetailInteractionListener,FaceContract.View {
 	private static final String TAG = SelfieFragment.class + "***";
@@ -54,14 +54,14 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 	private CameraPreview mCameraPreview;
 
 	@Inject
-	FaceRenderer mFaceRenderer;
+	SelfieRenderer mSelfieRenderer;
 	private TextureView mFaceTextureView;
 	private ViewGroup mBottomLayout;
 
 	private ImageButton mCameraButton;
 
 	private SelfieComponent mSelfieComponent;
-	private FaceRenderer.FaceRendererCallback faceRendererCallback = new FaceRenderer.FaceRendererCallback() {
+	private SelfieRenderer.FaceRendererCallback faceRendererCallback = new SelfieRenderer.FaceRendererCallback() {
 		@Override
 		public void onTextureAvailable(SurfaceTexture texture) {
 			mCameraPreview.setSurfaceTexture(texture);
@@ -112,25 +112,26 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 
 		mFaceTextureView = (TextureView) rootView.findViewById(R.id.texture_view);
 		mFaceTextureView.setEGLContextClientVersion(2);
-		mFaceTextureView.setSurfaceRenderer(mFaceRenderer); /* the surface where the renderer should display it's scene*/
-		mFaceRenderer.setCallback(faceRendererCallback);
+		mFaceTextureView.setSurfaceRenderer(mSelfieRenderer); /* the surface where the renderer should display it's scene*/
+		mSelfieRenderer.setCallback(faceRendererCallback);
+		mFaceTextureView.setFrameRate(60);
 
 		rootView.findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mFacePresenter.execute(new FavOneClick(getContext(),mFaceRenderer));
+				mFacePresenter.execute(new FavOneClick(getContext(), mSelfieRenderer));
 			}
 		});
 		rootView.findViewById(R.id.favorite2).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mFacePresenter.execute(new FavTwoClick(getContext(),mFaceRenderer));
+				mFacePresenter.execute(new FavTwoClick(getContext(), mSelfieRenderer));
 			}
 		});
 		rootView.findViewById(R.id.favorite3).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mFacePresenter.execute(new FavThreeClick(getContext(),mFaceRenderer));
+				mFacePresenter.execute(new FavThreeClick(getContext(), mSelfieRenderer));
 			}
 		});
 
@@ -239,7 +240,7 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 	 */
 	private void startCameraSource() {
 		try {
-			mCameraPreview.start(mCameraSource, mFaceRenderer);
+			mCameraPreview.start(mCameraSource, mSelfieRenderer);
 		} catch (IOException e) {
 			Log.e(TAG, "Unable to start camera source.", e);
 			mCameraPreview.stop();
@@ -250,7 +251,7 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 	// Interaction listener interfaces
 	// ===============================================================================================
 	public interface OnFavoritesListener {
-		void onFavoriteClicked(FaceObject object);
+		void onFavoriteClicked(SelfieObject object);
 	}
 	public interface OnSelfieInteractionListener{
 		void showTakenPictureActions();

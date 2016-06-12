@@ -12,16 +12,16 @@
         android:id="@+id/previewContainer"
         >
 
-        <com.marked.pixsee.face.custom.CameraPreview
+        <com.marked.pixsee.selfie.custom.CameraPreview
             android:id="@+id/preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <!--<android.opengl.GLSurfaceVizew-->
-            <com.marked.pixsee.face.custom.FaceTextureView
+            <com.marked.pixsee.selfie.custom.SelfieTextureView
                 android:id="@+id/texture_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-        </com.marked.pixsee.face.custom.CameraPreview>
+        </com.marked.pixsee.selfie.custom.CameraPreview>
     </FrameLayout>
 
     <LinearLayout
