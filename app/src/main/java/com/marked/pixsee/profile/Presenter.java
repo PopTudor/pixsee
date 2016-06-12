@@ -28,4 +28,9 @@ public class Presenter implements ProfileContract.Presenter {
 	public void start() {
 
 	}
+
+	@Override
+	public void logOut() {
+		mUserDatasource.deleteAllUsers();
+	}
 }

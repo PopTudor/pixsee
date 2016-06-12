@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
+import com.marked.pixsee.chat.data.MessageContract;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.mapper.Mapper;
@@ -91,6 +92,8 @@ public class UserDiskDatasource implements UserDatasource {
 	@Override
 	public void deleteAllUsers() {
 		db.getWritableDatabase().delete(TABLE_NAME, null, null);
+		db.getWritableDatabase().delete(DatabaseContract.User.TABLE_NAME, null, null);
+		db.getWritableDatabase().delete(MessageContract.TABLE_NAME, null, null);
 	}
 
 	@Override

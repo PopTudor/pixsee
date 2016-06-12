@@ -144,7 +144,8 @@ public class UserRepository implements UserDatasource {
 
     @Override
     public void deleteAllUsers() {
-
+	    cache.clear();
+		disk.deleteAllUsers();
     }
 
     @Override

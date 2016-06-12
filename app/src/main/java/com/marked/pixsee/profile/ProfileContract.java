@@ -10,6 +10,8 @@ import com.marked.pixsee.data.repository.user.User;
 public interface ProfileContract {
 	interface Presenter extends BasePresenter{
 		void saveAppUser(User user);
+
+		void logOut();
 	}
 
 	interface View extends BaseView<Presenter> {
