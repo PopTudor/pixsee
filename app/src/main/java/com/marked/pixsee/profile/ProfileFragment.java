@@ -4,6 +4,7 @@ package com.marked.pixsee.profile;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,11 +15,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
@@ -82,6 +86,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 				.profileModule(new ProfileModule(this))
 				.build()
 				.inject(this);
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -106,15 +111,27 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 			}
 		});
 
-		((SimpleDraweeView)rootView.findViewById(R.id.iconSimpleDraweeView)).setOnClickListener(new View.OnClickListener() {
+		rootView.findViewById(R.id.iconSimpleDraweeView).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mProfileInteraction.onCameraClick();
 			}
 		});
-		((Button)rootView.findViewById(R.id.logoutButton)).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
+		((Toolbar) rootView.findViewById(R.id.toolbar)).getOverflowIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+		// Inflate the layout for this fragment
+		return rootView ;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_more,menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()){
+			case R.id.logoutButton:
 				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 				SharedPreferences.Editor editor = preferences.edit();
 				editor.clear();
@@ -122,11 +139,12 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 				Intent intent = new Intent(getActivity(), EntryActivity.class);
 				getActivity().startActivity(intent);
 				getActivity().finish();
-			}
-		});
-
-		// Inflate the layout for this fragment
-		return rootView ;
+				return true;
+			default:
+				Toast.makeText(getActivity(), "Menu not working!", Toast.LENGTH_SHORT).show();
+				break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	public void setProfilePicture(File profilePicture) {
