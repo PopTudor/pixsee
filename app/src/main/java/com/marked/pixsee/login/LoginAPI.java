@@ -5,6 +5,7 @@ import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.networking.ServerConstants;
 
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
@@ -14,6 +15,7 @@ import retrofit2.http.HEAD;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Query;
+import rx.Observable;
 
 /**
  * Created by Tudor Pop on 17-Feb-16.
@@ -33,7 +35,7 @@ public interface LoginAPI {
     Call<JsonObject> delete(@Body User friend);
 
     @HEAD(ServerConstants.USER)
-    Call<Void> hasAccount(@Query("email") String email);
+    Observable<Response<Void>> hasAccount(@Query("email") String email);
 
     @FormUrlEncoded
     @POST(ServerConstants.LOGIN)
