@@ -75,7 +75,7 @@ public class UserDiskDatasource implements UserDatasource {
 
 	@Override
 	public Observable saveAppUser(@NonNull User user) {
-		db.getWritableDatabase().update(DatabaseContract.User.TABLE_NAME, userToCvMapper.map(user),null,null);
+		db.getWritableDatabase().insertWithOnConflict(DatabaseContract.User.TABLE_NAME, null,userToCvMapper.map(user),SQLiteDatabase.CONFLICT_REPLACE);
 		return Observable.empty();
 	}
 

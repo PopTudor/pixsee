@@ -87,7 +87,7 @@ public class SignUpEmailFragment extends Fragment {
 		mListener = null;
 	}
 
-	interface SignUpEmailFragmentInteraction {
+	public interface SignUpEmailFragmentInteraction {
 		// TODO: Update argument type and name
 		void onSaveEmail(String emailEditText);
 	}

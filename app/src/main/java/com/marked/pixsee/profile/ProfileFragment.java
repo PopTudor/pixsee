@@ -132,6 +132,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()){
 			case R.id.logoutButton:
+				mPresenter.logOut();
 				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 				SharedPreferences.Editor editor = preferences.edit();
 				editor.clear();

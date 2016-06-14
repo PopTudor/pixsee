@@ -70,7 +70,7 @@ public class SignUpPassFragment extends Fragment {
 	}
 
 
-	interface SignUpPassFragmentInteraction {
+	public interface SignUpPassFragmentInteraction {
 		// TODO: Update argument type and name
 		void onSavePassword(String password);
 		void onSaveUsername(String username);

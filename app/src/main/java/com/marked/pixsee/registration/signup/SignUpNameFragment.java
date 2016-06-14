@@ -86,7 +86,7 @@ public class SignUpNameFragment extends Fragment {
 		mListener = null;
 	}
 
-	interface SignUpNameFragmentInteraction {
+	public interface SignUpNameFragmentInteraction {
 		void onSaveName(String name);
 	}
 
