@@ -1,9 +1,9 @@
-package com.marked.pixsee.signup.di;
+package com.marked.pixsee.registration.di;
 
 import com.marked.pixsee.injection.components.AppComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.injection.scopes.PerActivity;
-import com.marked.pixsee.signup.SignUpActivity;
+import com.marked.pixsee.registration.RegistrationActivity;
 
 import dagger.Component;
 
@@ -13,5 +13,5 @@ import dagger.Component;
 @Component(modules = {SignupModule.class, ActivityModule.class},dependencies = {AppComponent.class})
 @PerActivity
 public interface SignupComponent {
-	void inject(SignUpActivity signUpActivity);
+	void inject(RegistrationActivity registrationActivity);
 }

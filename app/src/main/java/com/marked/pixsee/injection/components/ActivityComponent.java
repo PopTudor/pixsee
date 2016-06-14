@@ -8,7 +8,6 @@ import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.injection.scopes.PerActivity;
-import com.marked.pixsee.login.LogInActivity;
 
 import dagger.Component;
 
@@ -18,8 +17,6 @@ import dagger.Component;
 @Component(modules = {ActivityModule.class})
 @PerActivity
 public interface ActivityComponent {
-	void inject(LogInActivity activity);
-
 	AppCompatActivity provideAppCompatActivity();
 
 	Context provideContext();

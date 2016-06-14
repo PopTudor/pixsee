@@ -1,4 +1,4 @@
-package com.marked.pixsee.signup;
+package com.marked.pixsee.registration;
 
 
 import android.app.ProgressDialog;
@@ -15,21 +15,26 @@ import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.main.MainActivity;
-import com.marked.pixsee.signup.di.DaggerSignupComponent;
-import com.marked.pixsee.signup.di.SignupModule;
+import com.marked.pixsee.registration.di.DaggerSignupComponent;
+import com.marked.pixsee.registration.di.SignupModule;
+import com.marked.pixsee.registration.login.LoginFragment;
+import com.marked.pixsee.registration.signup.SignUpEmailFragment;
+import com.marked.pixsee.registration.signup.SignUpNameFragment;
+import com.marked.pixsee.registration.signup.SignUpPassFragment;
 
 import javax.inject.Inject;
 
-public class SignUpActivity
+public class RegistrationActivity
 		extends AppCompatActivity
 		implements SignUpNameFragment.SignUpNameFragmentInteraction,
 		SignUpEmailFragment.SignUpEmailFragmentInteraction,
-		SignUpPassFragment.SignUpPassFragmentInteraction, SignUpContract.View {
+		SignUpPassFragment.SignUpPassFragmentInteraction,
+		RegistrationContract.View,LoginFragment.LoginInteractionListener {
 	private FragmentManager mFragmentManager;
 	private ProgressDialog mProgressDialog;
 
 	@Inject
-	SignUpContract.Presenter mPresenter;
+	RegistrationContract.Presenter mPresenter;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,6 +92,13 @@ public class SignUpActivity
 	}
 
 	@Override
+	public void showLoginStep() {
+		mFragmentManager.beginTransaction()
+				.replace(R.id.fragmentContainer, LoginFragment.newInstance())
+				.commit();
+	}
+
+	@Override
 	public void onSavePassword(@NonNull String password) {
 		mPresenter.onSavePassword(password);
 	}
@@ -108,6 +120,7 @@ public class SignUpActivity
 	public void showSignupStepName() {
 		mFragmentManager.beginTransaction()
 				.add(R.id.fragmentContainer, SignUpNameFragment.newInstance())
+				.addToBackStack(null)
 				.commit();
 	}
 
@@ -121,7 +134,7 @@ public class SignUpActivity
 
 	@Override
 	public void showToast(String message) {
-		Toast.makeText(SignUpActivity.this, message, Toast.LENGTH_SHORT).show();
+		Toast.makeText(RegistrationActivity.this, message, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -130,8 +143,18 @@ public class SignUpActivity
 	}
 
 	@Override
-	public void setPresenter(SignUpContract.Presenter presenter) {
+	public void setPresenter(RegistrationContract.Presenter presenter) {
 		mPresenter = presenter;
+	}
+
+	@Override
+	public void onSignupClicked() {
+		showSignupStepName();
+	}
+
+	@Override
+	public void onLoginClicked(String email, String password) {
+		mPresenter.handleLogin(email, password);
 	}
 }
 

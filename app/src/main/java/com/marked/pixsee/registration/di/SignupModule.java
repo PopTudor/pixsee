@@ -1,12 +1,12 @@
-package com.marked.pixsee.signup.di;
+package com.marked.pixsee.registration.di;
 
 import android.content.SharedPreferences;
 
 import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.injection.scopes.PerActivity;
 import com.marked.pixsee.networking.ServerConstants;
-import com.marked.pixsee.signup.Presenter;
-import com.marked.pixsee.signup.SignUpContract;
+import com.marked.pixsee.registration.Presenter;
+import com.marked.pixsee.registration.RegistrationContract;
 
 import javax.inject.Named;
 
@@ -20,16 +20,16 @@ import retrofit2.Retrofit;
 @Module
 @PerActivity
 public class SignupModule {
-	private SignUpContract.View mView;
+	private RegistrationContract.View mView;
 
-	public SignupModule(SignUpContract.View view) {
+	public SignupModule(RegistrationContract.View view) {
 		mView = view;
 	}
 
 	@PerActivity
 	@Provides
-	SignUpContract.Presenter providePresenter(@Named(ServerConstants.SERVER) Retrofit retrofit, UserRepository datasource,
-	                                          SharedPreferences preferences) {
+	RegistrationContract.Presenter providePresenter(@Named(ServerConstants.SERVER) Retrofit retrofit, UserRepository datasource,
+	                                                SharedPreferences preferences) {
 		return new Presenter(mView, retrofit,datasource,preferences);
 	}
 }

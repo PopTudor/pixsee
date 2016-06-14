@@ -1,16 +1,21 @@
-package com.marked.pixsee.signup;
+package com.marked.pixsee.registration;
 
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
+import com.marked.pixsee.registration.signup.SignUpEmailFragment;
+import com.marked.pixsee.registration.signup.SignUpNameFragment;
+import com.marked.pixsee.registration.signup.SignUpPassFragment;
 
 /**
  * Created by Tudor on 13-Jun-16.
  */
-public interface SignUpContract {
+public interface RegistrationContract {
 	interface Presenter extends BasePresenter, SignUpNameFragment.SignUpNameFragmentInteraction,SignUpEmailFragment
 			.SignUpEmailFragmentInteraction,SignUpPassFragment.SignUpPassFragmentInteraction{
 
 		void checkEmail(String email);
+
+		void handleLogin(String email, String password);
 	}
 
 	interface View extends BaseView<Presenter> {
@@ -30,6 +35,8 @@ public interface SignUpContract {
 		void signupComplete(String name, String email, String username, String password);
 
 		void showMainScreen();
+
+		void showLoginStep();
 	}
 }
 
