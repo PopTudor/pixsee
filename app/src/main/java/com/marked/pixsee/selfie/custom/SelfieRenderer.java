@@ -182,7 +182,7 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 		float x2 = face.getWidth();
 		float y2 = face.getHeight();
 		double dist = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-		double scaleValue = dist / mDefaultViewportWidth;
+		double scaleValue = dist / mDefaultViewportWidth; /* convert from pixels to normalized scale*/
 		object3D.setScale(scaleValue);
 	}
 
@@ -223,7 +223,16 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	public float scaleY(float vertical) {
 		return vertical * mHeightScaleFactor;
 	}
-
+	/**
+	 * Adjusts the y coordinate from the preview's coordinate system to the view coordinate
+	 * system.
+	 */
+	private float translateY(float y) {
+		if (mFacing == CameraSource.CAMERA_FACING_FRONT)
+			return mCurrentViewportHeight - scaleY(y);
+		else
+			return scaleY(y);
+	}
 	/**
 	 * Adjusts the x coordinate from the preview's coordinate system to the view coordinate
 	 * system.
@@ -246,17 +255,6 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 			mPreviewHeight = previewHeight;
 			mFacing = facing;
 		}
-	}
-
-	/**
-	 * Adjusts the y coordinate from the preview's coordinate system to the view coordinate
-	 * system.
-	 */
-	private float translateY(float y) {
-		if (mFacing == CameraSource.CAMERA_FACING_FRONT)
-			return mCurrentViewportHeight - scaleY(y);
-		else
-			return scaleY(y);
 	}
 
 	@Override

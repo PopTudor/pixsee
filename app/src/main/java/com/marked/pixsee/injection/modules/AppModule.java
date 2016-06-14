@@ -44,7 +44,6 @@ public class AppModule {
 	}
 
 	@Provides
-	@Singleton
 	@Named(ServerConstants.SERVER)
 	Retrofit providesRetrofit(OkHttpClient client) {
 		return new Retrofit.Builder()

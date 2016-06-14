@@ -14,7 +14,7 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.commons.SpaceItemDecorator;
 import com.marked.pixsee.shop.Contract;
 
-import org.antlr.v4.runtime.misc.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;

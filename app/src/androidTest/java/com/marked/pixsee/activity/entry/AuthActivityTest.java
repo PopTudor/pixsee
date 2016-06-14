@@ -8,7 +8,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.entry.AuthActivity;
+import com.marked.pixsee.login.LogInActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,13 +21,13 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 class AuthActivityTest {
 	@Rule
-	ActivityTestRule<AuthActivity> activity = new ActivityTestRule<>(AuthActivity.class);
+	ActivityTestRule<LogInActivity> activity = new ActivityTestRule<>(LogInActivity.class);
 
 
 	@Test
 	void testLogInButtonShouldStartLogInActivity() {
 
-		Espresso.onView(ViewMatchers.withId(R.id.entryLogInButton)).perform(ViewActions.click());
+		Espresso.onView(ViewMatchers.withId(R.id.logInButtonPixy)).perform(ViewActions.click());
 		// this view is in login activity
 		Espresso.onView(ViewMatchers.withId(R.id.logInButtonPixy)).check(ViewAssertions.matches(ViewMatchers.withText("login")));
 	}

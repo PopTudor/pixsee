@@ -21,23 +21,29 @@ import rx.Observable;
  * Created by Tudor Pop on 17-Feb-16.
  */
 public interface LoginAPI {
-    @FormUrlEncoded
-    @POST(ServerConstants.USER)
-    Call<JsonObject> create(@Field("name") String name, @Field("email") String email, @Field("token") String token, @Field("password") String password);
+	@FormUrlEncoded
+	@POST(ServerConstants.USER)
+	Observable<Response<JsonObject>> create(@Field("name") String name, @Field("email") String email,
+	                                        @Field("username") String username, @Field("password") String password,
+	                                        @Field("token") String token);
 
-    @GET(ServerConstants.USER)
-    Call<JsonObject> read(@Query("email") String email);
+	@GET(ServerConstants.USER)
+	Call<JsonObject> read(@Query("email") String email);
 
-    @PUT(ServerConstants.USER)
-    Call<JsonObject> update(@Body User friend);
 
-    @DELETE(ServerConstants.USER)
-    Call<JsonObject> delete(@Body User friend);
+	@PUT(ServerConstants.USER)
+	Call<JsonObject> update(@Body User friend);
 
-    @HEAD(ServerConstants.USER)
-    Observable<Response<Void>> hasAccount(@Query("email") String email);
+	@DELETE(ServerConstants.USER)
+	Call<JsonObject> delete(@Body User friend);
 
-    @FormUrlEncoded
-    @POST(ServerConstants.LOGIN)
-    Call<JsonObject> login(@Field("email") String email, @Field("password") String password, @Field("token") String token);
+	@HEAD(ServerConstants.USER)
+	Observable<Response<Void>> checkUsername(@Query("username") String username);
+
+	@HEAD(ServerConstants.USER)
+	Observable<Response<Void>> hasAccount(@Query("email") String email);
+
+	@FormUrlEncoded
+	@POST(ServerConstants.LOGIN)
+	Observable<Response<JsonObject>> login(@Field("email") String email, @Field("password") String password, @Field("token") String token);
 }

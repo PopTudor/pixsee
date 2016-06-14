@@ -2,6 +2,7 @@ package com.marked.pixsee.injection.modules;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +14,6 @@ import com.marked.pixsee.data.repository.user.UserDiskDatasource;
 import com.marked.pixsee.data.repository.user.UserNetworkDatasource;
 import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.injection.scopes.PerActivity;
-import com.marked.pixsee.service.RegistrationBroadcastReceiver;
-import com.marked.pixsee.signup.DialogRegistration;
 
 import dagger.Module;
 import dagger.Provides;
@@ -43,14 +42,14 @@ public class ActivityModule {
 
 	@Provides
 	@PerActivity
-	RegistrationBroadcastReceiver.RegistrationListener provideDialogRegistration(ProgressDialog dialog) {
-		return new DialogRegistration(dialog, activity);
+	LocalBroadcastManager provideLocalBroadcastManager() {
+		return LocalBroadcastManager.getInstance(activity);
 	}
 
 	@Provides
 	@PerActivity
-	LocalBroadcastManager provideLocalBroadcastManager() {
-		return LocalBroadcastManager.getInstance(activity);
+	SharedPreferences provideSharedPreferences() {
+		return PreferenceManager.getDefaultSharedPreferences(activity);
 	}
 
 	@Provides

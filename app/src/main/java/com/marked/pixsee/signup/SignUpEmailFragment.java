@@ -10,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
 import com.marked.pixsee.utility.Utils;
 
@@ -37,8 +39,8 @@ public class SignUpEmailFragment extends Fragment {
 		hiUser = (TextView) rootView.findViewById(R.id.hiUser);
 		emailEditText = (TextView) rootView.findViewById(R.id.emailEditText);
 
-		hiUser.setText("Beautiful name " + getArguments().getString(NAME_TAG));
-		nextButton = (Button) rootView.findViewById(R.id.nextButton);
+		hiUser.setText(String.format("Nice to meet you %s!", getArguments().getString(NAME_TAG)));
+		nextButton = (Button) rootView.findViewById(R.id.finishButton);
 		nextButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -55,7 +57,9 @@ public class SignUpEmailFragment extends Fragment {
 				}
 			}
 		});
-
+		if (BuildConfig.DEBUG) {
+			((EditText) rootView.findViewById(R.id.emailEditText)).setText("tudor08pop@yahoo.com");
+		}
 		// Inflate the layout for this fragment
 		return rootView;
 	}

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:scrollbarStyle="outsideOverlay"
-    tools:context=".ui.activity.SignUpActivity"
+    tools:context=".signup.SignUpActivity"
     >
 
 </android.support.design.widget.CoordinatorLayout>

@@ -10,7 +10,7 @@
     <string name="menu_extended_tracking">Extended Tracking</string>
     <string name="user_data_file_name">com.marked.vifo.USER_DATA_LOGGED</string>
     <string name="title_activity_login">loginActivity</string>
-    <string name="log_in_with_pixy">Log in with Pixy</string>
+    <string name="log_in_with_pixy">Log in</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="title_contact_list">Contacts</string>
     <string name="title_contact_detail">Contact Detail</string>
