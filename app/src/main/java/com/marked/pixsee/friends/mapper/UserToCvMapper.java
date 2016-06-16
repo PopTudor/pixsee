@@ -2,7 +2,7 @@ package com.marked.pixsee.friends.mapper;
 
 import android.content.ContentValues;
 
-import com.marked.pixsee.data.mapper.Mapper;
+import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.friends.data.FriendConstants;
 
@@ -19,6 +19,7 @@ public class UserToCvMapper implements Mapper<User,ContentValues> {
 		values.put(FriendConstants.TOKEN, user.getToken());
 		values.put(FriendConstants.USERNAME, user.getUsername());
 		values.put(FriendConstants.COVER_URL, user.getCoverUrl());
+		values.put(FriendConstants.PASSWORD, user.getPassword());
 		values.put(FriendConstants.ICON_URL, user.getIconUrl());
 		return values;
 	}

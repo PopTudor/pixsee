@@ -1,4 +1,4 @@
-package com.marked.pixsee.registration.login;
+package com.marked.pixsee.authentification.login;
 
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.repository.user.User;

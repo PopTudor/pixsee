@@ -1,4 +1,4 @@
-package com.marked.pixsee.data.mapper;
+package com.marked.pixsee.data;
 
 /**
  * Created by Tudor Pop on 29-Mar-16.

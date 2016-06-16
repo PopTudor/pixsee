@@ -1,9 +1,10 @@
-package com.marked.pixsee.data.mapper;
+package com.marked.pixsee.chat.mapper;
 
 import android.content.ContentValues;
 
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.data.Mapper;
 
 import java.util.Map;
 

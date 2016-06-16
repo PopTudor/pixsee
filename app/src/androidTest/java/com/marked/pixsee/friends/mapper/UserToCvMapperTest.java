@@ -1,23 +1,27 @@
 package com.marked.pixsee.friends.mapper;
 
 import android.content.ContentValues;
+import android.support.test.filters.SmallTest;
+import android.support.test.runner.AndroidJUnit4;
 
-import com.marked.pixsee.friends.data.FriendConstants;
 import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.friends.data.FriendConstants;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * Created by Tudor on 6/2/2016.
  */
+@RunWith(AndroidJUnit4.class)
+@SmallTest
 public class UserToCvMapperTest {
 	UserToCvMapper userToCvMapper = new UserToCvMapper();
 
 	@Before
-	void setUp(){
-		ContentValues contentValues = new ContentValues();
+	public void setUp(){
 	}
 	@Test
 	public void testMap() throws Exception {

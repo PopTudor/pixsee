@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import com.marked.pixsee.chat.data.MessageContract;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.database.PixyDatabase;
-import com.marked.pixsee.data.mapper.Mapper;
+import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.friends.data.FriendContractDB;
 import com.marked.pixsee.friends.mapper.CursorToUserMapper;
 import com.marked.pixsee.friends.mapper.UserToCvMapper;

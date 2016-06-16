@@ -1,4 +1,4 @@
-package com.marked.pixsee.registration;
+package com.marked.pixsee.authentification;
 
 
 import android.app.ProgressDialog;
@@ -15,26 +15,26 @@ import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.main.MainActivity;
-import com.marked.pixsee.registration.di.DaggerSignupComponent;
-import com.marked.pixsee.registration.di.SignupModule;
-import com.marked.pixsee.registration.login.LoginFragment;
-import com.marked.pixsee.registration.signup.SignUpEmailFragment;
-import com.marked.pixsee.registration.signup.SignUpNameFragment;
-import com.marked.pixsee.registration.signup.SignUpPassFragment;
+import com.marked.pixsee.authentification.di.DaggerAuthenticationComponent;
+import com.marked.pixsee.authentification.di.AuthenticationModule;
+import com.marked.pixsee.authentification.login.LoginFragment;
+import com.marked.pixsee.authentification.signup.SignUpEmailFragment;
+import com.marked.pixsee.authentification.signup.SignUpNameFragment;
+import com.marked.pixsee.authentification.signup.SignUpPassFragment;
 
 import javax.inject.Inject;
 
-public class RegistrationActivity
+public class AuthenticationActivity
 		extends AppCompatActivity
 		implements SignUpNameFragment.SignUpNameFragmentInteraction,
 		SignUpEmailFragment.SignUpEmailFragmentInteraction,
 		SignUpPassFragment.SignUpPassFragmentInteraction,
-		RegistrationContract.View,LoginFragment.LoginInteractionListener {
+		AuthenticationContract.View,LoginFragment.LoginInteractionListener {
 	private FragmentManager mFragmentManager;
 	private ProgressDialog mProgressDialog;
 
 	@Inject
-	RegistrationContract.Presenter mPresenter;
+	AuthenticationContract.Presenter mPresenter;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,10 +42,10 @@ public class RegistrationActivity
 		setContentView(R.layout.activity_sign_up);
 		mFragmentManager = getSupportFragmentManager();
 		mProgressDialog = new ProgressDialog(this);
-		DaggerSignupComponent.builder()
+		DaggerAuthenticationComponent.builder()
 				.appComponent(((Pixsee) getApplication()).getAppComponent())
 				.activityModule(new ActivityModule(this))
-				.signupModule(new SignupModule(this))
+				.signupModule(new AuthenticationModule(this))
 				.build().inject(this);
 	}
 
@@ -134,7 +134,7 @@ public class RegistrationActivity
 
 	@Override
 	public void showToast(String message) {
-		Toast.makeText(RegistrationActivity.this, message, Toast.LENGTH_SHORT).show();
+		Toast.makeText(AuthenticationActivity.this, message, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class RegistrationActivity
 	}
 
 	@Override
-	public void setPresenter(RegistrationContract.Presenter presenter) {
+	public void setPresenter(AuthenticationContract.Presenter presenter) {
 		mPresenter = presenter;
 	}
 

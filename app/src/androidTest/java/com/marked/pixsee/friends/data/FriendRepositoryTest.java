@@ -29,7 +29,7 @@ public class FriendRepositoryTest {
 	PixyDatabase pixydb;
 
 	@Before
-	void setupViewModel() {
+	public void setupViewModel() {
 		context = InstrumentationRegistry.getTargetContext();
 		pixydb = PixyDatabase.getInstance(context);
 		UserDiskDatasource friendsDiskDatasource = new UserDiskDatasource(pixydb);
@@ -38,7 +38,7 @@ public class FriendRepositoryTest {
 	}
 
 	@Test
-	void testLength() {
+	public void testLength() {
 //        Mockito.`when`(pixydb.readableDatabase.select(DatabaseContract.Friend.TABLE_NAME)).thenReturn(selectQueryBuilder)
 //        Mockito.`when`(pixydb.readableDatabase.select(DatabaseContract.Friend.TABLE_NAME).exec { count }).thenReturn(0)
 		Assert.assertEquals(0, friendRepository.length());

@@ -1,15 +1,15 @@
-package com.marked.pixsee.registration;
+package com.marked.pixsee.authentification;
 
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
-import com.marked.pixsee.registration.signup.SignUpEmailFragment;
-import com.marked.pixsee.registration.signup.SignUpNameFragment;
-import com.marked.pixsee.registration.signup.SignUpPassFragment;
+import com.marked.pixsee.authentification.signup.SignUpEmailFragment;
+import com.marked.pixsee.authentification.signup.SignUpNameFragment;
+import com.marked.pixsee.authentification.signup.SignUpPassFragment;
 
 /**
  * Created by Tudor on 13-Jun-16.
  */
-public interface RegistrationContract {
+public interface AuthenticationContract {
 	interface Presenter extends BasePresenter, SignUpNameFragment.SignUpNameFragmentInteraction,SignUpEmailFragment
 			.SignUpEmailFragmentInteraction,SignUpPassFragment.SignUpPassFragmentInteraction{
 

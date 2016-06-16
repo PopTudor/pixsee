@@ -1,9 +1,10 @@
-package com.marked.pixsee.data.mapper;
+package com.marked.pixsee.chat.mapper;
 
 import android.database.Cursor;
 
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageContract;
+import com.marked.pixsee.data.Mapper;
 
 /**
  * Created by Tudor on 2016-05-19.

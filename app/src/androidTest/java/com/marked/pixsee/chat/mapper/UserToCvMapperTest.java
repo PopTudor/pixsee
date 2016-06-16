@@ -1,4 +1,4 @@
-package com.marked.pixsee.data.mapper;
+package com.marked.pixsee.chat.mapper;
 
 import android.content.ContentValues;
 import android.support.test.runner.AndroidJUnit4;

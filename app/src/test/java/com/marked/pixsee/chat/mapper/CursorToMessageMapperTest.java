@@ -1,4 +1,4 @@
-package com.marked.pixsee.data.mapper;
+package com.marked.pixsee.chat.mapper;
 
 import org.junit.Test;
 

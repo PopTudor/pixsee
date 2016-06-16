@@ -1,4 +1,4 @@
-package com.marked.pixsee.registration;
+package com.marked.pixsee.authentification;
 
 import android.content.SharedPreferences;
 import android.util.Patterns;
@@ -7,20 +7,16 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.marked.pixsee.authentification.login.LoginAPI;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.data.repository.user.UserDatasource;
 import com.marked.pixsee.networking.HTTPStatusCodes;
-import com.marked.pixsee.networking.ServerConstants;
-import com.marked.pixsee.registration.login.LoginAPI;
 import com.marked.pixsee.utility.GCMConstants;
 
 import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
 
-import javax.inject.Named;
-
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -30,21 +26,21 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Tudor on 13-Jun-16.
  */
-public class Presenter implements RegistrationContract.Presenter {
-	private WeakReference<RegistrationContract.View> mView;
-	private Retrofit mRetrofit;
+public class Presenter implements AuthenticationContract.Presenter {
+	private final WeakReference<AuthenticationContract.View> mView;
+	private final LoginAPI mLoginAPI;
+	private final UserDatasource mDatasource;
+	private final SharedPreferences mPreferences;
 	private String mName;
 	private String mEmail;
 	private String mPassword;
 	private String mUsername;
-	private UserDatasource mDatasource;
-	private SharedPreferences mPreferences;
 
-	public Presenter(RegistrationContract.View view, @Named(ServerConstants.SERVER) Retrofit retrofit, UserDatasource datasource, SharedPreferences preferences) {
+	public Presenter(AuthenticationContract.View view, LoginAPI loginAPI, UserDatasource datasource, SharedPreferences preferences) {
+		mLoginAPI = loginAPI;
 		mDatasource = datasource;
 		mPreferences = preferences;
-		mView = new WeakReference<RegistrationContract.View>(view);
-		mRetrofit = retrofit;
+		mView = new WeakReference<AuthenticationContract.View>(view);
 		mView.get().setPresenter(this);
 	}
 
@@ -62,8 +58,7 @@ public class Presenter implements RegistrationContract.Presenter {
 	 */
 	@Override
 	public void checkEmail(String email) {
-		mRetrofit.create(LoginAPI.class)
-				.hasAccount(email)
+		mLoginAPI.hasAccount(email)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Subscriber<Response<Void>>() {
@@ -87,7 +82,7 @@ public class Presenter implements RegistrationContract.Presenter {
 					public void onNext(Response<Void> jsonObject) {
 						if (jsonObject.code() == HTTPStatusCodes.REQUEST_CONFLICT)
 							mView.get().showToast("You already have an account");
-						else if (jsonObject.isSuccess() && jsonObject.code() == HTTPStatusCodes.REQUEST_OK) {
+						else if (jsonObject.isSuccessful() && jsonObject.code() == HTTPStatusCodes.REQUEST_OK) {
 							mView.get().showSignupStepPassword();
 						}
 					}
@@ -109,8 +104,7 @@ public class Presenter implements RegistrationContract.Presenter {
 	@Override
 	public void handleLogin(String email, String password) {
 		if (validateLogin(email, password)) {
-			mRetrofit.create(LoginAPI.class)
-					.login(email, password, FirebaseInstanceId.getInstance().getToken())
+			mLoginAPI.login(email, password, FirebaseInstanceId.getInstance().getToken())
 					.filter(new Func1<Response<JsonObject>, Boolean>() {
 						@Override
 						public Boolean call(Response<JsonObject> jsonObjectResponse) {
@@ -133,7 +127,7 @@ public class Presenter implements RegistrationContract.Presenter {
 
 						@Override
 						public void onNext(Response<JsonObject> response) {
-							if (response.isSuccess() && response.code() == HTTPStatusCodes.REQUEST_OK) {
+							if (response.isSuccessful() && response.code() == HTTPStatusCodes.REQUEST_OK) {
 								Gson gson = new Gson();
 								User user = gson.fromJson(response.body().get("user").getAsJsonObject(), User.class);
 								mDatasource.saveAppUser(user);
@@ -177,8 +171,7 @@ public class Presenter implements RegistrationContract.Presenter {
 	public void onSaveUsername(final String username) {
 		mUsername = username;
 		mView.get().showDialog("Signing up", "Please wait...");
-		mRetrofit.create(LoginAPI.class)
-				.checkUsername(username)
+		mLoginAPI.checkUsername(username)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Subscriber<Response<Void>>() {
@@ -195,7 +188,7 @@ public class Presenter implements RegistrationContract.Presenter {
 
 					@Override
 					public void onNext(Response<Void> voidResponse) {
-						if (voidResponse.isSuccess() && voidResponse.code() == HTTPStatusCodes.REQUEST_OK) {
+						if (voidResponse.isSuccessful() && voidResponse.code() == HTTPStatusCodes.REQUEST_OK) {
 							handleActionSignup(mName, mEmail, mUsername, mPassword, FirebaseInstanceId.getInstance().getToken());
 						} else if (voidResponse.code() == HTTPStatusCodes.REQUEST_CONFLICT) {
 							mView.get().showToast("The username is already taken.");
@@ -235,8 +228,7 @@ public class Presenter implements RegistrationContract.Presenter {
 	 */
 
 	public void handleActionSignup(String name, String email, String username, String password, String token) {
-		mRetrofit.create(LoginAPI.class)
-				.create(name, email, username, password, token)
+		mLoginAPI.create(name, email, username, password, token)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Subscriber<Response<JsonObject>>() {
@@ -252,7 +244,7 @@ public class Presenter implements RegistrationContract.Presenter {
 
 					@Override
 					public void onNext(Response<JsonObject> response) {
-						if (response.isSuccess()) {
+						if (response.isSuccessful()) {
 							Gson gson = new Gson();
 							User user = gson.fromJson(response.body().get("user").getAsJsonObject(), User.class);
 							mDatasource.saveAppUser(user);

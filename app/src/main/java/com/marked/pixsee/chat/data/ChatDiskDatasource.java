@@ -6,9 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import com.marked.pixsee.data.database.PixyDatabase;
-import com.marked.pixsee.data.mapper.CursorToMessageMapper;
-import com.marked.pixsee.data.mapper.Mapper;
-import com.marked.pixsee.data.mapper.MessageToCVMapper;
+import com.marked.pixsee.chat.mapper.CursorToMessageMapper;
+import com.marked.pixsee.data.Mapper;
+import com.marked.pixsee.chat.mapper.MessageToCVMapper;
 import com.marked.pixsee.data.repository.user.User;
 
 import java.util.ArrayList;

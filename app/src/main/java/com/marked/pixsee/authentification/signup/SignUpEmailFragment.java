@@ -1,4 +1,4 @@
-package com.marked.pixsee.registration.signup;
+package com.marked.pixsee.authentification.signup;
 
 
 import android.content.Context;

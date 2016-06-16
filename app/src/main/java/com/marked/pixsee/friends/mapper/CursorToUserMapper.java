@@ -2,7 +2,7 @@ package com.marked.pixsee.friends.mapper;
 
 import android.database.Cursor;
 
-import com.marked.pixsee.data.mapper.Mapper;
+import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.friends.data.FriendContractDB;
 import com.marked.pixsee.data.repository.user.User;
 
