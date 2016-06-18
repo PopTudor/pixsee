@@ -27,7 +27,7 @@ public class AddUserModule {
 	@Provides
 	@PerFragment
 	AddUsernameContract.Presenter providesPresenter(UserRepository repository, Context context) {
-		User user = repository.getUser(DatabaseContract.User.TABLE_NAME);
+		User user = repository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
 
 		return new Presenter(view, repository,new NetworkService(user,context.getString(R.string.gcm_defaultSenderId)));
 	}

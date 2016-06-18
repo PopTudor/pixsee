@@ -80,6 +80,6 @@ public class ActivityModule {
 	@Provides
 	@PerActivity
 	User provideAppsUser(UserRepository repository){
-		return repository.getUser(DatabaseContract.User.TABLE_NAME);
+		return repository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
 	}
 }

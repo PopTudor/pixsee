@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
+import com.google.gson.JsonObject;
 import com.marked.pixsee.chat.data.MessageContract;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.database.PixyDatabase;
@@ -68,14 +69,14 @@ public class UserDiskDatasource implements UserDatasource {
 	}
 
 	@Override
-	public Observable<Boolean> saveUser(@NonNull User user) {
+	public Observable<JsonObject> saveUser(@NonNull User user) {
 		db.getWritableDatabase().insertWithOnConflict(TABLE_NAME, null,userToCvMapper.map(user),SQLiteDatabase.CONFLICT_REPLACE);
 		return Observable.empty();
 	}
 
 	@Override
 	public Observable saveAppUser(@NonNull User user) {
-		db.getWritableDatabase().insertWithOnConflict(DatabaseContract.User.TABLE_NAME, null,userToCvMapper.map(user),SQLiteDatabase.CONFLICT_REPLACE);
+		db.getWritableDatabase().insertWithOnConflict(DatabaseContract.AppsUser.TABLE_NAME, null,userToCvMapper.map(user),SQLiteDatabase.CONFLICT_REPLACE);
 		return Observable.empty();
 	}
 
@@ -92,7 +93,7 @@ public class UserDiskDatasource implements UserDatasource {
 	@Override
 	public void deleteAllUsers() {
 		db.getWritableDatabase().delete(TABLE_NAME, null, null);
-		db.getWritableDatabase().delete(DatabaseContract.User.TABLE_NAME, null, null);
+		db.getWritableDatabase().delete(DatabaseContract.AppsUser.TABLE_NAME, null, null);
 		db.getWritableDatabase().delete(MessageContract.TABLE_NAME, null, null);
 	}
 
@@ -122,8 +123,8 @@ public class UserDiskDatasource implements UserDatasource {
 	public void saveUser(@NonNull List<User> users) {
 		db.getWritableDatabase().beginTransaction();
 		try {
-			for (User element : users) {
-				db.getWritableDatabase().insertWithOnConflict(TABLE_NAME, null, userToCvMapper.map(element), SQLiteDatabase.CONFLICT_REPLACE);
+			for (User user : users) {
+				db.getWritableDatabase().insertWithOnConflict(TABLE_NAME, null, userToCvMapper.map(user), SQLiteDatabase.CONFLICT_REPLACE);
 			}
 			db.getWritableDatabase().setTransactionSuccessful();
 		} finally {

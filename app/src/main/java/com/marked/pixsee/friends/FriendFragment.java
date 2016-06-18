@@ -83,7 +83,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 	@Override
 	public void onStart() {
 		super.onStart();
-		mPresenter.start();/* onStart is called twice */
+		mPresenter.attach();/* onStart is called twice */
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

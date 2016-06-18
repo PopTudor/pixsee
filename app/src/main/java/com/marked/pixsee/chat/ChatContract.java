@@ -7,6 +7,7 @@ import com.marked.pixsee.BaseView;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.selfie.SelfieFragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +18,7 @@ import java.util.List;
  */
 public interface ChatContract {
 
-	interface Presenter extends BasePresenter, GCMListenerService.Callback {
+	interface Presenter extends BasePresenter, GCMListenerService.Callback,SelfieFragment.SelfieTakePicture {
 		void loadMore(int limit);
 
 		void loadMore(int limit, boolean forceUpdate);
@@ -35,6 +36,9 @@ public interface ChatContract {
 		void receiveMessage(String message, Bundle bundle);
 
 		void filtersButtonClicked();
+
+		void setSelfieTakePicture(SelfieFragment.SelfieTakePicture listener);
+
 	}
 
 	interface View extends BaseView<Presenter> {

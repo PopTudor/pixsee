@@ -2,6 +2,8 @@ package com.marked.pixsee.data.repository.user;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.JsonObject;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -92,7 +94,7 @@ public class UserRepository implements UserDatasource {
     }
 
 	@Override
-	public Observable saveUser(@NonNull User item) {
+	public Observable<JsonObject> saveUser(@NonNull User item) {
 		cache.add(item);
 		disk.saveUser(item);
 		return network.saveUser(item);

@@ -32,7 +32,7 @@ class Presenter implements AddUsernameContract.Presenter {
 	}
 
 	@Override
-	public void start() {
+	public void attach() {
 
 	}
 

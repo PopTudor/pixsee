@@ -206,7 +206,7 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 		try {
 			mOnSelfieInteractionListener = (OnSelfieInteractionListener) context;
 		} catch (ClassCastException e) {
-			e.printStackTrace();
+			throw new ClassCastException(getActivity().toString() + " must implement OnArticleSelectedListener");
 		}
 	}
 
@@ -259,4 +259,8 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 		void selfieFragmentDesroyed();
 	}
 	private OnSelfieInteractionListener mOnSelfieInteractionListener;
+
+	public interface SelfieTakePicture {
+		void onCameraClick();
+	}
 }

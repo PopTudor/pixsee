@@ -45,14 +45,14 @@ public class AuthenticationActivity
 		DaggerAuthenticationComponent.builder()
 				.appComponent(((Pixsee) getApplication()).getAppComponent())
 				.activityModule(new ActivityModule(this))
-				.signupModule(new AuthenticationModule(this))
+				.authenticationModule(new AuthenticationModule(this))
 				.build().inject(this);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		mPresenter.start();
+		mPresenter.attach();
 	}
 
 	@Override

@@ -9,6 +9,7 @@ public interface FriendContractDB extends BaseColumns {
 	String TABLE_NAME = "friends";
 	String COLUMN_ID = FriendConstants.ID; /* id from online stored database */
 	String COLUMN_NAME = FriendConstants.NAME;
+	String COLUMN_PASSWORD = FriendConstants.PASSWORD;
 	String COLUMN_EMAIL = FriendConstants.EMAIL;
 	String COLUMN_TOKEN = FriendConstants.TOKEN;
 	String COLUMN_COVER_URL = FriendConstants.COVER_URL;
@@ -19,6 +20,7 @@ public interface FriendContractDB extends BaseColumns {
 					+ "(" +
 					COLUMN_ID + " TEXT PRIMARY KEY," +
 					COLUMN_NAME + " TEXT," +
+					COLUMN_PASSWORD + " TEXT," +
 					COLUMN_EMAIL + " TEXT," +
 					COLUMN_USERNAME + " TEXT," +
 					COLUMN_COVER_URL + " TEXT," +

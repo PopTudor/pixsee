@@ -122,7 +122,7 @@ public class UserNetworkDatasource implements UserDatasource {
 
 
 	@Override
-	public Observable saveUser(@NonNull User user) {
+	public Observable<JsonObject> saveUser(@NonNull User user) {
 		return retrofit.create(FriendsAPI.class)
 				.friendAccepted(user.getUserID(),userid)
 				.subscribeOn(Schedulers.io());

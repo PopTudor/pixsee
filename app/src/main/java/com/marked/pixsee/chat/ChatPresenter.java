@@ -8,6 +8,7 @@ import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.selfie.SelfieFragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,6 +26,8 @@ public class ChatPresenter implements ChatContract.Presenter {
 	private WeakReference<ChatContract.View> mView;
 	private ChatDatasource mRepository;
 	private boolean mShowTypingAnimation = true;
+	private SelfieFragment.SelfieTakePicture mSelfieTakePicture;
+
 
 	public ChatPresenter(ChatContract.View mView, ChatDatasource mRepository) {
 		this.mRepository = mRepository;
@@ -32,8 +35,9 @@ public class ChatPresenter implements ChatContract.Presenter {
 		this.mView.get().setPresenter(this);
 	}
 
+
 	@Override
-	public void start() {
+	public void attach() {
 		loadMore(50, true);
 	}
 
@@ -107,6 +111,16 @@ public class ChatPresenter implements ChatContract.Presenter {
 	@Override
 	public void filtersButtonClicked() {
 		mView.get().showFilters();
+	}
+
+	@Override
+	public void setSelfieTakePicture(SelfieFragment.SelfieTakePicture listener) {
+		mSelfieTakePicture = listener;
+	}
+
+	@Override
+	public void onCameraClick() {
+		mSelfieTakePicture.onCameraClick();
 	}
 
 	@Override

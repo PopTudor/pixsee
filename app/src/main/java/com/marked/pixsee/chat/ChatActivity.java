@@ -1,17 +1,23 @@
 package com.marked.pixsee.chat;
 
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.selfie.SelfieFragment;
 
 /**
  * An activity representing a single Contact detail screen. This
@@ -22,7 +28,7 @@ import com.marked.pixsee.data.repository.user.User;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link ChatFragment}.
  */
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements SelfieFragment.SelfieTakePicture,SelfieFragment.OnSelfieInteractionListener{
 	public static final String EXTRA_CONTACT = "com.marked.vifo.ui.activity.EXTRA_CONTACT";
 
 	private ChatFragment mFragment;
@@ -66,5 +72,28 @@ public class ChatActivity extends AppCompatActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onCameraClick() {
+		View view = this.getCurrentFocus();
+		if (view != null) {
+			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		}
+		findViewById(R.id.toolbar).setVisibility(View.GONE);
+		Fragment fragment = SelfieFragment.newInstance();
+		getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragment, "camera").addToBackStack(null).commit();
+	}
+
+	@Override
+	public void showTakenPictureActions() {
+
+	}
+
+	@Override
+	public void selfieFragmentDesroyed() {
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
 	}
 }

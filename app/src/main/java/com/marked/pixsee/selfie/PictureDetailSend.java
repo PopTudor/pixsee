@@ -1,4 +1,4 @@
-package com.marked.pixsee.profile;
+package com.marked.pixsee.selfie;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.selfie.DetailFragment;
 import com.marked.pixsee.utility.BitmapUtils;
 
 import java.io.File;
@@ -29,12 +28,12 @@ import rx.functions.Func1;
 /**
  * Created by Tudor on 07-Jun-16.
  */
-public class ProfilePictureDetail extends Fragment {
-	public static ProfilePictureDetail newInstance() {
+public class PictureDetailSend extends Fragment {
+	public static PictureDetailSend newInstance() {
 
 		Bundle args = new Bundle();
 
-		ProfilePictureDetail fragment = new ProfilePictureDetail();
+		PictureDetailSend fragment = new PictureDetailSend();
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -99,7 +98,7 @@ public class ProfilePictureDetail extends Fragment {
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		try {
-			mPictureDetailListener = (OnProfilePictureDetailListener) context;
+			mPictureDetailListener = (OnPictureDetailSendListener) context;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -117,7 +116,7 @@ public class ProfilePictureDetail extends Fragment {
 		mPictureDetailListener.hiddenProfilePictureDetailActions();
 	}
 
-	public interface OnProfilePictureDetailListener {
+	public interface OnPictureDetailSendListener {
 		/*
 		* When the user clicks the fab button for saving, this method gets triggered
 		* */
@@ -134,6 +133,6 @@ public class ProfilePictureDetail extends Fragment {
 		void pictureTaken(File picture);
 	}
 
-	private OnProfilePictureDetailListener mPictureDetailListener;
+	private OnPictureDetailSendListener mPictureDetailListener;
 
 }

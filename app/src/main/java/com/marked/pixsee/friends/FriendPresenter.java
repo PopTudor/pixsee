@@ -89,6 +89,7 @@ public class FriendPresenter implements FriendsContract.Presenter {
 										mView.get().showNoInternetConnection();
 									else
 										mView.get().showNoFriends();
+									throwable.printStackTrace();
 								}
 							});
 		} else {
@@ -120,7 +121,7 @@ public class FriendPresenter implements FriendsContract.Presenter {
 	}
 
 	@Override
-	public void start() {
+	public void attach() {
 		loadMore(25, false);
 	}
 

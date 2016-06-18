@@ -2,6 +2,7 @@ package com.marked.pixsee.chat;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,6 +36,7 @@ import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.networking.ServerConstants;
+import com.marked.pixsee.selfie.SelfieFragment;
 import com.marked.pixsee.utility.GCMConstants;
 
 import org.json.JSONException;
@@ -95,9 +97,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		GCMListenerService.addCallback(mPresenter);
 		mChatAdapter = new ChatAdapter(this);
 		mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule((AppCompatActivity) getActivity()))
-				                                      .build();
-		DaggerChatComponent.builder().activityComponent(activityComponent).chatModule(new ChatModule(this)).build().inject(this);
 		try {
 			mSocket = IO.socket(ServerConstants.SERVER);
 		} catch (URISyntaxException e) {
@@ -165,11 +164,17 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 					//		doGcmSendUpstreamMessage(message);
 					mSocket.emit(ChatFragment.ON_NEW_MESSAGE,  message.toJSON());
 					mPresenter.sendMessage(message);
+				} else {
+					mPresenter.onCameraClick();
 				}
 			}
 		});
 		((FloatingActionButton)rootView.findViewById(R.id.sendButton))
 				.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(),R.color.transparent)));
+
+		((FloatingActionButton)rootView.findViewById(R.id.sendButton))
+				.getDrawable().setColorFilter(ContextCompat.getColor(getActivity(),R.color.teal), PorterDuff.Mode.SRC_ATOP);
+
 		((ImageButton)rootView.findViewById(R.id.filtersImageButton)).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -227,7 +232,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void onStart() {
 		super.onStart();
-		mPresenter.start();
 		mPresenter.loadMore(50,mThatUser);
 	}
 
@@ -254,10 +258,19 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
+		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule((AppCompatActivity) getActivity()))
+				.build();
+		DaggerChatComponent.builder().activityComponent(activityComponent).chatModule(new ChatModule(this)).build().inject(this);
+		try {
+			SelfieFragment.SelfieTakePicture listener = (SelfieFragment.SelfieTakePicture) context;
+			mPresenter.setSelfieTakePicture(listener);
+		}catch (ClassCastException e) {
+			throw new ClassCastException(getActivity().toString() + " must implement OnArticleSelectedListener");
+		}
+		mPresenter.attach();
 		mThatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
 		mThisUser = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(GCMConstants.USER_ID, null);
 		mExplosionField = ExplosionField.attach2Window(getActivity());;
-
 	}
 
 	public void onTyping(boolean typing) {

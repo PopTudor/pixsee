@@ -51,7 +51,7 @@ public class EntryActivity extends AppCompatActivity {
 					getIntent().getStringExtra(FriendConstants.USERNAME));
 
 			intent.putExtra(MessageConstants.MESSAGE_TYPE, MessageConstants.MessageType.FRIEND_REQUEST);
-			intent.putExtra(DatabaseContract.User.TABLE_NAME, user);
+			intent.putExtra(DatabaseContract.AppsUser.TABLE_NAME, user);
 		}
 		startActivity(intent);
 		finish();

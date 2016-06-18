@@ -14,7 +14,7 @@ class Presenter implements FriendsInviteContract.Presenter {
 	}
 
 	@Override
-	public void start() {
+	public void attach() {
 
 	}
 

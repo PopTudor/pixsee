@@ -45,7 +45,7 @@ public class Presenter implements AuthenticationContract.Presenter {
 	}
 
 	@Override
-	public void start() {
+	public void attach() {
 		mView.get().showLoginStep();
 	}
 

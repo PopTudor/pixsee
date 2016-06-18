@@ -36,8 +36,8 @@ import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.main.di.DaggerMainComponent;
 import com.marked.pixsee.main.di.MainModule;
 import com.marked.pixsee.profile.ProfileFragment;
-import com.marked.pixsee.profile.ProfileFragment.ProfileInteraction;
-import com.marked.pixsee.profile.ProfilePictureDetail;
+import com.marked.pixsee.selfie.SelfieFragment.SelfieTakePicture;
+import com.marked.pixsee.selfie.PictureDetailSend;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -53,7 +53,7 @@ import static com.marked.pixsee.selfie.SelfieFragment.newInstance;
 public class MainActivity
 		extends AppCompatActivity
 		implements MainContract.View, FriendFragment.FriendFragmentInteractionListener, GCMListenerService.Callback,
-		ProfileInteraction, OnDetailInteractionListener, OnSelfieInteractionListener, ProfilePictureDetail.OnProfilePictureDetailListener {
+		SelfieTakePicture, OnDetailInteractionListener, OnSelfieInteractionListener, PictureDetailSend.OnPictureDetailSendListener {
 	public static final int START_CAMERA_REQUEST_CODE = 100;
 	@Inject
 	MainContract.Presenter mPresenter;
@@ -88,7 +88,7 @@ public class MainActivity
 		bottomNavigation.setInactiveColor(ContextCompat.getColor(this, R.color.dark_inactive_icons));
 
 		bottomNavigation.setOnTabSelectedListener(new OnTabSelectedHandler(mPresenter));
-		mPresenter.start();
+		mPresenter.attach();
 	}
 
 
@@ -97,7 +97,7 @@ public class MainActivity
 		super.onStart();
 		/* this will enter when the user is not using the app and get's a friend request from FCM */
 		if (getIntent().getIntExtra(MessageConstants.MESSAGE_TYPE, 0) == MessageConstants.MessageType.FRIEND_REQUEST) {
-			User user = getIntent().getParcelableExtra(DatabaseContract.User.TABLE_NAME);
+			User user = getIntent().getParcelableExtra(DatabaseContract.AppsUser.TABLE_NAME);
 			mPresenter.friendRequest(user);
 		}
 	}
@@ -166,7 +166,7 @@ public class MainActivity
 		// picture for tha account
 		if (getSupportFragmentManager().findFragmentByTag("profile") != null)
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.mainContainer2, ProfilePictureDetail.newInstance())
+					.replace(R.id.mainContainer2, PictureDetailSend.newInstance())
 					.addToBackStack(null)
 					.commit();
 		else// the picture is taken with click on camera button

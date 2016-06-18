@@ -2,6 +2,8 @@ package com.marked.pixsee.data.repository.user;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.JsonObject;
+
 import java.util.List;
 
 import rx.Observable;
@@ -19,7 +21,7 @@ public interface UserDatasource {
 
 	User getUser(@NonNull String tablename);
 
-	Observable saveUser(@NonNull User user);
+	Observable<JsonObject> saveUser(@NonNull User user);
 
 	Observable saveAppUser(@NonNull User user);
 

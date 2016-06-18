@@ -26,7 +26,7 @@ public class FacePresenter implements FaceContract.Presenter {
 	}
 
 	@Override
-	public void start() {
+	public void attach() {
 
 	}
 

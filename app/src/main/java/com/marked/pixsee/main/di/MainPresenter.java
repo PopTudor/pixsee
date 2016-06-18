@@ -1,5 +1,6 @@
 package com.marked.pixsee.main.di;
 
+import com.google.gson.JsonObject;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
@@ -33,9 +34,9 @@ class MainPresenter implements MainContract.Presenter {
 	public void friendRequest(User user, boolean accepted) {
 		if (accepted){
 			mRepository.saveUser(user)
-			.subscribe(new Action1() {
+			.subscribe(new Action1<JsonObject>() {
 				@Override
-				public void call(Object o) {
+				public void call(JsonObject o) {
 
 				}
 			}, new Action1<Throwable>() {
@@ -56,7 +57,7 @@ class MainPresenter implements MainContract.Presenter {
 	}
 
 	@Override
-	public void start() {
+	public void attach() {
 		chatClicked();
 	}
 
@@ -72,7 +73,7 @@ class MainPresenter implements MainContract.Presenter {
 
 	@Override
 	public void profileClicked() {
-		User user = mRepository.getUser(DatabaseContract.User.TABLE_NAME);
+		User user = mRepository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
 		mWeakView.get().showProfile(user);
 	}
 }

@@ -18,7 +18,7 @@ public class ShopPresenter implements Contract.Presenter {
 	}
 
 	@Override
-	public void start() {
+	public void attach() {
 		loadTasks(false);
 	}
 

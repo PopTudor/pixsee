@@ -25,7 +25,7 @@ public class Presenter implements ProfileContract.Presenter {
 	}
 
 	@Override
-	public void start() {
+	public void attach() {
 
 	}
 

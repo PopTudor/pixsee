@@ -119,7 +119,7 @@ public class ShopListFragment extends Fragment implements Contract.View {
 	@Override
 	public void onResume() {
 		super.onResume();
-		mPresenter.start();
+		mPresenter.attach();
 	}
 
 	@Override
