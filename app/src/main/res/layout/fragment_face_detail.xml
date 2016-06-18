@@ -6,7 +6,7 @@
     android:id="@+id/fullscreenContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.marked.pixsee.selfie.DetailFragment">
+    tools:context=".selfie.PictureDetailShareFragment">
 
     <RelativeLayout
         android:id="@+id/fullscreenAppBar"

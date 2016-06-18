@@ -34,7 +34,6 @@ import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.profile.di.DaggerProfileComponent;
 import com.marked.pixsee.profile.di.ProfileModule;
-import com.marked.pixsee.selfie.SelfieFragment;
 
 import java.io.File;
 
@@ -69,9 +68,9 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		try {
-			mSelfieTakePicture = (SelfieFragment.SelfieTakePicture) context;
+			mProfileFragmentInteraction = (ProfileFragmentInteraction) context;
 		}catch (ClassCastException e){
-			e.printStackTrace();
+			throw new ClassCastException(context.getPackageName()+" must implement "+ProfileFragmentInteraction.class.getCanonicalName());
 		}
 		mUser = getArguments().getParcelable(USER_EXTRA);
 	}
@@ -115,7 +114,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 		rootView.findViewById(R.id.iconSimpleDraweeView).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mSelfieTakePicture.onCameraClick();
+				mProfileFragmentInteraction.onTakeProfilePictureClick();
 			}
 		});
 		((Toolbar) rootView.findViewById(R.id.toolbar)).getOverflowIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
@@ -155,11 +154,15 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 		mPresenter.saveAppUser(mUser);
 	}
 
-	private SelfieFragment.SelfieTakePicture mSelfieTakePicture;
+	private ProfileFragmentInteraction mProfileFragmentInteraction;
 
 	@Override
 	public void setPresenter(ProfileContract.Presenter presenter) {
 		mPresenter = presenter;
+	}
+
+	public interface ProfileFragmentInteraction{
+		void onTakeProfilePictureClick();
 	}
 
 }

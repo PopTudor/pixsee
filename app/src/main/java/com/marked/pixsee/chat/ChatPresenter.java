@@ -8,10 +8,10 @@ import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.repository.user.User;
-import com.marked.pixsee.selfie.SelfieFragment;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class ChatPresenter implements ChatContract.Presenter {
 	private WeakReference<ChatContract.View> mView;
 	private ChatDatasource mRepository;
 	private boolean mShowTypingAnimation = true;
-	private SelfieFragment.SelfieTakePicture mSelfieTakePicture;
+	private ChatFragment.ChatFragmentInteraction mChatFragmentInteraction;
 
 
 	public ChatPresenter(ChatContract.View mView, ChatDatasource mRepository) {
@@ -113,14 +113,18 @@ public class ChatPresenter implements ChatContract.Presenter {
 		mView.get().showFilters();
 	}
 
+	public void setChatInteraction(ChatFragment.ChatFragmentInteraction listener) {
+		mChatFragmentInteraction = listener;
+	}
+
 	@Override
-	public void setSelfieTakePicture(SelfieFragment.SelfieTakePicture listener) {
-		mSelfieTakePicture = listener;
+	public void pictureTaken(File file) {
+		mView.get().showImage(file);
 	}
 
 	@Override
 	public void onCameraClick() {
-		mSelfieTakePicture.onCameraClick();
+		mChatFragmentInteraction.onCameraClick();
 	}
 
 	@Override

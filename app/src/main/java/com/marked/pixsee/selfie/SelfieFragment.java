@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -38,9 +37,9 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-import static com.marked.pixsee.selfie.DetailFragment.OnDetailInteractionListener;
+import static com.marked.pixsee.selfie.PictureDetailShareFragment.OnPictureDetailShareListener;
 
-public class SelfieFragment extends Fragment implements OnDetailInteractionListener,FaceContract.View {
+public class SelfieFragment extends Fragment implements OnPictureDetailShareListener,FaceContract.View {
 	private static final String TAG = SelfieFragment.class + "***";
 	public static final String PHOTO_EXTRA = "PHOTO";
 	public static final String PHOTO_RENDERER_EXTRA = "PHOTO_RENDERER";
@@ -216,15 +215,12 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 		mOnSelfieInteractionListener = null;
 	}
 
-
-	@NonNull
-	@Override
-	public Observable<Bitmap> onButtonClicked() {
+	public Observable<Bitmap> getPicture() {
 		return Observable.just(mFaceTextureView.getBitmap()).subscribeOn(Schedulers.computation());
 	}
 
 	@Override
-	public void hiddenDetailPictureActions() {
+	public void resumeSelfie() {
 		mFacePresenter.displayActions(true);
 		startCameraSource();
 	}
@@ -261,6 +257,6 @@ public class SelfieFragment extends Fragment implements OnDetailInteractionListe
 	private OnSelfieInteractionListener mOnSelfieInteractionListener;
 
 	public interface SelfieTakePicture {
-		void onCameraClick();
+		Observable<Bitmap> getPicture();
 	}
 }

@@ -27,8 +27,7 @@ import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.entry.EntryActivity;
-import com.marked.pixsee.selfie.DetailFragment;
-import com.marked.pixsee.selfie.DetailFragment.OnDetailInteractionListener;
+import com.marked.pixsee.selfie.PictureDetailShareFragment;
 import com.marked.pixsee.selfie.SelfieFragment;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.friends.data.FriendConstants;
@@ -37,7 +36,7 @@ import com.marked.pixsee.main.di.DaggerMainComponent;
 import com.marked.pixsee.main.di.MainModule;
 import com.marked.pixsee.profile.ProfileFragment;
 import com.marked.pixsee.selfie.SelfieFragment.SelfieTakePicture;
-import com.marked.pixsee.selfie.PictureDetailSend;
+import com.marked.pixsee.selfie.PictureDetailSendFragment;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -53,7 +52,8 @@ import static com.marked.pixsee.selfie.SelfieFragment.newInstance;
 public class MainActivity
 		extends AppCompatActivity
 		implements MainContract.View, FriendFragment.FriendFragmentInteractionListener, GCMListenerService.Callback,
-		SelfieTakePicture, OnDetailInteractionListener, OnSelfieInteractionListener, PictureDetailSend.OnPictureDetailSendListener {
+		SelfieTakePicture, PictureDetailShareFragment.OnPictureDetailShareListener, OnSelfieInteractionListener,
+		PictureDetailSendFragment.OnPictureDetailSendListener ,ProfileFragment.ProfileFragmentInteraction{
 	public static final int START_CAMERA_REQUEST_CODE = 100;
 	@Inject
 	MainContract.Presenter mPresenter;
@@ -138,18 +138,18 @@ public class MainActivity
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		AHBottomNavigation navigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 		navigation.setVisibility(View.VISIBLE);
-//		mPresenter.chatClicked();
+//		mPresenter.chatTabClicked();
 
 	}
 
 	@Override
-	public Observable<Bitmap> onButtonClicked() {
-		return ((SelfieFragment) getSupportFragmentManager().findFragmentById(R.id.mainContainer)).onButtonClicked();
+	public Observable<Bitmap> getPicture() {
+		return ((SelfieFragment) getSupportFragmentManager().findFragmentById(R.id.mainContainer)).getPicture();
 	}
 
 	@Override
-	public void hiddenProfilePictureDetailActions() {
-		((SelfieFragment) getSupportFragmentManager().findFragmentByTag("camera")).hiddenDetailPictureActions();
+	public void stop() {
+		((SelfieFragment) getSupportFragmentManager().findFragmentByTag("camera")).resumeSelfie();
 	}
 
 	@Override
@@ -166,12 +166,12 @@ public class MainActivity
 		// picture for tha account
 		if (getSupportFragmentManager().findFragmentByTag("profile") != null)
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.mainContainer2, PictureDetailSend.newInstance())
+					.replace(R.id.mainContainer2, PictureDetailSendFragment.newInstance())
 					.addToBackStack(null)
 					.commit();
 		else// the picture is taken with click on camera button
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.mainContainer2, DetailFragment.newInstance())
+					.replace(R.id.mainContainer2, PictureDetailShareFragment.newInstance())
 					.addToBackStack(null)
 					.commit();
 	}
@@ -180,8 +180,8 @@ public class MainActivity
 	 * This get
 	 */
 	@Override
-	public void hiddenDetailPictureActions() {
-		((SelfieFragment) getSupportFragmentManager().findFragmentByTag("camera")).hiddenDetailPictureActions();
+	public void resumeSelfie() {
+		((SelfieFragment) getSupportFragmentManager().findFragmentByTag("camera")).resumeSelfie();
 	}
 
 
@@ -267,8 +267,8 @@ public class MainActivity
 	}
 
 	@Override
-	public void onCameraClick() {
-		mPresenter.cameraClicked();
+	public void onTakeProfilePictureClick() {
+		mPresenter.cameraTabClicked();
 	}
 
 	private static class OnTabSelectedHandler implements AHBottomNavigation.OnTabSelectedListener {
@@ -283,15 +283,15 @@ public class MainActivity
 			switch (position) {
 				case 0:
 					if (!wasSelected)
-						mPresenterWeakReference.get().chatClicked();
+						mPresenterWeakReference.get().chatTabClicked();
 					break;
 				case 1:
 					if (!wasSelected)
-						mPresenterWeakReference.get().cameraClicked();
+						mPresenterWeakReference.get().cameraTabClicked();
 					break;
 				case 2:
 					if (!wasSelected)
-						mPresenterWeakReference.get().profileClicked();
+						mPresenterWeakReference.get().profileTabClicked();
 					break;
 			}
 		}

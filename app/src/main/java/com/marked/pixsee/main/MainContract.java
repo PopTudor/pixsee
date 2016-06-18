@@ -13,13 +13,13 @@ public interface MainContract {
 	interface Presenter extends BasePresenter,RequestService {
 		void execute(Command command);
 
-		void chatClicked();
+		void chatTabClicked();
 
-		void profileClicked();
+		void profileTabClicked();
 
 		void friendRequest(User user, boolean b);
 
-		void cameraClicked();
+		void cameraTabClicked();
 	}
 
 	interface View extends BaseView<Presenter> {

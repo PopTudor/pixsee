@@ -17,6 +17,35 @@
         android:layout_above="@+id/linearLayout">
 
     </android.support.v7.widget.RecyclerView>
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/pictureTakenContainer"
+        android:visibility="gone">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:id="@+id/picture"
+                android:layout_centerHorizontal="true"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                android:layout_alignParentTop="true"
+                android:layout_alignRight="@+id/picture"
+                app:srcCompat="@drawable/ic_cancel_24dp"
+                android:layout_alignEnd="@+id/picture"
+                android:background="@color/transparent"/>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
 
     <RelativeLayout
         android:id="@+id/linearLayout"
@@ -28,7 +57,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:orientation="horizontal"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:layout_marginTop="8dp">
 
         <EditText android:id="@+id/messageEditText"
             android:layout_width="match_parent"
@@ -63,7 +93,7 @@
             android:id="@+id/sendButton"
             android:background="@color/transparent"
             android:scaleType="center"
-            android:src="@drawable/ic_send_24dp"
+            android:src="@drawable/ic_camera_24dp"
             android:translationZ="0dp"
             android:elevation="0dp"
             app:fabSize="mini"

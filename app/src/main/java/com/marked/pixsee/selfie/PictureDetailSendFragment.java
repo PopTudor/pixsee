@@ -24,16 +24,17 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Tudor on 07-Jun-16.
  */
-public class PictureDetailSend extends Fragment {
-	public static PictureDetailSend newInstance() {
+public class PictureDetailSendFragment extends Fragment {
+	public static PictureDetailSendFragment newInstance() {
 
 		Bundle args = new Bundle();
 
-		PictureDetailSend fragment = new PictureDetailSend();
+		PictureDetailSendFragment fragment = new PictureDetailSendFragment();
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -45,7 +46,8 @@ public class PictureDetailSend extends Fragment {
 		rootView.findViewById(R.id.saveFabButton).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mPictureDetailListener.onButtonClicked()
+				mPictureDetailListener.getPicture()
+						.observeOn(Schedulers.io())
 						.map(new Func1<Bitmap, File>() {
 							@Override
 							public File call(Bitmap bitmap) {
@@ -113,24 +115,34 @@ public class PictureDetailSend extends Fragment {
 	@Override
 	public void onStop() {
 		super.onStop();
-		mPictureDetailListener.hiddenProfilePictureDetailActions();
+		mPictureDetailListener.stop();
 	}
 
+	/**
+	 * These methods are called in the following order:
+	 * 1. user sees frozen screen, clicks save, onSavePictureClick asks the activity for the bitmap to save
+	 * 2. onSavePictureClick saves the image and notifies activity of the location
+	 * 3. stop get's called, notifies activity to resume with the camera or do something else
+	 */
 	public interface OnPictureDetailSendListener {
 		/*
 		* When the user clicks the fab button for saving, this method gets triggered
 		* */
-		Observable<Bitmap> onButtonClicked();
+		Observable<Bitmap> getPicture();
 
 		/**
-		 * This should get start when the image is frozen and {@link DetailFragment} is active to show the user what
+		 * Tell the activity that the picture was saved on the disk.
+		 * @param picture
+		 */
+		void pictureTaken(File picture);
+
+		/**
+		 * This should get start when the image is frozen and {@link PictureDetailShareFragment} is active to show the user what
 		 * actions can he take with the taken picture.
 		 * When the user hits the back button, this will notify the activity that it should
 		 * start/unfreeze the preview fragment
 		 */
-		void hiddenProfilePictureDetailActions();
-
-		void pictureTaken(File picture);
+		void stop();
 	}
 
 	private OnPictureDetailSendListener mPictureDetailListener;

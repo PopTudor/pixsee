@@ -2,6 +2,7 @@ package com.marked.pixsee.chat;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +18,12 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.selfie.PictureDetailSendFragment;
 import com.marked.pixsee.selfie.SelfieFragment;
+
+import java.io.File;
+
+import rx.Observable;
 
 /**
  * An activity representing a single Contact detail screen. This
@@ -28,7 +34,8 @@ import com.marked.pixsee.selfie.SelfieFragment;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link ChatFragment}.
  */
-public class ChatActivity extends AppCompatActivity implements SelfieFragment.SelfieTakePicture,SelfieFragment.OnSelfieInteractionListener{
+public class ChatActivity extends AppCompatActivity implements ChatFragment.ChatFragmentInteraction,SelfieFragment
+		.OnSelfieInteractionListener,PictureDetailSendFragment.OnPictureDetailSendListener{
 	public static final String EXTRA_CONTACT = "com.marked.vifo.ui.activity.EXTRA_CONTACT";
 
 	private ChatFragment mFragment;
@@ -88,12 +95,32 @@ public class ChatActivity extends AppCompatActivity implements SelfieFragment.Se
 
 	@Override
 	public void showTakenPictureActions() {
-
+		getSupportFragmentManager().beginTransaction()
+				.add(R.id.fragmentContainer, PictureDetailSendFragment.newInstance())
+				.addToBackStack(null)
+				.commit();
 	}
 
 	@Override
 	public void selfieFragmentDesroyed() {
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	public Observable<Bitmap> getPicture() {
+		return ((SelfieFragment) getSupportFragmentManager().findFragmentByTag("camera")).getPicture();
+	}
+
+	@Override
+	public void stop() {
+		((SelfieFragment) getSupportFragmentManager().findFragmentByTag("camera")).resumeSelfie();
+	}
+
+	@Override
+	public void pictureTaken(File picture) {
+		getSupportFragmentManager().popBackStackImmediate();/* after the picture is saved on disk, we get it's location and continue
+		resuming the camera preview; here we stop that and send the file to chat fragment*/
+		((ChatFragment) getSupportFragmentManager().findFragmentByTag("contactDetailFragment")).pictureTaken(picture);
 	}
 }

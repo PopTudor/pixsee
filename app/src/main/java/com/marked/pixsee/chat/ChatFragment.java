@@ -3,6 +3,7 @@ package com.marked.pixsee.chat;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.custom.ChatAdapter;
@@ -36,12 +38,12 @@ import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.networking.ServerConstants;
-import com.marked.pixsee.selfie.SelfieFragment;
 import com.marked.pixsee.utility.GCMConstants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
@@ -262,8 +264,8 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 				.build();
 		DaggerChatComponent.builder().activityComponent(activityComponent).chatModule(new ChatModule(this)).build().inject(this);
 		try {
-			SelfieFragment.SelfieTakePicture listener = (SelfieFragment.SelfieTakePicture) context;
-			mPresenter.setSelfieTakePicture(listener);
+			ChatFragmentInteraction listener = (ChatFragmentInteraction) context;
+			mPresenter.setChatInteraction(listener);
 		}catch (ClassCastException e) {
 			throw new ClassCastException(getActivity().toString() + " must implement OnArticleSelectedListener");
 		}
@@ -369,7 +371,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	@Override
 	public void setPresenter(ChatContract.Presenter presenter) {
-
+		mPresenter = presenter;
 	}
 
 	@Override
@@ -386,5 +388,18 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void showFilters() {
 
+	}
+
+	@Override
+	public void showImage(File file) {
+		getView().findViewById(R.id.pictureTakenContainer).setVisibility(View.VISIBLE);
+		((SimpleDraweeView) getView().findViewById(R.id.picture)).setImageURI(Uri.fromFile(file));
+	}
+
+	public void pictureTaken(File file) {
+		mPresenter.pictureTaken(file);
+	}
+	interface ChatFragmentInteraction{
+		void onCameraClick();
 	}
 }

@@ -26,7 +26,7 @@ class MainPresenter implements MainContract.Presenter {
 	}
 
 	@Override
-	public void chatClicked() {
+	public void chatTabClicked() {
 		mWeakView.get().showChat(true);
 	}
 
@@ -51,14 +51,14 @@ class MainPresenter implements MainContract.Presenter {
 	}
 
 	@Override
-	public void cameraClicked() {
+	public void cameraTabClicked() {
 		mWeakView.get().hideBottomNavigation();
 		mWeakView.get().showCamera();
 	}
 
 	@Override
 	public void attach() {
-		chatClicked();
+		chatTabClicked();
 	}
 
 	@Override
@@ -72,7 +72,7 @@ class MainPresenter implements MainContract.Presenter {
 	}
 
 	@Override
-	public void profileClicked() {
+	public void profileTabClicked() {
 		User user = mRepository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
 		mWeakView.get().showProfile(user);
 	}
