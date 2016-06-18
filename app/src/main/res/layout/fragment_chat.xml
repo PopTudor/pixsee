@@ -37,7 +37,7 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageView"
+                android:id="@+id/clearImageButton"
                 android:layout_alignParentTop="true"
                 android:layout_alignRight="@+id/picture"
                 app:srcCompat="@drawable/ic_cancel_24dp"

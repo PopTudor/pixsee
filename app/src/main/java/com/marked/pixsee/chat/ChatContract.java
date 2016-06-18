@@ -42,6 +42,8 @@ public interface ChatContract {
 		void pictureTaken(File file);
 
 		void onCameraClick();
+
+		void clearImageButton();
 	}
 
 	interface View extends BaseView<Presenter> {
@@ -60,5 +62,7 @@ public interface ChatContract {
 		void showImage(File path);
 
 		void pictureTaken(File file);
+
+		void showPictureContainer(boolean show);
 	}
 }

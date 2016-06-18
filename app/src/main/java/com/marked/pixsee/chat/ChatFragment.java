@@ -3,6 +3,7 @@ package com.marked.pixsee.chat;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -111,13 +112,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		mSocket.on(ChatFragment.ON_TYPING, onTyping);
 
 		mSocket.connect();
-
-		try {
-			mSocket.emit(ChatFragment.ON_NEW_ROOM, new JSONObject(String.format("{from:%s,to:%s}",mThisUser, mThatUser.getUserID())));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	private RecyclerView messagesRecyclerView;
@@ -183,6 +177,13 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 				mPresenter.filtersButtonClicked();
 			}
 		});
+
+		rootView.findViewById(R.id.clearImageButton).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mPresenter.clearImageButton();
+			}
+		});
 		return rootView;
 	}
 
@@ -234,7 +235,24 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void onStart() {
 		super.onStart();
+		try {
+			mSocket.emit(ChatFragment.ON_NEW_ROOM, new JSONObject(String.format("{from:%s,to:%s,to_token:\'%s\'}",mThisUser, mThatUser
+					.getUserID(),mThatUser.getToken())));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		mPresenter.loadMore(50,mThatUser);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		try {
+			mSocket.emit(ChatFragment.ON_NEW_ROOM, new JSONObject(String.format("{from:%s,to:%s,to_token:\'%s\'}",mThisUser, mThatUser
+					.getUserID(),mThatUser.getToken())));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -277,8 +295,9 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	public void onTyping(boolean typing) {
 		try {
-			mSocket.emit(ChatFragment.ON_TYPING, new JSONObject(String.format("{from:%s,to:%s,typing:%s}",mThisUser, mThatUser.getUserID(),
-					typing)));
+			mSocket.emit(ChatFragment.ON_TYPING, new JSONObject(String.format("{from:%s,to:%s,typing:%s,to_token:\'%s\'}",mThisUser,
+					mThatUser.getUserID(),
+					typing,mThatUser.getToken())));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -338,6 +357,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	public static final String ON_NEW_MESSAGE = "onMessage";
 	public static final String ON_NEW_ROOM = "onRoom";
+	public static final String ON_EXIT_ROOM = "onRoom";
 	public static final String ON_TYPING = "onTyping";
 	/**
 	 * keep track if the user is interacting with the app. If not, disconnect the socket
@@ -392,8 +412,24 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	@Override
 	public void showImage(File file) {
+		Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_send_24dp);
+		drawable.setColorFilter(ContextCompat.getColor(getContext(),R.color.teal), PorterDuff.Mode.SRC_ATOP);
+		((FloatingActionButton) getView().findViewById(R.id.sendButton)).setImageDrawable(drawable);
+
+		getView().findViewById(R.id.messageEditText).setEnabled(false);
 		getView().findViewById(R.id.pictureTakenContainer).setVisibility(View.VISIBLE);
 		((SimpleDraweeView) getView().findViewById(R.id.picture)).setImageURI(Uri.fromFile(file));
+	}
+
+	@Override
+	public void showPictureContainer(boolean show) {
+		Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_camera_24dp);
+		drawable.setColorFilter(ContextCompat.getColor(getContext(),R.color.teal), PorterDuff.Mode.SRC_ATOP);
+
+		((FloatingActionButton) getView().findViewById(R.id.sendButton)).setImageDrawable(drawable);
+		getView().findViewById(R.id.messageEditText).setEnabled(true);
+		getView().findViewById(R.id.pictureTakenContainer).setVisibility(View.GONE);
+		((SimpleDraweeView) getView().findViewById(R.id.picture)).destroyDrawingCache();
 	}
 
 	public void pictureTaken(File file) {

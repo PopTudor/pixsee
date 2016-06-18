@@ -128,6 +128,11 @@ public class ChatPresenter implements ChatContract.Presenter {
 	}
 
 	@Override
+	public void clearImageButton() {
+		mView.get().showPictureContainer(false);
+	}
+
+	@Override
 	public void loadMore(int limit, boolean forceUpdate) {
 
 	}
