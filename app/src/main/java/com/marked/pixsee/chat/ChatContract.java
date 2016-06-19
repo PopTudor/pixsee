@@ -44,6 +44,8 @@ public interface ChatContract {
 		void onCameraClick();
 
 		void clearImageButton();
+
+		File getPictureFile();
 	}
 
 	interface View extends BaseView<Presenter> {

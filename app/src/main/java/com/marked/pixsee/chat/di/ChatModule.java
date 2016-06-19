@@ -10,6 +10,7 @@ import com.marked.pixsee.chat.data.ChatDiskDatasource;
 import com.marked.pixsee.chat.data.ChatNetworkDatasource;
 import com.marked.pixsee.chat.data.ChatRepository;
 import com.marked.pixsee.data.database.PixyDatabase;
+import com.marked.pixsee.data.repository.user.User;
 
 import dagger.Module;
 import dagger.Provides;
@@ -26,10 +27,11 @@ public class ChatModule {
 	}
 
 	@Provides
-	public ChatContract.Presenter providePresenter(Context context) {
+	public ChatContract.Presenter providePresenter(Context context, User user) {
 		ChatDatasource diskDatasource = new ChatDiskDatasource(PixyDatabase.getInstance(context));
 		ChatDatasource networkDatasource = new ChatNetworkDatasource(PreferenceManager.getDefaultSharedPreferences(context));
 		ChatDatasource repository = new ChatRepository(diskDatasource, networkDatasource);
-		return new ChatPresenter(view, repository);
+		ChatPresenter chatPresenter = new ChatPresenter(view, repository, user);
+		return chatPresenter;
 	}
 }

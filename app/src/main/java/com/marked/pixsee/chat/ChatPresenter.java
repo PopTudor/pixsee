@@ -25,14 +25,16 @@ import rx.schedulers.Schedulers;
 public class ChatPresenter implements ChatContract.Presenter {
 	private WeakReference<ChatContract.View> mView;
 	private ChatDatasource mRepository;
+	private User mAppsUser;
 	private boolean mShowTypingAnimation = true;
 	private ChatFragment.ChatFragmentInteraction mChatFragmentInteraction;
 	private File mPictureFile;
 
-	public ChatPresenter(ChatContract.View mView, ChatDatasource mRepository) {
+	public ChatPresenter(ChatContract.View mView, ChatDatasource mRepository,User appsUser) {
 		this.mRepository = mRepository;
 		this.mView = new WeakReference<>(mView);
 		this.mView.get().setPresenter(this);
+		mAppsUser = appsUser;
 	}
 
 
@@ -43,7 +45,7 @@ public class ChatPresenter implements ChatContract.Presenter {
 
 	@Override
 	public void loadMore(int limit) {
-//		loadMore(limit, false);
+		loadMore(limit, false);
 	}
 
 	@Override
@@ -83,19 +85,13 @@ public class ChatPresenter implements ChatContract.Presenter {
 
 	@Override
 	public void sendMessage(@NotNull Message message) {
-
-		if (message.getMessageType().equals(MessageConstants.MessageType.ME_IMAGE)||
-				message.getMessageType().equals(MessageConstants.MessageType.YOU_IMAGE)){
-			Message tmp = new Message.Builder()
-					.to(message.getTo())
-					.from(message.getFrom())
-					.messageType(message.getMessageType())
-					.addData(MessageConstants.DATA_BODY, mPictureFile.getAbsolutePath())
-					.build();
-			message = tmp;
-		}
 		mRepository.saveMessage(message);
 		mView.get().addMessage(message);
+	}
+
+	@Override
+	public File getPictureFile() {
+		return mPictureFile;
 	}
 
 	@Override

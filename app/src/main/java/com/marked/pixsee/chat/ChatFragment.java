@@ -163,11 +163,11 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 				} else if(!messageEditText.isEnabled()) {
 					Message message = new Message.Builder()
 							.messageType(MessageConstants.MessageType.ME_IMAGE)
+							.addData(MessageConstants.DATA_BODY, mPresenter.getPictureFile().getAbsolutePath())
 							.from(mThisUser)
 							.to(mThatUser.getUserID())
 							.build();
 					mPresenter.sendMessage(message);
-					mPresenter.clearImageButton();
 				} else {
 					mPresenter.onCameraClick();
 				}

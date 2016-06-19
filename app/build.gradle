@@ -115,7 +115,7 @@ dependencies {
     compile "com.facebook.android:facebook-android-sdk:[4,5]" // Facebook SDK
 
     // RX
-    compile "io.reactivex:rxjava:1.1.5" // RxJava
+    compile "io.reactivex:rxjava:1.1.6" // RxJava
     compile "io.reactivex:rxandroid:1.2.0" // RxAndroid
     compile "com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar" // RxPermissions
     compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0' // RxBindings
