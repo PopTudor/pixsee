@@ -160,6 +160,14 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 					//		doGcmSendUpstreamMessage(message);
 					mSocket.emit(ChatFragment.ON_NEW_MESSAGE,  message.toJSON());
 					mPresenter.sendMessage(message);
+				} else if(!messageEditText.isEnabled()) {
+					Message message = new Message.Builder()
+							.messageType(MessageConstants.MessageType.ME_IMAGE)
+							.from(mThisUser)
+							.to(mThatUser.getUserID())
+							.build();
+					mPresenter.sendMessage(message);
+					mPresenter.clearImageButton();
 				} else {
 					mPresenter.onCameraClick();
 				}

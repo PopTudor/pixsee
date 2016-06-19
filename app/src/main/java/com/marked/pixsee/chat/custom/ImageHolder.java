@@ -10,20 +10,22 @@ import android.view.View;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.marked.pixsee.R;
-import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.ImageFullscreenActivity;
+import com.marked.pixsee.chat.data.Message;
+import com.marked.pixsee.chat.data.MessageConstants;
 
 import java.io.File;
 
 /**
  * Created by Tudor Pop on 04-Dec-15.
  */
-public class ImageHolder extends RecyclerView.ViewHolder{
+public class ImageHolder extends RecyclerView.ViewHolder {
 	private Context context;
 
 	private SimpleDraweeView mImage;
@@ -34,35 +36,37 @@ public class ImageHolder extends RecyclerView.ViewHolder{
 		this.mImage = (SimpleDraweeView) itemView.findViewById(R.id.imageNetwork);
 	}
 
-    public void bindMessage(final Message message, final ChatAdapter.ChatInteraction chatInteraction) {
-//		val url = Uri.parse(message.data.get(MessageConstants.DATA_BODY));
-	    itemView.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View v) {
-			    chatInteraction.chatClicked(v, message, getAdapterPosition());
-		    }
-	    });
-		final Uri url = Uri.parse("http://www.online-image-editor.com//styles/2014/images/example_image.png");
-		mImage.setImageURI(url,context);
-        mImage.setOnClickListener(new View.OnClickListener() {
-	        @Override
-	        public void onClick(View v) {
-		        largeImage(url);
-	        }
-        });
+	public void bindMessage(final Message message, final ChatAdapter.ChatInteraction chatInteraction) {
+		itemView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				chatInteraction.chatClicked(v, message, getAdapterPosition());
+			}
+		});
+		final Uri url = new Uri.Builder()
+				.scheme(UriUtil.LOCAL_FILE_SCHEME)
+				.path(message.getData().get(MessageConstants.DATA_BODY))
+				.build();
+		mImage.setImageURI(url, context);
+		mImage.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				largeImage(url);
+			}
+		});
 	}
 
-    private void largeImage(Uri uri){
-        ImageRequest imageRequest1= ImageRequest.fromUri(uri);
-        CacheKey cacheKey1= DefaultCacheKeyFactory.getInstance().getEncodedCacheKey(imageRequest1);
-        BinaryResource resource = ImagePipelineFactory.getInstance().getMainDiskStorageCache().getResource(cacheKey1);
-        File file=((FileBinaryResource)resource).getFile();
-        Log.i("TAG", file.getAbsolutePath());
+	private void largeImage(Uri uri) {
+		ImageRequest imageRequest1 = ImageRequest.fromUri(uri);
+		CacheKey cacheKey1 = DefaultCacheKeyFactory.getInstance().getEncodedCacheKey(imageRequest1);
+		BinaryResource resource = ImagePipelineFactory.getInstance().getMainDiskStorageCache().getResource(cacheKey1);
+		File file = ((FileBinaryResource) resource).getFile();
+		Log.i("TAG", file.getAbsolutePath());
 
-	    Intent intent = new Intent(context, ImageFullscreenActivity.class);
-	    intent.putExtra("URI", file.getAbsolutePath());
-	    context.startActivity(intent);
-    }
+		Intent intent = new Intent(context, ImageFullscreenActivity.class);
+		intent.putExtra("URI", file.getAbsolutePath());
+		context.startActivity(intent);
+	}
 
 
 }

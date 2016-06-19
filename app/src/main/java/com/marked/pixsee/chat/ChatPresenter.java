@@ -27,7 +27,7 @@ public class ChatPresenter implements ChatContract.Presenter {
 	private ChatDatasource mRepository;
 	private boolean mShowTypingAnimation = true;
 	private ChatFragment.ChatFragmentInteraction mChatFragmentInteraction;
-
+	private File mPictureFile;
 
 	public ChatPresenter(ChatContract.View mView, ChatDatasource mRepository) {
 		this.mRepository = mRepository;
@@ -83,6 +83,17 @@ public class ChatPresenter implements ChatContract.Presenter {
 
 	@Override
 	public void sendMessage(@NotNull Message message) {
+
+		if (message.getMessageType().equals(MessageConstants.MessageType.ME_IMAGE)||
+				message.getMessageType().equals(MessageConstants.MessageType.YOU_IMAGE)){
+			Message tmp = new Message.Builder()
+					.to(message.getTo())
+					.from(message.getFrom())
+					.messageType(message.getMessageType())
+					.addData(MessageConstants.DATA_BODY, mPictureFile.getAbsolutePath())
+					.build();
+			message = tmp;
+		}
 		mRepository.saveMessage(message);
 		mView.get().addMessage(message);
 	}
@@ -119,6 +130,7 @@ public class ChatPresenter implements ChatContract.Presenter {
 
 	@Override
 	public void pictureTaken(File file) {
+		mPictureFile = file;
 		mView.get().showImage(file);
 	}
 
