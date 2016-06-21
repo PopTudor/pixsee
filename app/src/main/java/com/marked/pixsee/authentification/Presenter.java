@@ -20,6 +20,7 @@ import retrofit2.Response;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -113,6 +114,12 @@ public class Presenter implements AuthenticationContract.Presenter {
 					})
 					.subscribeOn(Schedulers.io())
 					.observeOn(AndroidSchedulers.mainThread())
+					.doOnSubscribe(new Action0() {
+						@Override
+						public void call() {
+							mView.get().showDialog("Login","Please wait...");
+						}
+					})
 					.subscribe(new Subscriber<Response<JsonObject>>() {
 						@Override
 						public void onCompleted() {
@@ -122,6 +129,9 @@ public class Presenter implements AuthenticationContract.Presenter {
 						@Override
 						public void onError(Throwable e) {
 							e.printStackTrace();
+							if (e instanceof SocketTimeoutException){
+								mView.get().showToast("Server is not responding. Please try again later !");
+							}
 							mView.get().hideDialog();
 						}
 
