@@ -11,7 +11,7 @@ import com.marked.pixsee.selfie.FaceContract;
 import com.marked.pixsee.selfie.FacePresenter;
 import com.marked.pixsee.selfie.custom.SelfieRenderer;
 import com.marked.pixsee.selfie.custom.SelfieTrackerAR;
-import com.marked.pixsee.injection.scopes.PerActivity;
+import com.marked.pixsee.injection.scopes.ActivityScope;
 
 import java.lang.ref.WeakReference;
 
@@ -31,13 +31,13 @@ public class SelfieModule {
 	}
 
 	@Provides
-	@PerActivity
+	@ActivityScope
 	public FaceContract.Presenter provideFacePresenter() {
 		return new FacePresenter(mSelfieFragment.get());
 	}
 
 	@Provides
-	@PerActivity
+	@ActivityScope
 	public SelfieRenderer provideFaceRenderer() {
 		return new SelfieRenderer(mSelfieFragment.get().getActivity());
 	}

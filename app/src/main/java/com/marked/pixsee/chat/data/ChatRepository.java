@@ -7,6 +7,8 @@ import com.marked.pixsee.data.repository.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -14,6 +16,24 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created by Tudor on 2016-05-19.
+ *
+ * https://frogermcs.github.io/dependency-injection-with-dagger-2-the-api/
+ * All parameters are taken from dependencies graph. @Inject annotation used in costructor
+ * also makes this class a part of dependencies graph.
+ * It means that it can also be injected when it’s needed:
+ * @Inject ChatNetworkDatasource networkData;
+ * and it can also be provided to methods that needs this dependency:
+ * @provides
+ * public Repository provideRepository(ChatNetworkDatasource source,ChatLocalds local){
+ *   return new Repository(source,local);
+ * }
+ * but it cannot be provided for an interface(unless annotated with qualified)
+ * the following won't work:
+ * @provides
+ * public Repository provideRepository(ChatDatasource source){
+ *   return new Repository(source);
+ * }
+ *
  */
 public class ChatRepository implements ChatDatasource {
 	private ChatDatasource disk;
@@ -23,16 +43,19 @@ public class ChatRepository implements ChatDatasource {
 
 	/**
 	 * Repository to retrieve data
-	 * @param disk must be @{link ChatDiskDatasource} or something that implements @{link ChatDatasource}
+	 *
+	 * @param disk    must be @{link ChatDiskDatasource} or something that implements @{link ChatDatasource}
 	 * @param network must be @{link ChatNetworkDatasource} or something that implements @{link ChatDatasource}
 	 */
-	public ChatRepository(ChatDatasource disk, ChatDatasource network) {
+	@Inject
+	public ChatRepository(ChatDiskDatasource disk, ChatNetworkDatasource network) {
 		this.disk = disk;
 		this.network = network;
 	}
 
 	/**
 	 * Get messages of the requested friend
+	 *
 	 * @param friendId
 	 * @return
 	 */
@@ -42,15 +65,15 @@ public class ChatRepository implements ChatDatasource {
 			return Observable.just(cache);
 		
 		// Query the local storage if available. If not, query the network.
-		Observable<List<Message>> local= disk.getMessages(friendId)
+		Observable<List<Message>> local = disk.getMessages(friendId)
 				.doOnNext(new Action1<List<Message>>() {
-			@Override
-			public void call(List<Message> messages) {
-				cache.clear();
-				cache.addAll(messages);
-			}
-		});
-		
+					@Override
+					public void call(List<Message> messages) {
+						cache.clear();
+						cache.addAll(messages);
+					}
+				});
+
 //		Observable<List<Message>> remote = network.getMessages(friendId)
 //					       .flatMap(new Func1<List<Message>, Observable<Message>>() {
 //						       @Override
@@ -74,13 +97,13 @@ public class ChatRepository implements ChatDatasource {
 //					       }).toList();
 		/* http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/ */
 		return Observable.concat(Observable.just(cache), local)
-				       .first(new Func1<List<Message>, Boolean>() {
-					       @Override
-					       public Boolean call(List<Message> users) {
-						       return users.size() > 0;
-					       }
-				       })
-				       .subscribeOn(Schedulers.io());
+				.first(new Func1<List<Message>, Boolean>() {
+					@Override
+					public Boolean call(List<Message> users) {
+						return users.size() > 0;
+					}
+				})
+				.subscribeOn(Schedulers.io());
 	}
 
 	@Override

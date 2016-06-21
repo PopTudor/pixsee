@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -35,9 +34,6 @@ import com.marked.pixsee.chat.di.ChatModule;
 import com.marked.pixsee.chat.di.DaggerChatComponent;
 import com.marked.pixsee.commons.SpaceItemDecorator;
 import com.marked.pixsee.data.repository.user.User;
-import com.marked.pixsee.injection.components.ActivityComponent;
-import com.marked.pixsee.injection.components.DaggerActivityComponent;
-import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.utility.GCMConstants;
 
@@ -286,9 +282,11 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule((AppCompatActivity) getActivity()))
-				.build();
-		DaggerChatComponent.builder().activityComponent(activityComponent).chatModule(new ChatModule(this)).build().inject(this);
+		// as long as ChatComponent != null, objects annotated with @FragmentScope are in memory
+		DaggerChatComponent.builder().activityComponent(((ChatActivity)getActivity()).getActivityComponent())
+				.chatModule(new ChatModule(this))
+				.build()
+				.inject(this);
 		try {
 			ChatFragmentInteraction listener = (ChatFragmentInteraction) context;
 			mPresenter.setChatInteraction(listener);

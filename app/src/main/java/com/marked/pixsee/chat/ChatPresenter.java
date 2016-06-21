@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.chat.data.ChatDatasource;
+import com.marked.pixsee.chat.data.ChatRepository;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.commands.Command;
@@ -30,7 +31,7 @@ public class ChatPresenter implements ChatContract.Presenter {
 	private ChatFragment.ChatFragmentInteraction mChatFragmentInteraction;
 	private File mPictureFile;
 
-	public ChatPresenter(ChatContract.View mView, ChatDatasource mRepository,User appsUser) {
+	public ChatPresenter(ChatContract.View mView, ChatRepository mRepository, User appsUser) {
 		this.mRepository = mRepository;
 		this.mView = new WeakReference<>(mView);
 		this.mView.get().setPresenter(this);

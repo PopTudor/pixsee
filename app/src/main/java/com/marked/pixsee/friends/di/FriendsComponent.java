@@ -2,7 +2,7 @@ package com.marked.pixsee.friends.di;
 
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.injection.components.ActivityComponent;
-import com.marked.pixsee.injection.scopes.PerFragment;
+import com.marked.pixsee.injection.scopes.FragmentScope;
 
 import dagger.Component;
 
@@ -11,7 +11,7 @@ import dagger.Component;
  * Because this componend depends on appcomponent, you have to add the appcomponent to the builder
  * DaggerFriendsComponent.builder().appComponent(appcomponent).friendModule(new FriendModule(this)).build().inject(this);
  */
-@PerFragment
+@FragmentScope
 @Component(modules = {FriendModule.class}, dependencies = {ActivityComponent.class})
 public interface FriendsComponent {
 	void inject(FriendFragment friendFragment);

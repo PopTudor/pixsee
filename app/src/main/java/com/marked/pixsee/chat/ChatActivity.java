@@ -18,6 +18,9 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.injection.components.ActivityComponent;
+import com.marked.pixsee.injection.components.DaggerActivityComponent;
+import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.selfie.PictureDetailSendFragment;
 import com.marked.pixsee.selfie.SelfieFragment;
 
@@ -39,6 +42,7 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.Chat
 	public static final String EXTRA_CONTACT = "com.marked.vifo.ui.activity.EXTRA_CONTACT";
 
 	private ChatFragment mFragment;
+	private ActivityComponent mActivityComponent;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +52,11 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.Chat
 			getWindow().setAllowEnterTransitionOverlap(false);
 		}
 		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+		// as long as activity component != null, objects with @ActivityScope are in memory
+		mActivityComponent = DaggerActivityComponent.builder()
+				.activityModule(new ActivityModule(this))
+				.build();
+
 		User user = getIntent().getParcelableExtra(EXTRA_CONTACT);
 		mFragment = ChatFragment.newInstance(user);
 		getSupportActionBar().setTitle(user.getName());
@@ -122,5 +131,9 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.Chat
 		getSupportFragmentManager().popBackStackImmediate();/* after the picture is saved on disk, we get it's location and continue
 		resuming the camera preview; here we stop that and send the file to chat fragment*/
 		((ChatFragment) getSupportFragmentManager().findFragmentByTag("contactDetailFragment")).pictureTaken(picture);
+	}
+
+	public ActivityComponent getActivityComponent() {
+		return mActivityComponent;
 	}
 }

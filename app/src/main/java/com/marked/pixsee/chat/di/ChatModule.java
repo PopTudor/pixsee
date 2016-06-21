@@ -1,16 +1,13 @@
 package com.marked.pixsee.chat.di;
 
-import android.content.Context;
-import android.preference.PreferenceManager;
-
 import com.marked.pixsee.chat.ChatContract;
 import com.marked.pixsee.chat.ChatPresenter;
-import com.marked.pixsee.chat.data.ChatDatasource;
-import com.marked.pixsee.chat.data.ChatDiskDatasource;
-import com.marked.pixsee.chat.data.ChatNetworkDatasource;
 import com.marked.pixsee.chat.data.ChatRepository;
-import com.marked.pixsee.data.database.PixyDatabase;
+import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.injection.scopes.FragmentScope;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -27,10 +24,8 @@ public class ChatModule {
 	}
 
 	@Provides
-	public ChatContract.Presenter providePresenter(Context context, User user) {
-		ChatDatasource diskDatasource = new ChatDiskDatasource(PixyDatabase.getInstance(context));
-		ChatDatasource networkDatasource = new ChatNetworkDatasource(PreferenceManager.getDefaultSharedPreferences(context));
-		ChatDatasource repository = new ChatRepository(diskDatasource, networkDatasource);
+	@FragmentScope
+	public ChatContract.Presenter providePresenter(ChatRepository repository,@Named(DatabaseContract.AppsUser.TABLE_NAME) User user) {
 		ChatPresenter chatPresenter = new ChatPresenter(view, repository, user);
 		return chatPresenter;
 	}

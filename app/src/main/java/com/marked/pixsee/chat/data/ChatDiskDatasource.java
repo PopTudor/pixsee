@@ -14,6 +14,8 @@ import com.marked.pixsee.data.repository.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 
 /**
@@ -21,7 +23,25 @@ import rx.Observable;
  */
 public class ChatDiskDatasource implements ChatDatasource {
 	private PixyDatabase database;
-
+	/*
+	* https://frogermcs.github.io/dependency-injection-with-dagger-2-the-api/
+	* All parameters are taken from dependencies graph. @Inject annotation used in costructor
+	* also makes this class a part of dependencies graph.
+	* It means that it can also be injected when it’s needed:
+	* @Inject ChatNetworkDatasource networkData;
+	* and it can also be provided to methods that needs this dependency:
+	* @provides
+	* public Repository provideRepository(ChatDiskDatasource source,ChatNetworkds network){
+	*   return new Repository(source,network);
+	* }
+	* but it cannot be provided for an interface(unless annotated with qualified)
+	* the following won't work:
+	* @provides
+	* public Repository provideRepository(ChatDatasource source){
+	*   return new Repository(source);
+	* }
+	* */
+	@Inject
 	public ChatDiskDatasource(PixyDatabase database) {
 		this.database = database;
 	}

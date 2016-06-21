@@ -1,7 +1,7 @@
 package com.marked.pixsee.profile.di;
 
 import com.marked.pixsee.data.repository.user.UserRepository;
-import com.marked.pixsee.injection.scopes.PerFragment;
+import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.profile.Presenter;
 import com.marked.pixsee.profile.ProfileContract;
 
@@ -18,7 +18,7 @@ public class ProfileModule {
 	public ProfileModule(ProfileContract.View view) {
 		mViewWeakReference = view;
 	}
-	@PerFragment
+	@FragmentScope
 	@Provides
 	ProfileContract.Presenter providePresenter(UserRepository userRepository){
 		return new Presenter(mViewWeakReference, userRepository);

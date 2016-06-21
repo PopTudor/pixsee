@@ -10,6 +10,8 @@ import com.marked.pixsee.utility.GCMConstants;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -25,6 +27,25 @@ public class ChatNetworkDatasource implements ChatDatasource {
 	private final String userid;
 	private final Gson gson = new Gson();
 
+	/*
+	* https://frogermcs.github.io/dependency-injection-with-dagger-2-the-api/
+	* All parameters are taken from dependencies graph. @Inject annotation used in costructor
+	* also makes this class a part of dependencies graph.
+	* It means that it can also be injected when it’s needed:
+	* @Inject ChatNetworkDatasource networkData;
+	* and it can also be provided to methods that needs this dependency:
+	* @provides
+	* public Repository provideRepository(ChatNetworkDatasource source,ChatLocalds local){
+	*   return new Repository(source,local);
+	* }
+	* but it cannot be provided for an interface(unless annotated with qualified)
+	* the following won't work:
+	* @provides
+	* public Repository provideRepository(ChatDatasource source){
+	*   return new Repository(source);
+	* }
+	* */
+	@Inject
 	public ChatNetworkDatasource(SharedPreferences sharedPreferences) {
 		HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
 		loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

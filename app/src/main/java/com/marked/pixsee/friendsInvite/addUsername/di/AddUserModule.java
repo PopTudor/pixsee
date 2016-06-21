@@ -7,7 +7,7 @@ import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
-import com.marked.pixsee.injection.scopes.PerFragment;
+import com.marked.pixsee.injection.scopes.FragmentScope;
 
 import dagger.Module;
 import dagger.Provides;
@@ -16,7 +16,7 @@ import dagger.Provides;
  * Created by Tudor on 03-Jun-16.
  */
 @Module
-@PerFragment
+@FragmentScope
 public class AddUserModule {
 	private AddUsernameContract.View view;
 
@@ -25,7 +25,7 @@ public class AddUserModule {
 	}
 
 	@Provides
-	@PerFragment
+	@FragmentScope
 	AddUsernameContract.Presenter providesPresenter(UserRepository repository, Context context) {
 		User user = repository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
 
