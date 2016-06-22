@@ -87,6 +87,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Password recovery"
+        android:visibility="gone"
         android:textAlignment="center"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
         android:layout_alignTop="@+id/logInButtonPixy"
