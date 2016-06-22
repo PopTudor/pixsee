@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.support.annotation.DrawableRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -133,6 +134,10 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 				if (!mTyping && count > 0) mTyping = true;
 				if (mTyping && count == 0) mTyping = false;
 				onTyping(mTyping);
+				if (s.length()>0)
+					switchButonImage(R.drawable.ic_send_24dp);
+				else if (s.length()==0)
+					switchButonImage(R.drawable.ic_camera_24dp);
 			}
 
 			@Override
@@ -418,21 +423,23 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	@Override
 	public void showImage(File file) {
-		Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_send_24dp);
-		drawable.setColorFilter(ContextCompat.getColor(getContext(),R.color.teal), PorterDuff.Mode.SRC_ATOP);
-		((FloatingActionButton) getView().findViewById(R.id.sendButton)).setImageDrawable(drawable);
+		switchButonImage(R.drawable.ic_send_24dp);
 
 		getView().findViewById(R.id.messageEditText).setEnabled(false);
 		getView().findViewById(R.id.pictureTakenContainer).setVisibility(View.VISIBLE);
 		((SimpleDraweeView) getView().findViewById(R.id.picture)).setImageURI(Uri.fromFile(file));
 	}
 
+	private void switchButonImage(@DrawableRes int resId) {
+		Drawable drawable = ContextCompat.getDrawable(getActivity(), resId);
+		drawable.setColorFilter(ContextCompat.getColor(getContext(),R.color.teal), PorterDuff.Mode.SRC_ATOP);
+		((FloatingActionButton) getView().findViewById(R.id.sendButton)).setImageDrawable(drawable);
+	}
+
 	@Override
 	public void showPictureContainer(boolean show) {
-		Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_camera_24dp);
-		drawable.setColorFilter(ContextCompat.getColor(getContext(),R.color.teal), PorterDuff.Mode.SRC_ATOP);
+		switchButonImage(R.drawable.ic_camera_24dp);
 
-		((FloatingActionButton) getView().findViewById(R.id.sendButton)).setImageDrawable(drawable);
 		getView().findViewById(R.id.messageEditText).setEnabled(true);
 		getView().findViewById(R.id.pictureTakenContainer).setVisibility(View.GONE);
 		((SimpleDraweeView) getView().findViewById(R.id.picture)).destroyDrawingCache();
