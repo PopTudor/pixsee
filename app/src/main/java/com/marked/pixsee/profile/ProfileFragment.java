@@ -8,12 +8,16 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +30,7 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
+import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.entry.EntryActivity;
 import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
@@ -36,6 +41,7 @@ import com.marked.pixsee.profile.di.DaggerProfileComponent;
 import com.marked.pixsee.profile.di.ProfileModule;
 
 import java.io.File;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -44,6 +50,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 	private User mUser;
 	@Inject
 	ProfileContract.Presenter mPresenter;
+	private PictureAdapter mPictureAdapter;
 	/**
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
@@ -73,11 +80,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 			throw new ClassCastException(context.getPackageName()+" must implement "+ProfileFragmentInteraction.class.getCanonicalName());
 		}
 		mUser = getArguments().getParcelable(USER_EXTRA);
-	}
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		ActivityComponent component = DaggerActivityComponent
 				.builder()
 				.activityModule(new ActivityModule((AppCompatActivity)getActivity()))
@@ -86,7 +89,24 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 				.profileModule(new ProfileModule(this))
 				.build()
 				.inject(this);
+
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		mPictureAdapter = new PictureAdapter();
+
+		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "/Pixsee/");
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				Log.d("Camera Guide", "Required media storage does not exist");
+			}
+		}
+		mPresenter.attach();
+		mPresenter.picturesData(mediaStorageDir.listFiles());
+
 	}
 
 	@Override
@@ -119,7 +139,17 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 		});
 		((Toolbar) rootView.findViewById(R.id.toolbar)).getOverflowIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 		// Inflate the layout for this fragment
+		RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.cardRecyclerView);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false));
+		recyclerView.setAdapter(mPictureAdapter);
+
 		return rootView ;
+	}
+
+	@Override
+	public void setData(List<String> list) {
+		PictureAdapter.setDataset(list);
+		mPictureAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -137,6 +167,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 				SharedPreferences.Editor editor = preferences.edit();
 				editor.clear();
 				editor.commit();
+				getActivity().deleteDatabase(DatabaseContract.DATABASE_NAME);
 				Intent intent = new Intent(getActivity(), EntryActivity.class);
 				getActivity().startActivity(intent);
 				getActivity().finish();
