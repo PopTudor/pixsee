@@ -340,7 +340,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
         };
     }
 
-    public Emitter.Listener onTyping() {
+    public Emitter.Listener onTyping() { // // FIXME: 23-Jun-16 gets called twice when I click a friend
         Emitter.Listener onTyping = new Emitter.Listener() {
             @Override
             public void call(final Object... args) {

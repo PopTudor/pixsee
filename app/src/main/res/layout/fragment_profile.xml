@@ -1,92 +1,120 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:animateLayoutChanges="true"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                tools:context="com.marked.pixsee.profile.ProfileFragment">
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    tools:context="com.marked.pixsee.profile.ProfileFragment"
+    >
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
+        android:layout_height="128dp"
         android:elevation="0dp"
+        android:fitsSystemWindows="true"
+        app:contentScrim="?attr/colorPrimary"
         app:elevation="0dp"
-        android:layout_height="128dp">
-        <android.support.v7.widget.Toolbar
+        app:layout_scrollFlags="scroll|snap">
+        <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
+            app:expandedTitleTextAppearance="@style/CollapsedAppBar"
+            app:collapsedTitleTextAppearance="@style/CollapsedAppBar"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+        <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:background="@color/primary"
-            android:elevation="0dp"
-            app:elevation="0dp"
+            android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="0dp"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="0dp">
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:background="@color/primary"
+            android:elevation="0dp"
+            android:minHeight="56dp"
+            app:elevation="0dp"
+            app:layout_collapseMode="pin"
+            />
+            <!--app:layout_scrollFlags="scroll|snap"-->
 
-        </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        fresco:roundAsCircle="true"
-        fresco:placeholderImage="@drawable/ic_photo_camera_24dp"
-        fresco:roundingBorderWidth="4dp"
-        fresco:roundingBorderColor="#FAFAFA"
-        fresco:backgroundImage="@color/light_gray"
-        android:id="@+id/iconSimpleDraweeView"
-        android:layout_below="@+id/app_bar"
-        android:layout_marginTop="-60dp"
-        android:layout_marginLeft="16dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:text="Name"
-        android:id="@+id/nameTextview"
-        android:layout_alignLeft="@+id/iconSimpleDraweeView"
-        android:layout_alignStart="@+id/iconSimpleDraweeView"
-        android:layout_alignRight="@+id/iconSimpleDraweeView"
-        android:layout_alignEnd="@+id/iconSimpleDraweeView"
-        android:layout_below="@+id/iconSimpleDraweeView"
-        android:layout_marginTop="8dp"
-        android:maxLines="2"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="username"
-        android:id="@+id/usernameTextview"
-        android:layout_below="@+id/nameTextview"
-        android:layout_alignLeft="@+id/nameTextview"
-        android:layout_alignStart="@+id/nameTextview"/>
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/inviteFriendsImageButton"
-        android:layout_alignBottom="@+id/iconSimpleDraweeView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:elevation="0dp"
-        android:src="@drawable/ic_person_add_24dp"
-        android:layout_marginRight="16dp"
-        style="@style/Base.Widget.AppCompat.Button.Colored"
-        android:background="@drawable/round_corner_button"/>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/cardRecyclerView"
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/usernameTextview"
-        android:layout_marginTop="16dp">
+        android:layout_marginBottom="56dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    </android.support.v7.widget.RecyclerView>
-</RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/profile_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="8dp">
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/iconSimpleDraweeView"
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:layout_marginLeft="16dp"
+                fresco:backgroundImage="@color/light_gray"
+                fresco:placeholderImage="@drawable/ic_photo_camera_24dp"
+                fresco:roundAsCircle="true"
+                fresco:roundingBorderColor="#FAFAFA"
+                fresco:roundingBorderWidth="4dp"
+                android:background="@color/transparent"
+                />
+            <TextView
+                android:id="@+id/nameTextview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/iconSimpleDraweeView"
+                android:layout_alignLeft="@+id/iconSimpleDraweeView"
+                android:layout_alignRight="@+id/iconSimpleDraweeView"
+                android:layout_alignStart="@+id/iconSimpleDraweeView"
+                android:layout_below="@+id/iconSimpleDraweeView"
+                android:layout_marginTop="8dp"
+                android:maxLines="2"
+                android:text="Name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+            <TextView
+                android:id="@+id/usernameTextview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/nameTextview"
+                android:layout_alignStart="@+id/nameTextview"
+                android:layout_below="@+id/nameTextview"
+                android:text="username"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <ImageButton
+                android:id="@+id/inviteFriendsImageButton"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_corner_button"
+                android:elevation="0dp"
+                android:src="@drawable/ic_person_add_24dp"
+                android:layout_alignBottom="@+id/iconSimpleDraweeView"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="8dp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/cardRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_below="@+id/usernameTextview"
+                android:layout_marginTop="8dp"/>
+
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

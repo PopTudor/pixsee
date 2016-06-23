@@ -27,7 +27,9 @@ public class Pixsee extends Application {
 		appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
 
 		ImagePipelineConfig config = OkHttpImagePipelineConfigFactory
-				.newBuilder(this, new OkHttpClient()).build();
+				.newBuilder(this, new OkHttpClient())
+				.setDownsampleEnabled(true)
+				.build();
 		Fresco.initialize(this, config);
 		FacebookSdk.sdkInitialize(getApplicationContext());
 		Fabric.with(this, new Crashlytics());
