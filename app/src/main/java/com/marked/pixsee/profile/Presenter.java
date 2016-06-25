@@ -2,7 +2,6 @@ package com.marked.pixsee.profile;
 
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.data.repository.user.UserDatasource;
-import com.marked.pixsee.data.repository.user.UserRepository;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -12,11 +11,11 @@ import java.util.List;
 /**
  * Created by Tudor on 07-Jun-16.
  */
-public class Presenter implements ProfileContract.Presenter {
+class Presenter implements ProfileContract.Presenter {
 	private WeakReference<ProfileContract.View> mViewWeakReference;
 	private UserDatasource mUserDatasource;
 
-	public Presenter(ProfileContract.View viewWeakReference, UserRepository repository) {
+	public Presenter(ProfileContract.View viewWeakReference, UserDatasource repository) {
 		mViewWeakReference = new WeakReference<>(viewWeakReference);
 		mUserDatasource = repository;
 		mViewWeakReference.get().setPresenter(this);

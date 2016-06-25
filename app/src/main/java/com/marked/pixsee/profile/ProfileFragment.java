@@ -37,8 +37,6 @@ import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
-import com.marked.pixsee.profile.di.DaggerProfileComponent;
-import com.marked.pixsee.profile.di.ProfileModule;
 
 import java.io.File;
 import java.util.List;

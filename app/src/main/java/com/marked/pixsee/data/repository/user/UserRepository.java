@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +24,7 @@ public class UserRepository implements UserDatasource {
     final List<User> cache = new ArrayList<>(10);
     private boolean dirtyCache;
 
-    public UserRepository(@NotNull UserDatasource disk, @NotNull UserDatasource network) {
+    public UserRepository(UserDatasource disk, UserDatasource network) {
         this.disk = disk;
         this.network = network;
     }

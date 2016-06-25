@@ -10,11 +10,14 @@ import com.google.gson.JsonObject;
 import com.marked.pixsee.friends.data.FriendContractDB;
 import com.marked.pixsee.friends.data.FriendsAPI;
 import com.marked.pixsee.friendsInvite.addUsername.data.AddUserAPI;
+import com.marked.pixsee.injection.scopes.ActivityScope;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.utility.GCMConstants;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -28,6 +31,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Tudor on 2016-05-20.
  */
+@ActivityScope
 public class UserNetworkDatasource implements UserDatasource {
 	private final HttpLoggingInterceptor loggingInterceptor;
 	private final OkHttpClient httpClient;
@@ -35,6 +39,7 @@ public class UserNetworkDatasource implements UserDatasource {
 	private final String userid;
 	private final Gson gson = new Gson();
 
+	@Inject
 	public UserNetworkDatasource(SharedPreferences sharedPreferences) {
 		loggingInterceptor = new HttpLoggingInterceptor();
 		loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

@@ -10,9 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.repository.user.UserDatasource;
 import com.marked.pixsee.data.repository.user.UserDiskDatasource;
 import com.marked.pixsee.data.repository.user.UserNetworkDatasource;
 import com.marked.pixsee.data.repository.user.UserRepository;
+import com.marked.pixsee.injection.Local;
+import com.marked.pixsee.injection.Remote;
+import com.marked.pixsee.injection.Repository;
 import com.marked.pixsee.injection.scopes.ActivityScope;
 
 import javax.inject.Named;
@@ -74,15 +78,27 @@ public class ActivityModule {
 
 	@Provides
 	@ActivityScope
-	UserRepository provideUserRepository(PixyDatabase database) {
-		return new UserRepository(
-				new UserDiskDatasource(database),
-				new UserNetworkDatasource(PreferenceManager.getDefaultSharedPreferences(activity)));
+	@Local
+	UserDatasource provideUserRepositoryLocal(PixyDatabase database) {
+		return new UserDiskDatasource(database);
+	}
+	@Provides
+	@ActivityScope
+	@Remote
+	UserDatasource provideUserRepositoryRemote(SharedPreferences preferences) {
+		return new UserNetworkDatasource(preferences);
+	}
+
+	@Provides
+	@ActivityScope
+	@Repository
+	UserDatasource provideUserRepository(@Local UserDatasource local, @Remote UserDatasource remote) {
+		return new UserRepository(local,remote);
 	}
 	@Provides
 	@ActivityScope
 	@Named(DatabaseContract.AppsUser.TABLE_NAME)
-	User provideAppsUser(UserRepository repository){
+	User provideAppsUser(@Repository UserDatasource repository){
 		return repository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
 	}
 }

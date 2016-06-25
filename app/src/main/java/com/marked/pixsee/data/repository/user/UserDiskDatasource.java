@@ -15,9 +15,12 @@ import com.marked.pixsee.friends.mapper.CursorToUserMapper;
 import com.marked.pixsee.friends.mapper.UserToCvMapper;
 import com.marked.pixsee.friends.specifications.GetFriendsSpecification;
 import com.marked.pixsee.friends.specifications.GetFriendsStartingWith;
+import com.marked.pixsee.injection.scopes.ActivityScope;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import rx.Observable;
 
@@ -26,11 +29,13 @@ import static com.marked.pixsee.friends.data.FriendContractDB.TABLE_NAME;
 /**
  * Created by Tudor on 2016-05-20.
  */
+@ActivityScope
 public class UserDiskDatasource implements UserDatasource {
 	private PixyDatabase db;
 	private Mapper<Cursor, User> cursorToUserMapper = new CursorToUserMapper();
 	private Mapper<User, ContentValues> userToCvMapper = new UserToCvMapper();
 
+	@Inject
 	public UserDiskDatasource(PixyDatabase db) {
 		this.db = db;
 	}

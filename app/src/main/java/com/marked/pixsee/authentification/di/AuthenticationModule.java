@@ -3,11 +3,12 @@ package com.marked.pixsee.authentification.di;
 import android.content.SharedPreferences;
 
 import com.marked.pixsee.authentification.AuthenticationContract;
+import com.marked.pixsee.authentification.Presenter;
 import com.marked.pixsee.authentification.login.LoginAPI;
-import com.marked.pixsee.data.repository.user.UserRepository;
+import com.marked.pixsee.data.repository.user.UserDatasource;
+import com.marked.pixsee.injection.Repository;
 import com.marked.pixsee.injection.scopes.ActivityScope;
 import com.marked.pixsee.networking.ServerConstants;
-import com.marked.pixsee.authentification.Presenter;
 
 import javax.inject.Named;
 
@@ -29,7 +30,8 @@ public class AuthenticationModule {
 
 	@ActivityScope
 	@Provides
-	AuthenticationContract.Presenter providePresenter(@Named(ServerConstants.SERVER) Retrofit retrofit, UserRepository datasource,
+	AuthenticationContract.Presenter providePresenter(@Named(ServerConstants.SERVER) Retrofit retrofit,
+	                                                  @Repository UserDatasource datasource,
 	                                                  SharedPreferences preferences) {
 		return new Presenter(mView, retrofit.create(LoginAPI.class),datasource,preferences);
 	}

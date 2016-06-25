@@ -39,6 +39,5 @@
     </style>
     <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textStyle">normal</item>
     </style>
 </resources>

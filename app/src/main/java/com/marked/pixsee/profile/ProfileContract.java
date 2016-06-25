@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Tudor on 06-Jun-16.
  */
-public interface ProfileContract {
+interface ProfileContract {
 	interface Presenter extends BasePresenter{
 		void saveAppUser(User user);
 

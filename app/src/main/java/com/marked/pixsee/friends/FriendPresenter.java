@@ -5,7 +5,6 @@ import android.view.View;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.data.repository.user.UserDatasource;
-import com.marked.pixsee.data.repository.user.UserRepository;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -33,9 +32,9 @@ public class FriendPresenter implements FriendsContract.Presenter {
 	private int size = 0;
 
 	@Inject
-	public FriendPresenter(FriendsContract.View view, UserRepository repository) {
+	public FriendPresenter(FriendsContract.View view, UserDatasource repository) {
 		this.repository = repository;
-		this.mView = new WeakReference<FriendsContract.View>(view);
+		this.mView = new WeakReference<>(view);
 		this.mView.get().setPresenter(this);
 	}
 

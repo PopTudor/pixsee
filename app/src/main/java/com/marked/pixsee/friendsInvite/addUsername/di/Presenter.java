@@ -2,7 +2,6 @@ package com.marked.pixsee.friendsInvite.addUsername.di;
 
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.data.repository.user.UserDatasource;
-import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
 import com.marked.pixsee.friendsInvite.addUsername.data.RequestService;
 
@@ -24,7 +23,7 @@ class Presenter implements AddUsernameContract.Presenter {
 	private RequestService requestService;
 
 
-	public Presenter(AddUsernameContract.View view, UserRepository repository, RequestService requestService) {
+	public Presenter(AddUsernameContract.View view, UserDatasource repository, RequestService requestService) {
 		this.requestService = requestService;
 		mView = new WeakReference<>(view);
 		mView.get().setPresenter(this);

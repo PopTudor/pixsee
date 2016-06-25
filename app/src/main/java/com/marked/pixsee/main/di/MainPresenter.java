@@ -5,7 +5,6 @@ import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.data.repository.user.UserDatasource;
-import com.marked.pixsee.data.repository.user.UserRepository;
 import com.marked.pixsee.main.MainContract;
 
 import java.lang.ref.WeakReference;
@@ -19,7 +18,7 @@ class MainPresenter implements MainContract.Presenter {
 	private WeakReference<MainContract.View> mWeakView;
 	private UserDatasource mRepository;
 
-	public MainPresenter(MainContract.View view, UserRepository userDatasource) {
+	public MainPresenter(MainContract.View view, UserDatasource userDatasource) {
 		this.mRepository = userDatasource;
 		this.mWeakView = new WeakReference<>(view);
 		this.mWeakView.get().setPresenter(this);

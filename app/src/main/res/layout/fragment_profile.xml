@@ -74,15 +74,14 @@
                 android:id="@+id/nameTextview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/iconSimpleDraweeView"
                 android:layout_alignLeft="@+id/iconSimpleDraweeView"
-                android:layout_alignRight="@+id/iconSimpleDraweeView"
                 android:layout_alignStart="@+id/iconSimpleDraweeView"
                 android:layout_below="@+id/iconSimpleDraweeView"
                 android:layout_marginTop="8dp"
                 android:maxLines="2"
                 android:text="Name"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:maxWidth="200dp"/>
 
             <TextView
                 android:id="@+id/usernameTextview"
@@ -92,7 +91,9 @@
                 android:layout_alignStart="@+id/nameTextview"
                 android:layout_below="@+id/nameTextview"
                 android:text="username"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:maxWidth="200dp"
+                android:maxLines="1"/>
 
             <ImageButton
                 android:id="@+id/inviteFriendsImageButton"

@@ -1,6 +1,8 @@
 package com.marked.pixsee.main.di;
 
+import com.marked.pixsee.data.repository.user.UserDatasource;
 import com.marked.pixsee.data.repository.user.UserRepository;
+import com.marked.pixsee.injection.Repository;
 import com.marked.pixsee.injection.scopes.ActivityScope;
 import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.main.MainContract;
@@ -20,7 +22,7 @@ public class MainModule {
 	}
 	@Provides
 	@ActivityScope
-	public MainContract.Presenter providesPresenter(UserRepository userRepository){
+	public MainContract.Presenter providesPresenter(@Repository UserDatasource userRepository){
 		MainContract.Presenter presenter = new MainPresenter(activity, userRepository);
 		return presenter;
 	}

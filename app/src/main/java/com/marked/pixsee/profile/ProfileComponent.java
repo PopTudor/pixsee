@@ -1,8 +1,7 @@
-package com.marked.pixsee.profile.di;
+package com.marked.pixsee.profile;
 
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.scopes.FragmentScope;
-import com.marked.pixsee.profile.ProfileFragment;
 
 import dagger.Component;
 
@@ -11,6 +10,6 @@ import dagger.Component;
  */
 @Component(modules = ProfileModule.class, dependencies = ActivityComponent.class)
 @FragmentScope
-public interface ProfileComponent {
+interface ProfileComponent {
 	void inject(ProfileFragment profileFragment);
 }
