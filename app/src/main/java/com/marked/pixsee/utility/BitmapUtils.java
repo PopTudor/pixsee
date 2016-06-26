@@ -30,6 +30,10 @@ import static android.os.Environment.getExternalStorageState;
  */
 public class BitmapUtils {
 	public static File getPublicPicture(String filename) {
+		// Create a media file name
+		return new File(getPublicPictureDirectory().getPath() + filename);
+	}
+	public static File getPublicPictureDirectory() {
 		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "/Pixsee/");
 		if (!mediaStorageDir.exists()) {
 			if (!mediaStorageDir.mkdirs()) {
@@ -38,7 +42,7 @@ public class BitmapUtils {
 			}
 		}
 		// Create a media file name
-		return new File(mediaStorageDir.getPath() + filename);
+		return mediaStorageDir;
 	}
 
 	static byte[] flipHorizontal(byte[] src) {

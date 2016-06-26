@@ -1,10 +1,9 @@
-package com.marked.pixsee.main.di;
+package com.marked.pixsee.main;
 
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.repository.user.User;
 import com.marked.pixsee.data.repository.user.UserRepository;
-import com.marked.pixsee.main.MainContract;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -14,8 +14,10 @@ import java.util.List;
 class Presenter implements ProfileContract.Presenter {
 	private WeakReference<ProfileContract.View> mViewWeakReference;
 	private UserDatasource mUserDatasource;
+	private File mPublicPictureDirectoryFile;
 
-	public Presenter(ProfileContract.View viewWeakReference, UserDatasource repository) {
+	public Presenter(ProfileContract.View viewWeakReference, UserDatasource repository, File publicPictureDirectoryFile) {
+		mPublicPictureDirectoryFile = publicPictureDirectoryFile;
 		mViewWeakReference = new WeakReference<>(viewWeakReference);
 		mUserDatasource = repository;
 		mViewWeakReference.get().setPresenter(this);
@@ -28,7 +30,12 @@ class Presenter implements ProfileContract.Presenter {
 
 	@Override
 	public void attach() {
+		File[] list = mPublicPictureDirectoryFile.listFiles();
+		List<String> strings = new ArrayList<>(list.length);
+		for(File it : list)
+			strings.add(it.getAbsolutePath());
 
+		mViewWeakReference.get().setData(strings);
 	}
 
 	@Override
@@ -36,11 +43,10 @@ class Presenter implements ProfileContract.Presenter {
 		mUserDatasource.deleteAllUsers();
 	}
 
+
+
 	@Override
-	public void picturesData(File[] list) {
-		List<String> strings = new ArrayList<>(list.length);
-		for(File it : list)
-			strings.add(it.getAbsolutePath());
-		mViewWeakReference.get().setData(strings);
+	public void inviteFriendsClicked() {
+		mViewWeakReference.get().showFriendsInvite();
 	}
 }

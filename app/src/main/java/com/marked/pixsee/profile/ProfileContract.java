@@ -4,7 +4,6 @@ import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.data.repository.user.User;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -16,12 +15,13 @@ interface ProfileContract {
 
 		void logOut();
 
-		void picturesData(File[] list);
+		void inviteFriendsClicked();
 	}
 
 	interface View extends BaseView<Presenter> {
 
 		void setData(List<String> list);
 
+		void showFriendsInvite();
 	}
 }

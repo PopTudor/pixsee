@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -96,15 +94,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 		setHasOptionsMenu(true);
 		mPictureAdapter = new PictureAdapter();
 
-		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "/Pixsee/");
-		if (!mediaStorageDir.exists()) {
-			if (!mediaStorageDir.mkdirs()) {
-				Log.d("Camera Guide", "Required media storage does not exist");
-			}
-		}
 		mPresenter.attach();
-		mPresenter.picturesData(mediaStorageDir.listFiles());
-
 	}
 
 	@Override
@@ -124,8 +114,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 		inviteFriendsImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), FriendsInviteActivity.class);
-				getActivity().startActivity(intent);
+				mPresenter.inviteFriendsClicked();
 			}
 		});
 
@@ -142,6 +131,12 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 		recyclerView.setAdapter(mPictureAdapter);
 
 		return rootView ;
+	}
+
+	@Override
+	public void showFriendsInvite() {
+		Intent intent = new Intent(getActivity(), FriendsInviteActivity.class);
+		getActivity().startActivity(intent);
 	}
 
 	@Override
