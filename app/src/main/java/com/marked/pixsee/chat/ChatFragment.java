@@ -1,6 +1,7 @@
 package com.marked.pixsee.chat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -18,11 +19,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -31,10 +32,9 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.chat.custom.ChatAdapter;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
-import com.marked.pixsee.chat.di.ChatModule;
-import com.marked.pixsee.chat.di.DaggerChatComponent;
 import com.marked.pixsee.commons.SpaceItemDecorator;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.fullscreenImage.ImageFullscreenActivity;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.utility.GCMConstants;
 
@@ -180,13 +180,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		((FloatingActionButton)rootView.findViewById(R.id.sendButton))
 				.getDrawable().setColorFilter(ContextCompat.getColor(getActivity(),R.color.teal), PorterDuff.Mode.SRC_ATOP);
 
-		((ImageButton)rootView.findViewById(R.id.filtersImageButton)).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mPresenter.filtersButtonClicked();
-			}
-		});
-
 		rootView.findViewById(R.id.clearImageButton).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -301,6 +294,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		mPresenter.attach();
 		mThatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
 		mThisUser = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(GCMConstants.USER_ID, null);
+		mPresenter.setThatUser(mThatUser);
 		mExplosionField = ExplosionField.attach2Window(getActivity());;
 	}
 
@@ -392,6 +386,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	public void showCards(List<Message> cards) {
 		mChatAdapter.getDataset().clear();
 		mChatAdapter.getDataset().addAll(cards);
+		messagesRecyclerView.scrollToPosition(mChatAdapter.getItemCount()-1);
 		mChatAdapter.notifyDataSetChanged();
 	}
 
@@ -412,13 +407,22 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	}
 
 	@Override
+	public void imageClicked(View view, Uri uri) {
+		mPresenter.chatImageClicked(uri);
+	}
+
+	@Override
+	public void showImageFullscreen(Uri uri) {
+		Log.i("TAG", uri.toString());
+		Intent intent = new Intent(getActivity(), ImageFullscreenActivity.class);
+		intent.putExtra("URI", uri);
+		getActivity().startActivity(intent);
+	}
+
+	@Override
 	public void remove(Message message,int position) {
 		mChatAdapter.getDataset().remove(position);
 		mChatAdapter.notifyItemRemoved(position);
-	}
-	@Override
-	public void showFilters() {
-
 	}
 
 	@Override
@@ -442,7 +446,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 		getView().findViewById(R.id.messageEditText).setEnabled(true);
 		getView().findViewById(R.id.pictureTakenContainer).setVisibility(View.GONE);
-		((SimpleDraweeView) getView().findViewById(R.id.picture)).destroyDrawingCache();
+		getView().findViewById(R.id.picture).destroyDrawingCache();
 	}
 
 	public void pictureTaken(File file) {

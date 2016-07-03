@@ -1,9 +1,11 @@
-package com.marked.pixsee.chat;
+package com.marked.pixsee.fullscreenImage;
 
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -133,7 +135,9 @@ public class ImageFullscreenActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fullscreen);
 		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-		getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.semi_transparent_black));
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.semi_transparent_black));
+		}
 		fullscreenContentControls = (LinearLayout) findViewById(R.id.fullscreenContentControls);
 		fullscreenAppBar = (AppBarLayout) findViewById(R.id.fullscreenAppBar);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -153,6 +157,8 @@ public class ImageFullscreenActivity extends AppCompatActivity {
 		mVisible = true;
 
 		{
+			Uri imagePath = getIntent().getParcelableExtra("URI");
+
 			fullscreenContent = (SubsamplingScaleImageView) findViewById(R.id.fullscreenContent);
 			// Set up the user interaction to manually show or hide the system UI.
 			fullscreenContent.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +168,7 @@ public class ImageFullscreenActivity extends AppCompatActivity {
 				}
 			});
 			fullscreenContent.setOnTouchListener(mDelayHideTouchListener);
-			fullscreenContent.setImage(ImageSource.uri(getIntent().getStringExtra("URI")));
+			fullscreenContent.setImage(ImageSource.uri(imagePath));
 			fullscreenContent.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
 			fullscreenContent.setMinimumDpi(100);
 			fullscreenContent.setDoubleTapZoomDpi(100 + 20);
