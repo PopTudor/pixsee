@@ -1,5 +1,6 @@
 package com.marked.pixsee.chat.custom;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,5 +96,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	public interface ChatInteraction {
 		void chatClicked(View view,Message message,int position);
+
+		void imageClicked(View view, Uri uri);
 	}
 }

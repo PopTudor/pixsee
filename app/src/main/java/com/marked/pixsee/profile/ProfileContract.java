@@ -2,7 +2,7 @@ package com.marked.pixsee.profile;
 
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 
 import java.util.List;
 

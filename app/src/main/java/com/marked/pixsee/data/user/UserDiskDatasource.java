@@ -1,4 +1,4 @@
-package com.marked.pixsee.data.repository.user;
+package com.marked.pixsee.data.user;
 
 import android.content.ContentValues;
 import android.database.Cursor;

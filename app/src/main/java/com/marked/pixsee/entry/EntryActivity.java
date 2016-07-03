@@ -11,7 +11,7 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.authentification.AuthenticationActivity;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.data.FriendConstants;
 import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.utility.GCMConstants;

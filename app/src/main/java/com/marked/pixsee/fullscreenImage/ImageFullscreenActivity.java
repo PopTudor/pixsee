@@ -4,6 +4,8 @@ package com.marked.pixsee.fullscreenImage;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,22 +40,19 @@ public class ImageFullscreenActivity extends AppCompatActivity {
 					View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
 					View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
 					View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
+			hideAnimation();
 		}
 	};
 	private SubsamplingScaleImageView fullscreenContent;
 
 	private Runnable mShowPart2Runnable = new Runnable () {
 		@Override
-		public void run() {
-			// Delayed display of UI elements
-			showAnimation();
-		}
+		public void run() {showAnimation();}
     };
 	private Runnable mHideRunnable = new Runnable() {
 		@Override
 		public void run() {
-			hide();
+			hideAnimation();
 		}
 	};
 	/**
@@ -72,6 +71,7 @@ public class ImageFullscreenActivity extends AppCompatActivity {
 	private AppBarLayout fullscreenAppBar;
 
 	void showAnimation() {
+		mVisible = true;
 		fullscreenContentControls
 				.animate()
 				.alpha(1.0f)
@@ -94,21 +94,22 @@ public class ImageFullscreenActivity extends AppCompatActivity {
 					public void onAnimationStart(Animator animation) {
 						super.onAnimationStart(animation);
 						if (fullscreenAppBar != null)
-							fullscreenAppBar.setVisibility(View.INVISIBLE);
+							fullscreenAppBar.setVisibility(View.VISIBLE);
 					}
 				})
 				.start();
 	}
 
     void hideAnimation() {
+	    mVisible = false;
 	    fullscreenContentControls
 			    .animate()
 			    .alpha(0.0f)
 			    .setDuration(300L)
 			    .setListener(new AnimatorListenerAdapter() {
 				    @Override
-				    public void onAnimationStart(Animator animation) {
-					    super.onAnimationStart(animation);
+				    public void onAnimationEnd(Animator animation) {
+					    super.onAnimationEnd(animation);
 					    if (fullscreenContentControls != null)
 						    fullscreenContentControls.setVisibility(View.GONE);
 				    }
@@ -121,10 +122,10 @@ public class ImageFullscreenActivity extends AppCompatActivity {
 			    .setDuration(300L)
 			    .setListener(new AnimatorListenerAdapter() {
 				    @Override
-				    public void onAnimationStart(Animator animation) {
-					    super.onAnimationStart(animation);
-					    if (fullscreenAppBar != null)
-						    fullscreenAppBar.setVisibility(View.GONE);
+				    public void onAnimationEnd(Animator animation) {
+					    super.onAnimationEnd(animation);
+					    if (fullscreenContentControls != null)
+						    fullscreenContentControls.setVisibility(View.GONE);
 				    }
 			    })
 			    .start();
@@ -152,9 +153,7 @@ public class ImageFullscreenActivity extends AppCompatActivity {
 				onBackPressed() ;
 			}
 		});
-
-
-		mVisible = true;
+		toolbar.getNavigationIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
 		{
 			Uri imagePath = getIntent().getParcelableExtra("URI");
@@ -191,11 +190,6 @@ public class ImageFullscreenActivity extends AppCompatActivity {
     }
 
     private void hide() {
-        // Hide UI first
-	    hideAnimation();
-
-	    mVisible = false;
-
         // Schedule a runnable to remove the status and navigation bar after a delay
 	    mHideHandler.removeCallbacks(mShowPart2Runnable);
 	    mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
@@ -204,8 +198,6 @@ public class ImageFullscreenActivity extends AppCompatActivity {
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
-	    mVisible = true;
-
         // Schedule a runnable to display UI elements after a delay
 	    mHideHandler.removeCallbacks(mHidePart2Runnable);
 	    mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
@@ -230,7 +222,7 @@ public class ImageFullscreenActivity extends AppCompatActivity {
 	 * If [.AUTO_HIDE] is set, the number of milliseconds to wait after
 	 * user interaction before hiding the system UI.
 	 */
-	private static int AUTO_HIDE_DELAY_MILLIS = 8000;
+	private static int AUTO_HIDE_DELAY_MILLIS = 5000;
 
 	/**
 	 * Some older devices needs a small delay between UI widget updates

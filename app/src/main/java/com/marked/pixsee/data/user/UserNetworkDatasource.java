@@ -1,4 +1,4 @@
-package com.marked.pixsee.data.repository.user;
+package com.marked.pixsee.data.user;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;

@@ -2,7 +2,7 @@ package com.marked.pixsee.chat.data;
 
 import android.support.annotation.NonNull;
 
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 
 import java.util.List;
 

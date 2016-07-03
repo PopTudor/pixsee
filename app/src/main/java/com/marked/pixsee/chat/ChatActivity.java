@@ -16,8 +16,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
@@ -54,6 +55,7 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.Chat
 		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 		// as long as activity component != null, objects with @ActivityScope are in memory
 		mActivityComponent = DaggerActivityComponent.builder()
+				.appComponent(((Pixsee) getApplication()).getAppComponent())
 				.activityModule(new ActivityModule(this))
 				.build();
 

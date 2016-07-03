@@ -27,9 +27,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.entry.EntryActivity;
 import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
 import com.marked.pixsee.injection.components.ActivityComponent;
@@ -79,6 +80,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 
 		ActivityComponent component = DaggerActivityComponent
 				.builder()
+				.appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
 				.activityModule(new ActivityModule((AppCompatActivity)getActivity()))
 				.build();
 		DaggerProfileComponent.builder().activityComponent(component)

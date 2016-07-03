@@ -125,7 +125,7 @@
             android:value="578f43a0aa4a22391ecc912451e1514f1af55ce4"/>
 
         <activity
-            android:name=".chat.ImageFullscreenActivity"
+            android:name=".fullscreenImage.ImageFullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
             android:theme="@style/FullscreenTheme"/>

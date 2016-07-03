@@ -9,7 +9,7 @@ import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.chat.mapper.CursorToMessageMapper;
 import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.chat.mapper.MessageToCVMapper;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
