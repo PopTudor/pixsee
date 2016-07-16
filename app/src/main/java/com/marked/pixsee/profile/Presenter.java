@@ -31,11 +31,13 @@ class Presenter implements ProfileContract.Presenter {
 	@Override
 	public void attach() {
 		File[] list = mPublicPictureDirectoryFile.listFiles();
-		List<String> strings = new ArrayList<>(list.length);
-		for(File it : list)
-			strings.add(it.getAbsolutePath());
+		if (list!=null) {
+			List<String> strings = new ArrayList<>(list.length);
+			for (File it : list)
+				strings.add(it.getAbsolutePath());
 
-		mViewWeakReference.get().setData(strings);
+			mViewWeakReference.get().setData(strings);
+		}
 	}
 
 	@Override

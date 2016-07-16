@@ -5,6 +5,8 @@ import com.marked.pixsee.injection.Repository;
 import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.utility.BitmapUtils;
 
+import java.io.File;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -21,6 +23,9 @@ class ProfileModule {
 	@FragmentScope
 	@Provides
 	ProfileContract.Presenter providePresenter(@Repository UserDatasource userRepository){
-		return new Presenter(mViewWeakReference, userRepository, BitmapUtils.getPublicPictureDirectory());
+		File publicPictureDirectory = BitmapUtils.getPublicPictureDirectory();
+		if (publicPictureDirectory==null)
+			publicPictureDirectory = new File(""); //// TODO: 16-Jul-16 is this correct ? or it will return the root of the file system ?
+		return new Presenter(mViewWeakReference, userRepository,publicPictureDirectory);
 	}
 }

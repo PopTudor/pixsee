@@ -1,6 +1,7 @@
 package com.marked.pixsee.profile;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,11 +38,14 @@ import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import rx.functions.Action1;
 
 public class ProfileFragment extends Fragment implements ProfileContract.View{
 	private static String USER_EXTRA = "PROFILE_FRAGMENT_USER";
@@ -96,7 +100,20 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		mPictureAdapter = new PictureAdapter();
-
+		// Must be done during an initialization phase like onCreate
+		RxPermissions.getInstance(getActivity())
+				.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+				.subscribe(new Action1<Boolean>() {
+					@Override
+					public void call(Boolean granted) {
+						if (granted) { // Always true pre-M
+							// I can control the camera now
+						} else {
+							// Oups permission denied
+							getActivity().onBackPressed();
+						}
+					}
+				});
 		mPresenter.attach();
 	}
 

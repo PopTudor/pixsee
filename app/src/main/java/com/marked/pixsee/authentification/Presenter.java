@@ -14,6 +14,7 @@ import com.marked.pixsee.networking.HTTPStatusCodes;
 import com.marked.pixsee.utility.GCMConstants;
 
 import java.lang.ref.WeakReference;
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
 import retrofit2.Response;
@@ -131,7 +132,8 @@ public class Presenter implements AuthenticationContract.Presenter {
 							e.printStackTrace();
 							if (e instanceof SocketTimeoutException){
 								mView.get().showToast("Server is not responding. Please try again later !");
-							}
+							}else if (e instanceof ConnectException)
+								mView.get().showToast("Failed to connect...");
 							mView.get().hideDialog();
 						}
 
