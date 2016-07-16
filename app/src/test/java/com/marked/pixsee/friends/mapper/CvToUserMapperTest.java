@@ -2,7 +2,7 @@ package com.marked.pixsee.friends.mapper;
 
 import android.content.ContentValues;
 
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.data.FriendContractDB;
 
 import org.junit.Assert;

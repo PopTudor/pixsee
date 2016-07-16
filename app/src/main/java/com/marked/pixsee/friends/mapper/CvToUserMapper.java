@@ -4,7 +4,7 @@ import android.content.ContentValues;
 
 import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.friends.data.FriendContractDB;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 
 /**
  * Created by Tudor Pop on 29-Mar-16.

@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import com.marked.pixsee.authentification.AuthenticationContract;
 import com.marked.pixsee.authentification.Presenter;
 import com.marked.pixsee.authentification.login.LoginAPI;
-import com.marked.pixsee.data.repository.user.UserDatasource;
+import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.injection.Repository;
 import com.marked.pixsee.injection.scopes.ActivityScope;
 import com.marked.pixsee.networking.ServerConstants;

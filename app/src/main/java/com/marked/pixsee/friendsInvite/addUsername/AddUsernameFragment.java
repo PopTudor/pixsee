@@ -18,8 +18,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
+import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friendsInvite.addUsername.di.AddUserModule;
 import com.marked.pixsee.friendsInvite.addUsername.di.DaggerAddUserComponent;
 import com.marked.pixsee.injection.components.ActivityComponent;
@@ -58,7 +59,8 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		ActivityComponent component =  DaggerActivityComponent.builder()
-				.activityModule(new ActivityModule((AppCompatActivity) getActivity())).build();
+				.activityModule(new ActivityModule((AppCompatActivity) getActivity()))
+				.appComponent(((Pixsee)getActivity().getApplication()).getAppComponent()).build();
 		DaggerAddUserComponent.builder()
 				.activityComponent(component)
 				.addUserModule(new AddUserModule(this))

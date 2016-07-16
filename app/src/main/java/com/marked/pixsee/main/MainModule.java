@@ -1,11 +1,8 @@
-package com.marked.pixsee.main.di;
+package com.marked.pixsee.main;
 
-import com.marked.pixsee.data.repository.user.UserDatasource;
-import com.marked.pixsee.data.repository.user.UserRepository;
+import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.injection.Repository;
 import com.marked.pixsee.injection.scopes.ActivityScope;
-import com.marked.pixsee.main.MainActivity;
-import com.marked.pixsee.main.MainContract;
 
 import dagger.Module;
 import dagger.Provides;
@@ -14,7 +11,7 @@ import dagger.Provides;
  * Created by Tudor on 2016-05-27.
  */
 @Module
-public class MainModule {
+class MainModule {
 	private MainActivity activity;
 
 	public MainModule(MainActivity activity) {

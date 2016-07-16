@@ -1,7 +1,7 @@
 package com.marked.pixsee.friendsInvite.addUsername.di;
 
-import com.marked.pixsee.data.repository.user.User;
-import com.marked.pixsee.data.repository.user.UserDatasource;
+import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
 import com.marked.pixsee.friendsInvite.addUsername.data.RequestService;
 

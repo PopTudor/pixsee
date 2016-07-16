@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -166,6 +167,14 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 				Intent intent = new Intent(getActivity(), EntryActivity.class);
 				getActivity().startActivity(intent);
 				getActivity().finish();
+				return true;
+			case R.id.aboutButton:
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				builder.setTitle("About")
+						.setCancelable(true)
+						.setIcon(R.mipmap.ic_launcher)
+						.setMessage("Version 1.0.0.0\nAuthor Pop Tudor\nContact tudor.pop92@e-uvt.ro")
+						.show();
 				return true;
 			default:
 				Toast.makeText(getActivity(), "Menu not working!", Toast.LENGTH_SHORT).show();

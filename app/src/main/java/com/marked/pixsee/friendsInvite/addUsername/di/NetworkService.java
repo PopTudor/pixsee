@@ -3,7 +3,7 @@ package com.marked.pixsee.friendsInvite.addUsername.di;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.chat.data.Message;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.data.FriendConstants;
 
 import java.util.UUID;

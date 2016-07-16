@@ -6,6 +6,10 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 /**
  * Created by Tudor Pop on 28-Nov-15.
  */
@@ -154,5 +158,16 @@ public final class User implements Parcelable, Comparable<User> {
 	@Override
 	public int compareTo(@NonNull User another) {
 		return this.email.compareTo(another.email);
+	}
+
+	public static List<User> getRandomUsers(int num) {
+		String[] names = {"Vincenza Goudeau", "Kellee Petrillo", "Nga Kinchen", "Leif Vara", "Bradley Mcgonigle", "Kasi Kitchen"};
+		List<User> users = new ArrayList<>();
+		for (int i = 0; i < num; i++) {
+			String name = names[(int) (Math.random() * names.length)];
+			String email = name.replace(" ", "")+"@gmail.com";
+			users.add(new User(UUID.randomUUID().toString(), name, email, name + email, null, null, null, name));
+		}
+		return users;
 	}
 }

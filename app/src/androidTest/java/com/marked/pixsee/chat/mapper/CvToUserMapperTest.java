@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.marked.pixsee.friends.data.FriendContractDB;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.mapper.CvToUserMapper;
 
 import org.junit.Test;

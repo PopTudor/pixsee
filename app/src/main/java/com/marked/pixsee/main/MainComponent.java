@@ -1,8 +1,7 @@
-package com.marked.pixsee.main.di;
+package com.marked.pixsee.main;
 
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.injection.scopes.ActivityScope;
-import com.marked.pixsee.main.MainActivity;
 
 import dagger.Component;
 
@@ -11,6 +10,6 @@ import dagger.Component;
  */
 @Component(modules = {MainModule.class, ActivityModule.class})
 @ActivityScope
-public interface MainComponent {
+interface MainComponent {
 	void inject(MainActivity mainActivity);
 }

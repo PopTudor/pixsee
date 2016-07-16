@@ -25,14 +25,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
+import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
-import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
 
 import java.util.List;
 
@@ -71,7 +72,10 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		mFriendsAdapter = new FriendsAdapter(mCallback);
-		ActivityComponent activityComponent = DaggerActivityComponent.builder().activityModule(new ActivityModule((AppCompatActivity) getContext())).build();
+		ActivityComponent activityComponent = DaggerActivityComponent.builder()
+				.appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
+				.activityModule(new ActivityModule((AppCompatActivity) getContext()))
+				.build();
 
 		DaggerFriendsComponent.builder().activityComponent(activityComponent)
 				.friendModule(new FriendModule(this)).build().inject(this);

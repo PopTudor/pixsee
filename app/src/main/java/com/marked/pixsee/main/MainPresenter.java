@@ -1,11 +1,10 @@
-package com.marked.pixsee.main.di;
+package com.marked.pixsee.main;
 
 import com.google.gson.JsonObject;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.data.repository.user.User;
-import com.marked.pixsee.data.repository.user.UserDatasource;
-import com.marked.pixsee.main.MainContract;
+import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.data.user.UserDatasource;
 
 import java.lang.ref.WeakReference;
 

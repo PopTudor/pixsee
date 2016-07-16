@@ -3,8 +3,8 @@ package com.marked.pixsee.friends;
 import android.view.View;
 
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.data.repository.user.User;
-import com.marked.pixsee.data.repository.user.UserDatasource;
+import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.data.user.UserDatasource;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -51,6 +50,11 @@ public class FriendPresenter implements FriendsContract.Presenter {
 					public void call(List<User> users) {
 						mView.get().onFriendsReplace(users);
 					}
+				}, new Action1<Throwable>() {
+					@Override
+					public void call(Throwable throwable) {
+						throwable.printStackTrace();
+					}
 				});
 	}
 
@@ -61,7 +65,7 @@ public class FriendPresenter implements FriendsContract.Presenter {
 	@Override
 	public void loadMore(final int limit, boolean forceUpdate) {
 		if (forceUpdate) {
-			final Subscription subscription = repository.refreshUsers()
+			repository.refreshUsers()
 					.flatMap(new Func1<List<User>, Observable<List<User>>>() {
 						@Override
 						public Observable<List<User>> call(List<User> users) {
@@ -92,7 +96,7 @@ public class FriendPresenter implements FriendsContract.Presenter {
 								}
 							});
 		} else {
-			final Subscription subscription = repository.getUsers()
+			repository.getUsers()
 					.flatMap(new Func1<List<User>, Observable<List<User>>>() {
 						@Override
 						public Observable<List<User>> call(List<User> users) {

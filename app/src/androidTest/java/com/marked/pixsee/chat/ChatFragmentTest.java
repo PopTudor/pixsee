@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.data.ChatRepository;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 
 import org.junit.Before;
 import org.junit.Rule;

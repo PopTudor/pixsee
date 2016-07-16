@@ -9,8 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameFragment;
 import com.marked.pixsee.friendsInvite.commands.ClickAddUser;
 import com.marked.pixsee.friendsInvite.commands.ClickShareUsername;
@@ -27,7 +28,8 @@ public class FriendsInviteActivity extends AppCompatActivity implements FriendsI
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_invite_friends);
 		mPresenter = new Presenter(this);
-		mAppsUser = DaggerActivityComponent.builder().activityModule(new ActivityModule(this)).build().provideUser();
+		mAppsUser = DaggerActivityComponent.builder().activityModule(new ActivityModule(this))
+				.appComponent(((Pixsee)getApplication()).getAppComponent()).build().provideUser();
 
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
