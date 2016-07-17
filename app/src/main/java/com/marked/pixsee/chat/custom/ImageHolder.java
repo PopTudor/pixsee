@@ -32,10 +32,16 @@ public class ImageHolder extends RecyclerView.ViewHolder {
 				chatInteraction.chatClicked(v, message, getAdapterPosition());
 			}
 		});
-		final Uri url = new Uri.Builder()
-				.scheme(UriUtil.LOCAL_FILE_SCHEME)
-				.path(message.getData().get(MessageConstants.DATA_BODY))
-				.build();
+		String scheme = UriUtil.LOCAL_FILE_SCHEME;
+		String path = message.getData().get(MessageConstants.DATA_BODY)
+//				.replace(ServerConstants.SCHEME_HTTP, "")
+//				.replace(ServerConstants.PORT, "/")
+				;
+		if (message.getMessageType() == MessageConstants.MessageType.YOU_IMAGE) {
+			scheme = UriUtil.HTTP_SCHEME;
+		}
+		final Uri url = UriUtil.parseUriOrNull(path);
+
 		mImage.setImageURI(url, context);
 		mImage.setOnClickListener(new View.OnClickListener() {
 			@Override

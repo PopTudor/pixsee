@@ -5,9 +5,12 @@ package com.marked.pixsee.networking;
  */
 public interface ServerConstants {
 	String PORT = ":3000/";
-	String BASE_URL =
-//			"http://46.101.225.31";/* DIGITAL-OCEAN */
-			"http://192.168.0.102";
+	String SCHEME_HTTP = "http://";
+	String IP =
+//			"46.101.225.31"/* DIGITAL-OCEAN */
+			"192.168.0.108"
+			;
+	String BASE_URL = SCHEME_HTTP + IP;
 	/* ENDPOINTS */
 	String USER = "user";
 	String USERS = "users";
@@ -19,10 +22,14 @@ public interface ServerConstants {
 	String USER_FRIENDS = USER +"/"+"friends";
 	String RECOVERY = "recovery";
 	String LOGIN = "login";
+	String UPLOAD = "upload";
+	String IMAGE = "image";
 
 
 	String SERVER = BASE_URL + PORT;
+	String SERVER_UPLOAD = SERVER+UPLOAD;
 	String SERVER_USER = SERVER + USER;
+	String SERVER_USER_IMAGE = SERVER + USER+"/"+IMAGE;
 	String SERVER_USER_FRIENDS = SERVER_USER + "/" + FRIENDS;
 	String SERVER_USER_RECOVERY = SERVER_USER + "/" + RECOVERY;
 

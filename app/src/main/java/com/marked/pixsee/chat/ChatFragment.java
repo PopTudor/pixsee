@@ -15,6 +15,7 @@ import android.support.annotation.DrawableRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -71,6 +72,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	private ExplosionField mExplosionField;
 	private Socket mSocket;
+	private CardView mPictureTakenContainer;
 
     private Emitter.Listener onMessage;
     private Emitter.Listener onTyping;
@@ -116,6 +118,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+		mPictureTakenContainer = (CardView) rootView.findViewById(R.id.pictureTakenContainer);
 		messagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.messagesRecyclerView);
 		messagesRecyclerView.setLayoutManager(mLinearLayoutManager);
 		messagesRecyclerView.addItemDecoration(new SpaceItemDecorator(15));
@@ -136,7 +139,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 				onTyping(mTyping);
 				if (s.length()>0)
 					switchButonImage(R.drawable.ic_send_24dp);
-				else if (s.length()==0)
+				else if (s.length()==0 && mPictureTakenContainer.getVisibility() == View.GONE)
 					switchButonImage(R.drawable.ic_camera_24dp);
 			}
 
@@ -149,7 +152,8 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 			@Override
 			public void onClick(View v) {
 				String text = messageEditText.getText().toString();
-				messageEditText.setText("");
+				if (!text.isEmpty())
+					messageEditText.setText("");
 				if (!text.isEmpty()){
 					Message message = new Message.Builder()
 							.addData(MessageConstants.DATA_BODY, text)
@@ -168,7 +172,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 							.from(mThisUser)
 							.to(mThatUser.getUserID())
 							.build();
-					mPresenter.sendMessage(message);
+					mPresenter.sendImage(message);
 				} else {
 					mPresenter.onCameraClick();
 				}
@@ -187,6 +191,11 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 			}
 		});
 		return rootView;
+	}
+
+	@Override
+	public void imageSent(Message message) {
+		mSocket.emit(ChatFragment.ON_NEW_MESSAGE,  message.toJSON());
 	}
 
 	/**
@@ -383,7 +392,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	}
 
 	@Override
-	public void showCards(List<Message> cards) {
+	public void showMessages(List<Message> cards) {
 		mChatAdapter.getDataset().clear();
 		mChatAdapter.getDataset().addAll(cards);
 		messagesRecyclerView.scrollToPosition(mChatAdapter.getItemCount()-1);
@@ -391,7 +400,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	}
 
 	@Override
-	public void showNoChats() {
+	public void showEmptyMessages() {
 
 	}
 

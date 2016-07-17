@@ -2,24 +2,33 @@ package com.marked.pixsee.chat;
 
 import android.os.Bundle;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.marked.pixsee.TestSchedulerProxy;
 import com.marked.pixsee.chat.data.ChatRepository;
 import com.marked.pixsee.chat.data.Message;
-import com.marked.pixsee.data.repository.user.User;
+import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.networking.UploadAPI;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
+import okhttp3.MultipartBody;
+import retrofit2.Response;
 import rx.Observable;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -36,6 +45,8 @@ public class ChatPresenterTest {
 
 	@Mock
 	ChatFragment.ChatFragmentInteraction mChatFragmentInteraction;
+	@Mock
+	UploadAPI uploadAPI;
 
 	ChatPresenter mPresenter;
 	List<Message> mExpectedMessages = MessageTestUtils.getRandomMessageList(3);
@@ -44,7 +55,7 @@ public class ChatPresenterTest {
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		mPresenter = new ChatPresenter(mView, mChatRepository,new User("abc","abc","abc","abc"));
+		mPresenter = new ChatPresenter(mView, mChatRepository,new User("abc","abc","abc","abc"), uploadAPI);
 		mPresenter.setChatInteraction(mChatFragmentInteraction);
 		TestSchedulerProxy.get();
 	}
@@ -57,7 +68,7 @@ public class ChatPresenterTest {
 		mPresenter.loadMore(50, any(User.class));
 
 		verify(mChatRepository).getMessages(any(User.class));
-		verify(mView).showCards(mExpectedMessages);
+		verify(mView).showMessages(mExpectedMessages);
 	}
 
 	@Test
@@ -68,7 +79,7 @@ public class ChatPresenterTest {
 		mPresenter.loadMore(50, any(User.class));
 
 		verify(mChatRepository).getMessages(any(User.class));
-		verify(mView).showNoChats();
+		verify(mView).showEmptyMessages();
 	}
 
 	@Test
@@ -83,6 +94,24 @@ public class ChatPresenterTest {
 	@Test
 	public void testSendMessage() throws Exception {
 		Message message = MessageTestUtils.getRandomMessage();
+		mPresenter.sendMessage(message);
+		verify(mChatRepository).saveMessage(message);
+		verify(mView).addMessage(message);
+	}
+
+	@Test
+	public void testSendMessageImage() throws Exception {
+		JsonObject response = new JsonObject();
+		response.add("statusCode",new JsonPrimitive(200));
+		when(uploadAPI.upload(anyString(), anyString(), Matchers.<MultipartBody.Part>anyObject()))
+				.thenReturn(Observable.just(Response.success(response)));
+		Message message = new Message.Builder()
+				.messageType(MessageConstants.MessageType.ME_IMAGE)
+				.from("ABC")
+				.to("")
+				.id(UUID.randomUUID().toString())
+				.addData(MessageConstants.DATA_BODY,"test message text")
+				.build();
 		mPresenter.sendMessage(message);
 		verify(mChatRepository).saveMessage(message);
 		verify(mView).addMessage(message);
