@@ -4,6 +4,8 @@ package com.marked.pixsee.chat.data
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,12 +21,12 @@ import java.util.UUID;
 
 public class Message implements MessageConstants,Comparable<Message> {
 
-	private Message(Builder builder) {
+	protected Message(Builder builder) {
 		data = Collections.unmodifiableMap(builder.data);
 		notificationParams = Collections.unmodifiableMap(builder.notificationParams);
 
 		collapseKey = builder.collapseKey;
-		isDelayWhileIdle = builder.delayWhileIdle;
+		delayWhileIdle = builder.delayWhileIdle;
 		timeToLive = builder.timeToLive;
 		restrictedPackageName = builder.restrictedPackageName;
 		messageType = builder.messageType;
@@ -35,7 +37,7 @@ public class Message implements MessageConstants,Comparable<Message> {
 	}
 
 	private Message() {
-
+		id = UUID.randomUUID().toString();
 	}
 
 	/**
@@ -50,11 +52,13 @@ public class Message implements MessageConstants,Comparable<Message> {
 	private Map<String, String> notificationParams;
 	private String restrictedPackageName;
 	private String collapseKey;
-	private Boolean isDelayWhileIdle;
+	private Boolean delayWhileIdle;
 	private Integer timeToLive;
 
 	private String to;
+	@SerializedName(value = "from", alternate = {"from_usr"})
 	private String from;
+	@SerializedName(value = "messageType",alternate = {"type"})
 	private Integer messageType;
 
 	private String date;
@@ -64,7 +68,7 @@ public class Message implements MessageConstants,Comparable<Message> {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			jsonObject.put(MessageConstants.COLLAPSE_OPTION, collapseKey);
-			jsonObject.put(MessageConstants.DELAY_WHILE_IDLE_OPTION, isDelayWhileIdle);
+			jsonObject.put(MessageConstants.DELAY_WHILE_IDLE_OPTION, delayWhileIdle);
 			jsonObject.put(MessageConstants.TIME_TO_LIVE_OPTION, timeToLive);
 			jsonObject.put(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION, restrictedPackageName);
 			jsonObject.put(MessageConstants.MESSAGE_TYPE, messageType);
@@ -98,8 +102,8 @@ public class Message implements MessageConstants,Comparable<Message> {
 			bundle.putString(MessageConstants.COLLAPSE_OPTION, collapseKey);
 		if (timeToLive != null)
 			bundle.putInt(MessageConstants.TIME_TO_LIVE_OPTION, timeToLive);
-		if (isDelayWhileIdle == true)
-			bundle.putBoolean(MessageConstants.DELAY_WHILE_IDLE_OPTION, isDelayWhileIdle);
+		if (delayWhileIdle == true)
+			bundle.putBoolean(MessageConstants.DELAY_WHILE_IDLE_OPTION, delayWhileIdle);
 		if (restrictedPackageName != null && !restrictedPackageName.isEmpty())
 			bundle.putString(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION, restrictedPackageName);
 		if (data.containsKey(MessageConstants.DATA_BODY))
@@ -126,7 +130,7 @@ public class Message implements MessageConstants,Comparable<Message> {
 	}
 
 	public Boolean getDelayWhileIdle() {
-		return isDelayWhileIdle;
+		return delayWhileIdle;
 	}
 
 	public Integer getTimeToLive() {
@@ -154,8 +158,8 @@ public class Message implements MessageConstants,Comparable<Message> {
 //		if (timeToLive != null) {
 //			builder.append(MessageConstants.TIME_TO_LIVE_OPTION + "=").append(timeToLive).append(", ");
 //		}
-//		if (isDelayWhileIdle != null) {
-//			builder.append(MessageConstants.DELAY_WHILE_IDLE_OPTION + "=").append(isDelayWhileIdle).append(", ");
+//		if (delayWhileIdle != null) {
+//			builder.append(MessageConstants.DELAY_WHILE_IDLE_OPTION + "=").append(delayWhileIdle).append(", ");
 //		}
 //		if (restrictedPackageName != null) {
 //			builder.append(MessageConstants.RESTRICTED_PACKAGE_NAME_OPTION + "=").append(restrictedPackageName).append(", ");
@@ -237,6 +241,10 @@ public class Message implements MessageConstants,Comparable<Message> {
 
             /*data:{'text':'very long string'}*/
 			data.put(MessageConstants.DATA_BODY, bundle.getString(MessageConstants.DATA_BODY));
+			return this;
+		}
+		public Builder addData(Map<String,String> data){
+			this.data.putAll(data);
 			return this;
 		}
 

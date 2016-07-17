@@ -12,7 +12,7 @@ import com.marked.pixsee.chat.data.MessageConstants;
 /**
  * Created by Tudor Pop on 04-Dec-15.
  */
-public class MessageHolder extends RecyclerView.ViewHolder {
+public class MessageHolder extends RecyclerView.ViewHolder implements Bindable{
 	private TextView mMessageTextView;
 
 	public MessageHolder(View itemView) {
@@ -21,6 +21,7 @@ public class MessageHolder extends RecyclerView.ViewHolder {
 
 	}
 
+	@Override
 	public void bindMessage(final Message message, final ChatAdapter.ChatInteraction chatInteraction) {
 		itemView.setOnClickListener(new View.OnClickListener() {
 			@Override

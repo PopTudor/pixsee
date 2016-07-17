@@ -14,7 +14,7 @@ import com.marked.pixsee.chat.data.MessageConstants;
 /**
  * Created by Tudor Pop on 04-Dec-15.
  */
-public class ImageHolder extends RecyclerView.ViewHolder {
+public class ImageHolder extends RecyclerView.ViewHolder implements Bindable{
 	private Context context;
 
 	private SimpleDraweeView mImage;
@@ -25,6 +25,7 @@ public class ImageHolder extends RecyclerView.ViewHolder {
 		this.mImage = (SimpleDraweeView) itemView.findViewById(R.id.imageNetwork);
 	}
 
+	@Override
 	public void bindMessage(final Message message, final ChatAdapter.ChatInteraction chatInteraction) {
 		itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -32,15 +33,10 @@ public class ImageHolder extends RecyclerView.ViewHolder {
 				chatInteraction.chatClicked(v, message, getAdapterPosition());
 			}
 		});
-		String scheme = UriUtil.LOCAL_FILE_SCHEME;
-		String path = message.getData().get(MessageConstants.DATA_BODY)
-//				.replace(ServerConstants.SCHEME_HTTP, "")
-//				.replace(ServerConstants.PORT, "/")
-				;
-		if (message.getMessageType() == MessageConstants.MessageType.YOU_IMAGE) {
-			scheme = UriUtil.HTTP_SCHEME;
-		}
-		final Uri url = UriUtil.parseUriOrNull(path);
+		StringBuilder path = new StringBuilder(message.getData().get(MessageConstants.DATA_BODY));
+		if (message.getMessageType() == MessageConstants.MessageType.ME_IMAGE)
+			path.insert(0, UriUtil.LOCAL_FILE_SCHEME+"://");
+		final Uri url = UriUtil.parseUriOrNull(path.toString());
 
 		mImage.setImageURI(url, context);
 		mImage.setOnClickListener(new View.OnClickListener() {

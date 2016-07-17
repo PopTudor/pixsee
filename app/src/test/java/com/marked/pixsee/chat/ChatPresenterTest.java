@@ -1,7 +1,5 @@
 package com.marked.pixsee.chat;
 
-import android.os.Bundle;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.marked.pixsee.TestSchedulerProxy;
@@ -29,7 +27,6 @@ import rx.Observable;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -85,8 +82,7 @@ public class ChatPresenterTest {
 	@Test
 	public void testReceiveMessage() throws Exception {
 		Message message = MessageTestUtils.getRandomMessage();
-		Bundle bundle = mock(Bundle.class);
-		mPresenter.receiveMessage("abc",bundle);
+		mPresenter.receiveMessage(message);
 		verify(mChatRepository).saveMessage(any(Message.class));
 		verify(mView).addMessage(any(Message.class));
 	}

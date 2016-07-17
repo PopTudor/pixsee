@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.custom.ChatAdapter;
 import com.marked.pixsee.chat.data.Message;
@@ -157,13 +159,14 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 				if (!text.isEmpty()){
 					Message message = new Message.Builder()
 							.addData(MessageConstants.DATA_BODY, text)
-							.messageType(MessageConstants.MessageType.ME_MESSAGE)
+							.messageType(MessageConstants.MessageType.YOU_MESSAGE)
 							.from(mThisUser)
 							.to(mThatUser.getUserID())
 							.build();
 
 					//		doGcmSendUpstreamMessage(message);
 					mSocket.emit(ChatFragment.ON_NEW_MESSAGE,  message.toJSON());
+					message.setMessageType(MessageConstants.MessageType.ME_MESSAGE);
 					mPresenter.sendMessage(message);
 				} else if(!messageEditText.isEnabled()) {
 					Message message = new Message.Builder()
@@ -326,14 +329,28 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
                     public void run() {
                         try {
                             JSONObject json = new JSONObject(args[0].toString());
-                            JSONObject data = json.getJSONObject(MessageConstants.DATA_PAYLOAD);
-                            String body = data.getString(MessageConstants.DATA_BODY);
-                            Integer type = json.getInt(MessageConstants.MESSAGE_TYPE); // MessageConstants.MessageType.ME_MESSAGE
-                            String from = json.getString(MessageConstants.FROM);
-                            Bundle bundle = new Bundle();
-                            bundle.putInt(MessageConstants.MESSAGE_TYPE, type);
-                            bundle.putString(MessageConstants.DATA_BODY, body);
-                            mPresenter.receiveMessage(from, bundle);
+	                        Gson gson = new GsonBuilder().create();
+	                        Message message = gson.fromJson(json.toString(), Message.class);
+
+	                        if (message.getMessageType()==MessageConstants.MessageType.YOU_IMAGE) {
+		                        message = new Message.Builder()
+				                        .date(message.getDate())
+				                        .id(message.getId())
+				                        .delayWhileIdle(message.getDelayWhileIdle())
+				                        .messageType(MessageConstants.MessageType.YOU_IMAGE)
+				                        .collapseKey(message.getCollapseKey())
+				                        .from(message.getFrom())
+				                        // the database doesn't have from but in this case from & to are the same
+				                        // from refers to app's user like 'from me to you'
+				                        .to(message.getFrom())
+				                        .restrictedPackageName(message.getRestrictedPackageName())
+				                        .addData(MessageConstants.DATA_BODY,ServerConstants.SERVER_USER_IMAGE+"/?img="+message.getData()
+						                        .get(MessageConstants.DATA_BODY))
+				                        .build();
+	                        }
+	                        if (message.getMessageType()==MessageConstants.MessageType.ME_MESSAGE)
+	                            message.setMessageType(MessageConstants.MessageType.YOU_MESSAGE);
+                            mPresenter.receiveMessage(message);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

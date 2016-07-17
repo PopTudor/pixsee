@@ -60,13 +60,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	@Override
 	public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-		if (holder instanceof MessageHolder){
-			((MessageHolder)holder).bindMessage(dataset.get(position),chatInteraction);
-		}else if (holder instanceof ImageHolder){
-			((ImageHolder)holder).bindMessage(dataset.get(position),chatInteraction);
-		}else if (holder instanceof TypingHolder){
-			((TypingHolder)holder).start();
-		}
+		((Bindable) holder).bindMessage(dataset.get(position), chatInteraction);
 	}
 
 	@Override

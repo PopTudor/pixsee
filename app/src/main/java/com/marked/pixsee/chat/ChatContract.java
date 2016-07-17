@@ -1,7 +1,6 @@
 package com.marked.pixsee.chat;
 
 import android.net.Uri;
-import android.os.Bundle;
 
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
@@ -34,7 +33,7 @@ interface ChatContract {
 
 		void sendImage(@NotNull Message message);
 
-		void receiveMessage(String message, Bundle bundle);
+		void receiveMessage(@NotNull Message message);
 
 
 		void setChatInteraction(ChatFragment.ChatFragmentInteraction listener);

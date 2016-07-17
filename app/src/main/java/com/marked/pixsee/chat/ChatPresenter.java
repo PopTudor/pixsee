@@ -1,7 +1,6 @@
 package com.marked.pixsee.chat;
 
 import android.net.Uri;
-import android.os.Bundle;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonObject;
@@ -11,7 +10,6 @@ import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.networking.UploadAPI;
 
 import org.jetbrains.annotations.NotNull;
@@ -80,38 +78,7 @@ class ChatPresenter implements ChatContract.Presenter {
 	}
 
 	@Override
-	public void receiveMessage(String from, Bundle data) {
-		Message message = new Message.Builder()
-				.addData(data)
-				.messageType(data.getInt(MessageConstants.MESSAGE_TYPE))
-				.from(from)
-				.to(from)
-				.build();
-		if (message.getMessageType()==MessageConstants.MessageType.YOU_IMAGE){
-			message = new Message.Builder()
-					.addData(MessageConstants.DATA_BODY, ServerConstants.SERVER_USER_IMAGE+"/?img="+message.getData().get(MessageConstants
-							.DATA_BODY))
-//					.addData(MessageConstants.DATA_BODY,"http://i.telegraph.co.uk/multimedia/archive/03589/Wellcome_Image_Awa_3589699k.jpg")
-					.messageType(message.getMessageType())
-					.from(from)
-					.to(null)
-					.build();
-//			mUploadAPI.download(message.getData().get(MessageConstants.DATA_BODY))
-//					.subscribeOn(Schedulers.io())
-//					.observeOn(AndroidSchedulers.mainThread())
-//					.subscribe(new Action1<Response<byte[]>>() {
-//						@Override
-//						public void call(Response<byte[]> jsonObjectResponse) {
-////							BitmapUtils.saveFile(jsonObjectResponse.body(),);
-//							Log.d("*** TAG ***", "call: ");
-//						}
-//					}, new Action1<Throwable>() {
-//						@Override
-//						public void call(Throwable throwable) {
-//							throwable.printStackTrace();
-//						}
-//					});
-		}
+	public void receiveMessage(@NotNull Message message) {
 		mRepository.saveMessage(message);
 		mView.get().addMessage(message);
 	}
