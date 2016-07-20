@@ -159,7 +159,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		mSelfieComponent.inject(mCameraSource);
 
 		startCameraSource();
-		/* if we resume and the user had the fragment screen, make him take another picture*/
+		/* if we resume and the user had the PictureAction screen, make him take another picture*/
 		if (getActivity().getSupportFragmentManager().getBackStackEntryCount() > 0)
 			getActivity().getSupportFragmentManager().popBackStack();
 	}
@@ -196,6 +196,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		mOnSelfieInteractionListener.selfieFragmentDesroyed();
 	}
 
@@ -253,10 +254,8 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		void showTakenPictureActions();
 
 		void selfieFragmentDesroyed();
-	}
-	private OnSelfieInteractionListener mOnSelfieInteractionListener;
 
-	public interface SelfieTakePicture {
 		Observable<Bitmap> getPicture();
 	}
+	private OnSelfieInteractionListener mOnSelfieInteractionListener;
 }

@@ -5,6 +5,8 @@ import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
+import com.marked.pixsee.main.strategy.ProfilePictureStrategy;
+import com.marked.pixsee.main.strategy.ShareStrategy;
 
 import java.lang.ref.WeakReference;
 
@@ -21,11 +23,6 @@ class MainPresenter implements MainContract.Presenter {
 		this.mRepository = userDatasource;
 		this.mWeakView = new WeakReference<>(view);
 		this.mWeakView.get().setPresenter(this);
-	}
-
-	@Override
-	public void chatTabClicked() {
-		mWeakView.get().showChat(true);
 	}
 
 	@Override
@@ -49,9 +46,26 @@ class MainPresenter implements MainContract.Presenter {
 	}
 
 	@Override
+	public void chatTabClicked() {
+		mWeakView.get().showChat(true);
+	}
+
+	@Override
+	public void profileTabClicked() {
+		User user = mRepository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
+		mWeakView.get().showProfile(user);
+	}
+
+	@Override
 	public void cameraTabClicked() {
 		mWeakView.get().hideBottomNavigation();
-		mWeakView.get().showCamera();
+		mWeakView.get().showCamera(new ShareStrategy());
+	}
+
+	@Override
+	public void profileImageClicked() {
+		mWeakView.get().hideBottomNavigation();
+		mWeakView.get().showCamera(new ProfilePictureStrategy());
 	}
 
 	@Override
@@ -67,11 +81,5 @@ class MainPresenter implements MainContract.Presenter {
 	@Override
 	public void execute(Command command) {
 		command.execute();
-	}
-
-	@Override
-	public void profileTabClicked() {
-		User user = mRepository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
-		mWeakView.get().showProfile(user);
 	}
 }
