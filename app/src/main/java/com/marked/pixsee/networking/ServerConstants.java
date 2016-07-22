@@ -8,7 +8,7 @@ public interface ServerConstants {
 	String SCHEME_HTTP = "http://";
 	String IP =
 //			"46.101.225.31"/* DIGITAL-OCEAN */
-			"192.168.0.108"
+			"192.168.0.101"
 			;
 	String BASE_URL = SCHEME_HTTP + IP;
 	/* ENDPOINTS */
@@ -18,6 +18,7 @@ public interface ServerConstants {
 	String FRIENDS = "friends";
 	String FRIENDS_ACCEPTED = FRIENDS+"/accepted";
 	String FRIENDS_REJECTED = FRIENDS+"/rejected";
+	String FRIENDS_REQUEST = FRIENDS+"/request";
 	String MESSAGES = "messages";
 	String USER_FRIENDS = USER +"/"+"friends";
 	String RECOVERY = "recovery";

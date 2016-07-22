@@ -12,7 +12,6 @@ import com.marked.pixsee.authentification.AuthenticationActivity;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.friends.data.FriendConstants;
 import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.utility.GCMConstants;
 
@@ -43,13 +42,8 @@ public class EntryActivity extends AppCompatActivity {
 		}
 		/* the intent was sent from FCM for a friend request, add the following extras */
 		if (getIntent().getAction() != null && getIntent().getAction().equals(getString(R.string.FRIEND_REQUEST))) {
-			User user = new User(getIntent().getStringExtra(FriendConstants.ID),
-					getIntent().getStringExtra(FriendConstants.NAME),
-					getIntent().getStringExtra(FriendConstants.EMAIL),
-					getIntent().getStringExtra(MessageConstants.FROM), null, null,
-					getIntent().getStringExtra(FriendConstants.ICON_URL),
-					getIntent().getStringExtra(FriendConstants.USERNAME));
-
+			IntentToUserMapper intentToUserMapper = new IntentToUserMapper();
+			User user = intentToUserMapper.map(getIntent());
 			intent.putExtra(MessageConstants.MESSAGE_TYPE, MessageConstants.MessageType.FRIEND_REQUEST);
 			intent.putExtra(DatabaseContract.AppsUser.TABLE_NAME, user);
 		}

@@ -116,9 +116,6 @@
         <activity
             android:name=".authentification.AuthenticationActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".login.LogInActivity"
-            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -133,19 +130,12 @@
             android:name=".chat.ChatActivity"
             android:label="FriendDetailActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".selfie.SelfieFragment"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait">
-        </activity>
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider1677465395803625"
             android:exported="true"/>
 
-        <activity android:name=".shop.ShopActivity">
-        </activity>
         <activity android:name=".main.MainActivity">
         </activity>
         <activity android:name=".friendsInvite.FriendsInviteActivity">

@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.friends.data.FriendContractDB;
 import com.marked.pixsee.friends.data.FriendsAPI;
-import com.marked.pixsee.friendsInvite.addUsername.data.AddUserAPI;
+import com.marked.pixsee.friendsInvite.addUsername.AddUserAPI;
 import com.marked.pixsee.injection.scopes.ActivityScope;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.utility.GCMConstants;
