@@ -4,7 +4,6 @@ import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.friendsInvite.addUsername.data.RequestService;
 import com.marked.pixsee.main.strategy.PictureActionStrategy;
 
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  * Created by Tudor on 2016-05-27.
  */
 interface MainContract {
-	interface Presenter extends BasePresenter,RequestService {
+	interface Presenter extends BasePresenter {
 		void execute(Command command);
 
 		void chatTabClicked();
@@ -23,6 +22,8 @@ interface MainContract {
 		void profileImageClicked();
 
 		void friendRequest(User user, boolean b);
+
+		void friendRequest(User user);
 
 		void cameraTabClicked();
 	}

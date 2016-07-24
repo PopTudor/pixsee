@@ -65,14 +65,6 @@ android {
 
         }
     }
-    productFlavors {
-        prod {
-            minSdkVersion 16
-        }
-        mock{
-
-        }
-    }
 
     // Always show the result of every unit test, even if it passes.
     testOptions.unitTests.all {
@@ -128,9 +120,9 @@ dependencies {
     compile "com.squareup.okhttp3:logging-interceptor:3.3.1"
 
     // DAGGER
-    compile "com.google.dagger:dagger:2.2"
-    apt "com.google.dagger:dagger-compiler:2.2"
-    provided "com.google.dagger:dagger-compiler:2.2"
+    compile "com.google.dagger:dagger:2.5"
+    apt "com.google.dagger:dagger-compiler:2.5"
+    provided "com.google.dagger:dagger-compiler:2.5"
     provided "org.glassfish:javax.annotation:10.0-b28"
 
     // TESTING
@@ -142,6 +134,7 @@ dependencies {
     testCompile 'org.robolectric:shadows-play-services:3.2-SNAPSHOT'
 //    testCompile 'org.robolectric:shadows-httpclient:3.1.1'
     testCompile 'org.robolectric:shadows-support-v4:3.2-SNAPSHOT'
+    testCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
 
     androidTestCompile "com.android.support.test:runner:0.5"
     androidTestCompile "com.android.support.test:rules:0.5"

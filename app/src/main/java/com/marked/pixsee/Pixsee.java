@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -55,13 +54,6 @@ public class Pixsee extends Application {
 		Fresco.initialize(this, config);
 		FacebookSdk.sdkInitialize(getApplicationContext());
 		Fabric.with(this, new Crashlytics());
-
-		AppEventsLogger.activateApp(this);
-		//        val fabric = Fabric.Builder(this)
-		//				.kits(Crashlytics())
-		//				.debuggable(true) // TODO: 13-Dec-15 disable this
-		//				.build()
-		//		Fabric.with(fabric)
 	}
 
 	public AppComponent getAppComponent() {

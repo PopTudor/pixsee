@@ -3,12 +3,12 @@ package com.marked.pixsee.chat.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 
-import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.chat.mapper.CursorToMessageMapper;
-import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.chat.mapper.MessageToCVMapper;
+import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.data.user.User;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import rx.Observable;
  * Created by Tudor on 2016-05-20.
  */
 public class ChatDiskDatasource implements ChatDatasource {
-	private PixyDatabase database;
+	private SQLiteOpenHelper database;
 	/*
 	* https://frogermcs.github.io/dependency-injection-with-dagger-2-the-api/
 	* All parameters are taken from dependencies graph. @Inject annotation used in costructor
@@ -42,7 +42,7 @@ public class ChatDiskDatasource implements ChatDatasource {
 	* }
 	* */
 	@Inject
-	public ChatDiskDatasource(PixyDatabase database) {
+	public ChatDiskDatasource(SQLiteOpenHelper database) {
 		this.database = database;
 	}
 

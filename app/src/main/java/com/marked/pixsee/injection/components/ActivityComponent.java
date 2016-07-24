@@ -2,10 +2,10 @@ package com.marked.pixsee.injection.components;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 
 import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.injection.Local;
@@ -30,7 +30,7 @@ public interface ActivityComponent {
 
 	Context provideContext();
 
-	PixyDatabase provideDatabase();
+	SQLiteOpenHelper provideDatabase();
 
 	@Local
 	UserDatasource provideLocalDatasource();

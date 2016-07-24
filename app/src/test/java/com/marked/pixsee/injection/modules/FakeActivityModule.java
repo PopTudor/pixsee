@@ -20,20 +20,22 @@ import com.marked.pixsee.injection.Remote;
 import com.marked.pixsee.injection.Repository;
 import com.marked.pixsee.injection.scopes.ActivityScope;
 
+import org.mockito.Mockito;
+
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by Tudor Pop on 19-Mar-16.
+ * Created by Tudor on 24-Jul-16.
  */
 @Module
 @ActivityScope
-public class ActivityModule {
+public class FakeActivityModule {
 	private AppCompatActivity activity;
 
-	public ActivityModule(AppCompatActivity activity) {
+	public FakeActivityModule(AppCompatActivity activity) {
 		this.activity = activity;
 	}
 
@@ -74,32 +76,49 @@ public class ActivityModule {
 	@Provides
 	@ActivityScope
 	SQLiteOpenHelper provideDatabase() {
-		return PixyDatabase.getInstance(activity);
+		return Mockito.mock(PixyDatabase.class);
 	}
 
 	@Provides
 	@ActivityScope
 	@Local
 	UserDatasource provideUserRepositoryLocal(SQLiteOpenHelper database) {
-		return new UserDiskDatasource(database);
+		return Mockito.mock(UserDiskDatasource.class);
 	}
 	@Provides
 	@ActivityScope
 	@Remote
 	UserDatasource provideUserRepositoryRemote(SharedPreferences preferences) {
-		return new UserNetworkDatasource(preferences);
+		return Mockito.mock(UserNetworkDatasource.class);
 	}
 
 	@Provides
 	@ActivityScope
 	@Repository
 	UserDatasource provideUserRepository(@Local UserDatasource local, @Remote UserDatasource remote) {
-		return new UserRepository(local,remote);
+		return Mockito.mock(UserRepository.class);
 	}
+
 	@Provides
 	@ActivityScope
 	@Named(DatabaseContract.AppsUser.TABLE_NAME)
 	User provideAppsUser(@Repository UserDatasource repository){
-		return repository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
+		return UserUtilTest.getUserTest();
+	}
+
+
+	public static class UserUtilTest {
+		public static final String USER_ID = "user_id_123";
+		public static final String USER_NAME = "user_name";
+		public static final String USER_USERNAME = "user_username";
+		public static final String USER_EMAIL = "user_email";
+		public static final String USER_COVERURL = "user_coverurl";
+		public static final String USER_ICONURL = "user_iconurl";
+		public static final String USER_TOKEN = "user_token";
+		public static final String USER_PASSWORD = "user_password";
+
+		public static User getUserTest() {
+			return new User(USER_ID, USER_NAME, USER_EMAIL, USER_TOKEN, USER_PASSWORD, USER_COVERURL, USER_ICONURL, USER_USERNAME);
+		}
 	}
 }

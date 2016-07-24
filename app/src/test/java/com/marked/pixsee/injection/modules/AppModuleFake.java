@@ -2,7 +2,7 @@ package com.marked.pixsee.injection.modules;
 
 import android.app.Application;
 
-import com.facebook.appevents.AppEventsLogger;
+import com.marked.pixsee.PixseeTest;
 import com.marked.pixsee.networking.ServerConstants;
 
 import javax.inject.Named;
@@ -17,21 +17,20 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by Tudor Pop on 16-Mar-16.
+ * Created by Tudor on 22-Jul-16.
  */
 @Module
-public class AppModule {
-	private Application application;
+public class AppModuleFake {
+	Application mApplication;
 
-	public AppModule(Application application) {
-		this.application = application;
+	public AppModuleFake(PixseeTest application) {
+		mApplication = application;
 	}
 
 	@Provides
 	@Singleton
 	Application providesApplication() {
-		AppEventsLogger.activateApp(application);
-		return application;
+		return mApplication;
 	}
 
 	@Provides

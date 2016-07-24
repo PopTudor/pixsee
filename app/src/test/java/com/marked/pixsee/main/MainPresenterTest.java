@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserRepository;
+import com.marked.pixsee.main.strategy.ProfilePictureStrategy;
+import com.marked.pixsee.main.strategy.ShareStrategy;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,22 +39,9 @@ public class MainPresenterTest {
 	}
 
 	@Test
-	public void testChatClicked() throws Exception {
-		mMainPresenter.chatTabClicked();
-		Mockito.verify(mView).showChat(true);
-	}
-
-	@Test
 	public void testFriendRequestOnlyUser() throws Exception {
 		mMainPresenter.friendRequest(mUser);
 		Mockito.verify(mView).showFriendRequestDialog(mUser);
-	}
-
-	@Test
-	public void testCameraClicked() throws Exception {
-		mMainPresenter.cameraTabClicked();
-		Mockito.verify(mView).hideBottomNavigation();
-		Mockito.verify(mView).showCamera();
 	}
 
 	@Test
@@ -80,12 +69,40 @@ public class MainPresenterTest {
 		mMainPresenter.friendRequest(mUser,false);
 	}
 
+
 	@Test
-	public void testProfileClicked() throws Exception {
+	public void testChatTabClicked() throws Exception {
+		mMainPresenter.chatTabClicked();
+		Mockito.verify(mView).showChat(true);
+	}
+
+	@Test
+	public void testProfileTabClicked() throws Exception {
 		Mockito.doReturn(mUser).when(mUserRepository).getUser(Matchers.anyString());
 		User user = mUserRepository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
 
 		mMainPresenter.profileTabClicked();
 		Mockito.verify(mView).showProfile(user);
+	}
+
+	@Test
+	public void testCameraTabClicked() throws Exception {
+		mMainPresenter.cameraTabClicked();
+		Mockito.verify(mView).hideBottomNavigation();
+		Mockito.verify(mView).showCamera(Matchers.any(ShareStrategy.class));
+	}
+
+	@Test
+	public void testProfileImageClicked() throws Exception {
+		mMainPresenter.profileImageClicked();
+		Mockito.verify(mView).hideBottomNavigation();
+		Mockito.verify(mView).showCamera(Matchers.any(ProfilePictureStrategy.class));
+	}
+
+	@Test
+	public void testAttach() throws Exception {
+		MainContract.Presenter presenter = Mockito.spy(mMainPresenter);
+		presenter.attach();
+		Mockito.verify(presenter,Mockito.atLeastOnce()).chatTabClicked();
 	}
 }

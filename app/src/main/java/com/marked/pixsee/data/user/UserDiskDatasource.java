@@ -3,13 +3,13 @@ package com.marked.pixsee.data.user;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 import com.marked.pixsee.chat.data.MessageContract;
-import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.Mapper;
+import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.friends.data.FriendContractDB;
 import com.marked.pixsee.friends.mapper.CursorToUserMapper;
 import com.marked.pixsee.friends.mapper.UserToCvMapper;
@@ -31,12 +31,12 @@ import static com.marked.pixsee.friends.data.FriendContractDB.TABLE_NAME;
  */
 @ActivityScope
 public class UserDiskDatasource implements UserDatasource {
-	private PixyDatabase db;
+	private SQLiteOpenHelper db;
 	private Mapper<Cursor, User> cursorToUserMapper = new CursorToUserMapper();
 	private Mapper<User, ContentValues> userToCvMapper = new UserToCvMapper();
 
 	@Inject
-	public UserDiskDatasource(PixyDatabase db) {
+	public UserDiskDatasource(SQLiteOpenHelper db) {
 		this.db = db;
 	}
 

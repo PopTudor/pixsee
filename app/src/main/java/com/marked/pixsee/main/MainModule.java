@@ -1,5 +1,7 @@
 package com.marked.pixsee.main;
 
+import android.content.Context;
+
 import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.injection.Repository;
 import com.marked.pixsee.injection.scopes.ActivityScope;
@@ -12,15 +14,10 @@ import dagger.Provides;
  */
 @Module
 class MainModule {
-	private MainActivity activity;
-
-	public MainModule(MainActivity activity) {
-		this.activity = activity;
-	}
 	@Provides
 	@ActivityScope
-	public MainContract.Presenter providesPresenter(@Repository UserDatasource userRepository){
-		MainContract.Presenter presenter = new MainPresenter(activity, userRepository);
+	public MainContract.Presenter providesPresenter(Context activity, @Repository UserDatasource userRepository) {
+		MainContract.Presenter presenter = new MainPresenter((MainActivity) activity, userRepository);
 		return presenter;
 	}
 }
