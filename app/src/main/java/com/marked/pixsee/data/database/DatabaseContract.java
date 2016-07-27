@@ -44,7 +44,7 @@ public class DatabaseContract {
 						+ COLUMN_COVER_URL + " TEXT,"
 						+ COLUMN_ICON_URL + " TEXT,"
 						+ COLUMN_TOKEN + " TEXT"
-						+ ") WITHOUT ROWID;";
+						+ ");";
 		public static final String DELETE_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME";
 	}
 

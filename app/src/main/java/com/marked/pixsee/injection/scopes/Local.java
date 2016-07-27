@@ -1,4 +1,4 @@
-package com.marked.pixsee.injection;
+package com.marked.pixsee.injection.scopes;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -10,7 +10,7 @@ import javax.inject.Qualifier;
  * Created by Tudor on 25-Jun-16.
  */
 @Qualifier
-@Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Remote {
+@Documented
+public @interface Local {
 }

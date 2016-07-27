@@ -8,18 +8,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.marked.pixsee.BaseActivity;
 import com.marked.pixsee.R;
-import com.marked.pixsee.RxBus;
 import com.marked.pixsee.chat.ChatActivity;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.FriendFragment;
+import com.marked.pixsee.injection.Injectable;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.main.strategy.PictureActionStrategy;
 import com.marked.pixsee.main.strategy.ProfilePictureStrategy;
@@ -36,16 +36,14 @@ import java.lang.ref.WeakReference;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.functions.Action1;
 
 import static com.marked.pixsee.selfie.SelfieFragment.OnSelfieInteractionListener;
-import static com.marked.pixsee.selfie.SelfieFragment.newInstance;
 
 public class MainActivity
-		extends BaseActivity
-		implements MainContract.View, FriendFragment.FriendFragmentInteractionListener,
+		extends AppCompatActivity
+		implements MainContract.View, Injectable, FriendFragment.FriendFragmentInteractionListener,
 		PictureDetailShareFragment.OnPictureDetailShareListener, OnSelfieInteractionListener,
-		PictureDetailSendFragment.OnPictureDetailSendListener ,ProfileFragment.ProfileFragmentInteraction{
+		PictureDetailSendFragment.OnPictureDetailSendListener, ProfileFragment.ProfileFragmentInteraction {
 	public static final int START_CAMERA_REQUEST_CODE = 100;
 	@Inject
 	MainContract.Presenter mPresenter;
@@ -56,7 +54,7 @@ public class MainActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		injectComponent();
 		mBottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 		// Create items
 		AHBottomNavigationItem item1 = new AHBottomNavigationItem(
@@ -77,18 +75,10 @@ public class MainActivity
 
 		mBottomNavigation.setOnTabSelectedListener(new OnTabSelectedHandler(mPresenter));
 		mPresenter.attach();
-
-		RxBus.getInstance().register(FriendRequestEvent.class, new Action1<FriendRequestEvent>() {
-			@Override
-			public void call(FriendRequestEvent friendRequestEvent) {
-				Intent intent = friendRequestEvent.buildIntent(MainActivity.this);
-				startActivity(intent);
-			}
-		});
 	}
 
 	@Override
-	protected void injectComponent(){
+	public void injectComponent() {
 		DaggerMainComponent.builder()
 				.activityModule(new ActivityModule(this))
 				.mainModule(new MainModule())
@@ -104,6 +94,12 @@ public class MainActivity
 			User user = getIntent().getParcelableExtra(DatabaseContract.AppsUser.TABLE_NAME);
 			mPresenter.friendRequest(user);
 		}
+	}
+
+	@Override
+	public void friendRequestEvent(FriendRequestEvent friendRequestEvent) {
+		Intent intent = friendRequestEvent.buildIntent(this);
+		startActivity(intent);
 	}
 
 	@Override
@@ -128,7 +124,7 @@ public class MainActivity
 	@Override
 	public void showCamera(@NotNull PictureActionStrategy actionStrategy) {
 		mPictureActionStrategy = actionStrategy;
-		Fragment fragment = newInstance();
+		Fragment fragment = SelfieFragment.newInstance();
 		getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, fragment, "camera").addToBackStack(null).commit();
 	}
 
@@ -165,6 +161,14 @@ public class MainActivity
 		mPictureActionStrategy.showAction(this);
 	}
 
+	public void setPictureActionStrategy(PictureActionStrategy pictureActionStrategy) {
+		mPictureActionStrategy = pictureActionStrategy;
+	}
+
+	public PictureActionStrategy getPictureActionStrategy() {
+		return mPictureActionStrategy;
+	}
+
 	/**
 	 * This get
 	 */
@@ -174,7 +178,7 @@ public class MainActivity
 	}
 
 	@Override
-	public void showFriendRequestDialog(final User user) {
+	public AlertDialog showFriendRequestDialog(final User user) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this)
 				.setCancelable(false)
 				.setTitle("Friend Request")
@@ -194,9 +198,12 @@ public class MainActivity
 		});
 		AlertDialog dialog = builder.create();
 		dialog.show();
+		return dialog;
 	}
 
-	/*************************** OnFriendFragmentInteractionListener *************************/
+	/***************************
+	 * OnFriendFragmentInteractionListener
+	 *************************/
 	@Override
 	public void onFriendClick(User friend) {
 		Intent intent = new Intent(this, ChatActivity.class);
@@ -204,7 +211,9 @@ public class MainActivity
 		startActivity(intent);
 	}
 
-	/*************************** OnProfilePictureInteraction *************************/
+	/***************************
+	 * OnProfilePictureInteraction
+	 *************************/
 	@Override
 	public void onTakeProfilePictureClick() {
 		mPresenter.profileImageClicked();

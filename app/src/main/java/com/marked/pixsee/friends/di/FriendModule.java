@@ -3,7 +3,7 @@ package com.marked.pixsee.friends.di;
 import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.friends.FriendPresenter;
 import com.marked.pixsee.friends.FriendsContract;
-import com.marked.pixsee.injection.Repository;
+import com.marked.pixsee.injection.scopes.Repository;
 import com.marked.pixsee.injection.scopes.FragmentScope;
 
 import dagger.Module;

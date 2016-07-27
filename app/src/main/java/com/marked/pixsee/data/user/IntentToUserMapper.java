@@ -1,10 +1,8 @@
-package com.marked.pixsee.entry;
+package com.marked.pixsee.data.user;
 
 import android.content.Intent;
 
-import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.Mapper;
-import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.data.FriendConstants;
 
 /**
@@ -17,7 +15,7 @@ public class IntentToUserMapper implements Mapper<Intent, User> {
 				intent.getStringExtra(FriendConstants.ID),
 				intent.getStringExtra(FriendConstants.NAME),
 				intent.getStringExtra(FriendConstants.EMAIL),
-				intent.getStringExtra(MessageConstants.FROM), null,
+				intent.getStringExtra(FriendConstants.TOKEN), null,
 				intent.getStringExtra(FriendConstants.COVER_URL),
 				intent.getStringExtra(FriendConstants.ICON_URL),
 				intent.getStringExtra(FriendConstants.USERNAME)

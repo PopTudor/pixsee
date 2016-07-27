@@ -5,7 +5,7 @@ import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
 import com.marked.pixsee.friendsInvite.addUsername.AddUserAPI;
-import com.marked.pixsee.injection.Repository;
+import com.marked.pixsee.injection.scopes.Repository;
 import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.networking.ServerConstants;
 

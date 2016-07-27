@@ -31,6 +31,7 @@ import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
 import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
+import com.marked.pixsee.injection.Injectable;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
@@ -50,7 +51,8 @@ import javax.inject.Inject;
  * Activities containing this fragment MUST implement the [Callbacks]
  * interface.
  */
-public class FriendFragment extends Fragment implements FriendsContract.View , SwipeRefreshLayout.OnRefreshListener {
+public class FriendFragment extends Fragment implements Injectable,
+		FriendsContract.View , SwipeRefreshLayout.OnRefreshListener {
 	public static int REQUEST_INVITE = 11;
 
 	@Inject
@@ -72,13 +74,7 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		mFriendsAdapter = new FriendsAdapter(mCallback);
-		ActivityComponent activityComponent = DaggerActivityComponent.builder()
-				.appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
-				.activityModule(new ActivityModule((AppCompatActivity) getContext()))
-				.build();
-
-		DaggerFriendsComponent.builder().activityComponent(activityComponent)
-				.friendModule(new FriendModule(this)).build().inject(this);
+		injectComponent();
 	}
 	@Override
 	public void onRefresh() {
@@ -361,6 +357,17 @@ public class FriendFragment extends Fragment implements FriendsContract.View , S
 	@Override
 	public void setPresenter(FriendsContract.Presenter presenter) {
 		mPresenter = presenter;
+	}
+
+	@Override
+	public void injectComponent() {
+		ActivityComponent activityComponent = DaggerActivityComponent.builder()
+				.appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
+				.activityModule(new ActivityModule((AppCompatActivity) getContext()))
+				.build();
+
+		DaggerFriendsComponent.builder().activityComponent(activityComponent)
+				.friendModule(new FriendModule(this)).build().inject(this);
 	}
 
 

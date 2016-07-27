@@ -1,6 +1,8 @@
 package com.marked.pixsee.main;
 
 import com.google.gson.JsonObject;
+import com.marked.pixsee.RxBus;
+import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserRepository;
@@ -104,5 +106,11 @@ public class MainPresenterTest {
 		MainContract.Presenter presenter = Mockito.spy(mMainPresenter);
 		presenter.attach();
 		Mockito.verify(presenter,Mockito.atLeastOnce()).chatTabClicked();
+	}
+	@Test
+	public void testAttachFriendEvent() throws Exception {
+		mMainPresenter.attach();
+		RxBus.getInstance().post(new FriendRequestEvent(UserUtilTest.getUserTest()));
+		Mockito.verify(mView).friendRequestEvent(Matchers.any(FriendRequestEvent.class));
 	}
 }

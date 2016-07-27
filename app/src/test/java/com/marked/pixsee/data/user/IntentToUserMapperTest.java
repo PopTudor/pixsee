@@ -1,10 +1,9 @@
-package com.marked.pixsee.entry;
+package com.marked.pixsee.data.user;
 
 import android.content.Intent;
 
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.chat.data.MessageConstants;
-import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.data.FriendConstants;
 
 import org.junit.Assert;

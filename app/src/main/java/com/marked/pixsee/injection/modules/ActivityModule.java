@@ -15,9 +15,9 @@ import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.data.user.UserDiskDatasource;
 import com.marked.pixsee.data.user.UserNetworkDatasource;
 import com.marked.pixsee.data.user.UserRepository;
-import com.marked.pixsee.injection.Local;
-import com.marked.pixsee.injection.Remote;
-import com.marked.pixsee.injection.Repository;
+import com.marked.pixsee.injection.scopes.Local;
+import com.marked.pixsee.injection.scopes.Remote;
+import com.marked.pixsee.injection.scopes.Repository;
 import com.marked.pixsee.injection.scopes.ActivityScope;
 
 import javax.inject.Named;

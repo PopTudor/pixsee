@@ -68,6 +68,9 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		}
 	};
 
+	public SelfieFragment() {
+	}
+
 	public static SelfieFragment newInstance() {
 
 		Bundle args = new Bundle();

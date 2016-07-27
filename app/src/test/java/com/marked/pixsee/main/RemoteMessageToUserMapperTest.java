@@ -2,7 +2,6 @@ package com.marked.pixsee.main;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.BuildConfig;
-import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.data.FriendConstants;
 
@@ -22,7 +21,7 @@ public class RemoteMessageToUserMapperTest {
 	public static final String ID = "123";
 	public static final String NAME = "name";
 	public static final String EMAIL = "email";
-	public static final String FROM = "from_token";
+	public static final String FROM = "token";
 	public static final String ICON_URL = "icon";
 	public static final String USERNAME = "username";
 	public static final String COVER = "cover";
@@ -36,7 +35,7 @@ public class RemoteMessageToUserMapperTest {
 				.addData(FriendConstants.ID, ID)
 				.addData(FriendConstants.NAME, NAME)
 				.addData(FriendConstants.EMAIL, EMAIL)
-				.addData(MessageConstants.FROM, FROM)
+				.addData(FriendConstants.TOKEN, FROM)
 				.addData(FriendConstants.ICON_URL, ICON_URL)
 				.addData(FriendConstants.USERNAME, USERNAME)
 				.addData(FriendConstants.COVER_URL, COVER)

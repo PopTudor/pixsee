@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.user.User;
@@ -15,10 +16,10 @@ import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.data.user.UserDiskDatasource;
 import com.marked.pixsee.data.user.UserNetworkDatasource;
 import com.marked.pixsee.data.user.UserRepository;
-import com.marked.pixsee.injection.Local;
-import com.marked.pixsee.injection.Remote;
-import com.marked.pixsee.injection.Repository;
 import com.marked.pixsee.injection.scopes.ActivityScope;
+import com.marked.pixsee.injection.scopes.Local;
+import com.marked.pixsee.injection.scopes.Remote;
+import com.marked.pixsee.injection.scopes.Repository;
 
 import org.mockito.Mockito;
 
@@ -104,21 +105,5 @@ public class FakeActivityModule {
 	@Named(DatabaseContract.AppsUser.TABLE_NAME)
 	User provideAppsUser(@Repository UserDatasource repository){
 		return UserUtilTest.getUserTest();
-	}
-
-
-	public static class UserUtilTest {
-		public static final String USER_ID = "user_id_123";
-		public static final String USER_NAME = "user_name";
-		public static final String USER_USERNAME = "user_username";
-		public static final String USER_EMAIL = "user_email";
-		public static final String USER_COVERURL = "user_coverurl";
-		public static final String USER_ICONURL = "user_iconurl";
-		public static final String USER_TOKEN = "user_token";
-		public static final String USER_PASSWORD = "user_password";
-
-		public static User getUserTest() {
-			return new User(USER_ID, USER_NAME, USER_EMAIL, USER_TOKEN, USER_PASSWORD, USER_COVERURL, USER_ICONURL, USER_USERNAME);
-		}
 	}
 }

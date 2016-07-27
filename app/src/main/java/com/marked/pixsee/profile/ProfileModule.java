@@ -1,7 +1,7 @@
 package com.marked.pixsee.profile;
 
 import com.marked.pixsee.data.user.UserDatasource;
-import com.marked.pixsee.injection.Repository;
+import com.marked.pixsee.injection.scopes.Repository;
 import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.utility.BitmapUtils;
 

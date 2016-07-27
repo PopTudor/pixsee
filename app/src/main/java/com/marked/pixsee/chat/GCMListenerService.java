@@ -18,13 +18,17 @@ package com.marked.pixsee.chat;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.os.Bundle;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.marked.pixsee.R;
+import com.marked.pixsee.RxBus;
+import com.marked.pixsee.chat.data.Message;
+import com.marked.pixsee.data.Mapper;
+import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.main.FriendRequestEvent;
+import com.marked.pixsee.main.NewMessageEvent;
+import com.marked.pixsee.main.RemoteMessageToUserMapper;
 
 /**
  * Receives messages sent by GCM server
@@ -32,17 +36,16 @@ import java.util.List;
 public class GCMListenerService extends FirebaseMessagingService {
 
 	private static final String TAG = "MyGcmListenerService";
-	private static List<Callback> mCallbacks=new ArrayList<>(3);
-
-	public static void addCallback(Callback callback) {
-		mCallbacks.add(callback);
-	}
-	public static void clear(){mCallbacks.clear();}
+	private Mapper<RemoteMessage, User> mRemoteMessageToUserMapper = new RemoteMessageToUserMapper();
 
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
-		for (Callback it:mCallbacks)
-			it.receiveRemoteMessage(remoteMessage);
+		if (remoteMessage.getNotification().getClickAction() != null &&
+				remoteMessage.getNotification().getClickAction().equals(getString(R.string.FRIEND_REQUEST))) {
+			RxBus.getInstance().post(new FriendRequestEvent(mRemoteMessageToUserMapper.map(remoteMessage)));
+		}else if (remoteMessage.getNotification().getClickAction()!=null &&
+				remoteMessage.getNotification().getClickAction().equals(getString(R.string.NEW_MESSAGE)))
+			RxBus.getInstance().post(new NewMessageEvent(remoteMessage));
 
 		if (remoteMessage.getFrom().startsWith("/topics/")) {
 			// message received from some topic.
@@ -59,7 +62,7 @@ public class GCMListenerService extends FirebaseMessagingService {
 
 		/*send notification only if the user is not inside the chatting fragment */
 		if (!ChatFragment.isInForeground)
-			sendNotification(new Bundle());
+			sendNotification(remoteMessage);
 		// [END_EXCLUDE]
 	}
 
@@ -69,7 +72,7 @@ public class GCMListenerService extends FirebaseMessagingService {
 	 *
 	 * @param bundle GCM message received.
 	 */
-	private void sendNotification(Bundle bundle) {
+	private void sendNotification(RemoteMessage bundle) {
 		//		Bundle[{text=h, links=[null], notification=Bundle[{e=1, body=This is a notification that will be displayed ASAP., icon=ic_launcher, title=Hello, World}], collapse_key=com.marked.vifo}]
 		if (bundle != null) {
 //			Intent intent = new Intent(this, EntryActivity.class);
@@ -100,6 +103,7 @@ public class GCMListenerService extends FirebaseMessagingService {
 	public void onMessageSent(String msgId) {
 		super.onMessageSent(msgId);
 	}
+
 	/* called when there was an error sending the upstream message */
 	@Override
 	public void onSendError(String s, Exception e) {
@@ -108,7 +112,7 @@ public class GCMListenerService extends FirebaseMessagingService {
 	}
 
 	public interface Callback {
-		void receiveRemoteMessage(RemoteMessage message);
+		void receiveRemoteMessage(Message message);
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.marked.pixsee.main;
 
 import com.google.firebase.messaging.RemoteMessage;
-import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.data.FriendConstants;
@@ -15,7 +14,7 @@ public class RemoteMessageToUserMapper implements Mapper<RemoteMessage,User> {
 		return new User(message.getData().get(FriendConstants.ID),
 				message.getData().get(FriendConstants.NAME),
 				message.getData().get(FriendConstants.EMAIL),
-				message.getData().get(MessageConstants.FROM), null,
+				message.getData().get(FriendConstants.TOKEN), null,
 				message.getData().get(FriendConstants.COVER_URL),
 				message.getData().get(FriendConstants.ICON_URL),
 				message.getData().get(FriendConstants.USERNAME));

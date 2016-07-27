@@ -1,8 +1,9 @@
 package com.marked.pixsee.main;
 
+import android.support.v7.app.AlertDialog;
+
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
-import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.main.strategy.PictureActionStrategy;
 
@@ -13,8 +14,6 @@ import org.jetbrains.annotations.NotNull;
  */
 interface MainContract {
 	interface Presenter extends BasePresenter {
-		void execute(Command command);
-
 		void chatTabClicked();
 
 		void profileTabClicked();
@@ -31,12 +30,14 @@ interface MainContract {
 	interface View extends BaseView<Presenter> {
 		void showChat(boolean show);
 
-		void showFriendRequestDialog(User user);
+		AlertDialog showFriendRequestDialog(User user);
 
 		void showProfile(User user);
 
 		void showCamera(@NotNull PictureActionStrategy actionStrategy);
 
 		void hideBottomNavigation();
+
+		void friendRequestEvent(FriendRequestEvent friendRequestEvent);
 	}
 }
