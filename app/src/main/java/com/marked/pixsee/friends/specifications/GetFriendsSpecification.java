@@ -1,13 +1,12 @@
 package com.marked.pixsee.friends.specifications;
 
-import com.marked.pixsee.data.repository.SQLSpecification;
 import com.marked.pixsee.friends.data.FriendContractDB;
 
 
 /**
  * Created by Tudor Pop on 29-Mar-16.
  */
-public class GetFriendsSpecification implements SQLSpecification {
+public class GetFriendsSpecification {
 	private int offset;
 	private int limit;
 
@@ -22,7 +21,6 @@ public class GetFriendsSpecification implements SQLSpecification {
 			FriendContractDB.COLUMN_EMAIL,
 			FriendContractDB.COLUMN_TOKEN};
 
-	@Override
 	public String createQuery() {
 		if (limit == -1)
 			return "SELECT * FROM " + FriendContractDB.TABLE_NAME;

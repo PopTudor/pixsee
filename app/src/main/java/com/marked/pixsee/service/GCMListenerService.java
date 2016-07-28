@@ -58,7 +58,7 @@ public class GCMListenerService extends FirebaseMessagingService {
 					@Override
 					public FcmEvent call(String s) {
 						if (s.equals(getString(R.string.FRIEND_REQUEST)))
-							return new FriendRequestEvent(new RemoteMessageToUserMapper().map(remoteMessage));
+							return new FriendRequestEvent(remoteMessage, new RemoteMessageToUserMapper());
 						else if (s.equals(getString(R.string.NEW_MESSAGE)))
 							return new NewMessageEvent(remoteMessage);
 						else

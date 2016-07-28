@@ -1,12 +1,11 @@
 package com.marked.pixsee.friends.specifications;
 
 import com.marked.pixsee.chat.data.MessageContract;
-import com.marked.pixsee.data.repository.SQLSpecification;
 
 /**
  * Created by Tudor on 2016-05-19.
  */
-public class GetMessagesByGroupedByDate implements SQLSpecification {
+public class GetMessagesByGroupedByDate {
 	private int offset;
 	private int limit;
 	private String friendID;
@@ -21,7 +20,6 @@ public class GetMessagesByGroupedByDate implements SQLSpecification {
 		this(-1, -1, friendID);
 	}
 
-	@Override
 	public String createQuery() {
 		if (offset < 0 || limit < 0)
 			return "SELECT * FROM " + MessageContract.TABLE_NAME

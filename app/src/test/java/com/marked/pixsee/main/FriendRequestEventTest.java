@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -35,7 +36,7 @@ public class FriendRequestEventTest {
 		RemoteMessageToUserMapper remoteMessageToUserMapper = mock(RemoteMessageToUserMapper.class);
 		doReturn(user).when(remoteMessageToUserMapper).map(Matchers.any(RemoteMessage.class));
 
-		FriendRequestEvent friendRequestEvent = new FriendRequestEvent(user);
+		FriendRequestEvent friendRequestEvent = new FriendRequestEvent(Mockito.any(RemoteMessage.class),remoteMessageToUserMapper);
 
 		Intent actual = friendRequestEvent.buildIntent(activity);
 
