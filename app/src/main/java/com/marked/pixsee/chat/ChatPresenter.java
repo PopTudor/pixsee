@@ -2,7 +2,6 @@ package com.marked.pixsee.chat;
 
 import android.net.Uri;
 
-import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.chat.data.ChatDatasource;
 import com.marked.pixsee.chat.data.ChatRepository;
@@ -73,11 +72,6 @@ class ChatPresenter implements ChatContract.Presenter {
 	}
 
 	@Override
-	public void receiveRemoteMessage(RemoteMessage remoteMessage) {
-
-	}
-
-	@Override
 	public void receiveMessage(@NotNull Message message) {
 		mRepository.saveMessage(message);
 		mView.get().addMessage(message);
@@ -93,7 +87,7 @@ class ChatPresenter implements ChatContract.Presenter {
 		if (message.getMessageType() == MessageConstants.MessageType.ME_IMAGE) {
 			File file = new File(message.getData().get(MessageConstants.DATA_BODY));
 			// create RequestBody instance from file
-			RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+			RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-com.marked.pixsee.data"), file);
 			// MultipartBody.Part is used to send also the actual file name
 			MultipartBody.Part body = MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
 			mUploadAPI.upload(mAppsUser.getUserID(),mThatUser.getUserID(),body)

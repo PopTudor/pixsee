@@ -1,6 +1,5 @@
 package com.marked.pixsee.main;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -23,7 +22,6 @@ import com.marked.pixsee.profile.ProfileFragment;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +33,10 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Tudor on 21-Jul-16.
@@ -79,18 +80,16 @@ public class MainActivityTest {
 
 	@Test
 	public void testFriendRequestEventShouldStartEntryActivity() throws Exception {
-		mMainActivity.create().start().resume();
+		mMainActivity.create();
 		//emulate friendRequestEvent Intent
 		Intent intent = new Intent(mMainActivity.get(), EntryActivity.class);
 
 		FriendRequestEvent friendRequestEvent = Mockito.mock(FriendRequestEvent.class);
 		Mockito.doReturn(intent).when(friendRequestEvent).buildIntent(mMainActivity.get());
-
 		mMainActivity.get().friendRequestEvent(friendRequestEvent);
 
-		Activity activity = Robolectric.buildActivity(EntryActivity.class).withIntent(intent).get();
-		// check if the intent from FriendRequestEvent was used to start EntryActivity
-		Assert.assertEquals(intent, activity.getIntent());
+		Intent startingIntent = Shadows.shadowOf(mMainActivity.get()).getNextStartedActivity();
+		assertEquals(intent, startingIntent);
 	}
 
 	@Test
@@ -98,7 +97,8 @@ public class MainActivityTest {
 		mMainActivity.create().start().resume().visible();
 		mMainActivity.get().hideBottomNavigation();
 		View view = mMainActivity.get().findViewById(R.id.bottom_navigation);
-		Assert.assertEquals(view.getVisibility(), View.GONE);
+		assertNotNull(view);
+		assertEquals(view.getVisibility(), View.GONE);
 	}
 
 	@Test
@@ -106,21 +106,22 @@ public class MainActivityTest {
 		mMainActivity.create().start().resume().visible();
 		mMainActivity.get().selfieFragmentDesroyed();
 		View view = mMainActivity.get().findViewById(R.id.bottom_navigation);
-		Assert.assertEquals(view.getVisibility(), View.VISIBLE);
+		assertNotNull(view);
+		assertEquals(view.getVisibility(), View.VISIBLE);
 	}
 
 	@Test
 	public void testShowProfile() throws Exception {
 		mMainActivity.create().start().resume().visible().get().showProfile(UserUtilTest.getUserTest());
 		Fragment fragment = mMainActivity.get().getSupportFragmentManager().findFragmentById(R.id.mainContainer);
-		Assert.assertTrue(fragment instanceof ProfileFragment);
+		assertTrue(fragment instanceof ProfileFragment);
 	}
 
 	@Test
 	public void testShowChat() throws Exception {
 		mMainActivity.create().start().resume().visible().get().showChat(true);
 		Fragment fragment = mMainActivity.get().getSupportFragmentManager().findFragmentById(R.id.mainContainer);
-		Assert.assertTrue(fragment instanceof FriendFragment);
+		assertTrue(fragment instanceof FriendFragment);
 	}
 
 	@Test
@@ -152,7 +153,7 @@ public class MainActivityTest {
 		expectedIntent.putExtra(ChatActivity.EXTRA_CONTACT, mUser);
 
 		Intent intent = Shadows.shadowOf(mMainActivity.get()).getNextStartedActivity();//
-		Assert.assertEquals("Starting intent and resulting activity's intent should be the same",//
+		assertEquals("Starting intent and resulting activity's intent should be the same",//
 				intent.getParcelableExtra(ChatActivity.EXTRA_CONTACT), mUser);
 	}
 

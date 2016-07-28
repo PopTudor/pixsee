@@ -26,6 +26,7 @@ repositories {
 def versionMajor = 1
 def versionMinor = 1
 def versionPatch = 1
+def versionSmallPatch = 2
 
 android {
     compileSdkVersion 23
@@ -35,7 +36,7 @@ android {
         applicationId 'com.marked.pixsee'
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch * 10
+        versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch * 10 +versionSmallPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -109,7 +110,7 @@ dependencies {
 
     // RX
     compile "io.reactivex:rxjava:1.1.6" // RxJava
-    compile "io.reactivex:rxandroid:1.2.0" // RxAndroid
+    compile "io.reactivex:rxandroid:1.2.1" // RxAndroid
     compile "com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar" // RxPermissions
     compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0' // RxBindings
 

@@ -14,6 +14,7 @@ import java.util.UUID;
  * Created by Tudor Pop on 28-Nov-15.
  */
 public final class User implements Parcelable, Comparable<User> {
+	public static final String TAG = "user_tag";
 	@SerializedName(value = "userID", alternate = {"_id"})
 	String userID;
 	String name;

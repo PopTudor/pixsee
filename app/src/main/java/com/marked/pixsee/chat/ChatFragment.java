@@ -98,7 +98,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		GCMListenerService.addCallback(mPresenter);
 		mChatAdapter = new ChatAdapter(this);
 		mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 		try {
@@ -221,7 +220,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 			public void call(Subscriber<? super String> subscriber) {
 //				try {
 //					RemoteMessage remoteMessage = new RemoteMessage();
-//					gcm.send(senderId + GCMConstants.SERVER_UPSTREAM_ADRESS, msgId, data);
+//					gcm.send(senderId + GCMConstants.SERVER_UPSTREAM_ADRESS, msgId, com.marked.pixsee.data);
 					subscriber.onCompleted();
 //				} catch (IOException e) {
 //					subscriber.onError(e);
@@ -261,12 +260,12 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void onStop() {
 		super.onStop();
-		try {
-			mSocket.emit(ChatFragment.ON_NEW_ROOM, new JSONObject(String.format("{from:%s,to:%s,to_token:\'%s\'}",mThisUser, mThatUser
-					.getUserID(),mThatUser.getToken())));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			mSocket.emit(ChatFragment.ON_NEW_ROOM, new JSONObject(String.format("{from:%s,to:%s,to_token:\'%s\'}",mThisUser, mThatUser
+//					.getUserID(),mThatUser.getToken())));
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override

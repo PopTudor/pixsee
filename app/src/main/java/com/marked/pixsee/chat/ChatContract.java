@@ -18,7 +18,7 @@ import java.util.List;
  */
 interface ChatContract {
 
-	interface Presenter extends BasePresenter, GCMListenerService.Callback{
+	interface Presenter extends BasePresenter{
 		void loadMore(int limit, boolean forceUpdate);
 
 		void loadMore(int limit, User user);

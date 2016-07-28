@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.marked.pixsee.chat;
+package com.marked.pixsee.service;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -23,12 +23,14 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.R;
 import com.marked.pixsee.RxBus;
-import com.marked.pixsee.chat.data.Message;
-import com.marked.pixsee.data.Mapper;
-import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.chat.ChatFragment;
 import com.marked.pixsee.main.FriendRequestEvent;
 import com.marked.pixsee.main.NewMessageEvent;
 import com.marked.pixsee.main.RemoteMessageToUserMapper;
+
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Receives messages sent by GCM server
@@ -36,16 +38,39 @@ import com.marked.pixsee.main.RemoteMessageToUserMapper;
 public class GCMListenerService extends FirebaseMessagingService {
 
 	private static final String TAG = "MyGcmListenerService";
-	private Mapper<RemoteMessage, User> mRemoteMessageToUserMapper = new RemoteMessageToUserMapper();
 
 	@Override
-	public void onMessageReceived(RemoteMessage remoteMessage) {
-		if (remoteMessage.getNotification().getClickAction() != null &&
-				remoteMessage.getNotification().getClickAction().equals(getString(R.string.FRIEND_REQUEST))) {
-			RxBus.getInstance().post(new FriendRequestEvent(mRemoteMessageToUserMapper.map(remoteMessage)));
-		}else if (remoteMessage.getNotification().getClickAction()!=null &&
-				remoteMessage.getNotification().getClickAction().equals(getString(R.string.NEW_MESSAGE)))
-			RxBus.getInstance().post(new NewMessageEvent(remoteMessage));
+	public void onMessageReceived(final RemoteMessage remoteMessage) {
+		Observable.just(remoteMessage)
+				.filter(new Func1<RemoteMessage, Boolean>() {
+					@Override
+					public Boolean call(RemoteMessage message) {
+						return message.getNotification().getClickAction() != null;
+					}
+				})
+				.map(new Func1<RemoteMessage, String>() {
+					@Override
+					public String call(RemoteMessage message) {
+						return message.getNotification().getClickAction();
+					}
+				})
+				.map(new Func1<String, FcmEvent>() {
+					@Override
+					public FcmEvent call(String s) {
+						if (s.equals(getString(R.string.FRIEND_REQUEST)))
+							return new FriendRequestEvent(new RemoteMessageToUserMapper().map(remoteMessage));
+						else if (s.equals(getString(R.string.NEW_MESSAGE)))
+							return new NewMessageEvent(remoteMessage);
+						else
+							return new EmptyEvent();
+					}
+				})
+				.subscribe(new Action1<FcmEvent>() {
+					@Override
+					public void call(FcmEvent event) {
+						RxBus.getInstance().post(event);
+					}
+				});
 
 		if (remoteMessage.getFrom().startsWith("/topics/")) {
 			// message received from some topic.
@@ -111,8 +136,9 @@ public class GCMListenerService extends FirebaseMessagingService {
 		e.printStackTrace();
 	}
 
-	public interface Callback {
-		void receiveRemoteMessage(Message message);
+	public interface FcmEvent {
 	}
 
+	public static final class EmptyEvent implements FcmEvent {
+	}
 }

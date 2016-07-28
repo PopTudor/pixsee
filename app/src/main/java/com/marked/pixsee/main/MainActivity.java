@@ -165,10 +165,6 @@ public class MainActivity
 		mPictureActionStrategy = pictureActionStrategy;
 	}
 
-	public PictureActionStrategy getPictureActionStrategy() {
-		return mPictureActionStrategy;
-	}
-
 	/**
 	 * This get
 	 */

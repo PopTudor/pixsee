@@ -9,7 +9,6 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.entry.EntryActivity;
-import com.marked.pixsee.friends.data.FriendConstants;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,15 +38,12 @@ public class FriendRequestEventTest {
 		FriendRequestEvent friendRequestEvent = new FriendRequestEvent(user);
 
 		Intent actual = friendRequestEvent.buildIntent(activity);
+
+
 		Intent expected = new Intent(activity, EntryActivity.class);
 		expected.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		expected.setAction(activity.getString(R.string.FRIEND_REQUEST));
-		expected.putExtra(FriendConstants.ID, user.getUserID());
-		expected.putExtra(FriendConstants.NAME, user.getName());
-		expected.putExtra(FriendConstants.EMAIL, user.getEmail());
-		expected.putExtra(FriendConstants.TOKEN, user.getToken());
-		expected.putExtra(FriendConstants.ICON_URL, user.getIconUrl());
-		expected.putExtra(FriendConstants.USERNAME, user.getUsername());
+		expected.putExtra(User.TAG, user);
 
 		Assert.assertTrue(expected.filterEquals(actual));
 		Assert.assertEquals(expected.getExtras().toString(),actual.getExtras().toString());

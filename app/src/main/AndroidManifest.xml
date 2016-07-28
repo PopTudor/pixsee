@@ -96,7 +96,7 @@
         </activity>
 
         <!-- [START gcm_listener] -->
-        <service android:name=".chat.GCMListenerService">
+        <service android:name=".service.GCMListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

@@ -2,7 +2,6 @@ package com.marked.pixsee.main;
 
 import com.google.gson.JsonObject;
 import com.marked.pixsee.RxBus;
-import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserRepository;
@@ -110,7 +109,8 @@ public class MainPresenterTest {
 	@Test
 	public void testAttachFriendEvent() throws Exception {
 		mMainPresenter.attach();
-		RxBus.getInstance().post(new FriendRequestEvent(UserUtilTest.getUserTest()));
+
+		RxBus.getInstance().post(new FriendRequestEvent(Mockito.any(User.class)));
 		Mockito.verify(mView).friendRequestEvent(Matchers.any(FriendRequestEvent.class));
 	}
 }

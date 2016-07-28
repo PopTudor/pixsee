@@ -11,12 +11,12 @@ import android.support.v4.app.NotificationCompat;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.entry.EntryActivity;
-import com.marked.pixsee.friends.data.FriendConstants;
+import com.marked.pixsee.service.GCMListenerService;
 
 /**
  * Created by Tudor on 22-Jul-16.
  */
-public class FriendRequestEvent {
+public class FriendRequestEvent implements GCMListenerService.FcmEvent {
 	private User mUser;
 
 	public FriendRequestEvent(User user) {
@@ -26,14 +26,8 @@ public class FriendRequestEvent {
 	public Intent buildIntent(Activity activity) {
 		Intent resultIntent = new Intent(activity, EntryActivity.class);
 		resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
 		resultIntent.setAction(activity.getString(R.string.FRIEND_REQUEST));
-		resultIntent.putExtra(FriendConstants.ID, mUser.getUserID());
-		resultIntent.putExtra(FriendConstants.NAME, mUser.getName());
-		resultIntent.putExtra(FriendConstants.EMAIL, mUser.getEmail());
-		resultIntent.putExtra(FriendConstants.TOKEN, mUser.getToken());
-		resultIntent.putExtra(FriendConstants.ICON_URL, mUser.getIconUrl());
-		resultIntent.putExtra(FriendConstants.USERNAME, mUser.getUsername());
+		resultIntent.putExtra(User.TAG, mUser);
 
 
 		PendingIntent resultPendingIntent = PendingIntent.getActivity(activity, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);

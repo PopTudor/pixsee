@@ -11,7 +11,6 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.authentification.AuthenticationActivity;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.data.user.IntentToUserMapper;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.utility.GCMConstants;
@@ -43,8 +42,7 @@ public class EntryActivity extends AppCompatActivity {
 		}
 		/* the intent was sent from FCM for a friend request, add the following extras */
 		if (getIntent().getAction() != null && getIntent().getAction().equals(getString(R.string.FRIEND_REQUEST))) {
-			IntentToUserMapper intentToUserMapper = new IntentToUserMapper();
-			User user = intentToUserMapper.map(getIntent());
+			User user = getIntent().getParcelableExtra(User.TAG);
 			intent.putExtra(MessageConstants.MESSAGE_TYPE, MessageConstants.MessageType.FRIEND_REQUEST);
 			intent.putExtra(DatabaseContract.AppsUser.TABLE_NAME, user);
 		}
