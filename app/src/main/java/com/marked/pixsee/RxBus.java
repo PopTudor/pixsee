@@ -20,12 +20,7 @@ public class RxBus {
 
 	public <T> Subscription register(final Class<T> eventClass, Action1<T> onNext) {
 		return mBusSubject
-				.filter(new Func1<Object, Boolean>() {
-					@Override
-					public Boolean call(Object event) {
-						return  event.getClass().equals(eventClass);
-					}
-				})
+				.ofType(eventClass)
 				.map(new Func1<Object, T>() {
 					@Override
 					public T call(Object o) {

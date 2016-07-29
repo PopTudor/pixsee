@@ -7,11 +7,9 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.marked.pixsee.R;
 import com.marked.pixsee.authentification.AuthenticationActivity;
-import com.marked.pixsee.chat.data.MessageConstants;
-import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.main.FriendRequestNotification;
 import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.utility.GCMConstants;
 
@@ -40,12 +38,8 @@ public class EntryActivity extends AppCompatActivity {
 		} else {
 			intent = new Intent(this, AuthenticationActivity.class);
 		}
-		/* the intent was sent from FCM for a friend request, add the following extras */
-		if (getIntent().getAction() != null && getIntent().getAction().equals(getString(R.string.FRIEND_REQUEST))) {
-			User user = getIntent().getParcelableExtra(User.TAG);
-			intent.putExtra(MessageConstants.MESSAGE_TYPE, MessageConstants.MessageType.FRIEND_REQUEST);
-			intent.putExtra(DatabaseContract.AppsUser.TABLE_NAME, user);
-		}
+		if (getIntent().getAction().equals(FriendRequestNotification.FRIEND_REQUEST_TAG))
+			intent.putExtra(FriendRequestNotification.FRIEND_REQUEST_TAG,new User(getIntent().getExtras()));
 		startActivity(intent);
 		finish();
 	}

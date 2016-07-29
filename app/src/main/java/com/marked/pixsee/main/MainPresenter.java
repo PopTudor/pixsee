@@ -1,15 +1,14 @@
 package com.marked.pixsee.main;
 
-import com.marked.pixsee.RxBus;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.main.strategy.ProfilePictureStrategy;
 import com.marked.pixsee.main.strategy.ShareStrategy;
 
-import java.lang.ref.WeakReference;
+import org.jetbrains.annotations.NotNull;
 
-import rx.functions.Action1;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by Tudor on 2016-05-27.
@@ -60,16 +59,10 @@ class MainPresenter implements MainContract.Presenter {
 	@Override
 	public void attach() {
 		chatTabClicked();
-		RxBus.getInstance().register(FriendRequestEvent.class, new Action1<FriendRequestEvent>() {
-			@Override
-			public void call(FriendRequestEvent friendRequestEvent) {
-				mWeakView.get().friendRequestEvent(friendRequestEvent);
-			}
-		});
 	}
 
 	@Override
-	public void friendRequest(User user) {
+	public void friendRequest(@NotNull User user) {
 		mWeakView.get().showFriendRequestDialog(user);
 	}
 }

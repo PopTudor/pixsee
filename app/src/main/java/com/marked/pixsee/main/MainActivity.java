@@ -15,8 +15,6 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.ChatActivity;
-import com.marked.pixsee.chat.data.MessageConstants;
-import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.injection.Injectable;
@@ -90,16 +88,9 @@ public class MainActivity
 	protected void onStart() {
 		super.onStart();
 		/* this will enter when the user is not using the app and gets a friend request from FCM */
-		if (getIntent().getIntExtra(MessageConstants.MESSAGE_TYPE, 0) == MessageConstants.MessageType.FRIEND_REQUEST) {
-			User user = getIntent().getParcelableExtra(DatabaseContract.AppsUser.TABLE_NAME);
+		User user = getIntent().getParcelableExtra(FriendRequestNotification.FRIEND_REQUEST_TAG);
+		if (user!=null)
 			mPresenter.friendRequest(user);
-		}
-	}
-
-	@Override
-	public void friendRequestEvent(FriendRequestEvent friendRequestEvent) {
-		Intent intent = friendRequestEvent.buildIntent(this);
-		startActivity(intent);
 	}
 
 	@Override

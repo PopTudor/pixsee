@@ -100,6 +100,7 @@ public class UserDiskDatasource implements UserDatasource {
 		db.getWritableDatabase().delete(TABLE_NAME, null, null);
 		db.getWritableDatabase().delete(DatabaseContract.AppsUser.TABLE_NAME, null, null);
 		db.getWritableDatabase().delete(MessageContract.TABLE_NAME, null, null);
+		db.close();
 	}
 
 	@Override

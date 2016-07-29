@@ -1,9 +1,6 @@
 package com.marked.pixsee.main;
 
-import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonObject;
-import com.marked.pixsee.RxBus;
-import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserRepository;
@@ -20,9 +17,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import rx.Observable;
-
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 
 /**
  * Created by Tudor on 17-Jun-16.
@@ -110,16 +104,5 @@ public class MainPresenterTest {
 		MainContract.Presenter presenter = Mockito.spy(mMainPresenter);
 		presenter.attach();
 		Mockito.verify(presenter, Mockito.atLeastOnce()).chatTabClicked();
-	}
-
-	@Test
-	public void testAttachFriendEvent() throws Exception {
-		mMainPresenter.attach();
-		User user = UserUtilTest.getUserTest();
-		RemoteMessageToUserMapper remoteMessageToUserMapper = mock(RemoteMessageToUserMapper.class);
-		doReturn(user).when(remoteMessageToUserMapper).map(Matchers.any(RemoteMessage.class));
-
-		RxBus.getInstance().post(new FriendRequestEvent(Mockito.any(RemoteMessage.class), remoteMessageToUserMapper));
-		Mockito.verify(mView).friendRequestEvent(Matchers.any(FriendRequestEvent.class));
 	}
 }

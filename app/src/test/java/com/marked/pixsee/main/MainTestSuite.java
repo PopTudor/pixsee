@@ -11,7 +11,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = {MainActivityTest.class, MainPresenterTest.class, RemoteMessageToUserMapperTest.class
-		, ProfilePictureStrategyTest.class, ShareStrategyTest.class,FriendRequestEventTest.class
+		, ProfilePictureStrategyTest.class, ShareStrategyTest.class
 })
 public class MainTestSuite {
 }

@@ -10,10 +10,7 @@ import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
 import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.chat.ChatActivity;
-import com.marked.pixsee.chat.data.MessageConstants;
-import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.entry.EntryActivity;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.injection.modules.FakeActivityModule;
 import com.marked.pixsee.main.strategy.PictureActionStrategy;
@@ -68,28 +65,12 @@ public class MainActivityTest {
 	public void testOnStartShouldShowFriendRequestDialog() throws Exception {
 		User user = UserUtilTest.getUserTest();
 		Intent intent = new Intent();
-		intent.putExtra(MessageConstants.MESSAGE_TYPE, MessageConstants.MessageType.FRIEND_REQUEST);
-		intent.putExtra(DatabaseContract.AppsUser.TABLE_NAME, user);
-		// start activity
-		MainActivity activity = Robolectric.buildActivity(MainActivity.class).withIntent(intent).create().start().get();
+		intent.putExtra(FriendRequestNotification.FRIEND_REQUEST_TAG, user);
+		mMainActivity.withIntent(intent).create().start();
 		// if it's a friend request, onStart will call the presenter's friendRequest with given user
-		Mockito.verify(activity.mPresenter).friendRequest(user);
+		Mockito.verify(mMainActivity.get().mPresenter).friendRequest(user);
 		// check if the dialog is showing
-		assertThat(activity.showFriendRequestDialog(user).isShowing(), CoreMatchers.any(Boolean.class));
-	}
-
-	@Test
-	public void testFriendRequestEventShouldStartEntryActivity() throws Exception {
-		mMainActivity.create();
-		//emulate friendRequestEvent Intent
-		Intent intent = new Intent(mMainActivity.get(), EntryActivity.class);
-
-		FriendRequestEvent friendRequestEvent = Mockito.mock(FriendRequestEvent.class);
-		Mockito.doReturn(intent).when(friendRequestEvent).buildIntent(mMainActivity.get());
-		mMainActivity.get().friendRequestEvent(friendRequestEvent);
-
-		Intent startingIntent = Shadows.shadowOf(mMainActivity.get()).getNextStartedActivity();
-		assertEquals(intent, startingIntent);
+		assertThat(mMainActivity.get().showFriendRequestDialog(user).isShowing(), CoreMatchers.any(Boolean.class));
 	}
 
 	@Test

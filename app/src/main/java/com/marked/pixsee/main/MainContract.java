@@ -20,9 +20,9 @@ interface MainContract {
 
 		void profileImageClicked();
 
-		void friendRequest(User user, boolean b);
+		void friendRequest(@NotNull User user, boolean b);
 
-		void friendRequest(User user);
+		void friendRequest(@NotNull User user);
 
 		void cameraTabClicked();
 	}
@@ -30,14 +30,12 @@ interface MainContract {
 	interface View extends BaseView<Presenter> {
 		void showChat(boolean show);
 
-		AlertDialog showFriendRequestDialog(User user);
+		AlertDialog showFriendRequestDialog(@NotNull User user);
 
-		void showProfile(User user);
+		void showProfile(@NotNull User user);
 
 		void showCamera(@NotNull PictureActionStrategy actionStrategy);
 
 		void hideBottomNavigation();
-
-		void friendRequestEvent(FriendRequestEvent friendRequestEvent);
 	}
 }

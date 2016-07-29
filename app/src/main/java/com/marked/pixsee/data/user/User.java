@@ -1,5 +1,6 @@
 package com.marked.pixsee.data.user;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -75,6 +76,11 @@ public final class User implements Parcelable, Comparable<User> {
 			return new User[size];
 		}
 	};
+
+	public User(Bundle extras) {
+		this(extras.getString("userID"), extras.getString("name"), extras.getString("email"), extras.getString("token")
+				, null, extras.getString("coverUrl"), extras.getString("iconUrl"), extras.getString("username"));
+	}
 
 	public String getUserID() {
 		return userID;
