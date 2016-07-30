@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -87,8 +88,18 @@ public class MainActivity
 	@Override
 	protected void onStart() {
 		super.onStart();
+		newFriendRequest(getIntent());
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		newFriendRequest(intent);
+	}
+
+	void newFriendRequest(Intent intent){
 		/* this will enter when the user is not using the app and gets a friend request from FCM */
-		User user = getIntent().getParcelableExtra(FriendRequestNotification.FRIEND_REQUEST_TAG);
+		User user = intent.getParcelableExtra(FriendRequestNotification.FRIEND_REQUEST_TAG);
 		if (user!=null)
 			mPresenter.friendRequest(user);
 	}
@@ -99,7 +110,7 @@ public class MainActivity
 	}
 
 	@Override
-	public void showProfile(User user) {
+	public void showProfile(@NonNull User user) {
 		getSupportFragmentManager()
 				.beginTransaction()
 				.replace(R.id.mainContainer, ProfileFragment.newInstance(user), "profile")
@@ -152,10 +163,6 @@ public class MainActivity
 		mPictureActionStrategy.showAction(this);
 	}
 
-	public void setPictureActionStrategy(PictureActionStrategy pictureActionStrategy) {
-		mPictureActionStrategy = pictureActionStrategy;
-	}
-
 	/**
 	 * This get
 	 */
@@ -165,7 +172,7 @@ public class MainActivity
 	}
 
 	@Override
-	public AlertDialog showFriendRequestDialog(final User user) {
+	public AlertDialog showFriendRequestDialog(@NonNull final User user) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this)
 				.setCancelable(false)
 				.setTitle("Friend Request")

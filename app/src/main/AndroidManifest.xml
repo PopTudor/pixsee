@@ -109,7 +109,7 @@
         </service>
         <!-- [END instanceId_listener] -->
         <service
-            android:name=".service.LogInRegistrationIntentService"
+            android:name=".service.MessagingService"
             android:exported="false"/>
 
 

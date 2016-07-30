@@ -10,8 +10,13 @@ import org.junit.runners.Suite;
  * Created by Tudor on 25-Jul-16.
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses(value = {MainActivityTest.class, MainPresenterTest.class, RemoteMessageToUserMapperTest.class
-		, ProfilePictureStrategyTest.class, ShareStrategyTest.class
+@Suite.SuiteClasses(value = {
+		MainActivityTest.class,
+		MainPresenterTest.class,
+		RemoteMessageToUserMapperTest.class,
+		ProfilePictureStrategyTest.class,
+		ShareStrategyTest.class,
+		FriendRequestNotificationTest.class
 })
 public class MainTestSuite {
 }

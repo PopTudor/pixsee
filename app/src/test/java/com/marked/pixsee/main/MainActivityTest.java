@@ -13,15 +13,13 @@ import com.marked.pixsee.chat.ChatActivity;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.injection.modules.FakeActivityModule;
-import com.marked.pixsee.main.strategy.PictureActionStrategy;
-import com.marked.pixsee.main.strategy.ShareStrategy;
 import com.marked.pixsee.profile.ProfileFragment;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
@@ -32,7 +30,6 @@ import org.robolectric.util.ActivityController;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -41,12 +38,12 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 23)
 public class MainActivityTest {
-	ActivityController<MainActivityTest.MainActivity> mMainActivity;
+	ActivityController<MainActivity> mMainActivity;
 	private User mUser = UserUtilTest.getUserTest();
 
 	@Before
 	public void setUp() throws Exception {
-		mMainActivity = Robolectric.buildActivity(MainActivityTest.MainActivity.class);
+		mMainActivity = Robolectric.buildActivity(MainActivity.class);
 		MockitoAnnotations.initMocks(this);
 	}
 
@@ -60,17 +57,45 @@ public class MainActivityTest {
 		mMainActivity.create();
 		Mockito.verify(mMainActivity.get().mPresenter).attach();
 	}
-
 	@Test
-	public void testOnStartShouldShowFriendRequestDialog() throws Exception {
+	public void testNewFriendRequest_ShouldCallPresenterFriendRequest() throws Exception {
 		User user = UserUtilTest.getUserTest();
-		Intent intent = new Intent();
-		intent.putExtra(FriendRequestNotification.FRIEND_REQUEST_TAG, user);
-		mMainActivity.withIntent(intent).create().start();
+		Intent intent = Mockito.mock(Intent.class);
+		Mockito.doReturn(user).when(intent).getParcelableExtra(Matchers.anyString());
+
+		mMainActivity.create().start().get().newFriendRequest(intent);
 		// if it's a friend request, onStart will call the presenter's friendRequest with given user
 		Mockito.verify(mMainActivity.get().mPresenter).friendRequest(user);
-		// check if the dialog is showing
-		assertThat(mMainActivity.get().showFriendRequestDialog(user).isShowing(), CoreMatchers.any(Boolean.class));
+	}
+
+	@Test
+	public void testNewFriendRequest_ShouldNotCallPresenterFriendRequest() throws Exception {
+		Intent intent = Mockito.mock(Intent.class);
+//		Mockito.doReturn(null).when(intent).getParcelableExtra(Matchers.anyString());
+		mMainActivity.create().get().newFriendRequest(intent);
+		// if it's a friend request, onStart will call the presenter's friendRequest with given user
+		Mockito.verify(mMainActivity.get().mPresenter,Mockito.never()).friendRequest(Mockito.<User>any());
+	}
+
+
+	@Test
+	public void testOnStart_ShouldNotShowFriendRequestDialog() throws Exception {
+		User user = UserUtilTest.getUserTest();
+		mMainActivity.create();
+		mMainActivity.get().newFriendRequest(Mockito.mock(Intent.class));
+		// if it's a friend request, onStart will call the presenter's friendRequest with given user
+		Mockito.verify(mMainActivity.get().mPresenter,Mockito.never()).friendRequest(user);
+
+	}
+
+	@Test
+	public void testOnNewIntent() throws Exception {
+		User user = UserUtilTest.getUserTest();
+		Intent intent = Mockito.mock(Intent.class);
+		Mockito.doReturn(user).when(intent).getParcelableExtra(Matchers.anyString());
+
+		mMainActivity.create().start().resume().newIntent(intent);
+		Mockito.verify(mMainActivity.get().mPresenter).friendRequest(user);
 	}
 
 	@Test
@@ -106,7 +131,7 @@ public class MainActivityTest {
 	}
 
 	@Test
-	public void testShowFriendRequestDialogShouldAcceptFriendship() throws Exception {
+	public void testShowFriendRequestDialog_ShouldAcceptFriendship() throws Exception {
 		MainContract.View view = mMainActivity.create().get();
 		AlertDialog dialog = view.showFriendRequestDialog(mUser);
 		dialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
@@ -117,7 +142,7 @@ public class MainActivityTest {
 	}
 
 	@Test
-	public void testShowFriendRequestDialogShouldDeclineFriendship() throws Exception {
+	public void testShowFriendRequestDialog_ShouldDeclineFriendship() throws Exception {
 		MainContract.View view = mMainActivity.create().get();
 		AlertDialog dialog = view.showFriendRequestDialog(mUser);
 		dialog.getButton(DialogInterface.BUTTON_NEGATIVE).performClick();
@@ -143,15 +168,6 @@ public class MainActivityTest {
 		mMainActivity.create().get().onTakeProfilePictureClick();
 		Mockito.verify(mMainActivity.get().mPresenter).profileImageClicked();
 	}
-
-	@Test
-	public void testShowTakenPictureActions() throws Exception {
-		PictureActionStrategy pictureActionStrategy = Mockito.mock(ShareStrategy.class);
-		mMainActivity.get().setPictureActionStrategy(pictureActionStrategy);
-		mMainActivity.get().showTakenPictureActions();
-		Mockito.verify(pictureActionStrategy).showAction(mMainActivity.get());
-	}
-
 
 	private static class MainActivity extends com.marked.pixsee.main.MainActivity {
 		@Override

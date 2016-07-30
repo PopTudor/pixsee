@@ -31,18 +31,19 @@ public class FriendRequestNotification implements GCMListenerService.FcmEvent {
 	public Notification buildNotification() {
 		User user = mMessageToUserMapper.map(mRemoteMessage);
 
-		Intent resultIntent = new Intent(mContext, MainActivity.class);
-		resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		resultIntent.setAction(FRIEND_REQUEST_TAG);
-		resultIntent.putExtra(FRIEND_REQUEST_TAG, user);
+		Intent intent = new Intent(mContext, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		intent.setAction(FRIEND_REQUEST_TAG);
+		intent.putExtra(FRIEND_REQUEST_TAG, user);
 
 		// open activity
-		PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat
 				.Builder(mContext)
-				.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.FLAG_AUTO_CANCEL | Notification.PRIORITY_HIGH)
-				.setAutoCancel(true)
+				.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE |
+							 Notification.DEFAULT_LIGHTS | Notification.PRIORITY_HIGH)
+				.setAutoCancel(false)
 				.setSmallIcon(R.drawable.pixsee_v2)
 				.setContentIntent(resultPendingIntent)
 				.setContentTitle("Friend Request")
