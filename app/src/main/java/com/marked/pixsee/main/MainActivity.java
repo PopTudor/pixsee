@@ -99,7 +99,7 @@ public class MainActivity
 
 	void newFriendRequest(Intent intent){
 		/* this will enter when the user is not using the app and gets a friend request from FCM */
-		User user = intent.getParcelableExtra(FriendRequestNotification.FRIEND_REQUEST_TAG);
+		User user = intent.getParcelableExtra(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION));
 		if (user!=null)
 			mPresenter.friendRequest(user);
 	}

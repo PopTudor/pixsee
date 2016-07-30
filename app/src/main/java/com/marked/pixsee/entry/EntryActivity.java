@@ -7,9 +7,9 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.marked.pixsee.R;
 import com.marked.pixsee.authentification.AuthenticationActivity;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.main.FriendRequestNotification;
 import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.utility.GCMConstants;
 
@@ -38,8 +38,9 @@ public class EntryActivity extends AppCompatActivity {
 		} else {
 			intent = new Intent(this, AuthenticationActivity.class);
 		}
-		if (getIntent().getAction().equals(FriendRequestNotification.FRIEND_REQUEST_TAG))
-			intent.putExtra(FriendRequestNotification.FRIEND_REQUEST_TAG,new User(getIntent().getExtras()));
+		if (getIntent().getAction().equals(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION))) {
+			intent.putExtra(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION), new User(getIntent().getExtras()));
+		}
 		startActivity(intent);
 		finish();
 	}

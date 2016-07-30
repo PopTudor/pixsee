@@ -1,4 +1,4 @@
-package com.marked.pixsee.main;
+package com.marked.pixsee.service.notifications;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -10,13 +10,13 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.service.GCMListenerService;
 
 /**
  * Created by Tudor on 22-Jul-16.
  */
-public class FriendRequestNotification implements GCMListenerService.FcmEvent {
-	public static final String FRIEND_REQUEST_TAG = "com.marked.pixsee.FRIEND_REQUEST";
+public class FriendRequestNotification implements GCMListenerService.FcmNotification {
 	private final RemoteMessage mRemoteMessage;
 	private final Mapper<RemoteMessage, User> mMessageToUserMapper;
 	private final Context mContext;
@@ -33,8 +33,8 @@ public class FriendRequestNotification implements GCMListenerService.FcmEvent {
 
 		Intent intent = new Intent(mContext, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		intent.setAction(FRIEND_REQUEST_TAG);
-		intent.putExtra(FRIEND_REQUEST_TAG, user);
+		intent.setAction(mContext.getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION));
+		intent.putExtra(mContext.getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION), user);
 
 		// open activity
 		PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -43,7 +43,7 @@ public class FriendRequestNotification implements GCMListenerService.FcmEvent {
 				.Builder(mContext)
 				.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE |
 							 Notification.DEFAULT_LIGHTS | Notification.PRIORITY_HIGH)
-				.setAutoCancel(false)
+				.setAutoCancel(true)
 				.setSmallIcon(R.drawable.pixsee_v2)
 				.setContentIntent(resultPendingIntent)
 				.setContentTitle("Friend Request")

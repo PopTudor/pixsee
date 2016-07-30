@@ -22,57 +22,56 @@ import android.content.Context;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.marked.pixsee.R;
 import com.marked.pixsee.chat.ChatFragment;
-import com.marked.pixsee.main.FriendRequestNotification;
-import com.marked.pixsee.main.NewMessageNotification;
 import com.marked.pixsee.main.RemoteMessageToUserMapper;
+import com.marked.pixsee.service.notifications.EmptyNotification;
+import com.marked.pixsee.service.notifications.FriendRequestNotification;
+import com.marked.pixsee.service.notifications.NewMessageNotification;
 
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
-import static com.marked.pixsee.main.FriendRequestNotification.FRIEND_REQUEST_TAG;
-import static com.marked.pixsee.main.NewMessageNotification.NEW_MESSAGE;
-
 /**
  * Receives messages sent by GCM server
  */
 public class GCMListenerService extends FirebaseMessagingService {
-
 	private static final String TAG = "MyGcmListenerService";
+	private final String FRIEND_REQUEST_TAG;
+	private final String NEW_MESSAGE;
 
+	public GCMListenerService() {
+		FRIEND_REQUEST_TAG = getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION);
+		NEW_MESSAGE = getString(R.string.NEW_MESSAGE_NOTIFICATION_ACTION);
+	}
 
 	@Override
 	public void onMessageReceived(final RemoteMessage remoteMessage) {
 		final NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		Observable.just(remoteMessage)
-				.filter(new Func1<RemoteMessage, Boolean>() {
-					@Override
-					public Boolean call(RemoteMessage message) {
-						return message.getNotification().getClickAction() != null;
-					}
-				})
 				.map(new Func1<RemoteMessage, String>() {
 					@Override
 					public String call(RemoteMessage message) {
-						return message.getNotification().getClickAction();
+						return message.getData().get("click_action");
 					}
 				})
-				.map(new Func1<String, FcmEvent>() {
+				.map(new Func1<String, FcmNotification>() {
 					@Override
-					public FcmEvent call(String s) {
-						if (s.equals(FRIEND_REQUEST_TAG))
+					public FcmNotification call(String s) {
+						if (s.equals(FRIEND_REQUEST_TAG)) {
 							return new FriendRequestNotification(remoteMessage, new RemoteMessageToUserMapper(), GCMListenerService.this);
-						else if (s.equals(NEW_MESSAGE))
-							return new NewMessageNotification(remoteMessage);
-						else
-							return new EmptyEvent();
+						} else if (s.equals(NEW_MESSAGE)) {
+							return new NewMessageNotification(remoteMessage, GCMListenerService.this);
+						} else {
+							return new EmptyNotification();
+						}
 					}
 				})
-				.map(new Func1<FcmEvent, Notification>() {
+				.map(new Func1<FcmNotification, Notification>() {
 					@Override
-					public Notification call(FcmEvent fcmEvent) {
-						return fcmEvent.buildNotification();
+					public Notification call(FcmNotification fcmNotification) {
+						return fcmNotification.buildNotification();
 					}
 				})
 				.subscribe(new Action1<Notification>() {
@@ -146,14 +145,8 @@ public class GCMListenerService extends FirebaseMessagingService {
 		e.printStackTrace();
 	}
 
-	public interface FcmEvent {
+	public interface FcmNotification {
 		Notification buildNotification();
 	}
 
-	public static final class EmptyEvent implements FcmEvent {
-		@Override
-		public Notification buildNotification() {
-			return new Notification();
-		}
-	}
 }

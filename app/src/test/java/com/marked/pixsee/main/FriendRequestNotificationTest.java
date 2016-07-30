@@ -6,9 +6,11 @@ import android.content.Intent;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.BuildConfig;
+import com.marked.pixsee.R;
 import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.service.notifications.FriendRequestNotification;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +23,6 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowPendingIntent;
 
-import static com.marked.pixsee.main.FriendRequestNotification.FRIEND_REQUEST_TAG;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 
@@ -38,13 +39,15 @@ public class FriendRequestNotificationTest {
 
 	@Mock
 	Mapper<RemoteMessage, User> mRemoteMessageUserMapper;
+	private String FRIEND_REQUEST_TAG;
 
 
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-
 		mContext = RuntimeEnvironment.application;
+
+		FRIEND_REQUEST_TAG = mContext.getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION);
 		mUser = UserUtilTest.getUserTest();
 		remoteMessage = new RemoteMessage.Builder("asd").build();
 
