@@ -2,6 +2,8 @@ package com.marked.pixsee.chat.data
 		;
 
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
@@ -9,9 +11,11 @@ import com.google.gson.annotations.SerializedName;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,7 +23,7 @@ import java.util.UUID;
  * Created by Tudor Pop on 04-Dec-15.
  */
 
-public class Message implements MessageConstants,Comparable<Message> {
+public class Message implements Parcelable, MessageConstants, Comparable<Message> {
 
 	protected Message(Builder builder) {
 		data = Collections.unmodifiableMap(builder.data);
@@ -34,6 +38,50 @@ public class Message implements MessageConstants,Comparable<Message> {
 	private Message() {
 		id = UUID.randomUUID().toString();
 	}
+
+	public Message(Parcel parcelIn) {
+		List<String> keys = new ArrayList<>();
+		List<String> values = new ArrayList<>();
+		parcelIn.readStringList(keys);
+		parcelIn.readStringList(values);
+		for (int i = 0; i < keys.size(); i++)
+			data.put(keys.get(i), values.get(i));
+
+		messageType = parcelIn.readInt();
+		to = parcelIn.readString();
+		from = parcelIn.readString();
+		date = parcelIn.readString();
+		id = parcelIn.readString();
+	}
+
+	public static final Creator<Message> CREATOR = new Creator<Message>() {
+		@Override
+		public Message createFromParcel(Parcel in) {
+			return new Message(in);
+		}
+
+		@Override
+		public Message[] newArray(int size) {
+			return new Message[size];
+		}
+	};
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeStringList(new ArrayList<>(data.keySet()));
+		dest.writeStringList(new ArrayList<>(data.values()));
+		dest.writeInt(messageType);
+		dest.writeString(to);
+		dest.writeString(from);
+		dest.writeString(date);
+		dest.writeString(id);
+	}
+
 
 	/**
 	 * Gets the payload data, which is immutable.

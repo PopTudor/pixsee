@@ -44,8 +44,12 @@ class FriendRequestNotification extends FcmNotification {
 				.setAutoCancel(true)
 				.setSmallIcon(R.drawable.pixsee_v2)
 				.setContentIntent(resultPendingIntent)
+				.setPriority(Notification.PRIORITY_DEFAULT)
 				.setContentTitle("Friend Request")
 				.setContentText("You received a friend request from " + user.getUsername());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			mBuilder.setCategory(Notification.CATEGORY_SOCIAL);
+		}
 		return mBuilder.build();
 	}
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.R;
 import com.marked.pixsee.service.GCMListenerService;
+import com.marked.pixsee.service.notifications.mapper.RemoteMessageToMessageMapper;
 import com.marked.pixsee.service.notifications.mapper.RemoteMessageToUserMapper;
 
 /**
@@ -29,8 +30,13 @@ public class FcmNotificationFactoryImpl implements GCMListenerService.FcmNotific
 		if (clickAction.equals(FRIEND_REQUEST))
 			return new FriendRequestNotification(remoteMessage, new RemoteMessageToUserMapper(), mContext);
 		else if (clickAction.equals(NEW_MESSAGE))
-			return new NewMessageNotification(remoteMessage, null, mContext);
+			return new NewMessageNotification(remoteMessage, new RemoteMessageToMessageMapper(), mContext);
 		else
-			return new EmptyNotification(remoteMessage, null, mContext);
+			throw new InvalidNotificationException("The click_action in remoteMessage is not valid !");
+	}
+	public static class InvalidNotificationException extends RuntimeException{
+		public InvalidNotificationException(String detailMessage) {
+			super(detailMessage);
+		}
 	}
 }

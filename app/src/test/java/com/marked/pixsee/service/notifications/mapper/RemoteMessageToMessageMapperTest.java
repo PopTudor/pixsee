@@ -41,7 +41,7 @@ public class RemoteMessageToMessageMapperTest {
 	}
 
 	@Test
-	public void testMapper_shouldCreateMessage() throws Exception {
+	public void testMap_shouldCreateMessage() throws Exception {
 		Message message = mRemoteMessageToMessageMapper.map(mRemoteMessage);
 		assertThat(message, any(Message.class));
 	}
@@ -50,8 +50,8 @@ public class RemoteMessageToMessageMapperTest {
 	public void testMap_shouldReturnData() throws Exception {
 		Message actual = mRemoteMessageToMessageMapper.map(mRemoteMessage);
 
-		assertEquals(BODY, actual.getData().get(BODY));
-		assertEquals(MESSAGE_TYPE, actual.getMessageType().intValue());
+		assertEquals(mRemoteMessage.getData().get(DATA_BODY), actual.getData().get(BODY));
+		assertEquals(Integer.parseInt(mRemoteMessage.getData().get(MessageConstants.MESSAGE_TYPE)), actual.getMessageType().intValue());
 		assertEquals(String.valueOf(mRemoteMessage.getSentTime()), actual.getDate());
 	}
 

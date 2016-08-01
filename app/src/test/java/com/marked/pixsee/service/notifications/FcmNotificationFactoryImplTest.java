@@ -54,10 +54,13 @@ public class FcmNotificationFactoryImplTest {
 
 	@Test
 	public void testCreateNotification_shouldCreateEmptyNotification() throws Exception {
-		RemoteMessage remoteMessage = new RemoteMessage.Builder("Pasd").addData("click_action", "").build();
+		RemoteMessage remoteMessage = new RemoteMessage.Builder("Pasd").addData("click_action", "invalid.action").build();
 
 		FcmNotificationFactoryImpl fcmNotificationFactory = new FcmNotificationFactoryImpl(mContext);
-		FcmNotification notification = fcmNotificationFactory.createNotification(remoteMessage);
-		Assert.assertThat(notification, instanceOf(EmptyNotification.class));
+		try {
+			fcmNotificationFactory.createNotification(remoteMessage);
+		}catch (RuntimeException e){
+			Assert.assertThat(e, instanceOf(FcmNotificationFactoryImpl.InvalidNotificationException.class));
+		}
 	}
 }
