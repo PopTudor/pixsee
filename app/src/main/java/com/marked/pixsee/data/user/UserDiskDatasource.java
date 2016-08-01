@@ -82,7 +82,7 @@ public class UserDiskDatasource implements UserDatasource {
 	@Override
 	public Observable saveAppUser(@NonNull User user) {
 		db.getWritableDatabase().insertWithOnConflict(DatabaseContract.AppsUser.TABLE_NAME, null,userToCvMapper.map(user),SQLiteDatabase.CONFLICT_REPLACE);
-		return Observable.empty();
+		return Observable.just(user);
 	}
 
 	@Override
@@ -97,9 +97,9 @@ public class UserDiskDatasource implements UserDatasource {
 
 	@Override
 	public void deleteAllUsers() {
-		db.getWritableDatabase().delete(TABLE_NAME, null, null);
-		db.getWritableDatabase().delete(DatabaseContract.AppsUser.TABLE_NAME, null, null);
-		db.getWritableDatabase().delete(MessageContract.TABLE_NAME, null, null);
+		db.getWritableDatabase().execSQL(FriendContractDB.DELETE_TABLE);
+		db.getWritableDatabase().execSQL(DatabaseContract.AppsUser.DELETE_TABLE);
+		db.getWritableDatabase().execSQL(MessageContract.TABLE_NAME);
 		db.close();
 	}
 

@@ -12,7 +12,6 @@ import com.marked.pixsee.data.Mapper;
 public class CursorToMessageMapper implements Mapper<Cursor,Message> {
 	private final int bodyText;
 	private final int type;
-	private final int delay;
 	private final int date;
 	private final int to;
 	private final int id;
@@ -20,7 +19,6 @@ public class CursorToMessageMapper implements Mapper<Cursor,Message> {
 	public CursorToMessageMapper(Cursor cursor){
 		bodyText = cursor.getColumnIndex(MessageContract.COLUMN_DATA_BODY);
 		type = cursor.getColumnIndex(MessageContract.COLUMN_TYPE);
-		delay = cursor.getColumnIndex(MessageContract.COLUMN_DELAY_WITH_IDLE);
 		date = cursor.getColumnIndex(MessageContract.COLUMN_DATE);
 		to = cursor.getColumnIndex(MessageContract.COLUMN_TO);
 		id = cursor.getColumnIndex(MessageContract.COLUMN_ID);

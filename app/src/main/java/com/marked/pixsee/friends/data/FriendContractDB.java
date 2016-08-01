@@ -27,5 +27,5 @@ public interface FriendContractDB extends BaseColumns {
 					COLUMN_ICON_URL + " TEXT," +
 					COLUMN_TOKEN + " TEXT "
 					+ ");";
-	String DELETE_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME";
+	String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 }

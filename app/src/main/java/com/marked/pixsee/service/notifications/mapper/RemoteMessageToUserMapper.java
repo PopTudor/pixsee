@@ -1,4 +1,4 @@
-package com.marked.pixsee.main;
+package com.marked.pixsee.service.notifications.mapper;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.data.Mapper;

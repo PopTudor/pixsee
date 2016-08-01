@@ -8,7 +8,7 @@ public interface ServerConstants {
 	String SCHEME_HTTP = "http://";
 	String IP =
 //			"46.101.225.31"/* DIGITAL-OCEAN */
-			"192.168.0.101"
+			"192.168.0.108"
 			;
 	String BASE_URL = SCHEME_HTTP + IP;
 	/* ENDPOINTS */

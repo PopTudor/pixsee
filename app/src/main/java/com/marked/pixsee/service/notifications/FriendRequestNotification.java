@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.firebase.messaging.RemoteMessage;
@@ -11,29 +12,26 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.main.MainActivity;
-import com.marked.pixsee.service.GCMListenerService;
 
 /**
  * Created by Tudor on 22-Jul-16.
  */
-public class FriendRequestNotification implements GCMListenerService.FcmNotification {
-	private final RemoteMessage mRemoteMessage;
-	private final Mapper<RemoteMessage, User> mMessageToUserMapper;
-	private final Context mContext;
+class FriendRequestNotification extends FcmNotification {
 
-	public FriendRequestNotification(RemoteMessage remoteMessage, Mapper<RemoteMessage, User> messageToUserMapper, Context context) {
-		mRemoteMessage = remoteMessage;
-		mMessageToUserMapper = messageToUserMapper;
-		mContext = context;
+	public FriendRequestNotification(RemoteMessage remoteMessage, Mapper<RemoteMessage, User> mapper, Context context) {
+		super(remoteMessage, mapper, context);
 	}
 
 	@Override
 	public Notification buildNotification() {
-		User user = mMessageToUserMapper.map(mRemoteMessage);
+		User user = (User) mMapper.map(mRemoteMessage);
 
 		Intent intent = new Intent(mContext, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		intent.setAction(mContext.getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION));
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			intent.addCategory(Notification.CATEGORY_SOCIAL);
+		}
 		intent.putExtra(mContext.getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION), user);
 
 		// open activity

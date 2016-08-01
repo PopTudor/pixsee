@@ -18,16 +18,11 @@ package com.marked.pixsee.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.content.Context;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.marked.pixsee.R;
-import com.marked.pixsee.chat.ChatFragment;
-import com.marked.pixsee.main.RemoteMessageToUserMapper;
-import com.marked.pixsee.service.notifications.EmptyNotification;
-import com.marked.pixsee.service.notifications.FriendRequestNotification;
-import com.marked.pixsee.service.notifications.NewMessageNotification;
+import com.marked.pixsee.service.notifications.FcmNotification;
+import com.marked.pixsee.service.notifications.FcmNotificationFactoryImpl;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -38,40 +33,29 @@ import rx.functions.Func1;
  */
 public class GCMListenerService extends FirebaseMessagingService {
 	private static final String TAG = "MyGcmListenerService";
-	private final String FRIEND_REQUEST_TAG;
-	private final String NEW_MESSAGE;
+	private FcmNotificationFactory mFcmNotificationFactory;
+	private NotificationManager mNotificationManager;
 
-	public GCMListenerService() {
-		FRIEND_REQUEST_TAG = getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION);
-		NEW_MESSAGE = getString(R.string.NEW_MESSAGE_NOTIFICATION_ACTION);
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		mFcmNotificationFactory = new FcmNotificationFactoryImpl(this);
+		mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	}
 
 	@Override
 	public void onMessageReceived(final RemoteMessage remoteMessage) {
-		final NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		Observable.just(remoteMessage)
-				.map(new Func1<RemoteMessage, String>() {
+				.map(new Func1<RemoteMessage, FcmNotification>() {
 					@Override
-					public String call(RemoteMessage message) {
-						return message.getData().get("click_action");
-					}
-				})
-				.map(new Func1<String, FcmNotification>() {
-					@Override
-					public FcmNotification call(String s) {
-						if (s.equals(FRIEND_REQUEST_TAG)) {
-							return new FriendRequestNotification(remoteMessage, new RemoteMessageToUserMapper(), GCMListenerService.this);
-						} else if (s.equals(NEW_MESSAGE)) {
-							return new NewMessageNotification(remoteMessage, GCMListenerService.this);
-						} else {
-							return new EmptyNotification();
-						}
+					public FcmNotification call(RemoteMessage s) {
+						return mFcmNotificationFactory.createNotification(remoteMessage);
 					}
 				})
 				.map(new Func1<FcmNotification, Notification>() {
 					@Override
-					public Notification call(FcmNotification fcmNotification) {
-						return fcmNotification.buildNotification();
+					public Notification call(FcmNotification fcmNotificationFactory) {
+						return fcmNotificationFactory.buildNotification();
 					}
 				})
 				.subscribe(new Action1<Notification>() {
@@ -95,37 +79,9 @@ public class GCMListenerService extends FirebaseMessagingService {
 		 */
 
 		/*send notification only if the user is not inside the chatting fragment */
-		if (!ChatFragment.isInForeground)
-			sendNotification(remoteMessage);
+//		if (!ChatFragment.isInForeground)
+//			sendNotification(remoteMessage);
 		// [END_EXCLUDE]
-	}
-
-
-	/**
-	 * Create and show a simple notification containing the received GCM message.
-	 *
-	 * @param bundle GCM message received.
-	 */
-	private void sendNotification(RemoteMessage bundle) {
-		//		Bundle[{text=h, links=[null], notification=Bundle[{e=1, body=This is a notification that will be displayed ASAP., icon=ic_launcher, title=Hello, World}], collapse_key=com.marked.vifo}]
-		if (bundle != null) {
-//			Intent intent = new Intent(this, EntryActivity.class);
-//			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//			PendingIntent pendingIntent = getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
-//			Uri defaultSoundUri = getDefaultUri(TYPE_NOTIFICATION);
-//			NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_chat_24dp)
-//			                                                                                     .setWhen(0)
-//			                                                                                     .setLargeIcon(BitmapFactory
-//					                                                             .decodeResource(getResources(), R.mipmap.ic_launcher))
-//			                                                                                     .setContentTitle(bundle.getString(NOTIFICATION_PAYLOAD_TITLE))
-//			                                                                                     .setContentText(bundle.getString(NOTIFICATION_PAYLOAD_BODY))
-//			                                                                                     .setAutoCancel(true)
-//			                                                                                     .setSound(defaultSoundUri)
-//			                                                                                     .setContentIntent(pendingIntent);
-
-			NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//			notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-		}
 	}
 
 	/**
@@ -145,8 +101,10 @@ public class GCMListenerService extends FirebaseMessagingService {
 		e.printStackTrace();
 	}
 
-	public interface FcmNotification {
-		Notification buildNotification();
+	/**
+	 * Factory to produce FcmNotifications
+	 */
+	public interface FcmNotificationFactory {
+		FcmNotification createNotification(RemoteMessage remoteMessage);
 	}
-
 }

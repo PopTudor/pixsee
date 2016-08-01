@@ -335,14 +335,11 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		                        message = new Message.Builder()
 				                        .date(message.getDate())
 				                        .id(message.getId())
-				                        .delayWhileIdle(message.getDelayWhileIdle())
 				                        .messageType(MessageConstants.MessageType.YOU_IMAGE)
-				                        .collapseKey(message.getCollapseKey())
 				                        .from(message.getFrom())
 				                        // the database doesn't have from but in this case from & to are the same
 				                        // from refers to app's user like 'from me to you'
 				                        .to(message.getFrom())
-				                        .restrictedPackageName(message.getRestrictedPackageName())
 				                        .addData(MessageConstants.DATA_BODY,ServerConstants.SERVER_USER_IMAGE+"/?img="+message.getData()
 						                        .get(MessageConstants.DATA_BODY))
 				                        .build();

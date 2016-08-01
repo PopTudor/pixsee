@@ -21,12 +21,6 @@ public interface MessageConstants {
 	String TO = "to"; /* message destination, (destination is a better name but GCM uses to)*/
 	String ID = "cloudID"; /* message destination, (destination is a better name but GCM uses to)*/
 	String FROM = "from_usr";  /* source of the message (the app's user id)*/
-	String REGISTRATION_IDS_TARGETS = "registration_ids";
-	String PRIORITY_OPTION = "priority";
-	String COLLAPSE_OPTION = "collapse_key";
-	String TIME_TO_LIVE_OPTION = "timeToLive";
-	String DELAY_WHILE_IDLE_OPTION = "delayWhileIdle";
-	String RESTRICTED_PACKAGE_NAME_OPTION = "restrictedPackageName";
 	/* This parameter specifies the predefined key-value pairs of the data payload */
 	String DATA_PAYLOAD = "data"; /* JSON object that holds the body {data: {"body": "some nice text" }  } */
 	String DATA_BODY = "body";

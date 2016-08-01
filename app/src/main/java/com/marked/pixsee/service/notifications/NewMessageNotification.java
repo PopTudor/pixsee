@@ -7,10 +7,10 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.data.Mapper;
 
 /**
- * Created by Tudor on 30-Jul-16.
+ * Created by Tudor on 22-Jul-16.
  */
-final class EmptyNotification extends FcmNotification {
-	public EmptyNotification(RemoteMessage remoteMessage, Mapper<RemoteMessage, ?> mapper, Context context) {
+class NewMessageNotification extends FcmNotification {
+	public NewMessageNotification(RemoteMessage remoteMessage, Mapper<RemoteMessage, ?> mapper, Context context) {
 		super(remoteMessage, mapper, context);
 	}
 

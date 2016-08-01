@@ -13,10 +13,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses(value = {
 		MainActivityTest.class,
 		MainPresenterTest.class,
-		RemoteMessageToUserMapperTest.class,
 		ProfilePictureStrategyTest.class,
-		ShareStrategyTest.class,
-		FriendRequestNotificationTest.class
+		ShareStrategyTest.class
 })
 public class MainTestSuite {
 }

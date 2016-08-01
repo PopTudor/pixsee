@@ -45,7 +45,7 @@ public class DatabaseContract {
 						+ COLUMN_ICON_URL + " TEXT,"
 						+ COLUMN_TOKEN + " TEXT"
 						+ ");";
-		public static final String DELETE_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME";
+		public static final String DELETE_TABLE = "DROP TABLE IF EXISTS "+TABLE_NAME;
 	}
 
 }

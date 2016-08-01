@@ -1,4 +1,4 @@
-package com.marked.pixsee.main;
+package com.marked.pixsee.service.notifications;
 
 import android.app.Notification;
 import android.content.Context;
@@ -10,7 +10,7 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.service.notifications.FriendRequestNotification;
+import com.marked.pixsee.main.MainActivity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +54,7 @@ public class FriendRequestNotificationTest {
 		intent = new Intent(mContext, MainActivity.class);
 		intent.setAction(FRIEND_REQUEST_TAG);
 		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		intent.addCategory(Notification.CATEGORY_SOCIAL);
 		intent.putExtra(FRIEND_REQUEST_TAG, mUser);
 	}
 
