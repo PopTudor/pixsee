@@ -15,8 +15,16 @@ public class RemoteMessageToMessageMapper implements Mapper<RemoteMessage, Messa
 				.addData(remoteMessage.getData())
 				.to(remoteMessage.getData().get(MessageConstants.TO))
 				.from(remoteMessage.getData().get(MessageConstants.FROM))
-				.messageType(Integer.parseInt(remoteMessage.getData().get(MessageConstants.MESSAGE_TYPE)))
+				.messageType(getMessageType(remoteMessage))
 				.date(String.valueOf(remoteMessage.getSentTime()))
 				.build();
+	}
+
+	private int getMessageType(RemoteMessage remoteMessage){
+		String messageTypeString = remoteMessage.getData().get(MessageConstants.MESSAGE_TYPE);
+		int messageType = 0;
+		if (messageTypeString != null)
+			messageType = Integer.parseInt(messageTypeString);
+		return messageType;
 	}
 }

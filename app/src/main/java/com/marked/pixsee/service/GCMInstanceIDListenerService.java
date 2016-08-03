@@ -16,11 +16,9 @@
 
 package com.marked.pixsee.service;
 
-import android.content.Intent;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.marked.pixsee.entry.EntryActivity;
 
 public class GCMInstanceIDListenerService extends FirebaseInstanceIdService {
 
@@ -36,8 +34,6 @@ public class GCMInstanceIDListenerService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Fetch updated Instance ID token and notify our app's server of any changes (if applicable).
         Log.e("***", "onTokenRefresh ");
-        Intent intent = new Intent(this, EntryActivity.class);
-        startService(intent);
     }
     // [END refresh_token]
 

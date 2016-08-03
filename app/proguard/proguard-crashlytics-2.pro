@@ -1,8 +1,7 @@
 # Crashlytics 2.+
-
+-keepattributes SourceFile, LineNumberTable, *Annotation*
 -keep class com.crashlytics.** { *; }
 -keep class com.crashlytics.android.**
--keepattributes SourceFile, LineNumberTable, *Annotation*
 
 # If you are using custom exceptions, add this line so that custom exception types are skipped during obfuscation:
 -keep public class * extends java.lang.Exception

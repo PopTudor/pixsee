@@ -19,6 +19,7 @@ package com.marked.pixsee.service;
 import android.app.Notification;
 import android.app.NotificationManager;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.service.notifications.FcmNotification;
@@ -63,42 +64,12 @@ public class GCMListenerService extends FirebaseMessagingService {
 					public void call(Notification notification) {
 						mNotificationManager.notify(0, notification);
 					}
+				}, new Action1<Throwable>() {
+					@Override
+					public void call(Throwable throwable) {
+						Crashlytics.logException(throwable);
+					}
 				});
-
-		if (remoteMessage.getFrom().startsWith("/topics/")) {
-			// message received from some topic.
-		} else {
-			// normal downstream message.
-		}
-
-		/**
-		 * Production applications would usually process the message here.
-		 * Eg: - Syncing with server.
-		 *     - Store message in local database.
-		 *     - Update UI.
-		 */
-
-		/*send notification only if the user is not inside the chatting fragment */
-//		if (!ChatFragment.isInForeground)
-//			sendNotification(remoteMessage);
-		// [END_EXCLUDE]
-	}
-
-	/**
-	 * Called when an upstream message has been successfully sent to the GCM connection server.
-	 *
-	 * @param msgId of the upstream message sent using send(String, String, Bundle).
-	 */
-	@Override
-	public void onMessageSent(String msgId) {
-		super.onMessageSent(msgId);
-	}
-
-	/* called when there was an error sending the upstream message */
-	@Override
-	public void onSendError(String s, Exception e) {
-		super.onSendError(s, e);
-		e.printStackTrace();
 	}
 
 	/**

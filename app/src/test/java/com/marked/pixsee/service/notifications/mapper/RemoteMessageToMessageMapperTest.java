@@ -28,6 +28,7 @@ public class RemoteMessageToMessageMapperTest {
 	private static final String TO = "to";
 	private static final String FROM = "from";
 	private static final int MESSAGE_TYPE = 2;
+	private Message actualMessage;
 
 	@Before
 	public void setUp() throws Exception {
@@ -38,29 +39,36 @@ public class RemoteMessageToMessageMapperTest {
 				.addData(MessageConstants.FROM, FROM)
 				.addData(MessageConstants.MESSAGE_TYPE, String.valueOf(MESSAGE_TYPE))
 				.build();
+		actualMessage = mRemoteMessageToMessageMapper.map(mRemoteMessage);
 	}
 
 	@Test
 	public void testMap_shouldCreateMessage() throws Exception {
-		Message message = mRemoteMessageToMessageMapper.map(mRemoteMessage);
-		assertThat(message, any(Message.class));
+		assertThat(actualMessage, any(Message.class));
 	}
 
 	@Test
 	public void testMap_shouldReturnData() throws Exception {
-		Message actual = mRemoteMessageToMessageMapper.map(mRemoteMessage);
-
-		assertEquals(mRemoteMessage.getData().get(DATA_BODY), actual.getData().get(BODY));
-		assertEquals(Integer.parseInt(mRemoteMessage.getData().get(MessageConstants.MESSAGE_TYPE)), actual.getMessageType().intValue());
-		assertEquals(String.valueOf(mRemoteMessage.getSentTime()), actual.getDate());
+		assertEquals(mRemoteMessage.getData().get(DATA_BODY), actualMessage.getData().get(BODY));
+		assertEquals(Integer.parseInt(mRemoteMessage.getData().get(MessageConstants.MESSAGE_TYPE)), actualMessage.getMessageType().intValue());
+		assertEquals(String.valueOf(mRemoteMessage.getSentTime()), actualMessage.getDate());
 	}
 
 	@Test
 	public void testMap_shouldReturnParameters() throws Exception {
-		Message actual = mRemoteMessageToMessageMapper.map(mRemoteMessage);
+		assertEquals(TO, actualMessage.getTo());
+		assertEquals(FROM, actualMessage.getFrom());
+		assertEquals(Long.parseLong(mRemoteMessage.getData().get(MessageConstants.MESSAGE_TYPE)), actualMessage.getMessageType().longValue());
+	}
 
-		assertEquals(TO, actual.getTo());
-		assertEquals(FROM, actual.getFrom());
-		assertEquals(Long.parseLong(mRemoteMessage.getData().get(MessageConstants.MESSAGE_TYPE)), actual.getMessageType().longValue());
+	@Test
+	public void testNoMessageType_shouldNotThrowException() throws Exception {
+		mRemoteMessage = new RemoteMessage.Builder("1")
+				.addData(DATA_BODY, BODY)
+				.addData(MessageConstants.TO, TO)
+				.addData(MessageConstants.FROM, FROM)
+				.build();
+		Message actual = mRemoteMessageToMessageMapper.map(mRemoteMessage);
+		assertEquals(0,actual.getMessageType().intValue());
 	}
 }

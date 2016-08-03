@@ -18,7 +18,9 @@ import org.junit.runners.Suite;
 		RemoteMessageToMessageMapperTest.class,
 		FriendRequestNotificationTest.class,
 		FcmNotificationFactoryImplTest.class,
-		NewMessageNotificationTest.class
+		NewMessageNotificationTest.class,
+		GCMInstanceIDListenerServiceTest.class,
+		GCMListenerServiceTest.class
 })
 public class ServiceTestSuite {
 }
