@@ -181,13 +181,11 @@ public class MainActivity
 		builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				mPresenter.friendRequest(user, true);
-				finish();
 			}
 		});
 		builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				mPresenter.friendRequest(user, false);
-				finish();
 			}
 		});
 		AlertDialog dialog = builder.create();

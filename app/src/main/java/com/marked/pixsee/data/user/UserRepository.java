@@ -124,7 +124,7 @@ public class UserRepository implements UserDatasource {
 			        @Override
 			        public void call() {
 				        dirtyCache = false;
-				        disk.deleteAllUsers();
+				        disk.refreshUsers();
 				        disk.saveUser(cache);
 			        }
 		        })

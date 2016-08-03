@@ -87,6 +87,7 @@ public class UserDiskDatasource implements UserDatasource {
 
 	@Override
 	public Observable<List<User>> refreshUsers() {
+		db.getWritableDatabase().delete(FriendContractDB.TABLE_NAME,null,null);
 		return Observable.empty();
 	}
 
@@ -99,7 +100,7 @@ public class UserDiskDatasource implements UserDatasource {
 	public void deleteAllUsers() {
 		db.getWritableDatabase().execSQL(FriendContractDB.DELETE_TABLE);
 		db.getWritableDatabase().execSQL(DatabaseContract.AppsUser.DELETE_TABLE);
-		db.getWritableDatabase().execSQL(MessageContract.TABLE_NAME);
+		db.getWritableDatabase().execSQL(MessageContract.DELETE_TABLE);
 		db.close();
 	}
 

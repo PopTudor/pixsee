@@ -18,6 +18,7 @@ import bolts.AppLinks;
 
 public class EntryActivity extends AppCompatActivity {
 	private boolean mUserRegistered;
+	private Intent whatToStartIntent;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,17 +32,21 @@ public class EntryActivity extends AppCompatActivity {
 
 	public void onResume() {
 		super.onResume();
-		Intent intent;
 		if (mUserRegistered) {
-			intent = new Intent(this, MainActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			whatToStartIntent = new Intent(this, MainActivity.class);
+			whatToStartIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		} else {
-			intent = new Intent(this, AuthenticationActivity.class);
+			whatToStartIntent = new Intent(this, AuthenticationActivity.class);
 		}
-		if (getIntent().getAction().equals(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION))) {
-			intent.putExtra(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION), new User(getIntent().getExtras()));
-		}
-		startActivity(intent);
+		prepareFriendRequest();
+		startActivity(whatToStartIntent);
 		finish();
+	}
+
+	private void prepareFriendRequest() {
+		String action = getIntent().getAction();
+		if (action!=null && action.equals(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION))) {
+			whatToStartIntent.putExtra(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION), new User(getIntent().getExtras()));
+		}
 	}
 }

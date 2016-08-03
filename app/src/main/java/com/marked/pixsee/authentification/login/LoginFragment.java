@@ -19,7 +19,6 @@ import com.marked.pixsee.utility.Utils;
 
 import java.util.concurrent.TimeUnit;
 
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
@@ -40,26 +39,26 @@ public class LoginFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+		final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 		if (BuildConfig.DEBUG) {
 			((EditText) rootView.findViewById(R.id.emailEditText)).setText("tudor14pop@gmail.com");
 			((EditText) rootView.findViewById(R.id.passwordEditText)).setText("password");
 		}
 
-		Subscription subscription = RxView.clicks(rootView.findViewById(R.id.logInButtonPixy))
+		RxView.clicks(rootView.findViewById(R.id.logInButtonPixy))
 				.throttleFirst(10, TimeUnit.SECONDS)
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Action1<Void>() {
 					@Override
 					public void call(Void aVoid) {
-						if (!Utils.isOnline(getActivity())) Utils.showNoConnectionDialog(getActivity());
+						if (!Utils.isOnline(getActivity()))
+							Utils.showNoConnectionDialog(getActivity());
 						mInteractionListener.onLoginClicked(
-								((EditText) getView().findViewById(R.id.emailEditText)).getText().toString(),
-								((EditText) getView().findViewById(R.id.passwordEditText)).getText().toString()
+								((EditText) rootView.findViewById(R.id.emailEditText)).getText().toString(),
+								((EditText) rootView.findViewById(R.id.passwordEditText)).getText().toString()
 						);
 					}
 				});
-		mCompositeSubscription.add(subscription);
 
 		rootView.findViewById(R.id.signUpButton).setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -85,7 +84,6 @@ public class LoginFragment extends Fragment {
 	public void onDetach() {
 		super.onDetach();
 		mInteractionListener = null;
-		mCompositeSubscription.unsubscribe();
 	}
 
 	/**
