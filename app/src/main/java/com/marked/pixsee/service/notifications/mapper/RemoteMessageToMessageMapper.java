@@ -21,10 +21,9 @@ public class RemoteMessageToMessageMapper implements Mapper<RemoteMessage, Messa
 	}
 
 	private int getMessageType(RemoteMessage remoteMessage){
-		String messageTypeString = remoteMessage.getData().get(MessageConstants.MESSAGE_TYPE);
-		int messageType = 0;
-		if (messageTypeString != null)
-			messageType = Integer.parseInt(messageTypeString);
-		return messageType;
-	}
+        String messageType = remoteMessage.getData().get(MessageConstants.MESSAGE_TYPE);
+        if (messageType == null)
+            return 0;
+        return Integer.parseInt(messageType);
+    }
 }

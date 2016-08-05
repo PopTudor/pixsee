@@ -22,12 +22,12 @@ import static org.junit.Assert.assertThat;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class RemoteMessageToMessageMapperTest {
-	private RemoteMessage mRemoteMessage;
-	private RemoteMessageToMessageMapper mRemoteMessageToMessageMapper;
 	private static final String BODY = "body";
 	private static final String TO = "to";
 	private static final String FROM = "from";
 	private static final int MESSAGE_TYPE = 2;
+	private RemoteMessage mRemoteMessage;
+	private RemoteMessageToMessageMapper mRemoteMessageToMessageMapper;
 	private Message actualMessage;
 
 	@Before
@@ -58,17 +58,15 @@ public class RemoteMessageToMessageMapperTest {
 	public void testMap_shouldReturnParameters() throws Exception {
 		assertEquals(TO, actualMessage.getTo());
 		assertEquals(FROM, actualMessage.getFrom());
-		assertEquals(Long.parseLong(mRemoteMessage.getData().get(MessageConstants.MESSAGE_TYPE)), actualMessage.getMessageType().longValue());
+		assertEquals(MESSAGE_TYPE, actualMessage.getMessageType().longValue());
 	}
 
 	@Test
-	public void testNoMessageType_shouldNotThrowException() throws Exception {
-		mRemoteMessage = new RemoteMessage.Builder("1")
-				.addData(DATA_BODY, BODY)
-				.addData(MessageConstants.TO, TO)
-				.addData(MessageConstants.FROM, FROM)
-				.build();
+	public void missingMessageType_shouldBeZero() throws Exception {
+		mRemoteMessage = new RemoteMessage.Builder("1").build();
+
 		Message actual = mRemoteMessageToMessageMapper.map(mRemoteMessage);
+
 		assertEquals(0,actual.getMessageType().intValue());
 	}
 }
