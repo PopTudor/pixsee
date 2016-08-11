@@ -1,10 +1,8 @@
 package com.marked.pixsee.selfie.custom;
 
 import android.content.Context;
-import android.graphics.SurfaceTexture;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.Surface;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -34,7 +32,7 @@ import javax.microedition.khronos.opengles.GL10;
  * Used to render models onto a @{StreamingTexture} using the render thread
  * The renderer should only be created once we have a running camera
  */
-public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, StreamingTexture.ISurfaceListener, SelfieTrackerAR.TrackerCallback {
+public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, SelfieTrackerAR.TrackerCallback {
 	private static final String TAG = "***********";
 	private static final int CAMERA_Z = 6;
 	private final Object mLock = new Object();
@@ -49,33 +47,23 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 
 	private Object3D loadedObject = null;
 	private ASingleTexture aSingleTexture; /* GIF */
-	private FaceRendererCallback callback;
 	/******************
 	 * Camera preview *
 	 ******************/
 	private ScreenQuad screenQuad;
 	private StreamingTexture mCameraStreamingTexture;
 
-	public SelfieRenderer(Context context) {
-		this(context, null);
-	}
 
-	public SelfieRenderer(Context context, FaceRendererCallback faceRendererCallback) {
+	public SelfieRenderer(Context context, StreamingTexture streamingTexture) {
 		super(context);
-		this.callback = faceRendererCallback;
 		setFrameRate(60);
 		screenQuad = new ScreenQuad(1,1,true,false,false);
-		mCameraStreamingTexture = new StreamingTexture("Preview", this);
-	}
-
-	public void setCallback(FaceRendererCallback callback) {
-		this.callback = callback;
+		mCameraStreamingTexture = streamingTexture;
 	}
 
 	@Override
 	protected void initScene() {
 		screenQuad.rotate(Vector3.Axis.Z, -90);
-
 
 		directionalLight = new DirectionalLight(0f, 0f, -1.0f);
 		directionalLight.setColor(1.0f, 1.0f, 1.0f);
@@ -89,7 +77,6 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 			material.addTexture(mCameraStreamingTexture);
 
 			screenQuad.setMaterial(material);
-//					getCurrentScene().replaceChild(screenQuad, screenQuad);
 			getCurrentScene().addChild(screenQuad);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -265,15 +252,5 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	@Override
 	public void onOffsetsChanged(float xOffset, float yOffset, float xOffsetStep, float yOffsetStep, int xPixelOffset, int yPixelOffset) {
 
-	}
-
-	@Override
-	public void setSurface(Surface surface) {
-		if (callback != null)
-			callback.onTextureAvailable(mCameraStreamingTexture.getSurfaceTexture());
-	}
-
-	public interface FaceRendererCallback {
-		void onTextureAvailable(SurfaceTexture texture);
 	}
 }

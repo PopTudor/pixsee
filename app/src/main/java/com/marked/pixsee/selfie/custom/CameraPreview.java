@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.common.images.Size;
 
 import org.jetbrains.annotations.NotNull;
+import org.rajawali3d.renderer.Renderer;
 
 import java.io.IOException;
 
@@ -23,7 +24,7 @@ public class CameraPreview extends ViewGroup {
 	private boolean mStartRequested;
 	private boolean mSurfaceAvailable;
 	private CameraSource mCameraSource;
-	private SelfieRenderer mSelfieRenderer;
+	private Renderer mSelfieRenderer;
 	private SurfaceTexture surfaceTexture;
 
 	public CameraPreview(Context context, AttributeSet attrs) {
@@ -36,7 +37,7 @@ public class CameraPreview extends ViewGroup {
 		mSurfaceAvailable = true;
 	}
 
-	public void start(@NotNull CameraSource cameraSource, @NotNull SelfieRenderer overlay) throws IOException {
+	public void start(@NotNull CameraSource cameraSource, @NotNull Renderer overlay) throws IOException {
 		mCameraSource = cameraSource;
 		mSelfieRenderer = overlay;
 
@@ -58,7 +59,8 @@ public class CameraPreview extends ViewGroup {
 	public void release(){
 		stop();
 		mSelfieRenderer = null;
-		mCameraSource.release();
+		if (mCameraSource != null)
+			mCameraSource.release();
 		mCameraSource = null;
 		mSurfaceAvailable = false;
 	}
@@ -76,6 +78,7 @@ public class CameraPreview extends ViewGroup {
 				return;
 			}
 			mCameraSource.start(surfaceTexture);
+
 			if (mSelfieRenderer != null) {
 				Size size = mCameraSource.getPreviewSize();
 				int min = Math.min(size.getWidth(), size.getHeight());
@@ -83,9 +86,9 @@ public class CameraPreview extends ViewGroup {
 				if (isPortraitMode()) {
 					// Swap width and height sizes when in portrait, since it will be rotated by
 					// 90 degrees
-					mSelfieRenderer.setCameraInfo(min, max, mCameraSource.getCameraFacing());
+					((SelfieRenderer) mSelfieRenderer).setCameraInfo(min, max, mCameraSource.getCameraFacing());
 				} else {
-					mSelfieRenderer.setCameraInfo(max, min, mCameraSource.getCameraFacing());
+					((SelfieRenderer) mSelfieRenderer).setCameraInfo(max, min, mCameraSource.getCameraFacing());
 				}
 			}
 			mStartRequested = false;

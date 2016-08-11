@@ -44,6 +44,7 @@ public class MainActivity
 		PictureDetailShareFragment.OnPictureDetailShareListener, OnSelfieInteractionListener,
 		PictureDetailSendFragment.OnPictureDetailSendListener, ProfileFragment.ProfileFragmentInteraction {
 	public static final int START_CAMERA_REQUEST_CODE = 100;
+	public ActivityModule activityModule;
 	@Inject
 	MainContract.Presenter mPresenter;
 	private AHBottomNavigation mBottomNavigation;
@@ -78,8 +79,9 @@ public class MainActivity
 
 	@Override
 	public void injectComponent() {
+		activityModule = new ActivityModule(this);
 		DaggerMainComponent.builder()
-				.activityModule(new ActivityModule(this))
+				.activityModule(activityModule)
 				.mainModule(new MainModule())
 				.build()
 				.inject(this);

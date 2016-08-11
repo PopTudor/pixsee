@@ -17,6 +17,13 @@ public class SelfieTrackerAR extends Tracker<Face> {
 		this.trackerCallback = trackerCallback;
 	}
 
+	public SelfieTrackerAR() {
+	}
+
+	public void setTrackerCallback(TrackerCallback trackerCallback) {
+		this.trackerCallback = trackerCallback;
+	}
+
 	@Override
 	public void onNewItem(int id, Face item) {
 		super.onNewItem(id, item);
