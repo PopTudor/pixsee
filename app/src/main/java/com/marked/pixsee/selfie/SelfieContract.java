@@ -13,13 +13,10 @@ import org.rajawali3d.renderer.Renderer;
  * Created by Tudor on 2016-05-22.
  */
 class SelfieContract {
-	interface Presenter extends BasePresenter, CameraSource.ShutterCallback {
+	interface Presenter extends BasePresenter {
 		void execute(Command command);
 
 		void takePicture();
-
-		@Override
-		void onShutter();
 
 		void resumeSelfie();
 	}
@@ -27,7 +24,7 @@ class SelfieContract {
 	interface View extends BaseView<Presenter> {
 		void showTakenPictureActions();
 
-		void displayActions(boolean showSelfieActions);
+		void displayEmojiActions(boolean showSelfieActions);
 
 		void setSurfaceTexture(SurfaceTexture texture);
 

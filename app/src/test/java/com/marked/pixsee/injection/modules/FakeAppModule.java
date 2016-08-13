@@ -20,10 +20,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Tudor on 22-Jul-16.
  */
 @Module
-public class AppModuleFake {
+public class FakeAppModule {
 	Application mApplication;
 
-	public AppModuleFake(PixseeTest application) {
+	public FakeAppModule(PixseeTest application) {
 		mApplication = application;
 	}
 

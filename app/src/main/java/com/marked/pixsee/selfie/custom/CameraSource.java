@@ -748,7 +748,7 @@ public class CameraSource {
 	/**
 	 * Callback interface used to signal the moment of actual image capture.
 	 */
-	public interface ShutterCallback {
+	public interface ShutterCallback  {
 		/**
 		 * Called as near as possible to the moment when a photo is captured from the sensor. This
 		 * is a good opportunity to play a shutter sound or give other feedback of camera operation.

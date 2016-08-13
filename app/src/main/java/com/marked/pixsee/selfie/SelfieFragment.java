@@ -84,18 +84,19 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		// Must be done during an initialization phase like onCreate
 		RxPermissions.getInstance(getActivity())
 				.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+//				.toBlocking()
 				.subscribe(new Action1<Boolean>() {
 					@Override
 					public void call(Boolean granted) {
 						if (granted) { // Always true pre-M
 							// I can control the camera now
+							injectComponent();
 						} else {
 							// Oups permission denied
 							getActivity().onBackPressed();
 						}
 					}
 				});
-		injectComponent();
 	}
 
 	@Nullable
@@ -115,19 +116,19 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		rootView.findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				mFacePresenter.execute(new FavOneClick(getContext()));
+//	mFacePresenter.execute(new FavOneClick(getContext()));
 			}
 		});
 		rootView.findViewById(R.id.favorite2).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				mFacePresenter.execute(new FavTwoClick(getContext()));
+//	mFacePresenter.execute(new FavTwoClick(getContext()));
 			}
 		});
 		rootView.findViewById(R.id.favorite3).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				mFacePresenter.execute(new FavThreeClick(getContext()));
+//	mFacePresenter.execute(new FavThreeClick(getContext()));
 			}
 		});
 
@@ -165,7 +166,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	}
 
 	@Override
-	public void displayActions(boolean showSelfieActions) {
+	public void displayEmojiActions(boolean showSelfieActions) {
 		if (showSelfieActions)
 			mBottomLayout.setVisibility(View.VISIBLE);
 		else

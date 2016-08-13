@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.injection.scopes.FragmentScope;
@@ -54,7 +56,7 @@ class SelfieModule {
 
     @Provides
     @FragmentScope
-    CameraSource provideCameraSource(Context context, FaceDetector faceDetector) {
+    CameraSource provideCameraSource(Context context, Detector<Face> faceDetector) {
         return new CameraSource.Builder(context, faceDetector).setRequestedFps(60.0f)
                 .setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO)
                 .setFacing(com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT)
@@ -69,7 +71,7 @@ class SelfieModule {
 
     @Provides
     @FragmentScope
-    FaceDetector provideFaceDetector(Context context, SelfieTrackerAR selfieTrackerAR) {
+    Detector<Face> provideFaceDetector(Context context, SelfieTrackerAR selfieTrackerAR) {
         FaceDetector faceDetector = new FaceDetector.Builder(context)
                 .setTrackingEnabled(true)
                 .setProminentFaceOnly(true)

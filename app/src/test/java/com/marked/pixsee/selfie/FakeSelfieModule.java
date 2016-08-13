@@ -2,8 +2,11 @@ package com.marked.pixsee.selfie;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.util.SparseArray;
 
-import com.google.android.gms.vision.face.FaceDetector;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.Face;
 import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.selfie.custom.CameraSource;
 import com.marked.pixsee.selfie.custom.SelfieTrackerAR;
@@ -34,7 +37,7 @@ class FakeSelfieModule {
 
     @Provides
     @FragmentScope
-    CameraSource provideCameraSource(Context context, FaceDetector faceDetector) {
+    CameraSource provideCameraSource(Context context, Detector<Face> faceDetector) {
         return Mockito.mock(CameraSource.class);
     }
 
@@ -46,8 +49,14 @@ class FakeSelfieModule {
 
     @Provides
     @FragmentScope
-    FaceDetector provideFaceDetector(Context context, SelfieTrackerAR selfieTrackerAR) {
-        return Mockito.mock(FaceDetector.class);
+    Detector<Face> provideFaceDetector(Context context, SelfieTrackerAR selfieTrackerAR) {
+        return Mockito.mock(FakeFaceDetector.class);
+    }
+    private class FakeFaceDetector extends Detector<Face>{
+        @Override
+        public SparseArray<Face> detect(Frame frame) {
+            return null;
+        }
     }
 
     @Provides
