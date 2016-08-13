@@ -1,11 +1,14 @@
 package com.marked.pixsee.selfie;
 
+import android.graphics.SurfaceTexture;
+
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.selfie.custom.CameraSource;
 
 import org.jetbrains.annotations.NotNull;
 import org.rajawali3d.renderer.Renderer;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 /**
@@ -15,7 +18,7 @@ class FacePresenter implements SelfieContract.Presenter {
 	private final CameraSource cameraSource;
 	private WeakReference<SelfieContract.View> mView;
 	private Renderer renderer;
-	private CameraSource mCameraSource;
+	private SurfaceTexture mCameraSurfaceTexture;
 
 	FacePresenter(@NotNull SelfieContract.View view, @NotNull Renderer renderer, @NotNull CameraSource cameraSource) {
 		this.mView = new WeakReference<>(view);
@@ -35,7 +38,7 @@ class FacePresenter implements SelfieContract.Presenter {
 		}, new CameraSource.PictureCallback() {
 			@Override
 			public void onPictureTaken(byte[] data) {
-				mView.get().stopCamera();
+				cameraSource.stop();
 			}
 		});
 	}
@@ -43,7 +46,21 @@ class FacePresenter implements SelfieContract.Presenter {
 	@Override
 	public void resumeSelfie() {
 		mView.get().displayEmojiActions(true);
-		mView.get().startCamera(cameraSource, renderer);
+		startCamera();
+	}
+	@Override
+	public void onAvailableCameraSurfaceTexture(SurfaceTexture cameraSurfaceTexture) {
+		mCameraSurfaceTexture = cameraSurfaceTexture;
+		startCamera();
+	}
+
+	private void startCamera(){
+		try {
+			if (mCameraSurfaceTexture!=null)
+				cameraSource.start(mCameraSurfaceTexture);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -55,4 +72,5 @@ class FacePresenter implements SelfieContract.Presenter {
 	public void attach() {
 
 	}
+
 }

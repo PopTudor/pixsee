@@ -5,9 +5,6 @@ import android.graphics.SurfaceTexture;
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.selfie.custom.CameraSource;
-
-import org.rajawali3d.renderer.Renderer;
 
 /**
  * Created by Tudor on 2016-05-22.
@@ -19,17 +16,13 @@ class SelfieContract {
 		void takePicture();
 
 		void resumeSelfie();
+
+		void onAvailableCameraSurfaceTexture(SurfaceTexture cameraSurfaceTexture);
 	}
 
 	interface View extends BaseView<Presenter> {
 		void showTakenPictureActions();
 
 		void displayEmojiActions(boolean showSelfieActions);
-
-		void setSurfaceTexture(SurfaceTexture texture);
-
-		void startCamera(CameraSource source, Renderer renderer);
-
-		void stopCamera();
 	}
 }

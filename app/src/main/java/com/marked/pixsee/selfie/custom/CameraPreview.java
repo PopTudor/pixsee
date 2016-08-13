@@ -17,6 +17,9 @@ import org.rajawali3d.renderer.Renderer;
 
 import java.io.IOException;
 
+/**
+ * Coordinate
+ */
 public class CameraPreview extends ViewGroup {
 	private static final String TAG = "CameraSourcePreview";
 

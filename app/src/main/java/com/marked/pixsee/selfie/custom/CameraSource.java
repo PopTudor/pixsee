@@ -1,7 +1,6 @@
 package com.marked.pixsee.selfie.custom;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -12,7 +11,6 @@ import android.hardware.Camera.CameraInfo;
 import android.os.Build;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresPermission;
 import android.support.annotation.StringDef;
 import android.util.Log;
 import android.view.Surface;
@@ -217,7 +215,6 @@ public class CameraSource {
 	 *
 	 * @throws IOException if the camera's preview texture or display could not be initialized
 	 */
-	@RequiresPermission(Manifest.permission.CAMERA)
 	public CameraSource start(SurfaceTexture surfaceTexture) throws IOException {
 		synchronized (mCameraLock) {
 			if (mCamera != null) {

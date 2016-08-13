@@ -11,10 +11,10 @@ import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.Surface;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
@@ -23,14 +23,8 @@ import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.selfie.custom.AutofitTextureView;
-import com.marked.pixsee.selfie.custom.CameraPreview;
-import com.marked.pixsee.selfie.custom.CameraSource;
 import com.marked.pixsee.selfie.data.SelfieObject;
 import com.tbruyelle.rxpermissions.RxPermissions;
-
-import org.rajawali3d.renderer.Renderer;
-
-import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -56,12 +50,14 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	@Inject
 	SelfieContract.Presenter mFacePresenter;
 
-	CameraPreview mCameraPreview;
+	@Inject
+	TextureView.SurfaceTextureListener mCameraAvailable;
 
-	private AutofitTextureView mFaceTextureView;
+	private AutofitTextureView mRendererTextureview;
+
+	private TextureView mCameraTextureview;
+
 	private ViewGroup mBottomLayout;
-
-	private ImageButton mCameraButton;
 	private OnSelfieInteractionListener mOnSelfieInteractionListener;
 
 	public SelfieFragment() {
@@ -84,7 +80,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		// Must be done during an initialization phase like onCreate
 		RxPermissions.getInstance(getActivity())
 				.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-//				.toBlocking()
+				.toBlocking()
 				.subscribe(new Action1<Boolean>() {
 					@Override
 					public void call(Boolean granted) {
@@ -104,46 +100,15 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.activity_face, container, false);
 
-		mCameraPreview = (CameraPreview) rootView.findViewById(R.id.preview);
 		mBottomLayout = (ViewGroup) rootView.findViewById(R.id.bottomLayout);
-//		mFaceTextureView = (AutofitTextureView) rootView.findViewById(R.id.texture_view);
-		mCameraButton = (ImageButton) rootView.findViewById(R.id.camera_button);
+		mCameraTextureview = (TextureView) rootView.findViewById(R.id.camera_texture);
+//		mRendererTextureview = (AutofitTextureView) rootView.findViewById(R.id.renderer_texture);
 
+		mCameraTextureview.setSurfaceTextureListener(mCameraAvailable);
+//		mRendererTextureview.setSurfaceRenderer(mFacePresenter);
 
-//		mFaceTextureView.setEGLContextClientVersion(2);
-//		mFaceTextureView.setSurfaceRenderer(mSelfieRenderer); /* the surface where the renderer should display it's scene*/
-
-		rootView.findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-//	mFacePresenter.execute(new FavOneClick(getContext()));
-			}
-		});
-		rootView.findViewById(R.id.favorite2).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-//	mFacePresenter.execute(new FavTwoClick(getContext()));
-			}
-		});
-		rootView.findViewById(R.id.favorite3).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-//	mFacePresenter.execute(new FavThreeClick(getContext()));
-			}
-		});
-
-		mCameraButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(final View cameraButton) {
-				mFacePresenter.takePicture();
-			}
-		});
+//		mRendererTextureview.setSurfaceRenderer(mSelfieRenderer); /* the surface where the renderer should display it's scene*/
 		return rootView;
-	}
-
-	@Override
-	public void stopCamera() {
-		mCameraPreview.stop();
 	}
 
 	/**
@@ -152,12 +117,16 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		if (mFacePresenter != null)
-			mFacePresenter.resumeSelfie();
+		setTextureIfAvailable();
+		mFacePresenter.resumeSelfie();
 		/* if we resume and the user had the PictureAction screen, make him take another picture*/
 		if (getActivity().getSupportFragmentManager().getBackStackEntryCount() > 0)
 			getActivity().getSupportFragmentManager().popBackStack();
+	}
+
+	private void setTextureIfAvailable() {
+		if (mCameraTextureview.isAvailable())
+			mCameraAvailable.onSurfaceTextureAvailable(mCameraTextureview.getSurfaceTexture(), mCameraTextureview.getWidth(), mCameraTextureview.getHeight());
 	}
 
 	@Override
@@ -173,11 +142,6 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 			mBottomLayout.setVisibility(View.GONE);
 	}
 
-	@Override
-	public void setSurfaceTexture(SurfaceTexture texture) {
-		mCameraPreview.setSurfaceTexture(texture);
-	}
-
 	/**
 	 * Releases the resources associated with the camera source, the associated detector, and the
 	 * rest of the processing pipeline.
@@ -185,8 +149,9 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (mCameraPreview != null)
-			mCameraPreview.release();
+
+//		if (mCameraPreview != null)
+//			mCameraPreview.release();
 		Log.d(TAG, "onPause: ");
 	}
 
@@ -219,7 +184,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	}
 
 	public Observable<Bitmap> getPicture() {
-//		return Observable.just(mFaceTextureView.getBitmap()).subscribeOn(Schedulers.computation());
+//		return Observable.just(mRendererTextureview.getBitmap()).subscribeOn(Schedulers.computation());
 		return Observable.empty();
 	}
 
@@ -229,42 +194,94 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 
 	@Override
 	public void resumeSelfie() {
-		mFacePresenter.resumeSelfie();
+		if (mCameraTextureview.isAvailable())
+
+			mFacePresenter.resumeSelfie();
 	}
 
-	/**
-	 * Starts or restarts the camera source, if it exists.  If the camera source doesn't exist yet
-	 * (e.g., because onResume was called before the camera source was created), this will be called
-	 * again when the camera source is created.
-	 */
 	@Override
-	public void startCamera(CameraSource source, Renderer renderer) {
-		try {
-			mCameraPreview.start(source, renderer);
-		} catch (IOException e) {
-			Log.e(TAG, "Unable to start camera source.", e);
-			mCameraPreview.stop();
-		}
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		setupListeners();
+	}
+
+	public void setupListeners() {
+		View rootView = getView();
+
+		rootView.findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+//	mFacePresenter.execute(new FavOneClick(getContext()));
+			}
+		});
+		rootView.findViewById(R.id.favorite2).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+//	mFacePresenter.execute(new FavTwoClick(getContext()));
+			}
+		});
+		rootView.findViewById(R.id.favorite3).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+//	mFacePresenter.execute(new FavThreeClick(getContext()));
+			}
+		});
+		rootView.findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(final View cameraButton) {
+				mFacePresenter.takePicture();
+			}
+		});
 	}
 
 	@Override
 	public void injectComponent() {
 		ActivityComponent daggerActivityComponent = DaggerActivityComponent.builder()
-				.appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
-				.activityModule(((MainActivity) getActivity()).activityModule).build();
+				                                            .appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
+				                                            .activityModule(((MainActivity) getActivity()).activityModule).build();
 		SelfieComponent mSelfieComponent = DaggerSelfieComponent.builder()
-				.selfieModule(new SelfieModule(this))
-				.activityComponent(daggerActivityComponent)
-				.build();
+				                                   .selfieModule(new SelfieModule(this))
+				                                   .activityComponent(daggerActivityComponent)
+				                                   .build();
 		mSelfieComponent.inject(this);
 	}
+
+	public static class CameraAvailable implements TextureView.SurfaceTextureListener {
+		private SelfieContract.Presenter mFacePresenter;
+
+		CameraAvailable(SelfieContract.Presenter facePresenter) {
+			mFacePresenter = facePresenter;
+		}
+
+		@Override
+		public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+			mFacePresenter.onAvailableCameraSurfaceTexture(surface);
+		}
+
+		@Override
+		public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+		}
+
+		@Override
+		public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+			return false;
+		}
+
+		@Override
+		public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+		}
+	}
+
 	// ===============================================================================================
 	// Interaction listener interfaces
 	// ===============================================================================================
 	public interface OnFavoritesListener {
 		void onFavoriteClicked(SelfieObject object);
 	}
-	public interface OnSelfieInteractionListener{
+
+	public interface OnSelfieInteractionListener {
 		void showTakenPictureActions();
 
 		void selfieFragmentDesroyed();

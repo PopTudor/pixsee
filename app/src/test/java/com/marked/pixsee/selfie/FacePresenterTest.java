@@ -1,19 +1,25 @@
 package com.marked.pixsee.selfie;
 
+import android.graphics.SurfaceTexture;
+
 import com.marked.pixsee.selfie.custom.CameraSource;
 
 import org.jetbrains.annotations.Contract;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.rajawali3d.renderer.Renderer;
 
-import static com.marked.pixsee.selfie.custom.CameraSource.*;
+import static com.marked.pixsee.selfie.custom.CameraSource.PictureCallback;
+import static com.marked.pixsee.selfie.custom.CameraSource.ShutterCallback;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -35,6 +41,7 @@ public class FacePresenterTest {
 		MockitoAnnotations.initMocks(this);
 
 		mFacePresenter = new FacePresenter(mView, mRenderer, mCameraSource);
+		Mockito.doNothing().when(mCameraSource).stop();
 	}
 
 	@Test
@@ -56,7 +63,7 @@ public class FacePresenterTest {
 
 		mFacePresenter.takePicture();
 
-		verify(mView).stopCamera();
+		verify(mCameraSource).stop();
 	}
 
 	@Test
@@ -69,11 +76,18 @@ public class FacePresenterTest {
 	}
 
 	@Test
-	public void resumeSelfie() throws Exception {
+	public void nullSurfaceTexture_shouldNotStartCamera() throws Exception {
 		mFacePresenter.resumeSelfie();
 
 		verify(mView).displayEmojiActions(true);
-		verify(mView).startCamera(mCameraSource, mRenderer);
+		verify(mCameraSource, never()).start(any(SurfaceTexture.class));
+	}
+
+	@Test
+	public void onCameraAvailable() throws Exception {
+		mFacePresenter.onAvailableCameraSurfaceTexture(mock(SurfaceTexture.class));
+
+		verify(mCameraSource).start(any(SurfaceTexture.class));
 	}
 
 	/*****************

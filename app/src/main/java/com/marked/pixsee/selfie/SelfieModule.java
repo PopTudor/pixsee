@@ -3,6 +3,7 @@ package com.marked.pixsee.selfie;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.view.TextureView;
 
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.face.Face;
@@ -49,9 +50,15 @@ class SelfieModule {
         return new SurfaceTexture.OnFrameAvailableListener() {
             @Override
             public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-                mSelfieFragment.get().setSurfaceTexture(surfaceTexture);
+//                mSelfieFragment.get().onAvailableCameraSurfaceTexture(surfaceTexture);
             }
         };
+    }
+
+    @Provides
+    @FragmentScope
+    TextureView.SurfaceTextureListener provideCameraTexture(SelfieContract.Presenter presenter){
+        return new SelfieFragment.CameraAvailable(presenter);
     }
 
     @Provides

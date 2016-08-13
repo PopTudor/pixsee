@@ -60,10 +60,4 @@ public class AutofitTextureView extends TextureView {
             }
         }
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        setFrameRate(60);
-    }
 }

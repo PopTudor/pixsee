@@ -3,6 +3,7 @@ package com.marked.pixsee.selfie;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.util.SparseArray;
+import android.view.TextureView;
 
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
@@ -27,6 +28,11 @@ class FakeSelfieModule {
     @FragmentScope
     Renderer provideFaceRenderer(Context context, SurfaceTexture.OnFrameAvailableListener onFrameAvailableListener, CameraSource source, SelfieTrackerAR selfieTrackerAR) {
         return Mockito.mock(Renderer.class);
+    }
+    @Provides
+    @FragmentScope
+    TextureView.SurfaceTextureListener provideCameraTexture(SelfieContract.Presenter presenter){
+        return new SelfieFragment.CameraAvailable(presenter);
     }
 
     @Provides
