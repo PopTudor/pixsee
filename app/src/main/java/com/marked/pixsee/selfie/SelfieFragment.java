@@ -24,6 +24,7 @@ import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.selfie.custom.AutofitTextureView;
 import com.marked.pixsee.selfie.data.SelfieObject;
+import com.marked.pixsee.utility.Permissions;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import javax.inject.Inject;
@@ -33,7 +34,7 @@ import rx.functions.Action1;
 
 import static com.marked.pixsee.selfie.PictureDetailShareFragment.OnPictureDetailShareListener;
 
-public class SelfieFragment extends Fragment implements OnPictureDetailShareListener, SelfieContract.View, Injectable {
+public class SelfieFragment extends Fragment implements OnPictureDetailShareListener, SelfieContract.View, Injectable,Permissions {
 	public static final String PHOTO_EXTRA = "PHOTO";
 	public static final String PHOTO_RENDERER_EXTRA = "PHOTO_RENDERER";
 	private static final String TAG = SelfieFragment.class + "***";
@@ -78,7 +79,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		// Must be done during an initialization phase like onCreate
-		RxPermissions.getInstance(getActivity())
+		RxPermissions()
 				.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
 				.toBlocking()
 				.subscribe(new Action1<Boolean>() {
@@ -244,6 +245,11 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 				                                   .activityComponent(daggerActivityComponent)
 				                                   .build();
 		mSelfieComponent.inject(this);
+	}
+
+	@Override
+	public RxPermissions RxPermissions() {
+		return RxPermissions.getInstance(getActivity());
 	}
 
 	public static class CameraAvailable implements TextureView.SurfaceTextureListener {
