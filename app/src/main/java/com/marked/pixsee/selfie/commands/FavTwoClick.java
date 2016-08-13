@@ -4,8 +4,10 @@ import android.content.Context;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.commands.ClickCommand;
-import com.marked.pixsee.selfie.custom.SelfieRenderer;
+import com.marked.pixsee.selfie.SelfieFragment;
 import com.marked.pixsee.selfie.data.SelfieObject;
+
+import org.rajawali3d.renderer.Renderer;
 
 import java.lang.ref.WeakReference;
 
@@ -13,9 +15,9 @@ import java.lang.ref.WeakReference;
  * Created by Tudor on 2016-05-10.
  */
 public class FavTwoClick extends ClickCommand {
-	private WeakReference<SelfieRenderer> mFaceRenderer;
+	private WeakReference<SelfieFragment.OnFavoritesListener> mFaceRenderer;
 
-	public FavTwoClick(Context context, SelfieRenderer mSelfieRenderer) {
+	public FavTwoClick(Context context, SelfieFragment.OnFavoritesListener mSelfieRenderer) {
 		super(context);
 		this.mFaceRenderer = new WeakReference<>(mSelfieRenderer);
 	}
@@ -24,7 +26,7 @@ public class FavTwoClick extends ClickCommand {
 	public void execute() {
 		SelfieObject selfieObject = new SelfieObject.FaceBuilder(mContext)
 				                        .withTextureId(R.drawable.hearts)
-				                        .withRenderer(mFaceRenderer.get())
+				                        .withRenderer((Renderer) mFaceRenderer.get())
 				                        .build();
 		mFaceRenderer.get().onFavoriteClicked(selfieObject);
 	}

@@ -14,10 +14,11 @@ import com.marked.pixsee.selfie.custom.CameraSource;
 import com.marked.pixsee.selfie.custom.SelfieRenderer;
 import com.marked.pixsee.selfie.custom.SelfieTrackerAR;
 
-import org.rajawali3d.materials.textures.StreamingTexture;
 import org.rajawali3d.renderer.Renderer;
 
 import java.lang.ref.WeakReference;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -36,10 +37,8 @@ class SelfieModule {
 
     @Provides
     @FragmentScope
-    Renderer provideFaceRenderer(Context context, SurfaceTexture.OnFrameAvailableListener onFrameAvailableListener,
-                                 CameraSource source, SelfieTrackerAR selfieTrackerAR) {
-        StreamingTexture streamingTexture = new StreamingTexture("stream", source.getCamera(), onFrameAvailableListener);
-        SelfieRenderer selfieRenderer = new SelfieRenderer(context, streamingTexture);
+    Renderer provideFaceRenderer(Context context, SelfieTrackerAR selfieTrackerAR) {
+        SelfieRenderer selfieRenderer = new SelfieRenderer(context);
         selfieTrackerAR.setTrackerCallback(selfieRenderer);
         return selfieRenderer;
     }
@@ -57,9 +56,11 @@ class SelfieModule {
 
     @Provides
     @FragmentScope
+    @Named(value = "cameraTexture")
     TextureView.SurfaceTextureListener provideCameraTexture(SelfieContract.Presenter presenter){
-        return new SelfieFragment.CameraAvailable(presenter);
+        return new SelfieFragment.CameraTextureAvailable(presenter);
     }
+
 
     @Provides
     @FragmentScope

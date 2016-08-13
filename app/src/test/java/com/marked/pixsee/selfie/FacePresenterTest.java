@@ -18,7 +18,6 @@ import static com.marked.pixsee.selfie.custom.CameraSource.PictureCallback;
 import static com.marked.pixsee.selfie.custom.CameraSource.ShutterCallback;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -81,13 +80,6 @@ public class FacePresenterTest {
 
 		verify(mView).displayEmojiActions(true);
 		verify(mCameraSource, never()).start(any(SurfaceTexture.class));
-	}
-
-	@Test
-	public void onCameraAvailable() throws Exception {
-		mFacePresenter.onAvailableCameraSurfaceTexture(mock(SurfaceTexture.class));
-
-		verify(mCameraSource).start(any(SurfaceTexture.class));
 	}
 
 	/*****************

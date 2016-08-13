@@ -6,6 +6,7 @@ import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.selfie.custom.CameraSource;
 
 import org.jetbrains.annotations.NotNull;
+import org.rajawali3d.renderer.ISurfaceRenderer;
 import org.rajawali3d.renderer.Renderer;
 
 import java.io.IOException;
@@ -61,6 +62,11 @@ class FacePresenter implements SelfieContract.Presenter {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public ISurfaceRenderer getRenderer() {
+		return renderer;
 	}
 
 	@Override

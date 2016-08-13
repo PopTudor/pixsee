@@ -15,6 +15,8 @@ import com.marked.pixsee.selfie.custom.SelfieTrackerAR;
 import org.mockito.Mockito;
 import org.rajawali3d.renderer.Renderer;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -31,8 +33,16 @@ class FakeSelfieModule {
     }
     @Provides
     @FragmentScope
+    @Named(value = "cameraTexture")
     TextureView.SurfaceTextureListener provideCameraTexture(SelfieContract.Presenter presenter){
-        return new SelfieFragment.CameraAvailable(presenter);
+        return Mockito.mock(TextureView.SurfaceTextureListener.class);
+    }
+
+    @Provides
+    @FragmentScope
+    @Named(value = "renderTexture")
+    TextureView.SurfaceTextureListener provideRenderTexture(SelfieContract.Presenter presenter){
+        return Mockito.mock(TextureView.SurfaceTextureListener.class);
     }
 
     @Provides

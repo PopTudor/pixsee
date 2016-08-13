@@ -6,6 +6,8 @@ import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.commands.Command;
 
+import org.rajawali3d.renderer.ISurfaceRenderer;
+
 /**
  * Created by Tudor on 2016-05-22.
  */
@@ -18,6 +20,8 @@ class SelfieContract {
 		void resumeSelfie();
 
 		void onAvailableCameraSurfaceTexture(SurfaceTexture cameraSurfaceTexture);
+
+		ISurfaceRenderer getRenderer();
 	}
 
 	interface View extends BaseView<Presenter> {

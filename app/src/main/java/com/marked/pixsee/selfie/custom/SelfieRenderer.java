@@ -16,11 +16,9 @@ import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.ALoader;
 import org.rajawali3d.loader.AMeshLoader;
 import org.rajawali3d.loader.async.IAsyncLoaderCallback;
-import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.textures.ASingleTexture;
 import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.AnimatedGIFTexture;
-import org.rajawali3d.materials.textures.StreamingTexture;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.ScreenQuad;
 import org.rajawali3d.renderer.Renderer;
@@ -51,14 +49,12 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	 * Camera preview *
 	 ******************/
 	private ScreenQuad screenQuad;
-	private StreamingTexture mCameraStreamingTexture;
 
 
-	public SelfieRenderer(Context context, StreamingTexture streamingTexture) {
+	public SelfieRenderer(Context context) {
 		super(context);
 		setFrameRate(60);
 		screenQuad = new ScreenQuad(1,1,true,false,false);
-		mCameraStreamingTexture = streamingTexture;
 	}
 
 	@Override
@@ -71,17 +67,6 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 
 		getCurrentScene().addLight(directionalLight);
 		getCurrentCamera().setPosition(0, 0, CAMERA_Z);
-		try {
-			Material material = new Material();
-			material.setColorInfluence(0);
-			material.addTexture(mCameraStreamingTexture);
-
-			screenQuad.setMaterial(material);
-			getCurrentScene().addChild(screenQuad);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	@Override
@@ -118,11 +103,6 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	@Override
 	public void onRenderFrame(GL10 gl) {
 		super.onRenderFrame(gl);
-		try {
-			mCameraStreamingTexture.update();
-		} catch (RuntimeException e) {
-			e.printStackTrace(); //
-		}
 		if (aSingleTexture != null) {
 			try {
 				((AnimatedGIFTexture) aSingleTexture).update();
