@@ -9,8 +9,8 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.marked.pixsee.injection.scopes.FragmentScope;
-import com.marked.pixsee.selfie.custom.CameraSource;
-import com.marked.pixsee.selfie.custom.SelfieTrackerAR;
+import com.marked.pixsee.selfie.camerasource.CameraSource;
+import com.marked.pixsee.selfie.renderer.SelfieTrackerAR;
 
 import org.mockito.Mockito;
 import org.rajawali3d.renderer.Renderer;

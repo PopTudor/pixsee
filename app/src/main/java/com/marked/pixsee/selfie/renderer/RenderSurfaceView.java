@@ -1,31 +1,27 @@
-package com.marked.pixsee.selfie.custom;
+package com.marked.pixsee.selfie.renderer;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
-import org.rajawali3d.view.TextureView;
+import org.rajawali3d.view.SurfaceView;
 
 /**
  * Created by Tudor on 2016-05-24.
  */
 
 /**
- * A {@link android.view.TextureView} that can be adjusted to a specified aspect ratio.
+ * A {@link SurfaceView} that can be adjusted to a specified aspect ratio.
  */
-public class AutofitTextureView extends TextureView {
+public class RenderSurfaceView extends SurfaceView {
     private int mRatioWidth = 0;
     private int mRatioHeight = 0;
 
-    public AutofitTextureView(final Context context) {
-        this(context, null);
+    public RenderSurfaceView(Context context) {
+        super(context);
     }
 
-    public AutofitTextureView(final Context context, final AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public AutofitTextureView(final Context context, final AttributeSet attrs, final int defStyle) {
-        super(context, attrs, defStyle);
+    public RenderSurfaceView(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
 
     /**
@@ -59,5 +55,10 @@ public class AutofitTextureView extends TextureView {
                 setMeasuredDimension(height * mRatioWidth / mRatioHeight, height);
             }
         }
+    }
+
+    @Override
+    public void setTransparent(boolean isTransparent) {
+        super.setTransparent(isTransparent);
     }
 }

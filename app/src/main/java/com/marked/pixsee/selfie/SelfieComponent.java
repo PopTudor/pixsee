@@ -2,7 +2,7 @@ package com.marked.pixsee.selfie;
 
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.scopes.FragmentScope;
-import com.marked.pixsee.selfie.custom.CameraSource;
+import com.marked.pixsee.selfie.camerasource.CameraSource;
 
 import dagger.Component;
 

@@ -1,18 +1,15 @@
-package com.marked.pixsee.selfie.custom;
+package com.marked.pixsee.selfie.camerasource;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.SurfaceTexture;
-import android.support.v4.app.ActivityCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
+import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 
-import org.jetbrains.annotations.NotNull;
 import org.rajawali3d.renderer.Renderer;
 
 import java.io.IOException;
@@ -20,81 +17,23 @@ import java.io.IOException;
 /**
  * Coordinate
  */
-public class CameraPreview extends ViewGroup {
+public class CameraSourcePreview extends ViewGroup {
 	private static final String TAG = "CameraSourcePreview";
 
 	private Context mContext;
-	private boolean mStartRequested;
-	private boolean mSurfaceAvailable;
 	private CameraSource mCameraSource;
 	private Renderer mSelfieRenderer;
 	private SurfaceTexture surfaceTexture;
 
-	public CameraPreview(Context context, AttributeSet attrs) {
+	public CameraSourcePreview(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mContext = context;
 	}
 
-	public void setSurfaceTexture(SurfaceTexture surfaceTexture) {
-		this.surfaceTexture = surfaceTexture;
-		mSurfaceAvailable = true;
-	}
-
-	public void start(@NotNull CameraSource cameraSource, @NotNull Renderer overlay) throws IOException {
-		mCameraSource = cameraSource;
-		mSelfieRenderer = overlay;
-
-		mSelfieRenderer.onResume();
-		if (mCameraSource != null) {
-			mStartRequested = true;
-			startIfReady();
-		}
-	}
-
-	public void stop() {
-		if (mSelfieRenderer != null) {
-			mSelfieRenderer.onPause(); /* calls renderer.stopRendering() */
-		}
-		if (mCameraSource != null) {
-			mCameraSource.stop();
-		}
-	}
-	public void release(){
-		stop();
-		mSelfieRenderer = null;
-		if (mCameraSource != null)
-			mCameraSource.release();
-		mCameraSource = null;
-		mSurfaceAvailable = false;
-	}
-
 	private void startIfReady() throws IOException {
-		if (mStartRequested && mSurfaceAvailable) {
-			if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-				// TODO: Consider calling
-				//    ActivityCompat#requestPermissions
-				// here to request the missing permissions, and then overriding
-				//   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-				//                                          int[] grantResults)
-				// to handle the case where the user grants the permission. See the documentation
-				// for ActivityCompat#requestPermissions for more details.
-				return;
-			}
-			mCameraSource.start(surfaceTexture);
-
-			if (mSelfieRenderer != null) {
-				Size size = mCameraSource.getPreviewSize();
-				int min = Math.min(size.getWidth(), size.getHeight());
-				int max = Math.max(size.getWidth(), size.getHeight());
-				if (isPortraitMode()) {
-					// Swap width and height sizes when in portrait, since it will be rotated by
-					// 90 degrees
-					((SelfieRenderer) mSelfieRenderer).setCameraInfo(min, max, mCameraSource.getCameraFacing());
-				} else {
-					((SelfieRenderer) mSelfieRenderer).setCameraInfo(max, min, mCameraSource.getCameraFacing());
-				}
-			}
-			mStartRequested = false;
+		if (mSelfieRenderer != null) {
+			Size size = mCameraSource.getPreviewSize();
+			((SelfieRenderer) mSelfieRenderer).setCameraInfo(size, mCameraSource.getCameraFacing());
 		}
 	}
 

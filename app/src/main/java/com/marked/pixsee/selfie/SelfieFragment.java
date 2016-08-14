@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +24,12 @@ import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.selfie.commands.FavOneClick;
 import com.marked.pixsee.selfie.commands.FavThreeClick;
 import com.marked.pixsee.selfie.commands.FavTwoClick;
-import com.marked.pixsee.selfie.custom.AutofitTextureView;
+import com.marked.pixsee.selfie.renderer.RenderSurfaceView;
 import com.marked.pixsee.selfie.data.SelfieObject;
 import com.marked.pixsee.utility.Permissions;
 import com.tbruyelle.rxpermissions.RxPermissions;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -45,13 +46,6 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	private static final int RC_HANDLE_CAMERA_PERM = 2;
 	private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
-	static {
-		ORIENTATIONS.append(Surface.ROTATION_0, 90);
-		ORIENTATIONS.append(Surface.ROTATION_90, 0);
-		ORIENTATIONS.append(Surface.ROTATION_180, 270);
-		ORIENTATIONS.append(Surface.ROTATION_270, 180);
-	}
-
 	@Inject
 	SelfieContract.Presenter mFacePresenter;
 
@@ -60,7 +54,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	TextureView.SurfaceTextureListener mCameraTextureAvailable;
 
 
-	private AutofitTextureView mRendererTextureview;
+	private RenderSurfaceView mRendererSurfaceView;
 
 	private TextureView mCameraTextureview;
 
@@ -109,12 +103,12 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 
 		mBottomLayout = (ViewGroup) rootView.findViewById(R.id.bottomLayout);
 		mCameraTextureview = (TextureView) rootView.findViewById(R.id.camera_texture);
-		mRendererTextureview = (AutofitTextureView) rootView.findViewById(R.id.renderer_texture);
+		mRendererSurfaceView = (RenderSurfaceView) rootView.findViewById(R.id.renderer_texture);
+		mRendererSurfaceView.setTransparent(true);
+
 
 		mCameraTextureview.setSurfaceTextureListener(mCameraTextureAvailable);
-		mRendererTextureview.setSurfaceRenderer(mFacePresenter.getRenderer());
-//		mRendererTextureview.setOpaque(false);
-		mRendererTextureview.setAlpha(0.5f);
+		mRendererSurfaceView.setSurfaceRenderer(mFacePresenter.getRenderer());
 		return rootView;
 	}
 
@@ -131,6 +125,9 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 			getActivity().getSupportFragmentManager().popBackStack();
 	}
 
+	/**
+	 * if screen was locked cameraTextureview will not be recreated since we have one
+	 */
 	private void setTextureIfAvailable() {
 		if (mCameraTextureview.isAvailable())
 			mCameraTextureAvailable.onSurfaceTextureAvailable(mCameraTextureview.getSurfaceTexture(), mCameraTextureview.getWidth(), mCameraTextureview.getHeight());
@@ -157,8 +154,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	public void onPause() {
 		super.onPause();
 
-//		if (mCameraPreview != null)
-//			mCameraPreview.release();
+		mFacePresenter.release();
 		Log.d(TAG, "onPause: ");
 	}
 
@@ -177,11 +173,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		try {
-			mOnSelfieInteractionListener = (OnSelfieInteractionListener) context;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(getActivity().toString() + " must implement OnArticleSelectedListener");
-		}
+		mOnSelfieInteractionListener = (OnSelfieInteractionListener) context;
 	}
 
 	@Override
@@ -191,7 +183,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	}
 
 	public Observable<Bitmap> getPicture() {
-//		return Observable.just(mRendererTextureview.getBitmap()).subscribeOn(Schedulers.computation());
+//		return Observable.just(mRendererSurfaceView.getBitmap()).subscribeOn(Schedulers.computation());
 		return Observable.empty();
 	}
 
@@ -202,38 +194,35 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	@Override
 	public void resumeSelfie() {
 		if (mCameraTextureview.isAvailable())
-
 			mFacePresenter.resumeSelfie();
 	}
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		setupListeners();
+		setupListeners(view);
 	}
 
-	public void setupListeners() {
-		View rootView = getView();
-
-		rootView.findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
+	private void setupListeners(@NotNull View view) {
+		view.findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mFacePresenter.execute(new FavOneClick(getContext(), (OnFavoritesListener) mFacePresenter.getRenderer()));
 			}
 		});
-		rootView.findViewById(R.id.favorite2).setOnClickListener(new View.OnClickListener() {
+		view.findViewById(R.id.favorite2).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mFacePresenter.execute(new FavTwoClick(getContext(), (OnFavoritesListener) mFacePresenter.getRenderer()));
 			}
 		});
-		rootView.findViewById(R.id.favorite3).setOnClickListener(new View.OnClickListener() {
+		view.findViewById(R.id.favorite3).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mFacePresenter.execute(new FavThreeClick(getContext(), (OnFavoritesListener) mFacePresenter.getRenderer()));
 			}
 		});
-		rootView.findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
+		view.findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View cameraButton) {
 				mFacePresenter.takePicture();
@@ -267,7 +256,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 
 		@Override
 		public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-			mFacePresenter.onAvailableCameraSurfaceTexture(surface);
+			mFacePresenter.onAvailableCameraSurfaceTexture(surface,width,height);
 		}
 
 		@Override

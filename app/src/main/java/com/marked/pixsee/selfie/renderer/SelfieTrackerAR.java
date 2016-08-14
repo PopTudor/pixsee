@@ -1,4 +1,4 @@
-package com.marked.pixsee.selfie.custom;
+package com.marked.pixsee.selfie.renderer;
 
 import android.util.Log;
 

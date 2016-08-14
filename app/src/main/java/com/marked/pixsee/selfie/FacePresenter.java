@@ -2,8 +2,12 @@ package com.marked.pixsee.selfie;
 
 import android.graphics.SurfaceTexture;
 
+import com.google.android.gms.common.images.Size;
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.selfie.custom.CameraSource;
+import com.marked.pixsee.selfie.camerasource.CameraSource;
+import com.marked.pixsee.selfie.camerasource.PictureCallback;
+import com.marked.pixsee.selfie.camerasource.ShutterCallback;
+import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 
 import org.jetbrains.annotations.NotNull;
 import org.rajawali3d.renderer.ISurfaceRenderer;
@@ -31,12 +35,12 @@ class FacePresenter implements SelfieContract.Presenter {
 	@Override
 	public void takePicture() {
 		mView.get().displayEmojiActions(false);
-		cameraSource.takePicture(new CameraSource.ShutterCallback() {
+		cameraSource.takePicture(new ShutterCallback() {
 			@Override
 			public void onShutter() {
 				mView.get().showTakenPictureActions(); /* when the user touches the selfie button */
 			}
-		}, new CameraSource.PictureCallback() {
+		}, new PictureCallback() {
 			@Override
 			public void onPictureTaken(byte[] data) {
 				cameraSource.stop();
@@ -50,18 +54,30 @@ class FacePresenter implements SelfieContract.Presenter {
 		startCamera();
 	}
 	@Override
-	public void onAvailableCameraSurfaceTexture(SurfaceTexture cameraSurfaceTexture) {
+	public void onAvailableCameraSurfaceTexture(SurfaceTexture cameraSurfaceTexture, int width, int height) {
 		mCameraSurfaceTexture = cameraSurfaceTexture;
 		startCamera();
 	}
 
 	private void startCamera(){
 		try {
-			if (mCameraSurfaceTexture!=null)
+			if (mCameraSurfaceTexture!=null) {
 				cameraSource.start(mCameraSurfaceTexture);
+				setRenderSurfaceSize();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void setRenderSurfaceSize() {
+		Size size = cameraSource.getPreviewSize();
+		((SelfieRenderer) renderer).setCameraInfo(size, cameraSource.getCameraFacing());
+	}
+
+	@Override
+	public void release() {
+		cameraSource.release();
 	}
 
 	@Override

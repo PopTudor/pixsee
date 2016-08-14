@@ -2,7 +2,9 @@ package com.marked.pixsee.selfie;
 
 import android.graphics.SurfaceTexture;
 
-import com.marked.pixsee.selfie.custom.CameraSource;
+import com.marked.pixsee.selfie.camerasource.CameraSource;
+import com.marked.pixsee.selfie.camerasource.PictureCallback;
+import com.marked.pixsee.selfie.camerasource.ShutterCallback;
 
 import org.jetbrains.annotations.Contract;
 import org.junit.Before;
@@ -14,8 +16,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.rajawali3d.renderer.Renderer;
 
-import static com.marked.pixsee.selfie.custom.CameraSource.PictureCallback;
-import static com.marked.pixsee.selfie.custom.CameraSource.ShutterCallback;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
@@ -80,6 +80,13 @@ public class FacePresenterTest {
 
 		verify(mView).displayEmojiActions(true);
 		verify(mCameraSource, never()).start(any(SurfaceTexture.class));
+	}
+
+	@Test
+	public void release() throws Exception {
+		mFacePresenter.release();
+
+		verify(mCameraSource).release();
 	}
 
 	/*****************

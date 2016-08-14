@@ -1,7 +1,6 @@
 package com.marked.pixsee.selfie;
 
 import android.content.Context;
-import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.view.TextureView;
 
@@ -10,9 +9,9 @@ import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.injection.scopes.FragmentScope;
-import com.marked.pixsee.selfie.custom.CameraSource;
-import com.marked.pixsee.selfie.custom.SelfieRenderer;
-import com.marked.pixsee.selfie.custom.SelfieTrackerAR;
+import com.marked.pixsee.selfie.camerasource.CameraSource;
+import com.marked.pixsee.selfie.renderer.SelfieRenderer;
+import com.marked.pixsee.selfie.renderer.SelfieTrackerAR;
 
 import org.rajawali3d.renderer.Renderer;
 
@@ -41,17 +40,6 @@ class SelfieModule {
         SelfieRenderer selfieRenderer = new SelfieRenderer(context);
         selfieTrackerAR.setTrackerCallback(selfieRenderer);
         return selfieRenderer;
-    }
-
-    @Provides
-    @FragmentScope
-    SurfaceTexture.OnFrameAvailableListener provideOnFrameAvailableListener() {
-        return new SurfaceTexture.OnFrameAvailableListener() {
-            @Override
-            public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-//                mSelfieFragment.get().onAvailableCameraSurfaceTexture(surfaceTexture);
-            }
-        };
     }
 
     @Provides

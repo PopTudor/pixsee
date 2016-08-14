@@ -1,9 +1,10 @@
-package com.marked.pixsee.selfie.custom;
+package com.marked.pixsee.selfie.renderer;
 
 import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.google.android.gms.common.images.Size;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.face.Face;
@@ -16,14 +17,8 @@ import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.ALoader;
 import org.rajawali3d.loader.AMeshLoader;
 import org.rajawali3d.loader.async.IAsyncLoaderCallback;
-import org.rajawali3d.materials.textures.ASingleTexture;
-import org.rajawali3d.materials.textures.ATexture;
-import org.rajawali3d.materials.textures.AnimatedGIFTexture;
 import org.rajawali3d.math.vector.Vector3;
-import org.rajawali3d.primitives.ScreenQuad;
 import org.rajawali3d.renderer.Renderer;
-
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by Tudor on 4/8/2016.
@@ -34,34 +29,22 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	private static final String TAG = "***********";
 	private static final int CAMERA_Z = 6;
 	private final Object mLock = new Object();
-	private DirectionalLight directionalLight;
-
 
 	private int mFacing = CameraSource.CAMERA_FACING_FRONT;
-	private int mPreviewWidth;
-	private int mPreviewHeight;
-	private float mWidthScaleFactor = 1.0f;
-	private float mHeightScaleFactor = 1.0f;
+	private int mPreviewWidth, mPreviewHeight;
+
+	private float mWidthScaleFactor = 1.0f, mHeightScaleFactor = 1.0f;
 
 	private Object3D loadedObject = null;
-	private ASingleTexture aSingleTexture; /* GIF */
-	/******************
-	 * Camera preview *
-	 ******************/
-	private ScreenQuad screenQuad;
-
 
 	public SelfieRenderer(Context context) {
 		super(context);
 		setFrameRate(60);
-		screenQuad = new ScreenQuad(1,1,true,false,false);
 	}
 
 	@Override
 	protected void initScene() {
-		screenQuad.rotate(Vector3.Axis.Z, -90);
-
-		directionalLight = new DirectionalLight(0f, 0f, -1.0f);
+		DirectionalLight directionalLight = new DirectionalLight(0f, 0f, -1.0f);
 		directionalLight.setColor(1.0f, 1.0f, 1.0f);
 		directionalLight.setPower(2);
 
@@ -101,17 +84,6 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	}
 
 	@Override
-	public void onRenderFrame(GL10 gl) {
-		super.onRenderFrame(gl);
-		if (aSingleTexture != null) {
-			try {
-				((AnimatedGIFTexture) aSingleTexture).update();
-			} catch (ATexture.TextureException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	@Override
 	public void onNewItem(int id, Face face) {
 		if (loadedObject != null)
 			loadedObject.setVisible(true);
@@ -144,11 +116,7 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	 * @param face     the face to scale upon
 	 */
 	private void scale(@NotNull Object3D object3D, @NotNull Face face) {
-		float x1 = face.getPosition().x;
-		float y1 = face.getPosition().y;
-		float x2 = face.getWidth();
-		float y2 = face.getHeight();
-		double dist = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+		double dist = Utils.calculateFaceCenter(face);
 		double scaleValue = dist / mDefaultViewportWidth; /* convert from pixels to normalized scale*/
 		object3D.setScale(scaleValue);
 	}
@@ -214,9 +182,22 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 
 	/**
 	 * Sets the camera attributes for size and facing direction, which informs how to transform
-	 * image coordinates later.
+	 * image coordinates later. If this is not set, image coordinates/loaded objects are not properly
+	 * shown on the face. This sets the preview width/height of the rendering surface to be the same
+	 * as the camera surface so their sizes will match when overlapped
 	 */
-	public void setCameraInfo(int previewWidth, int previewHeight, int facing) {
+	public void setCameraInfo(Size size,int facing){
+		int min = Math.min(size.getWidth(), size.getHeight());
+		int max = Math.max(size.getWidth(), size.getHeight());
+		if (Utils.isPortraitMode(mContext)) {
+			// Swap width and height sizes when in portrait, since it will be rotated by
+			// 90 degrees
+			setCameraInfo(min,max,facing);
+		} else {
+			setCameraInfo(max,min,facing);
+		}
+	}
+	private void setCameraInfo(int previewWidth, int previewHeight, int facing) {
 		synchronized (mLock) {
 			mPreviewWidth = previewWidth;
 			mPreviewHeight = previewHeight;

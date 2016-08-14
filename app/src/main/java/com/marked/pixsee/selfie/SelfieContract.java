@@ -19,9 +19,11 @@ class SelfieContract {
 
 		void resumeSelfie();
 
-		void onAvailableCameraSurfaceTexture(SurfaceTexture cameraSurfaceTexture);
+		void onAvailableCameraSurfaceTexture(SurfaceTexture cameraSurfaceTexture, int width, int height);
 
 		ISurfaceRenderer getRenderer();
+
+		void release();
 	}
 
 	interface View extends BaseView<Presenter> {
