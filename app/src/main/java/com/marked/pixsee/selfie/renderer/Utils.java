@@ -9,7 +9,7 @@ import com.google.android.gms.vision.face.Face;
  * Created by Tudor on 14-Aug-16.
  */
 
-class Utils {
+public class Utils {
 	static double calculateFaceCenter(Face face) {
 		float x1 = face.getPosition().x;
 		float y1 = face.getPosition().y;
@@ -18,7 +18,7 @@ class Utils {
 		return Math.sqrt(Math.pow(x1 - x2, 2.0) + Math.pow(y1 - y2, 2.0));
 	}
 
-	static boolean isPortraitMode(Context context) {
+	public static boolean isPortraitMode(Context context) {
 		int orientation = context.getResources().getConfiguration().orientation;
 		if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			return false;

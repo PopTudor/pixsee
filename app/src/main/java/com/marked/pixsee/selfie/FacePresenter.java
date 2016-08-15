@@ -63,16 +63,19 @@ class FacePresenter implements SelfieContract.Presenter {
 		try {
 			if (mCameraSurfaceTexture!=null) {
 				cameraSource.start(mCameraSurfaceTexture);
-				setRenderSurfaceSize();
+				setPreviewSizes();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void setRenderSurfaceSize() {
+	private void setPreviewSizes() {
 		Size size = cameraSource.getPreviewSize();
+		// render preview size
 		((SelfieRenderer) renderer).setCameraInfo(size, cameraSource.getCameraFacing());
+		// cameraTextureView preview size
+		mView.get().setCameraTextureViewSize(size);
 	}
 
 	@Override

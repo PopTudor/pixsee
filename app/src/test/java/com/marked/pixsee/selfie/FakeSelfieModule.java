@@ -10,6 +10,7 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.selfie.camerasource.CameraSource;
+import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 import com.marked.pixsee.selfie.renderer.SelfieTrackerAR;
 
 import org.mockito.Mockito;
@@ -29,7 +30,7 @@ class FakeSelfieModule {
     @Provides
     @FragmentScope
     Renderer provideFaceRenderer(Context context, SurfaceTexture.OnFrameAvailableListener onFrameAvailableListener, CameraSource source, SelfieTrackerAR selfieTrackerAR) {
-        return Mockito.mock(Renderer.class);
+        return Mockito.mock(SelfieRenderer.class);
     }
     @Provides
     @FragmentScope
@@ -60,7 +61,7 @@ class FakeSelfieModule {
     @Provides
     @FragmentScope
     SelfieContract.Presenter provideFacePresenter(Renderer renderer, CameraSource source) {
-        return Mockito.mock(SelfieContract.Presenter.class);
+        return Mockito.mock(FacePresenter.class);
     }
 
     @Provides

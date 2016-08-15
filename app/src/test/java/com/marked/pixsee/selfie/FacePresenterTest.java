@@ -5,6 +5,7 @@ import android.graphics.SurfaceTexture;
 import com.marked.pixsee.selfie.camerasource.CameraSource;
 import com.marked.pixsee.selfie.camerasource.PictureCallback;
 import com.marked.pixsee.selfie.camerasource.ShutterCallback;
+import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 
 import org.jetbrains.annotations.Contract;
 import org.junit.Before;
@@ -14,10 +15,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.rajawali3d.renderer.Renderer;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -28,7 +29,7 @@ public class FacePresenterTest {
 	@Mock
 	SelfieContract.View mView;
 	@Mock
-	Renderer mRenderer;
+	SelfieRenderer mRenderer;
 	@Mock
 	CameraSource mCameraSource;
 
@@ -88,7 +89,14 @@ public class FacePresenterTest {
 
 		verify(mCameraSource).release();
 	}
+	
+	@Test
+	public void startCamera_shouldChangeCameraSurfaceSize() throws Exception {
+		mFacePresenter.onAvailableCameraSurfaceTexture(mock(SurfaceTexture.class),0,0);
 
+		verify(mView).setCameraTextureViewSize(any(com.google.android.gms.common.images.Size.class));
+	}
+	
 	/*****************
 	 * DSL
 	 *******************/

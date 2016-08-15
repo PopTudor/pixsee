@@ -15,17 +15,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import com.google.android.gms.common.images.Size;
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.injection.Injectable;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.main.MainActivity;
+import com.marked.pixsee.selfie.camerasource.CameraTextureView;
 import com.marked.pixsee.selfie.commands.FavOneClick;
 import com.marked.pixsee.selfie.commands.FavThreeClick;
 import com.marked.pixsee.selfie.commands.FavTwoClick;
-import com.marked.pixsee.selfie.renderer.RenderSurfaceView;
 import com.marked.pixsee.selfie.data.SelfieObject;
+import com.marked.pixsee.selfie.renderer.RenderSurfaceView;
 import com.marked.pixsee.utility.Permissions;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
@@ -56,7 +58,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 
 	private RenderSurfaceView mRendererSurfaceView;
 
-	private TextureView mCameraTextureview;
+	private CameraTextureView mCameraTextureview;
 
 	private ViewGroup mBottomLayout;
 	private OnSelfieInteractionListener mOnSelfieInteractionListener;
@@ -102,7 +104,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		View rootView = inflater.inflate(R.layout.activity_face, container, false);
 
 		mBottomLayout = (ViewGroup) rootView.findViewById(R.id.bottomLayout);
-		mCameraTextureview = (TextureView) rootView.findViewById(R.id.camera_texture);
+		mCameraTextureview = (CameraTextureView) rootView.findViewById(R.id.camera_texture);
 		mRendererSurfaceView = (RenderSurfaceView) rootView.findViewById(R.id.renderer_texture);
 		mRendererSurfaceView.setTransparent(true);
 
@@ -231,6 +233,11 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	}
 
 	@Override
+	public void setCameraTextureViewSize(Size size) {
+		mCameraTextureview.setPreviewSize(size);
+	}
+
+	@Override
 	public void injectComponent() {
 		ActivityComponent daggerActivityComponent = DaggerActivityComponent.builder()
 				                                            .appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
@@ -245,6 +252,21 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	@Override
 	public RxPermissions RxPermissions() {
 		return RxPermissions.getInstance(getActivity());
+	}
+
+	// ===============================================================================================
+	// Interaction listener interfaces
+	// ===============================================================================================
+	public interface OnFavoritesListener {
+		void onFavoriteClicked(SelfieObject object);
+	}
+
+	public interface OnSelfieInteractionListener {
+		void showTakenPictureActions();
+
+		void selfieFragmentDesroyed();
+
+		Observable<Bitmap> getPicture();
 	}
 
 	public static class CameraTextureAvailable implements TextureView.SurfaceTextureListener {
@@ -273,20 +295,5 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
 		}
-	}
-
-	// ===============================================================================================
-	// Interaction listener interfaces
-	// ===============================================================================================
-	public interface OnFavoritesListener {
-		void onFavoriteClicked(SelfieObject object);
-	}
-
-	public interface OnSelfieInteractionListener {
-		void showTakenPictureActions();
-
-		void selfieFragmentDesroyed();
-
-		Observable<Bitmap> getPicture();
 	}
 }

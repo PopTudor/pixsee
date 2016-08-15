@@ -56,9 +56,4 @@ public class RenderSurfaceView extends SurfaceView {
             }
         }
     }
-
-    @Override
-    public void setTransparent(boolean isTransparent) {
-        super.setTransparent(isTransparent);
-    }
 }
