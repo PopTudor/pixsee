@@ -1,15 +1,14 @@
 package com.marked.pixsee.networking;
 
+import com.marked.pixsee.BuildConfig;
+
 /**
  * Created by Tudor Pop on 03-Jan-16.
  */
 public interface ServerConstants {
 	String PORT = ":3000/";
 	String SCHEME_HTTP = "http://";
-	String IP =
-//			"46.101.225.31"/* DIGITAL-OCEAN */
-			"192.168.0.102"
-			;
+	String IP = BuildConfig.SERVER_IP;
 	String BASE_URL = SCHEME_HTTP + IP;
 	/* ENDPOINTS */
 	String USER = "user";
