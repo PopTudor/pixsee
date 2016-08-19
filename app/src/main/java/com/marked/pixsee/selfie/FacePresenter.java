@@ -4,8 +4,8 @@ import android.graphics.SurfaceTexture;
 
 import com.google.android.gms.common.images.Size;
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.selfie.camerasource.CameraSource;
 import com.marked.pixsee.selfie.camerasource.PictureCallback;
+import com.marked.pixsee.selfie.camerasource.PixseeCamera;
 import com.marked.pixsee.selfie.camerasource.ShutterCallback;
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 
@@ -20,12 +20,12 @@ import java.lang.ref.WeakReference;
  * Created by Tudor on 2016-05-10.
  */
 class FacePresenter implements SelfieContract.Presenter {
-	private final CameraSource cameraSource;
+	private final PixseeCamera cameraSource;
 	private WeakReference<SelfieContract.View> mView;
 	private Renderer renderer;
 	private SurfaceTexture mCameraSurfaceTexture;
 
-	FacePresenter(@NotNull SelfieContract.View view, @NotNull Renderer renderer, @NotNull CameraSource cameraSource) {
+	FacePresenter(@NotNull SelfieContract.View view, @NotNull Renderer renderer, @NotNull PixseeCamera cameraSource) {
 		this.mView = new WeakReference<>(view);
 		this.renderer = renderer;
 		this.cameraSource = cameraSource;

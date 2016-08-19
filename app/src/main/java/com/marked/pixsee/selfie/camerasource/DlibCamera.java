@@ -3,12 +3,12 @@ package com.marked.pixsee.selfie.camerasource;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.google.android.gms.common.images.Size;
 import com.tzutalin.dlib.Constants;
 import com.tzutalin.dlib.PeopleDet;
 import com.tzutalin.dlib.VisionDetRet;
@@ -21,10 +21,10 @@ import java.util.List;
  * Created by Tudor on 18-Aug-16.
  */
 
-public class DlibFaceDetector extends PixseeCamera {
-	private static final String TAG = "DlibFaceDetector";
+public class DlibCamera extends PixseeCamera {
+	private static final String TAG = "DlibCamera";
 	private final Context mContext;
-	private PeopleDet mPeopleDet = new PeopleDet();
+	private PeopleDet mPeopleDet;
 	private int[] mRGBBytes = null;
 	private Bitmap mRGBframeBitmap = null;
 	private boolean mIsComputing = false;
@@ -34,21 +34,31 @@ public class DlibFaceDetector extends PixseeCamera {
 	 * frames become available from the camera.
 	 */
 	private Thread mProcessingThread;
-	private FrameProcessingRunnable mFrameProcessor = new FrameProcessingRunnable(mPeopleDet);
+	private FrameProcessingRunnable mFrameProcessor;
 
-	public DlibFaceDetector(Context context, DlibFaceCallback dlibFaceCallback) {
+	public DlibCamera(Context context, DlibFaceCallback dlibFaceCallback) {
 		super(context);
 		mContext = context;
 		mDlibFaceCallback = dlibFaceCallback;
+		mPeopleDet = new PeopleDet();
+		mFrameProcessor = new FrameProcessingRunnable(mPeopleDet);
 	}
 
+	/**
+	 * Called when the camera has a new preview frame.
+	 */
 	@Override
 	protected Camera.PreviewCallback createPreviewCallback() {
-		return new CameraPreviewCallback();
+		return new Camera.PreviewCallback() {
+			@Override
+			public void onPreviewFrame(byte[] data, Camera camera) {
+				mFrameProcessor.setNextFrame(data, camera);
+			}
+		};
 	}
 
 	@Override
-	synchronized protected PixseeCamera start(SurfaceTexture surfaceTexture) throws IOException {
+	public PixseeCamera start(SurfaceTexture surfaceTexture) throws IOException {
 		synchronized (mCameraLock) {
 			super.start(surfaceTexture);
 
@@ -56,67 +66,52 @@ public class DlibFaceDetector extends PixseeCamera {
 			mProcessingThread = new Thread(mFrameProcessor);
 			mFrameProcessor.setActive(true);
 			mProcessingThread.start();
+
 		}
+		Log.d(TAG, "--------------------> STARTED");
 		return this;
 	}
 
 	@Override
-	protected void stop() {
+	public void stop() {
 		synchronized (mCameraLock) {
 			mFrameProcessor.setActive(false);
-			if (mProcessingThread != null) {
-				try {
-					// Wait for the thread to complete to ensure that we can't have multiple threads
-					// executing at the same time (i.e., which would happen if we called start too
-					// quickly after stop).
-					mProcessingThread.join();
-				} catch (InterruptedException e) {
-					Log.d(TAG, "Frame processing thread interrupted on release.");
-				}
-				mProcessingThread = null;
-			}
+			stopProcessingThread();
 			// clear the buffer to prevent oom exceptions
 			mBytesToByteBuffer.clear();
 			super.stop();
+			Log.d(TAG, "--------------------> STOPED");
 		}
 	}
 
 	@Override
-	synchronized public void release() {
+	public void release() {
 		super.release();
 		synchronized (mCameraLock) {
 			mFrameProcessor.setActive(false);
 			mFrameProcessor.release();
-			if (mProcessingThread != null) {
-				try {
-					// Wait for the thread to complete to ensure that we can't have multiple threads
-					// executing at the same time (i.e., which would happen if we called start too
-					// quickly after stop).
-					mProcessingThread.join();
-				} catch (InterruptedException e) {
-					Log.d(TAG, "Frame processing thread interrupted on release.");
-				}
-				mProcessingThread = null;
-			}
-			// clear the buffer to prevent oom exceptions
-			mBytesToByteBuffer.clear();
+			stopProcessingThread();
 			super.stop();
+		}
+	}
+
+	private void stopProcessingThread() {
+		if (mProcessingThread != null) {
+			try {
+				// Wait for the thread to complete to ensure that we can't have multiple threads
+				// executing at the same time (i.e., which would happen if we called start too
+				// quickly after stop).
+				mProcessingThread.join();
+			} catch (InterruptedException e) {
+				Log.d(TAG, "Frame processing thread interrupted on release.");
+			}
+			mProcessingThread = null;
 		}
 	}
 
 	public interface DlibFaceCallback {
 
 		void onUpdate(VisionDetRet ret);
-	}
-
-	/**
-	 * Called when the camera has a new preview frame.
-	 */
-	private class CameraPreviewCallback implements Camera.PreviewCallback {
-		@Override
-		public void onPreviewFrame(byte[] data, Camera camera) {
-			mFrameProcessor.setNextFrame(data, camera);
-		}
 	}
 
 	private class FrameProcessingRunnable implements Runnable {
@@ -224,14 +219,19 @@ public class DlibFaceDetector extends PixseeCamera {
 						// loop.
 						return;
 					}
-//					Size size = getPreviewSize();
-//					int mPreviewWdith = size.getWidth();
-//					int mPreviewHeight = size.getHeight();
+					Size size = getPreviewSize();
+					int mPreviewWdith = size.getWidth();
+					int mPreviewHeight = size.getHeight();
 
-//					mRGBBytes = new int[mPreviewWdith * mPreviewHeight];
-//					mRGBframeBitmap = Bitmap.createBitmap(mPreviewWdith, mPreviewHeight, Bitmap.Config.ARGB_8888);
 
-					mRGBframeBitmap = BitmapFactory.decodeByteArray(mPendingFrameData.array(), 0, mPendingFrameData.capacity());
+					mRGBBytes = new int[mPreviewWdith * mPreviewHeight];
+					mRGBframeBitmap = Bitmap.createBitmap(mPreviewWdith, mPreviewHeight, Bitmap.Config.ARGB_8888);
+
+					ImageUtils.convertYUV420SPToARGB8888(mPendingFrameData.array(), mRGBBytes, mRequestedPreviewWidth,
+							mPreviewHeight, false);
+
+					mRGBframeBitmap.setPixels(mRGBBytes, 0, mPreviewWdith, 0, 0, mPreviewWdith, mPreviewHeight);
+
 					// Hold onto the frame data locally, so that we can use this for detection
 					// below.  We need to clear mPendingFrameData to ensure that this buffer isn't
 					// recycled back to the camera before we are done using that data.

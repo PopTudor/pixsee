@@ -171,7 +171,7 @@ public abstract class PixseeCamera {
 	//==============================================================================================
 	// Bridge Functionality for the Camera1 API
 	//==============================================================================================
-	protected PixseeCamera start(SurfaceTexture surfaceTexture) throws IOException {
+	public PixseeCamera start(SurfaceTexture surfaceTexture) throws IOException {
 		if (mCamera != null) {
 			return this;
 		}
@@ -539,7 +539,7 @@ public abstract class PixseeCamera {
 	 * Call {@link #release()} instead to completely shut down this camera source and release the
 	 * resources of the underlying detector.
 	 */
-	protected void stop() {
+	public void stop() {
 		if (mCamera != null) {
 			mCamera.stopPreview();
 			mCamera.setPreviewCallbackWithBuffer(null);

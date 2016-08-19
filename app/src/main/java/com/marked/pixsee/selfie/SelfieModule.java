@@ -10,6 +10,8 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.selfie.camerasource.CameraSource;
+import com.marked.pixsee.selfie.camerasource.DlibCamera;
+import com.marked.pixsee.selfie.camerasource.PixseeCamera;
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 import com.marked.pixsee.selfie.renderer.SelfieTrackerAR;
 
@@ -52,7 +54,8 @@ class SelfieModule {
 
     @Provides
     @FragmentScope
-    CameraSource provideCameraSource(Context context, Detector<Face> faceDetector) {
+    @Named(value = "vision")
+    PixseeCamera provideCameraSource(Context context, Detector<Face> faceDetector) {
         return new CameraSource.Builder(context, faceDetector).setRequestedFps(60.0f)
                 .setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO)
                 .setFacing(com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT)
@@ -61,7 +64,14 @@ class SelfieModule {
 
     @Provides
     @FragmentScope
-    SelfieContract.Presenter provideFacePresenter(Renderer renderer, CameraSource source) {
+    @Named(value = "dlib")
+    PixseeCamera provideCameraDlib(Context context, Renderer renderer) {
+        return new DlibCamera(context, (SelfieRenderer) renderer);
+    }
+
+    @Provides
+    @FragmentScope
+    SelfieContract.Presenter provideFacePresenter(Renderer renderer, @Named("vision") PixseeCamera source) {
         return new FacePresenter(mSelfieFragment.get(), renderer, source);
     }
 
