@@ -2,7 +2,8 @@ package com.marked.pixsee.selfie;
 
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.scopes.FragmentScope;
-import com.marked.pixsee.selfie.camerasource.CameraSource;
+
+import org.rajawali3d.renderer.Renderer;
 
 import dagger.Component;
 
@@ -14,5 +15,5 @@ import dagger.Component;
 interface SelfieComponent {
 	void inject(SelfieFragment selfieFragment);
 
-	void inject(CameraSource cameraSource);
+	void inject(Renderer renderer);
 }

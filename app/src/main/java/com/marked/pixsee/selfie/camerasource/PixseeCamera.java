@@ -67,6 +67,10 @@ public abstract class PixseeCamera {
 	 */
 	protected Map<byte[], ByteBuffer> mBytesToByteBuffer = new HashMap<>();
 
+	public PixseeCamera(Context context) {
+		mContext = context;
+	}
+
 	/**
 	 * Gets the id for the camera specified by the direction it is facing.  Returns -1 if no such
 	 * camera was found.
@@ -267,6 +271,8 @@ public abstract class PixseeCamera {
 
 		return camera;
 	}
+
+	protected abstract Camera.PreviewCallback createPreviewCallback();
 
 	/**
 	 * Creates one buffer for the camera preview callback.  The size of the buffer is based off of
@@ -510,8 +516,6 @@ public abstract class PixseeCamera {
 
 		return true;
 	}
-
-	protected abstract Camera.PreviewCallback createPreviewCallback();
 
 	/**
 	 * Stops the camera and releases the resources of the camera and underlying detector.

@@ -83,7 +83,6 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		// Must be done during an initialization phase like onCreate
 		RxPermissions()
 				.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-				.toBlocking()
 				.subscribe(new Action1<Boolean>() {
 					@Override
 					public void call(Boolean granted) {
@@ -101,17 +100,16 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.activity_face, container, false);
-
-		mBottomLayout = (ViewGroup) rootView.findViewById(R.id.bottomLayout);
-		mCameraTextureview = (CameraTextureView) rootView.findViewById(R.id.camera_texture);
-		mRendererSurfaceView = (RenderSurfaceView) rootView.findViewById(R.id.renderer_texture);
-		mRendererSurfaceView.setTransparent(true);
-
-
+		View view = inflater.inflate(R.layout.activity_face, container, false);
+		mBottomLayout = (ViewGroup) view.findViewById(R.id.bottomLayout);
+		mCameraTextureview = (CameraTextureView) view.findViewById(R.id.camera_texture);
 		mCameraTextureview.setSurfaceTextureListener(mCameraTextureAvailable);
+//
+		mRendererSurfaceView = (RenderSurfaceView) view.findViewById(R.id.renderer_texture);
+		mRendererSurfaceView.setTransparent(true);
 		mRendererSurfaceView.setSurfaceRenderer(mFacePresenter.getRenderer());
-		return rootView;
+
+		return view;
 	}
 
 	/**

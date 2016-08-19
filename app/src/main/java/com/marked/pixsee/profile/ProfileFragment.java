@@ -49,10 +49,17 @@ import rx.functions.Action1;
 
 public class ProfileFragment extends Fragment implements ProfileContract.View{
 	private static String USER_EXTRA = "PROFILE_FRAGMENT_USER";
-	private User mUser;
 	@Inject
 	ProfileContract.Presenter mPresenter;
+	private User mUser;
 	private PictureAdapter mPictureAdapter;
+	private ProfileFragmentInteraction mProfileFragmentInteraction;
+
+
+	public ProfileFragment() {
+		// Required empty public constructor
+	}
+
 	/**
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
@@ -66,11 +73,6 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 		args.putParcelable(USER_EXTRA, user);
 		fragment.setArguments(args);
 		return fragment;
-	}
-
-
-	public ProfileFragment() {
-		// Required empty public constructor
 	}
 
 	@Override
@@ -110,7 +112,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 							// I can control the camera now
 						} else {
 							// Oups permission denied
-							getActivity().onBackPressed();
+//							getActivity().onBackPressed();
 						}
 					}
 				});
@@ -205,8 +207,6 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 		mUser.setIconUrl("file://"+profilePicture.getAbsolutePath());
 		mPresenter.saveAppUser(mUser);
 	}
-
-	private ProfileFragmentInteraction mProfileFragmentInteraction;
 
 	@Override
 	public void setPresenter(ProfileContract.Presenter presenter) {
