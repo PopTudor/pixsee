@@ -1,10 +1,10 @@
 package com.marked.pixsee.friends.di;
 
 import com.marked.pixsee.friends.FriendFragment;
-import com.marked.pixsee.injection.components.ActivityComponent;
-import com.marked.pixsee.injection.scopes.FragmentScope;
 
 import dagger.Component;
+import dependencyInjection.components.ActivityComponent;
+import dependencyInjection.scopes.FragmentScope;
 
 /**
  * Created by Tudor Pop on 19-Mar-16.

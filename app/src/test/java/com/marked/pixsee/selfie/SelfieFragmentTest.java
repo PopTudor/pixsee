@@ -6,10 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.PixseeTest;
-import com.marked.pixsee.injection.components.AppComponentFake;
-import com.marked.pixsee.injection.components.DaggerFakeActivityComponent;
-import com.marked.pixsee.injection.components.FakeActivityComponent;
-import com.marked.pixsee.injection.modules.FakeActivityModule;
 import com.marked.pixsee.main.MainActivity;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
@@ -23,6 +19,10 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.support.v4.SupportFragmentController;
 
+import dependencyInjection.components.DaggerFakeActivityComponent;
+import dependencyInjection.components.FakeActivityComponent;
+import dependencyInjection.components.FakeAppComponent;
+import dependencyInjection.modules.FakeActivityModule;
 import rx.Observable;
 
 import static org.mockito.Mockito.doReturn;
@@ -34,11 +34,10 @@ import static org.mockito.Mockito.doReturn;
 @Config(constants = BuildConfig.class,sdk = 23,application = PixseeTest.class)
 public class SelfieFragmentTest extends SelfieFragment {
 	String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
-	// Robolectric Controllers
-	private SupportFragmentController<SelfieFragmentTest> fragmentController;
-
 	@Mock
 	RxPermissions rxPermissions;
+	// Robolectric Controllers
+	private SupportFragmentController<SelfieFragmentTest> fragmentController;
 
 	@Before
 	public void setUp() throws Exception {
@@ -65,7 +64,7 @@ public class SelfieFragmentTest extends SelfieFragment {
 	@Override
 	public void injectComponent() {
 		FakeActivityComponent activityComponent = DaggerFakeActivityComponent.builder()
-				.appComponentFake((AppComponentFake) ((PixseeTest) getActivity().getApplication()).getAppComponent())
+				                                          .appComponentFake((FakeAppComponent) ((PixseeTest) getActivity().getApplication()).getAppComponent())
 				.fakeActivityModule(new FakeActivityModule((AppCompatActivity) getActivity()))
 				.build();
 

@@ -19,14 +19,14 @@ import android.view.inputmethod.InputMethodManager;
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.injection.components.ActivityComponent;
-import com.marked.pixsee.injection.components.DaggerActivityComponent;
-import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.selfie.PictureDetailSendFragment;
 import com.marked.pixsee.selfie.SelfieFragment;
 
 import java.io.File;
 
+import dependencyInjection.components.ActivityComponent;
+import dependencyInjection.components.DaggerActivityComponent;
+import dependencyInjection.modules.ActivityModule;
 import rx.Observable;
 
 /**

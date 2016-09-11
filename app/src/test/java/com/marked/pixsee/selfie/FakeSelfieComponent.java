@@ -1,9 +1,8 @@
 package com.marked.pixsee.selfie;
 
-import com.marked.pixsee.injection.components.FakeActivityComponent;
-import com.marked.pixsee.injection.scopes.FragmentScope;
-
 import dagger.Component;
+import dependencyInjection.components.FakeActivityComponent;
+import dependencyInjection.scopes.FragmentScope;
 
 /**
  * Created by tudor on 10.08.2016.

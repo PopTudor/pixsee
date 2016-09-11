@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,11 +19,7 @@ import android.view.WindowManager;
 import com.google.android.gms.common.images.Size;
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
-import com.marked.pixsee.injection.Injectable;
-import com.marked.pixsee.injection.components.ActivityComponent;
-import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.main.MainActivity;
-import com.marked.pixsee.selfie.camerasource.CameraTextureView;
 import com.marked.pixsee.selfie.commands.FavOneClick;
 import com.marked.pixsee.selfie.commands.FavThreeClick;
 import com.marked.pixsee.selfie.commands.FavTwoClick;
@@ -31,11 +28,13 @@ import com.marked.pixsee.selfie.renderer.RenderSurfaceView;
 import com.marked.pixsee.utility.Permissions;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import camerasource.CameraTextureView;
+import dependencyInjection.Injectable;
+import dependencyInjection.components.ActivityComponent;
+import dependencyInjection.components.DaggerActivityComponent;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -203,7 +202,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		setupListeners(view);
 	}
 
-	private void setupListeners(@NotNull View view) {
+	private void setupListeners(@NonNull View view) {
 		view.findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

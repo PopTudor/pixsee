@@ -23,15 +23,15 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friendsInvite.addUsername.di.AddUserModule;
 import com.marked.pixsee.friendsInvite.addUsername.di.DaggerAddUserComponent;
-import com.marked.pixsee.injection.components.ActivityComponent;
-import com.marked.pixsee.injection.components.DaggerActivityComponent;
-import com.marked.pixsee.injection.modules.ActivityModule;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import dependencyInjection.components.ActivityComponent;
+import dependencyInjection.components.DaggerActivityComponent;
+import dependencyInjection.modules.ActivityModule;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -47,6 +47,10 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 	private RecyclerView mUsersRecyclerview;
 	private UsersAdapter mUsersAdapter;
 	private Subscription subscription;
+
+	public AddUsernameFragment() {
+		// Required empty public constructor
+	}
 
 	public static AddUsernameFragment newInstance() {
 		AddUsernameFragment fragment = new AddUsernameFragment();
@@ -66,10 +70,6 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 				.addUserModule(new AddUserModule(this))
 				.build()
 				.inject(this);
-	}
-
-	public AddUsernameFragment() {
-		// Required empty public constructor
 	}
 
 	@Override

@@ -1,12 +1,12 @@
 package com.marked.pixsee.main;
 
+import android.support.annotation.NonNull;
+
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.main.strategy.ProfilePictureStrategy;
 import com.marked.pixsee.main.strategy.ShareStrategy;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 
@@ -62,7 +62,7 @@ class MainPresenter implements MainContract.Presenter {
 	}
 
 	@Override
-	public void friendRequest(@NotNull User user) {
+	public void friendRequest(@NonNull User user) {
 		mWeakView.get().showFriendRequestDialog(user);
 	}
 }

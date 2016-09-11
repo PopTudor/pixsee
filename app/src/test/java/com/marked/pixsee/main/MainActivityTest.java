@@ -12,7 +12,6 @@ import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.chat.ChatActivity;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.FriendFragment;
-import com.marked.pixsee.injection.modules.FakeActivityModule;
 import com.marked.pixsee.profile.ProfileFragment;
 
 import org.junit.After;
@@ -27,6 +26,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
+
+import dependencyInjection.modules.FakeActivityModule;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

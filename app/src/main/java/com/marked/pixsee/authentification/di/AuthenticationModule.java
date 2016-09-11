@@ -6,14 +6,14 @@ import com.marked.pixsee.authentification.AuthenticationContract;
 import com.marked.pixsee.authentification.Presenter;
 import com.marked.pixsee.authentification.login.LoginAPI;
 import com.marked.pixsee.data.user.UserDatasource;
-import com.marked.pixsee.injection.scopes.Repository;
-import com.marked.pixsee.injection.scopes.ActivityScope;
 import com.marked.pixsee.networking.ServerConstants;
 
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
+import dependencyInjection.scopes.ActivityScope;
+import dependencyInjection.scopes.Repository;
 import retrofit2.Retrofit;
 
 /**

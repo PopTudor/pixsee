@@ -8,10 +8,6 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
-import com.marked.pixsee.injection.scopes.FragmentScope;
-import com.marked.pixsee.selfie.camerasource.CameraSource;
-import com.marked.pixsee.selfie.camerasource.DlibCamera;
-import com.marked.pixsee.selfie.camerasource.PixseeCamera;
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 import com.marked.pixsee.selfie.renderer.SelfieTrackerAR;
 
@@ -21,8 +17,12 @@ import java.lang.ref.WeakReference;
 
 import javax.inject.Named;
 
+import camerasource.CameraSource;
+import camerasource.DlibCamera;
+import camerasource.PixseeCamera;
 import dagger.Module;
 import dagger.Provides;
+import dependencyInjection.scopes.FragmentScope;
 
 /**
  * Created by Tudor on 4/24/2016.

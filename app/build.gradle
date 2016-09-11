@@ -30,17 +30,35 @@ def versionPatch = 2
 def versionSmallPatch = 1
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 23
     buildToolsVersion '24.0.2'
 
     defaultConfig {
         applicationId 'com.marked.pixsee'
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 23
         versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch * 10 +versionSmallPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+
+        // uncomment splits to decrease app size - google recommends to split only if the app is > 100mb
+//        splits {
+//            abi {
+//                enable true
+//                reset()
+//                include 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'arm64-v8a','mips','mips64'
+//            }
+//        }
+        ndk {
+            abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+        }
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_PLATFORM=android-13', '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static'
+                cppFlags "-frtti", "-fexceptions"
+            }
+        }
     }
     archivesBaseName = rootProject.projectDir.getName()
     dexOptions {
@@ -64,7 +82,7 @@ android {
         }
         debug {
             debuggable true
-            buildConfigField(String, Server_ip, "\"192.168.0.102\"")
+            buildConfigField(String, Server_ip, "\"192.168.0.101\"")
 //            shrinkResources true
 //            minifyEnabled true
 //            proguardFiles(files { file('./proguard').listFiles() })
@@ -79,9 +97,16 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+    externalNativeBuild {
+        cmake {
+            path 'src/main/jni/CMakeLists.txt'
+        }
+    }
 }
 
 dependencies {
+    def supportVersion = "23.4.0"
+    compile project(':openCVLibrary310')
     compile('io.socket:socket.io-client:0.6.3') {
         exclude group: 'org.json', module: 'json'
     }
@@ -89,9 +114,9 @@ dependencies {
         transitive = true;
     }
     // GOOGLE
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.android.support:recyclerview-v7:24.2.0'
-    compile 'com.android.support:design:24.2.0'
+    compile "com.android.support:appcompat-v7: $supportVersion"
+    compile "com.android.support:recyclerview-v7: $supportVersion"
+    compile "com.android.support:design: $supportVersion"
     compile 'com.google.firebase:firebase-messaging:9.2.1'
     // Firebase
     compile 'com.google.android.gms:play-services-vision:9.2.1'
@@ -123,7 +148,6 @@ dependencies {
     // Fresco Pipeline
     compile 'com.facebook.android:facebook-android-sdk:[4,5]'
     // Facebook SDK
-
     // RX
     compile 'io.reactivex:rxjava:1.1.8'
     // RxJava
@@ -133,7 +157,6 @@ dependencies {
     // RxPermissions
     compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
     // RxBindings
-
     // RETROFIT
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
@@ -154,18 +177,18 @@ dependencies {
     testCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'com.android.support:support-annotations:24.2.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
-        exclude group: 'com.android.support'
+        exclude group: "com.android.support"
         exclude module: 'recyclerview-v7'
-        exclude module: 'support-annotations'
+        exclude module: "support-annotations"
     }
-    compile 'org.jetbrains:annotations-java5:15.0'
 }
 
-
+configurations.all {
+    resolutionStrategy.force 'com.android.support:support-annotations:23.4.0'
+}
 apply plugin: 'com.google.gms.google-services'
 
 /*

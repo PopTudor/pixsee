@@ -1,12 +1,11 @@
 package com.marked.pixsee.friends;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
@@ -38,7 +37,7 @@ public class FriendPresenter implements FriendsContract.Presenter {
 	}
 
 	@Override
-	public void loadMore(int limit, @NotNull String text) {
+	public void loadMore(int limit, @NonNull String text) {
 		if (text.isEmpty())
 			return;
 		repository.getUsers(text)

@@ -1,9 +1,8 @@
 package com.marked.pixsee.chat;
 
-import com.marked.pixsee.injection.components.ActivityComponent;
-import com.marked.pixsee.injection.scopes.FragmentScope;
-
 import dagger.Component;
+import dependencyInjection.components.ActivityComponent;
+import dependencyInjection.scopes.FragmentScope;
 
 /**
  * Created by Tudor on 2016-05-28.

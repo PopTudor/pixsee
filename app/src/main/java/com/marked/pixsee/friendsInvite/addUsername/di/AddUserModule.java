@@ -3,16 +3,16 @@ package com.marked.pixsee.friendsInvite.addUsername.di;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
-import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
 import com.marked.pixsee.friendsInvite.addUsername.AddUserAPI;
-import com.marked.pixsee.injection.scopes.Repository;
-import com.marked.pixsee.injection.scopes.FragmentScope;
+import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
 import com.marked.pixsee.networking.ServerConstants;
 
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
+import dependencyInjection.scopes.FragmentScope;
+import dependencyInjection.scopes.Repository;
 import retrofit2.Retrofit;
 
 /**

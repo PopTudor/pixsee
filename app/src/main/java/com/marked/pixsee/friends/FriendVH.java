@@ -1,6 +1,7 @@
 package com.marked.pixsee.friends;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -9,19 +10,17 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.user.User;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Created by Tudor Pop on 03-Dec-15.
  */
 class FriendVH extends RecyclerView.ViewHolder {
+	private static FriendClick FRIEND_CLICK;
 	private SimpleDraweeView simpleDraweeView;
 	private TextView friendNameTextView;
 	private TextView friendBodyTextView;
 	private FriendFragment.FriendFragmentInteractionListener friendFragmentInteractionListener;
-	private static FriendClick FRIEND_CLICK;
 
-	public FriendVH(@NotNull View binding, FriendFragment.FriendFragmentInteractionListener interactionListener) {
+	public FriendVH(@NonNull View binding, FriendFragment.FriendFragmentInteractionListener interactionListener) {
 		super(binding);
 		simpleDraweeView = (SimpleDraweeView) binding.findViewById(R.id.friendIconImageView);
 		friendNameTextView = (TextView) binding.findViewById(R.id.friendNameTextView);

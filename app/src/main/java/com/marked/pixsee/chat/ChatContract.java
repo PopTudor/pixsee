@@ -1,14 +1,13 @@
 package com.marked.pixsee.chat;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.user.User;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
@@ -29,11 +28,11 @@ interface ChatContract {
 
 		void chatClicked(Message message,int position);
 
-		void sendMessage(@NotNull Message message);
+		void sendMessage(@NonNull Message message);
 
-		void sendImage(@NotNull Message message);
+		void sendImage(@NonNull Message message);
 
-		void receiveMessage(@NotNull Message message);
+		void receiveMessage(@NonNull Message message);
 
 
 		void setChatInteraction(ChatFragment.ChatFragmentInteraction listener);

@@ -1,6 +1,7 @@
 package com.marked.pixsee.chat;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 import com.marked.pixsee.chat.data.ChatDatasource;
@@ -10,8 +11,6 @@ import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.networking.UploadAPI;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -30,9 +29,9 @@ import rx.schedulers.Schedulers;
  * Created by Tudor on 2016-05-19.
  */
 class ChatPresenter implements ChatContract.Presenter {
+	private final UploadAPI mUploadAPI;
 	private WeakReference<ChatContract.View> mView;
 	private ChatDatasource mRepository;
-	private final UploadAPI mUploadAPI;
 	private User mAppsUser;
 	private boolean mShowTypingAnimation = true;
 	private ChatFragment.ChatFragmentInteraction mChatFragmentInteraction;
@@ -72,7 +71,7 @@ class ChatPresenter implements ChatContract.Presenter {
 	}
 
 	@Override
-	public void receiveMessage(@NotNull Message message) {
+	public void receiveMessage(@NonNull Message message) {
 		mRepository.saveMessage(message);
 		mView.get().addMessage(message);
 	}
@@ -83,7 +82,7 @@ class ChatPresenter implements ChatContract.Presenter {
 	}
 
 	@Override
-	public void sendImage(@NotNull final Message message) {
+	public void sendImage(@NonNull final Message message) {
 		if (message.getMessageType() == MessageConstants.MessageType.ME_IMAGE) {
 			File file = new File(message.getData().get(MessageConstants.DATA_BODY));
 			// create RequestBody instance from file
@@ -126,7 +125,7 @@ class ChatPresenter implements ChatContract.Presenter {
 	}
 
 	@Override
-	public void sendMessage(@NotNull Message message) {
+	public void sendMessage(@NonNull Message message) {
 		mRepository.saveMessage(message);
 		mView.get().addMessage(message);
 	}

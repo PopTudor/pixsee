@@ -15,13 +15,13 @@ import com.marked.pixsee.friends.mapper.CursorToUserMapper;
 import com.marked.pixsee.friends.mapper.UserToCvMapper;
 import com.marked.pixsee.friends.specifications.GetFriendsSpecification;
 import com.marked.pixsee.friends.specifications.GetFriendsStartingWith;
-import com.marked.pixsee.injection.scopes.ActivityScope;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import dependencyInjection.scopes.ActivityScope;
 import rx.Observable;
 
 import static com.marked.pixsee.friends.data.FriendContractDB.TABLE_NAME;

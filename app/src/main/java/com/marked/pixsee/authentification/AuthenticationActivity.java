@@ -13,16 +13,17 @@ import android.widget.Toast;
 
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
-import com.marked.pixsee.injection.modules.ActivityModule;
-import com.marked.pixsee.main.MainActivity;
-import com.marked.pixsee.authentification.di.DaggerAuthenticationComponent;
 import com.marked.pixsee.authentification.di.AuthenticationModule;
+import com.marked.pixsee.authentification.di.DaggerAuthenticationComponent;
 import com.marked.pixsee.authentification.login.LoginFragment;
 import com.marked.pixsee.authentification.signup.SignUpEmailFragment;
 import com.marked.pixsee.authentification.signup.SignUpNameFragment;
 import com.marked.pixsee.authentification.signup.SignUpPassFragment;
+import com.marked.pixsee.main.MainActivity;
 
 import javax.inject.Inject;
+
+import dependencyInjection.modules.ActivityModule;
 
 public class AuthenticationActivity
 		extends AppCompatActivity
@@ -30,11 +31,10 @@ public class AuthenticationActivity
 		SignUpEmailFragment.SignUpEmailFragmentInteraction,
 		SignUpPassFragment.SignUpPassFragmentInteraction,
 		AuthenticationContract.View,LoginFragment.LoginInteractionListener {
-	private FragmentManager mFragmentManager;
-	private ProgressDialog mProgressDialog;
-
 	@Inject
 	AuthenticationContract.Presenter mPresenter;
+	private FragmentManager mFragmentManager;
+	private ProgressDialog mProgressDialog;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

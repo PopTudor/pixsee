@@ -1,9 +1,10 @@
 package com.marked.pixsee.selfie.renderer.transformation;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.vision.face.Face;
 import com.tzutalin.dlib.VisionDetRet;
 
-import org.jetbrains.annotations.NotNull;
 import org.rajawali3d.Object3D;
 
 /**
@@ -47,7 +48,7 @@ public class ScaleTransform extends Transform {
 //		object3D.setScale(scaleValue);
 	}
 
-	private void scale(@NotNull Object3D object3D, @NotNull Face face) {
+	private void scale(@NonNull Object3D object3D, @NonNull Face face) {
 
 	}
 }

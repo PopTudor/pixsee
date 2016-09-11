@@ -31,14 +31,15 @@ import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
 import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
-import com.marked.pixsee.injection.Injectable;
-import com.marked.pixsee.injection.components.ActivityComponent;
-import com.marked.pixsee.injection.components.DaggerActivityComponent;
-import com.marked.pixsee.injection.modules.ActivityModule;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import dependencyInjection.Injectable;
+import dependencyInjection.components.ActivityComponent;
+import dependencyInjection.components.DaggerActivityComponent;
+import dependencyInjection.modules.ActivityModule;
 
 
 /**
@@ -57,17 +58,44 @@ public class FriendFragment extends Fragment implements Injectable,
 
 	@Inject
 	FriendsContract.Presenter mPresenter;
+	MenuItemCompat.OnActionExpandListener expandListener = new MenuItemCompat.OnActionExpandListener() {
+		@Override
+		public boolean onMenuItemActionExpand(MenuItem item) {
+			return true;
+		}
 
+		@Override
+		public boolean onMenuItemActionCollapse(MenuItem item) {
+			mPresenter.loadMore(50);
+			return true;
+		}
+	};
 	private RecyclerView mFriendsRecyclerview;
 	private FriendsAdapter mFriendsAdapter;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 
+	//	lateinit private var mFabMenu: FloatingActionMenu
 	/**
 	 * Used to open a friend's cards collection
 	 */
 	private FriendFragmentInteractionListener mCallback;
+	private SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
+		@Override
+		public boolean onQueryTextSubmit(String query) {
+			mPresenter.loadMore(10, query);
+			return false;
+		}
 
-	//	lateinit private var mFabMenu: FloatingActionMenu
+		@Override
+		public boolean onQueryTextChange(String query) {
+			mPresenter.loadMore(10, query);
+			return false;
+		}
+	};
+
+	public static FriendFragment newInstance() {
+		return new FriendFragment();
+	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,10 +104,12 @@ public class FriendFragment extends Fragment implements Injectable,
 		mFriendsAdapter = new FriendsAdapter(mCallback);
 		injectComponent();
 	}
+
 	@Override
 	public void onRefresh() {
 		mPresenter.loadMore(50, true);
 	}
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -169,7 +199,6 @@ public class FriendFragment extends Fragment implements Injectable,
 		}
 	}
 
-
 	public void setupListeners(View rootView) {
 //		mBinding.vuforiaCamera.setOnClickListener(new View.OnClickListener() {
 //			@Override
@@ -210,42 +239,6 @@ public class FriendFragment extends Fragment implements Injectable,
 		MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), expandListener);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
-	MenuItemCompat.OnActionExpandListener expandListener = new MenuItemCompat.OnActionExpandListener() {
-		@Override
-		public boolean onMenuItemActionExpand(MenuItem item) {
-			return true;
-		}
-
-		@Override
-		public boolean onMenuItemActionCollapse(MenuItem item) {
-			mPresenter.loadMore(50);
-			return true;
-		}
-	};
-
-	private SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
-		@Override
-		public boolean onQueryTextSubmit(String query) {
-			mPresenter.loadMore(10, query);
-			return false;
-		}
-
-		@Override
-		public boolean onQueryTextChange(String query) {
-			mPresenter.loadMore(10, query);
-			return false;
-		}
-	};
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()){
-			case R.id.action_invite:
-				mPresenter.actionInviteClick();
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
 
 	//	void setUpFab() {
 	//		mFabMenu = mBinding.fabMenu;
@@ -260,25 +253,13 @@ public class FriendFragment extends Fragment implements Injectable,
 	//	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		Log.d("TAG", "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
-
-		if (requestCode == REQUEST_INVITE) {
-			if (resultCode == Activity.RESULT_OK) {
-				Toast.makeText(getActivity(), "Hurray \ud83d\ude04", Toast.LENGTH_SHORT).show();
-				// Check how many invitations were sent and log a message
-				// The ids array contains the unique invitation ids for each invitation sent
-				// (one for each contact select by the user). You can use these for analytics
-				// as the ID will be consistent on the sending and receiving devices.
-				if (data != null) {
-//					Toast.makeText(getActivity(), "got invitations " + ids.length, Toast.LENGTH_SHORT).show();
-				}
-			} else {
-				// Sending failed or it was canceled, show failure message to the user
-				Toast.makeText(getActivity(), "Ooh \ud83d\ude14", Toast.LENGTH_SHORT).show();
-			}
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_invite:
+				mPresenter.actionInviteClick();
+				return true;
 		}
+		return super.onOptionsItemSelected(item);
 	}
 	/* // uncomment this when we are going to add floating action menu
 	    private fun createCustomAnimation() {
@@ -316,6 +297,37 @@ public class FriendFragment extends Fragment implements Injectable,
 
         */
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.d("TAG", "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+		if (requestCode == REQUEST_INVITE) {
+			if (resultCode == Activity.RESULT_OK) {
+				Toast.makeText(getActivity(), "Hurray \ud83d\ude04", Toast.LENGTH_SHORT).show();
+				// Check how many invitations were sent and log a message
+				// The ids array contains the unique invitation ids for each invitation sent
+				// (one for each contact select by the user). You can use these for analytics
+				// as the ID will be consistent on the sending and receiving devices.
+				if (data != null) {
+//					Toast.makeText(getActivity(), "got invitations " + ids.length, Toast.LENGTH_SHORT).show();
+				}
+			} else {
+				// Sending failed or it was canceled, show failure message to the user
+				Toast.makeText(getActivity(), "Ooh \ud83d\ude14", Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
+
+	//	public void attachListeners(){
+	//		for (Contact contact:mContacts.getContacts())
+	//			mSocket.on(contact.getId(), onNewRoom);
+	//	}
+	//	public void dettachListeners(){
+	//		for (Contact contact:mContacts.getContacts())
+	//			mSocket.off(contact.getId(), onNewRoom);
+	//	}
+
 	/**
 	 * Closes the Floating Action Button
 	 *
@@ -338,20 +350,6 @@ public class FriendFragment extends Fragment implements Injectable,
 		super.onDetach();
 		// Reset the active callbacks interface to the dummy implementation.
 		//		dettachListeners();
-	}
-
-	//	public void attachListeners(){
-	//		for (Contact contact:mContacts.getContacts())
-	//			mSocket.on(contact.getId(), onNewRoom);
-	//	}
-	//	public void dettachListeners(){
-	//		for (Contact contact:mContacts.getContacts())
-	//			mSocket.off(contact.getId(), onNewRoom);
-	//	}
-
-
-	public static FriendFragment newInstance() {
-		return new FriendFragment();
 	}
 
 	@Override

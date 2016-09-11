@@ -12,10 +12,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -244,10 +243,7 @@ public class BitmapUtils {
 	/* Checks if external storage is available for read and write */
 	static boolean isExternalStorageWritable() {
 		String state = getExternalStorageState();
-		if (MEDIA_MOUNTED.equals(state)) {
-			return true;
-		}
-		return false;
+		return MEDIA_MOUNTED.equals(state);
 	}
 
 	/**
@@ -259,7 +255,7 @@ public class BitmapUtils {
 	 * @param filename   the name of the saved image
 	 * @return the path of the image
 	 */
-	public static File saveFile(@NotNull Bitmap screenshot, Bitmap.CompressFormat format, int quality, String filename) {
+	public static File saveFile(@NonNull Bitmap screenshot, Bitmap.CompressFormat format, int quality, String filename) {
 		File file = getPublicPicture("/" + filename);
 		try {
 			screenshot.compress(format, quality, new FileOutputStream(file));

@@ -10,7 +10,6 @@ import com.google.gson.JsonObject;
 import com.marked.pixsee.friends.data.FriendContractDB;
 import com.marked.pixsee.friends.data.FriendsAPI;
 import com.marked.pixsee.friendsInvite.addUsername.AddUserAPI;
-import com.marked.pixsee.injection.scopes.ActivityScope;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.utility.GCMConstants;
 
@@ -19,6 +18,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dependencyInjection.scopes.ActivityScope;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;

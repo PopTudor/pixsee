@@ -8,7 +8,6 @@ import com.google.android.gms.common.images.Size;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.face.Face;
 import com.marked.pixsee.selfie.SelfieFragment.OnFavoritesListener;
-import com.marked.pixsee.selfie.camerasource.DlibCamera;
 import com.marked.pixsee.selfie.data.SelfieObject;
 import com.marked.pixsee.selfie.renderer.transformation.RotationTransform;
 import com.marked.pixsee.selfie.renderer.transformation.ScaleTransform;
@@ -25,6 +24,8 @@ import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.renderer.Renderer;
 
 import java.util.ArrayList;
+
+import camerasource.DlibCamera;
 
 /**
  * Created by Tudor on 4/8/2016.

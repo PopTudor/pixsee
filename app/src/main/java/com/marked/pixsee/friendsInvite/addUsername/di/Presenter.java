@@ -1,12 +1,12 @@
 package com.marked.pixsee.friendsInvite.addUsername.di;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
-import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
 import com.marked.pixsee.friendsInvite.addUsername.AddUserAPI;
-
-import org.jetbrains.annotations.NotNull;
+import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
 
 import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
@@ -42,7 +42,7 @@ class Presenter implements AddUsernameContract.Presenter {
 	}
 
 	@Override
-	public void search(@NotNull String usernameOrEmail) {
+	public void search(@NonNull String usernameOrEmail) {
 		if (usernameOrEmail.isEmpty())
 			return;
 		repository.getUsers(usernameOrEmail)

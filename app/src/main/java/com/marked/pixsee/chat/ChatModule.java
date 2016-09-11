@@ -3,7 +3,6 @@ package com.marked.pixsee.chat;
 import com.marked.pixsee.chat.data.ChatRepository;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.networking.UploadAPI;
 
@@ -11,6 +10,7 @@ import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
+import dependencyInjection.scopes.FragmentScope;
 import retrofit2.Retrofit;
 
 /**

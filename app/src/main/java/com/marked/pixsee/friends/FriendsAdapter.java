@@ -1,5 +1,6 @@
 package com.marked.pixsee.friends;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,8 +8,6 @@ import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.user.User;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ class FriendsAdapter extends RecyclerView.Adapter<FriendVH> {
 	private final List<User> mDataSet;
 	private FriendFragment.FriendFragmentInteractionListener friendFragmentInteractionListener;
 
-	FriendsAdapter(@NotNull FriendFragment.FriendFragmentInteractionListener friendFragmentInteractionListener) {
+	FriendsAdapter(@NonNull FriendFragment.FriendFragmentInteractionListener friendFragmentInteractionListener) {
 		this.friendFragmentInteractionListener = checkNotNull(friendFragmentInteractionListener);
 		mDataSet= new ArrayList<>();
 	}

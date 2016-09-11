@@ -18,8 +18,6 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.chat.ChatActivity;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.FriendFragment;
-import com.marked.pixsee.injection.Injectable;
-import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.main.strategy.PictureActionStrategy;
 import com.marked.pixsee.main.strategy.ProfilePictureStrategy;
 import com.marked.pixsee.profile.ProfileFragment;
@@ -27,13 +25,13 @@ import com.marked.pixsee.selfie.PictureDetailSendFragment;
 import com.marked.pixsee.selfie.PictureDetailShareFragment;
 import com.marked.pixsee.selfie.SelfieFragment;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
+import dependencyInjection.Injectable;
+import dependencyInjection.modules.ActivityModule;
 import rx.Observable;
 
 import static com.marked.pixsee.selfie.SelfieFragment.OnSelfieInteractionListener;
@@ -126,7 +124,7 @@ public class MainActivity
 	}
 
 	@Override
-	public void showCamera(@NotNull PictureActionStrategy actionStrategy) {
+	public void showCamera(@NonNull PictureActionStrategy actionStrategy) {
 		mPictureActionStrategy = actionStrategy;
 		Fragment fragment = SelfieFragment.newInstance();
 		getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, fragment, "camera").addToBackStack(null).commit();

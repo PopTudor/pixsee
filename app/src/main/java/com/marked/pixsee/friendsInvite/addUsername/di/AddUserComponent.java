@@ -1,10 +1,10 @@
 package com.marked.pixsee.friendsInvite.addUsername.di;
 
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameFragment;
-import com.marked.pixsee.injection.components.ActivityComponent;
-import com.marked.pixsee.injection.scopes.FragmentScope;
 
 import dagger.Component;
+import dependencyInjection.components.ActivityComponent;
+import dependencyInjection.scopes.FragmentScope;
 
 /**
  * Created by Tudor on 03-Jun-16.

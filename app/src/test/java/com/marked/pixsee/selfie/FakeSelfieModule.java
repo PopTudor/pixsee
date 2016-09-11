@@ -8,8 +8,6 @@ import android.view.TextureView;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
-import com.marked.pixsee.injection.scopes.FragmentScope;
-import com.marked.pixsee.selfie.camerasource.CameraSource;
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 import com.marked.pixsee.selfie.renderer.SelfieTrackerAR;
 
@@ -18,8 +16,10 @@ import org.rajawali3d.renderer.Renderer;
 
 import javax.inject.Named;
 
+import camerasource.CameraSource;
 import dagger.Module;
 import dagger.Provides;
+import dependencyInjection.scopes.FragmentScope;
 
 /**
  * Created by tudor on 10.08.2016.
@@ -69,16 +69,17 @@ class FakeSelfieModule {
     Detector<Face> provideFaceDetector(Context context, SelfieTrackerAR selfieTrackerAR) {
         return Mockito.mock(FakeFaceDetector.class);
     }
-    private class FakeFaceDetector extends Detector<Face>{
-        @Override
-        public SparseArray<Face> detect(Frame frame) {
-            return null;
-        }
-    }
 
     @Provides
     @FragmentScope
     SelfieTrackerAR provideSelfieTrackerAR() {
         return Mockito.mock(SelfieTrackerAR.class);
+    }
+
+    private class FakeFaceDetector extends Detector<Face> {
+        @Override
+        public SparseArray<Face> detect(Frame frame) {
+            return null;
+        }
     }
 }

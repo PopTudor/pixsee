@@ -1,20 +1,21 @@
 package com.marked.pixsee.selfie;
 
 import android.graphics.SurfaceTexture;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.common.images.Size;
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.selfie.camerasource.PictureCallback;
-import com.marked.pixsee.selfie.camerasource.PixseeCamera;
-import com.marked.pixsee.selfie.camerasource.ShutterCallback;
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 
-import org.jetbrains.annotations.NotNull;
 import org.rajawali3d.renderer.ISurfaceRenderer;
 import org.rajawali3d.renderer.Renderer;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+
+import camerasource.PictureCallback;
+import camerasource.PixseeCamera;
+import camerasource.ShutterCallback;
 
 /**
  * Created by Tudor on 2016-05-10.
@@ -25,7 +26,7 @@ class FacePresenter implements SelfieContract.Presenter {
 	private Renderer renderer;
 	private SurfaceTexture mCameraSurfaceTexture;
 
-	FacePresenter(@NotNull SelfieContract.View view, @NotNull Renderer renderer, @NotNull PixseeCamera cameraSource) {
+	FacePresenter(@NonNull SelfieContract.View view, @NonNull Renderer renderer, @NonNull PixseeCamera cameraSource) {
 		this.mView = new WeakReference<>(view);
 		this.renderer = renderer;
 		this.cameraSource = cameraSource;

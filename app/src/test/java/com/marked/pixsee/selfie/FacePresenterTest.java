@@ -2,9 +2,6 @@ package com.marked.pixsee.selfie;
 
 import android.graphics.SurfaceTexture;
 
-import com.marked.pixsee.selfie.camerasource.CameraSource;
-import com.marked.pixsee.selfie.camerasource.PictureCallback;
-import com.marked.pixsee.selfie.camerasource.ShutterCallback;
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 
 import org.jetbrains.annotations.Contract;
@@ -15,6 +12,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
+import camerasource.CameraSource;
+import camerasource.PictureCallback;
+import camerasource.ShutterCallback;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
