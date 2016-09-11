@@ -20,3 +20,5 @@ gen/
 obj/
 app/build/
 build/
+/openCVLibrary310/build/
+/projectFilesBackup/.idea/

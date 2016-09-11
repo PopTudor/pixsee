@@ -30,13 +30,13 @@ def versionPatch = 2
 def versionSmallPatch = 1
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.2'
 
     defaultConfig {
         applicationId 'com.marked.pixsee'
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch * 10 +versionSmallPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -60,7 +60,7 @@ android {
 //            ndk {
 //                abiFilters "armeabi-v7a"
 //            }
-//            multiDexEnabled true
+            multiDexEnabled true
         }
         debug {
             debuggable true
@@ -68,7 +68,7 @@ android {
 //            shrinkResources true
 //            minifyEnabled true
 //            proguardFiles(files { file('./proguard').listFiles() })
-//            multiDexEnabled true
+            multiDexEnabled true
 
         }
     }
@@ -89,67 +89,75 @@ dependencies {
         transitive = true;
     }
     // GOOGLE
-
-    compile "com.android.support:appcompat-v7:23.4.0"
-    compile "com.android.support:recyclerview-v7:23.4.0"
-    compile "com.android.support:design:23.4.0"
-    compile "com.google.firebase:firebase-messaging:9.2.1" // Firebase
-    compile "com.google.android.gms:play-services-vision:9.2.1"// Vision
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile 'com.android.support:design:24.2.0'
+    compile 'com.google.firebase:firebase-messaging:9.2.1'
+    // Firebase
+    compile 'com.google.android.gms:play-services-vision:9.2.1'
+    // Vision
     compile 'com.tzutalin.dlib-android-app:dlib:1.0.1'
-
     // DESIGN
-    compile "com.davemorrissey.labs:subsampling-scale-image-view:3.4.1" // Subsampling scale image
-    compile "me.himanshusoni.chatmessageview:chat-message-view:1.0.3" // ChatView
-    compile "com.github.justzak:dilatingdotsprogressbar:1.0.1" // Dilating Dots
-    compile "org.rajawali3d:rajawali:1.1.505-SNAPSHOT@aar" // Rajawali
-    compile 'com.aurelhubert:ahbottomnavigation:1.2.3' // Bottom navigation
-    compile "com.github.clans:fab:1.6.2" // Fab
-    compile 'tyrantgit:explosionfield:1.0.1' // Explosion field
-    compile "com.github.zzz40500:AndroidSweetSheet:1.1.0"
-    compile ('com.github.ozodrukh:CircularReveal:2.0.1@aar') { // Circular Reveal
+    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
+    // Subsampling scale image
+    compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
+    // ChatView
+    compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
+    // Dilating Dots
+    compile 'org.rajawali3d:rajawali:1.1.505-SNAPSHOT@aar'
+    // Rajawali
+    compile 'com.aurelhubert:ahbottomnavigation:1.2.3'
+    // Bottom navigation
+    compile 'com.github.clans:fab:1.6.2'
+    // Fab
+    compile 'tyrantgit:explosionfield:1.0.1'
+    // Explosion field
+    compile 'com.github.zzz40500:AndroidSweetSheet:1.1.0'
+    compile('com.github.ozodrukh:CircularReveal:2.0.1@aar') { // Circular Reveal
         transitive = true;
     }
-
     // FACEBOOK
-    compile "com.facebook.fresco:fresco:0.11.0" // Fresco
-    compile "com.facebook.fresco:imagepipeline-okhttp:0.9.0" // Fresco Pipeline
-    compile "com.facebook.android:facebook-android-sdk:[4,5]" // Facebook SDK
+    compile 'com.facebook.fresco:fresco:0.11.0'
+    // Fresco
+    compile 'com.facebook.fresco:imagepipeline-okhttp:0.9.0'
+    // Fresco Pipeline
+    compile 'com.facebook.android:facebook-android-sdk:[4,5]'
+    // Facebook SDK
 
     // RX
-    compile "io.reactivex:rxjava:1.1.8" // RxJava
-    compile "io.reactivex:rxandroid:1.2.1" // RxAndroid
-    compile "com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar" // RxPermissions
-    compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0' // RxBindings
+    compile 'io.reactivex:rxjava:1.1.8'
+    // RxJava
+    compile 'io.reactivex:rxandroid:1.2.1'
+    // RxAndroid
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
+    // RxPermissions
+    compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
+    // RxBindings
 
     // RETROFIT
-    compile "com.squareup.retrofit2:retrofit:2.1.0"
-    compile "com.squareup.retrofit2:converter-gson:2.1.0"
-    compile "com.squareup.retrofit2:adapter-rxjava:2.1.0"
-    compile "com.squareup.okhttp3:logging-interceptor:3.3.1"
-
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
     // DAGGER
-    compile "com.google.dagger:dagger:2.6"
+    compile 'com.google.dagger:dagger:2.6'
     apt "com.google.dagger:dagger-compiler:2.6"
-    provided "com.google.dagger:dagger-compiler:2.6"
-    provided "org.glassfish:javax.annotation:10.0-b28"
-
+    provided 'com.google.dagger:dagger-compiler:2.6'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
     // TESTING
-    testCompile "junit:junit:4.12"
-    testCompile "org.mockito:mockito-core:1.10.19"
-
-    testCompile "org.robolectric:robolectric:3.1.1"
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'org.robolectric:robolectric:3.1.1'
     testCompile 'org.robolectric:shadows-play-services:3.1'
-//    testCompile 'org.robolectric:shadows-httpclient:3.1.1'
+    //    testCompile 'org.robolectric:shadows-httpclient:3.1.1'
     testCompile 'org.robolectric:shadows-support-v4:3.1.1'
     testCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
-
-
-    androidTestCompile "com.android.support.test:runner:0.5"
-    androidTestCompile "com.android.support.test:rules:0.5"
-    androidTestCompile "com.android.support:support-annotations:23.4.0"
-    androidTestCompile "com.android.support.test.espresso:espresso-core:2.2.2"
-    androidTestCompile "com.android.support.test.espresso:espresso-intents:2.2.2"
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.2'){
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support:support-annotations:24.2.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
         exclude group: 'com.android.support'
         exclude module: 'recyclerview-v7'
         exclude module: 'support-annotations'
