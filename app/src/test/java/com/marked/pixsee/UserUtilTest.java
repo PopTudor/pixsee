@@ -1,6 +1,6 @@
 package com.marked.pixsee;
 
-import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.model.user.User;
 
 /**
  * Created by Tudor on 23-Jul-16.

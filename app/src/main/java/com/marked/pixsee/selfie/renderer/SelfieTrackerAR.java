@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
+import com.marked.pixsee.model.face.VisionFace;
 
 /**
  * Created by Tudor on 5/6/2016.
@@ -27,14 +28,14 @@ public class SelfieTrackerAR extends Tracker<Face> {
 	@Override
 	public void onNewItem(int id, Face item) {
 		super.onNewItem(id, item);
-		trackerCallback.onNewItem(id, item);
+		trackerCallback.onNewItem(id, new VisionFace(item));
 		Log.i(TAG, "Awesome person detected.  Hello!");
 	}
 
 	@Override
 	public void onUpdate(Detector.Detections<Face> detections, Face item) {
 		super.onUpdate(detections, item);
-		trackerCallback.onUpdate(detections, item);
+		trackerCallback.onUpdate(new VisionFace(item));
 	}
 
 	@Override
@@ -50,9 +51,9 @@ public class SelfieTrackerAR extends Tracker<Face> {
 	}
 
 	interface TrackerCallback {
-		void onNewItem(int id, Face face);
+		void onNewItem(int id, com.marked.pixsee.model.face.Face face);
 
-		void onUpdate(Detector.Detections<Face> detections, Face face);
+		void onUpdate(com.marked.pixsee.model.face.Face face);
 
 		void onDone();
 	}

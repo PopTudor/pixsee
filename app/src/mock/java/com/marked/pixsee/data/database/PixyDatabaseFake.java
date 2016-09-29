@@ -1,4 +1,4 @@
-package com.marked.pixsee.data.database;
+package com.marked.pixsee.model.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

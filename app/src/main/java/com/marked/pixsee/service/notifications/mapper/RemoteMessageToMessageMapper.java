@@ -3,7 +3,7 @@ package com.marked.pixsee.service.notifications.mapper;
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
-import com.marked.pixsee.data.Mapper;
+import com.marked.pixsee.model.Mapper;
 
 /**
  * Created by Tudor on 01-Aug-16.

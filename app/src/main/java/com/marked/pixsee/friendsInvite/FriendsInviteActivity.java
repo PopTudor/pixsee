@@ -11,10 +11,10 @@ import android.view.View;
 
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameFragment;
 import com.marked.pixsee.friendsInvite.commands.ClickAddUser;
 import com.marked.pixsee.friendsInvite.commands.ClickShareUsername;
+import com.marked.pixsee.model.user.User;
 
 import dependencyInjection.components.DaggerActivityComponent;
 import dependencyInjection.modules.ActivityModule;

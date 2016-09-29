@@ -18,7 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.selfie.PictureDetailSendFragment;
 import com.marked.pixsee.selfie.SelfieFragment;
 

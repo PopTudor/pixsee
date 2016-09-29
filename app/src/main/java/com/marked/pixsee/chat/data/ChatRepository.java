@@ -2,7 +2,7 @@ package com.marked.pixsee.chat.data;
 
 import android.support.annotation.NonNull;
 
-import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.model.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +36,9 @@ import rx.schedulers.Schedulers;
  *
  */
 public class ChatRepository implements ChatDatasource {
+	private final List<Message> cache = new ArrayList<>();
 	private ChatDatasource disk;
 	private ChatDatasource network;
-	private final List<Message> cache = new ArrayList<>();
 	private boolean dirtyCache;
 
 	/**

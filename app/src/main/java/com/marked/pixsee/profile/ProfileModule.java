@@ -1,6 +1,6 @@
 package com.marked.pixsee.profile;
 
-import com.marked.pixsee.data.user.UserDatasource;
+import com.marked.pixsee.model.user.UserDatasource;
 import com.marked.pixsee.utility.BitmapUtils;
 
 import java.io.File;

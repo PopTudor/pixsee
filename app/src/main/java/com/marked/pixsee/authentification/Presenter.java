@@ -8,8 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.authentification.login.LoginAPI;
-import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.data.user.UserDatasource;
+import com.marked.pixsee.model.user.User;
+import com.marked.pixsee.model.user.UserDatasource;
 import com.marked.pixsee.networking.HTTPStatusCodes;
 import com.marked.pixsee.utility.GCMConstants;
 

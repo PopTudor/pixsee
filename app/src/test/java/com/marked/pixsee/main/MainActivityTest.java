@@ -10,8 +10,8 @@ import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
 import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.chat.ChatActivity;
-import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.FriendFragment;
+import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.profile.ProfileFragment;
 
 import org.junit.After;

@@ -1,7 +1,7 @@
 package com.marked.pixsee.profile;
 
-import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.data.user.UserDatasource;
+import com.marked.pixsee.model.user.User;
+import com.marked.pixsee.model.user.UserDatasource;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

@@ -7,7 +7,7 @@ import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.model.user.User;
 
 import java.io.File;
 import java.util.List;

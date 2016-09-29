@@ -1,4 +1,4 @@
-package com.marked.pixsee.data.database;
+package com.marked.pixsee.model.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,12 +9,12 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class PixyDatabase extends SQLiteOpenHelper {
 
+	private static PixyDatabase instance;
+
+
 	private PixyDatabase(Context context) {
 		super(context, DatabaseContract.DATABASE_NAME, null, DatabaseContract.DATABASE_VERSION);
 	}
-
-
-	private static PixyDatabase instance;
 
 	public static PixyDatabase getInstance(Context context) {
 		if (instance == null)

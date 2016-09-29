@@ -4,7 +4,7 @@ import android.content.ContentValues;
 
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
-import com.marked.pixsee.data.Mapper;
+import com.marked.pixsee.model.Mapper;
 
 import java.util.Map;
 

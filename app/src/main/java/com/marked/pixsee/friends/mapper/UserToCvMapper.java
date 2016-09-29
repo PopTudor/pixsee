@@ -2,9 +2,9 @@ package com.marked.pixsee.friends.mapper;
 
 import android.content.ContentValues;
 
-import com.marked.pixsee.data.Mapper;
-import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.friends.data.FriendConstants;
+import com.marked.pixsee.model.Mapper;
+import com.marked.pixsee.model.user.User;
 
 /**
  * Created by Tudor Pop on 29-Mar-16.

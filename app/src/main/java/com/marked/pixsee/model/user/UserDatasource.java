@@ -1,4 +1,4 @@
-package com.marked.pixsee.data.user;
+package com.marked.pixsee.model.user;
 
 import android.support.annotation.NonNull;
 

@@ -2,11 +2,11 @@ package com.marked.pixsee.main;
 
 import android.support.annotation.NonNull;
 
-import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.main.strategy.ProfilePictureStrategy;
 import com.marked.pixsee.main.strategy.ShareStrategy;
+import com.marked.pixsee.model.database.DatabaseContract;
+import com.marked.pixsee.model.user.User;
+import com.marked.pixsee.model.user.UserDatasource;
 
 import java.lang.ref.WeakReference;
 

@@ -1,4 +1,4 @@
-package com.marked.pixsee.data;
+package com.marked.pixsee.model;
 
 /**
  * Created by Tudor Pop on 29-Mar-16.

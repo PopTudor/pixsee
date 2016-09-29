@@ -4,7 +4,6 @@ import android.graphics.SurfaceTexture;
 
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 
-import org.jetbrains.annotations.Contract;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -101,7 +100,6 @@ public class FacePresenterTest {
 	/*****************
 	 * DSL
 	 *******************/
-	@Contract(" -> !null")
 	private Answer callTakePictureCallbacks() {
 		return new Answer() {
 			@Override

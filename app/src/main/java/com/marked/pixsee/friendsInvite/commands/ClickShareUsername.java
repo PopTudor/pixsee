@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.marked.pixsee.commands.ClickCommand;
-import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.model.user.User;
 
 /**
  * Created by Tudor on 03-Jun-16.

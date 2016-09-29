@@ -1,8 +1,8 @@
 package com.marked.pixsee.friends.di;
 
-import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.friends.FriendPresenter;
 import com.marked.pixsee.friends.FriendsContract;
+import com.marked.pixsee.model.user.UserDatasource;
 
 import dagger.Module;
 import dagger.Provides;

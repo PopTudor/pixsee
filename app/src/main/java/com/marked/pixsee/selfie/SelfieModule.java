@@ -18,7 +18,6 @@ import java.lang.ref.WeakReference;
 import javax.inject.Named;
 
 import camerasource.CameraSource;
-import camerasource.DlibCamera;
 import camerasource.PixseeCamera;
 import dagger.Module;
 import dagger.Provides;
@@ -60,13 +59,6 @@ class SelfieModule {
                 .setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO)
                 .setFacing(com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT)
                 .build();
-    }
-
-    @Provides
-    @FragmentScope
-    @Named(value = "dlib")
-    PixseeCamera provideCameraDlib(Context context, Renderer renderer) {
-        return new DlibCamera(context, (SelfieRenderer) renderer);
     }
 
     @Provides

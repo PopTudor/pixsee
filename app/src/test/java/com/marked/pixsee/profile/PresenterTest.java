@@ -1,7 +1,7 @@
 package com.marked.pixsee.profile;
 
-import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.data.user.UserRepository;
+import com.marked.pixsee.model.user.User;
+import com.marked.pixsee.model.user.UserRepository;
 
 import org.junit.Assert;
 import org.junit.Before;

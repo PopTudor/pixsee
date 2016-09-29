@@ -1,8 +1,8 @@
 package com.marked.pixsee.chat;
 
 import com.marked.pixsee.chat.data.ChatRepository;
-import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.model.database.DatabaseContract;
+import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.networking.UploadAPI;
 

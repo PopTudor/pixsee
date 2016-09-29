@@ -1,6 +1,6 @@
 package com.marked.pixsee.main;
 
-import com.marked.pixsee.data.user.UserDatasource;
+import com.marked.pixsee.model.user.UserDatasource;
 
 import org.mockito.Mockito;
 

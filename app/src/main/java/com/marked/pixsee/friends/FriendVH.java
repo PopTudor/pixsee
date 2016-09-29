@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.model.user.User;
 
 /**
  * Created by Tudor Pop on 03-Dec-15.

@@ -4,8 +4,8 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.data.user.UserDatasource;
+import com.marked.pixsee.model.user.User;
+import com.marked.pixsee.model.user.UserDatasource;
 
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;

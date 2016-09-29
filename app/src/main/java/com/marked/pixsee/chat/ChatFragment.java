@@ -36,8 +36,8 @@ import com.marked.pixsee.chat.custom.ChatAdapter;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.commons.SpaceItemDecorator;
-import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.fullscreenImage.ImageFullscreenActivity;
+import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.utility.GCMConstants;
 
@@ -66,22 +66,37 @@ import tyrantgit.explosionfield.ExplosionField;
  * on handsets.
  */
 public class ChatFragment extends Fragment implements ChatContract.View, ChatAdapter.ChatInteraction {
+	public static final String ON_NEW_MESSAGE = "onMessage";
+	public static final String ON_NEW_ROOM = "onRoom";
+	public static final String ON_EXIT_ROOM = "onRoom";
+	public static final String ON_TYPING = "onTyping";
+	/**
+	 * Check if the user is using the app
+	 *
+	 * @return if the app is in foreground or not
+	 */
+	public static boolean isInForeground = false;
+	@Inject
+	ChatContract.Presenter mPresenter;
 	private String mThisUser;
 	private User mThatUser;
-
 	private ChatAdapter mChatAdapter;
 	private LinearLayoutManager mLinearLayoutManager;
-
 	private ExplosionField mExplosionField;
 	private Socket mSocket;
 	private CardView mPictureTakenContainer;
-
     private Emitter.Listener onMessage;
     private Emitter.Listener onTyping;
-    @Inject
-    ChatContract.Presenter mPresenter;
-
 	private EditText messageEditText;
+	private RecyclerView messagesRecyclerView;
+
+	public static ChatFragment newInstance(Parcelable parcelable) {
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(ChatActivity.EXTRA_CONTACT, parcelable);
+		ChatFragment fragment = new ChatFragment();
+		fragment.setArguments(bundle);
+		return fragment;
+	}
 
 	/**
 	 * Add message to dataset and notify the adapter of the change
@@ -113,8 +128,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 		mSocket.connect();
 	}
-
-	private RecyclerView messagesRecyclerView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -180,7 +193,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 				}
 			}
 		});
-		((FloatingActionButton)rootView.findViewById(R.id.sendButton))
+		rootView.findViewById(R.id.sendButton)
 				.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(),R.color.transparent)));
 
 		((FloatingActionButton)rootView.findViewById(R.id.sendButton))
@@ -306,7 +319,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		mThatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
 		mThisUser = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(GCMConstants.USER_ID, null);
 		mPresenter.setThatUser(mThatUser);
-		mExplosionField = ExplosionField.attach2Window(getActivity());;
+		mExplosionField = ExplosionField.attach2Window(getActivity());
 	}
 
 	public void onTyping(boolean typing) {
@@ -356,6 +369,10 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
         };
     }
 
+	/**
+	 * keep track if the user is interacting with the app. If not, disconnect the socket
+	 */
+
     public Emitter.Listener onTyping() { // // FIXME: 23-Jun-16 gets called twice when I click a friend
         Emitter.Listener onTyping = new Emitter.Listener() {
             @Override
@@ -380,28 +397,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 			return;
 		mChatAdapter.getDataset().remove(mChatAdapter.getDataset().size() - 1);
 		mChatAdapter.notifyItemRemoved(mChatAdapter.getDataset().size());
-	}
-
-	public static final String ON_NEW_MESSAGE = "onMessage";
-	public static final String ON_NEW_ROOM = "onRoom";
-	public static final String ON_EXIT_ROOM = "onRoom";
-	public static final String ON_TYPING = "onTyping";
-	/**
-	 * keep track if the user is interacting with the app. If not, disconnect the socket
-	 */
-	/**
-	 * Check if the user is using the app
-	 *
-	 * @return if the app is in foreground or not
-	 */
-	public static boolean isInForeground = false;
-
-	public static ChatFragment newInstance(Parcelable parcelable) {
-		Bundle bundle = new Bundle();
-		bundle.putParcelable(ChatActivity.EXTRA_CONTACT, parcelable);
-		ChatFragment fragment = new ChatFragment();
-		fragment.setArguments(bundle);
-		return fragment;
 	}
 
 	@Override

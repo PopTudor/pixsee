@@ -2,7 +2,7 @@ package com.marked.pixsee.main;
 
 import android.content.Context;
 
-import com.marked.pixsee.data.user.UserDatasource;
+import com.marked.pixsee.model.user.UserDatasource;
 
 import dagger.Module;
 import dagger.Provides;

@@ -1,4 +1,4 @@
-package com.marked.pixsee.data.user;
+package com.marked.pixsee.model.user;
 
 import android.os.Bundle;
 import android.os.Parcel;
@@ -16,6 +16,17 @@ import java.util.UUID;
  */
 public final class User implements Parcelable, Comparable<User> {
 	public static final String TAG = "user_tag";
+	public static final Parcelable.Creator CREATOR = new Parcelable.Creator<User>() {
+		@Override
+		public User createFromParcel(Parcel parcelIn) {
+			return new User(parcelIn);
+		}
+
+		@Override
+		public User[] newArray(int size) {
+			return new User[size];
+		}
+	};
 	@SerializedName(value = "userID", alternate = {"_id"})
 	String userID;
 	String name;
@@ -53,6 +64,7 @@ public final class User implements Parcelable, Comparable<User> {
 		this(userID, name, email, token, null, null, null, null);
 	}
 
+
 	public User(Parcel parcelIn) {
 		this.userID = parcelIn.readString();
 		this.name = parcelIn.readString();
@@ -64,26 +76,28 @@ public final class User implements Parcelable, Comparable<User> {
 		this.username = parcelIn.readString();
 	}
 
-
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator<User>() {
-		@Override
-		public User createFromParcel(Parcel parcelIn) {
-			return new User(parcelIn);
-		}
-
-		@Override
-		public User[] newArray(int size) {
-			return new User[size];
-		}
-	};
-
 	public User(Bundle extras) {
 		this(extras.getString("userID"), extras.getString("name"), extras.getString("email"), extras.getString("token")
 				, null, extras.getString("coverUrl"), extras.getString("iconUrl"), extras.getString("username"));
 	}
 
+	public static List<User> getRandomUsers(int num) {
+		String[] names = {"Vincenza Goudeau", "Kellee Petrillo", "Nga Kinchen", "Leif Vara", "Bradley Mcgonigle", "Kasi Kitchen"};
+		List<User> users = new ArrayList<>();
+		for (int i = 0; i < num; i++) {
+			String name = names[(int) (Math.random() * names.length)];
+			String email = name.replace(" ", "") + "@gmail.com";
+			users.add(new User(UUID.randomUUID().toString(), name, email, name + email, null, null, null, name));
+		}
+		return users;
+	}
+
 	public String getUserID() {
 		return userID;
+	}
+
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 
 	@Override
@@ -102,79 +116,64 @@ public final class User implements Parcelable, Comparable<User> {
 		dest.writeString(username);
 	}
 
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
+	public String getToken() {
+		return token;
 	}
 
 	public void setToken(String token) {
 		this.token = token;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public void setCoverUrl(String coverUrl) {
-		this.coverUrl = coverUrl;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public void setIconUrl(String iconUrl) {
-		this.iconUrl = iconUrl;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
 	public String getName() {
 		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getPassword() {
 		return password;
 	}
 
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public String getEmail() {
 		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getUsername() {
 		return username;
 	}
 
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	public String getCoverUrl() {
 		return coverUrl;
+	}
+
+	public void setCoverUrl(String coverUrl) {
+		this.coverUrl = coverUrl;
 	}
 
 	public String getIconUrl() {
 		return iconUrl;
 	}
 
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
+	}
+
 	@Override
 	public int compareTo(@NonNull User another) {
 		return this.email.compareTo(another.email);
-	}
-
-	public static List<User> getRandomUsers(int num) {
-		String[] names = {"Vincenza Goudeau", "Kellee Petrillo", "Nga Kinchen", "Leif Vara", "Bradley Mcgonigle", "Kasi Kitchen"};
-		List<User> users = new ArrayList<>();
-		for (int i = 0; i < num; i++) {
-			String name = names[(int) (Math.random() * names.length)];
-			String email = name.replace(" ", "")+"@gmail.com";
-			users.add(new User(UUID.randomUUID().toString(), name, email, name + email, null, null, null, name));
-		}
-		return users;
 	}
 }

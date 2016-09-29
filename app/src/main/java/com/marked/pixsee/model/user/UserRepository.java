@@ -1,4 +1,4 @@
-package com.marked.pixsee.data.user;
+package com.marked.pixsee.model.user;
 
 import android.support.annotation.NonNull;
 
@@ -19,9 +19,9 @@ import rx.schedulers.Schedulers;
  * Singleton class used to keep all the friends of the user
  */
 public class UserRepository implements UserDatasource {
-    private UserDatasource disk;
+	final List<User> cache = new ArrayList<>(10);
+	private UserDatasource disk;
     private UserDatasource network;
-    final List<User> cache = new ArrayList<>(10);
     private boolean dirtyCache;
 
     public UserRepository(UserDatasource disk, UserDatasource network) {

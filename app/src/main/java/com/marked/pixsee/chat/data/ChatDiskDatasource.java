@@ -8,8 +8,8 @@ import android.support.annotation.NonNull;
 
 import com.marked.pixsee.chat.mapper.CursorToMessageMapper;
 import com.marked.pixsee.chat.mapper.MessageToCVMapper;
-import com.marked.pixsee.data.Mapper;
-import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.model.Mapper;
+import com.marked.pixsee.model.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +22,8 @@ import rx.Observable;
  * Created by Tudor on 2016-05-20.
  */
 public class ChatDiskDatasource implements ChatDatasource {
+	Mapper<Cursor, Message> cursorToMessageMapper;
+	Mapper<Message, ContentValues> messageToCVMapper = new MessageToCVMapper();
 	private SQLiteOpenHelper database;
 	/*
 	* https://frogermcs.github.io/dependency-injection-with-dagger-2-the-api/
@@ -45,9 +47,6 @@ public class ChatDiskDatasource implements ChatDatasource {
 	public ChatDiskDatasource(SQLiteOpenHelper database) {
 		this.database = database;
 	}
-
-	Mapper<Cursor, Message> cursorToMessageMapper;
-	Mapper<Message, ContentValues> messageToCVMapper = new MessageToCVMapper();
 
 	@Override
 	public Observable<List<Message>> getMessages(User friend) {

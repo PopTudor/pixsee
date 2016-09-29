@@ -64,7 +64,8 @@ public class SelfieFragmentTest extends SelfieFragment {
 	@Override
 	public void injectComponent() {
 		FakeActivityComponent activityComponent = DaggerFakeActivityComponent.builder()
-				                                          .appComponentFake((FakeAppComponent) ((PixseeTest) getActivity().getApplication()).getAppComponent())
+				                                          .fakeAppComponent((FakeAppComponent) ((PixseeTest) getActivity().getApplication())
+						                                                                               .getAppComponent())
 				.fakeActivityModule(new FakeActivityModule((AppCompatActivity) getActivity()))
 				.build();
 

@@ -5,15 +5,13 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.google.android.gms.common.images.Size;
-import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.face.Face;
+import com.marked.pixsee.model.face.Face;
 import com.marked.pixsee.selfie.SelfieFragment.OnFavoritesListener;
 import com.marked.pixsee.selfie.data.SelfieObject;
 import com.marked.pixsee.selfie.renderer.transformation.RotationTransform;
 import com.marked.pixsee.selfie.renderer.transformation.ScaleTransform;
 import com.marked.pixsee.selfie.renderer.transformation.Transform;
 import com.marked.pixsee.selfie.renderer.transformation.TranslateTransform;
-import com.tzutalin.dlib.VisionDetRet;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
@@ -25,18 +23,17 @@ import org.rajawali3d.renderer.Renderer;
 
 import java.util.ArrayList;
 
-import camerasource.DlibCamera;
 
 /**
  * Created by Tudor on 4/8/2016.
  * Used to render models onto a @{StreamingTexture} using the render thread
  * The renderer should only be created once we have a running camera
  */
-public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, SelfieTrackerAR.TrackerCallback, DlibCamera.DlibFaceCallback {
+public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, SelfieTrackerAR.TrackerCallback {
 	private static final String TAG = "***********";
 	private static final int CAMERA_Z = 6;
 	private final Object mLock = new Object();
-	ArrayList<Transform> mTransforms = new ArrayList<>();
+	private ArrayList<Transform> mTransforms = new ArrayList<>();
 	private int mPreviewWidth, mPreviewHeight;
 	private Object3D loadedObject = null;
 
@@ -97,7 +94,7 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	}
 
 	@Override
-	public void onUpdate(Detector.Detections<Face> detections, Face face) {
+	public void onUpdate(Face face) {
 		if (loadedObject != null && face != null) {
 			for (Transform it : mTransforms)
 				it.transform(loadedObject, face);
@@ -157,19 +154,19 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 
 	}
 
-	private void translation(Object3D object3D, VisionDetRet ret) {
+//	private void translation(Object3D object3D, VisionDetRet ret) {
 //		float x = translateX(ret.getLeft() + ret.getRight() / 2);
 //		float y = translateY(ret.getTop() + ret.getBottom() / 2);
 //		object3D.setScreenCoordinates(x, y, mCurrentViewportWidth, mCurrentViewportHeight, CAMERA_Z);
-	}
+//	}
 
-	@Override
-	public void onUpdate(VisionDetRet ret) {
-		if (loadedObject != null && ret != null) {
+//	@Override
+//	public void onUpdate(VisionDetRet ret) {
+//		if (loadedObject != null && ret != null) {
 //			scale(loadedObject, ret);
 //			translation(loadedObject, ret);
-		}
-	}
+//		}
+//	}
 
 
 }

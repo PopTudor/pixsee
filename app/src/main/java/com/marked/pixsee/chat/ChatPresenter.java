@@ -9,7 +9,7 @@ import com.marked.pixsee.chat.data.ChatRepository;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.commands.Command;
-import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.networking.UploadAPI;
 
 import java.io.File;

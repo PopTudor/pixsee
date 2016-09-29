@@ -1,7 +1,7 @@
 package com.marked.pixsee.selfie.renderer.transformation;
 
 import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.face.Face;
+import com.marked.pixsee.model.face.Face;
 
 import org.rajawali3d.Object3D;
 
@@ -32,8 +32,8 @@ public class TranslateTransform extends Transform {
 	 */
 	@Override
 	public void transform(Object3D object3D, Face face) {
-		float x = translateX(face.getPosition().x + face.getWidth() / 2);
-		float y = translateY(face.getPosition().y + face.getHeight() / 2);
+		float x = translateX(face.centerX());
+		float y = translateY(face.centerY());
 		object3D.setScreenCoordinates(x, y, sCurrentViewportWidth, sCurrentViewportHeight, CAMERA_Z);
 	}
 

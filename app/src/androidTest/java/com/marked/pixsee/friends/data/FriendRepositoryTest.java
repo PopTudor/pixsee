@@ -7,10 +7,10 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.marked.pixsee.data.database.PixyDatabase;
-import com.marked.pixsee.data.user.UserRepository;
-import com.marked.pixsee.data.user.UserDiskDatasource;
-import com.marked.pixsee.data.user.UserNetworkDatasource;
+import com.marked.pixsee.model.database.PixyDatabase;
+import com.marked.pixsee.model.user.UserDiskDatasource;
+import com.marked.pixsee.model.user.UserNetworkDatasource;
+import com.marked.pixsee.model.user.UserRepository;
 
 import org.junit.Assert;
 import org.junit.Before;

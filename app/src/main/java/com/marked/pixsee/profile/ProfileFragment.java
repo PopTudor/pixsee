@@ -31,10 +31,10 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.entry.EntryActivity;
 import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
+import com.marked.pixsee.model.database.DatabaseContract;
+import com.marked.pixsee.model.user.User;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
