@@ -33,7 +33,8 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	private static final String TAG = "***********";
 	private static final int CAMERA_Z = 6;
 	private final Object mLock = new Object();
-	private ArrayList<Transform> mTransforms = new ArrayList<>();
+	private ArrayList<Transform> mTransforms = new ArrayList<>(3);
+	private TranslateTransform mTranslateTransform;
 	private int mPreviewWidth, mPreviewHeight;
 	private Object3D loadedObject = null;
 
@@ -50,9 +51,18 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 
 		getCurrentScene().addLight(directionalLight);
 		getCurrentCamera().setPosition(0, 0, CAMERA_Z);
-		mTransforms.add(new ScaleTransform());
-		mTransforms.add(new RotationTransform());
-		mTransforms.add(new TranslateTransform(CAMERA_Z));
+
+		initTransforms();
+	}
+
+	private void initTransforms() {
+		mTranslateTransform = new TranslateTransform(CAMERA_Z);
+		ScaleTransform scaleTransform = new ScaleTransform();
+		RotationTransform rotationTransform = new RotationTransform();
+
+		mTransforms.add(scaleTransform);
+		mTransforms.add(rotationTransform);
+		mTransforms.add(mTranslateTransform);
 	}
 
 	@Override
@@ -83,8 +93,7 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 		if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
 			float widthScaleFactor = (float) mCurrentViewportWidth / (float) mPreviewWidth;
 			float heightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
-			Transform.setCurrentViewport(mCurrentViewportWidth, mCurrentViewportHeight);
-			TranslateTransform.setScaleFactor(widthScaleFactor, heightScaleFactor);
+			mTranslateTransform.setScaleFactor(widthScaleFactor, heightScaleFactor);
 		}
 	}
 
@@ -114,6 +123,12 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 		onDone();
 	}
 
+	@Override
+	public void setViewPort(int width, int height) {
+		super.setViewPort(width, height);
+		Transform.setCurrentViewport(width, height);
+	}
+
 	/**
 	 * Sets the camera attributes for size and facing direction, which informs how to transform
 	 * image coordinates later. If this is not set, image coordinates/loaded objects are not properly
@@ -135,7 +150,7 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 		synchronized (mLock) {
 			mPreviewWidth = previewWidth;
 			mPreviewHeight = previewHeight;
-			TranslateTransform.mFacing = facing;
+			mTranslateTransform.setFacing(facing);
 		}
 	}
 
@@ -148,10 +163,4 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	public void onOffsetsChanged(float xOffset, float yOffset, float xOffsetStep, float yOffsetStep, int xPixelOffset, int yPixelOffset) {
 
 	}
-
-//	private void translation(Object3D object3D, VisionDetRet ret) {
-//		float x = translateX(ret.getLeft() + ret.getWidth() / 2);
-//		float y = translateY(ret.getTop() + ret.getHeight() / 2);
-//		object3D.setScreenCoordinates(x, y, mCurrentViewportWidth, mCurrentViewportHeight, CAMERA_Z);
-//	}
 }

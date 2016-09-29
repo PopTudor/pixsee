@@ -1,6 +1,6 @@
 package com.marked.pixsee.selfie.renderer.transformation;
 
-import com.google.android.gms.vision.face.Face;
+import com.marked.pixsee.model.face.PixseeFace;
 
 import org.rajawali3d.Object3D;
 
@@ -16,5 +16,5 @@ public abstract class Transform {
 		sCurrentViewportHeight = currentViewportHeight;
 	}
 
-	public abstract void transform(Object3D object3D, Face face);
+	public abstract void transform(Object3D object3D, PixseeFace pixseeFace);
 }

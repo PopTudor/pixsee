@@ -10,11 +10,12 @@ public class VisionFace extends PixseeFace {
 	com.google.android.gms.vision.face.Face mFace;
 
 	public void setFace(com.google.android.gms.vision.face.Face face) {
+		mFace = face;
 		PointF xyCoord = face.getPosition();
-		mLeft = xyCoord.x;
-		mTop = xyCoord.y;
-		mRight = face.getWidth();
-		mBottom = face.getHeight();
+		mPositionX = xyCoord.x;
+		mPositionY = xyCoord.y;
+		mWidth = face.getWidth();
+		mHeight = face.getHeight();
 		mEulerY = face.getEulerY();
 		mEulerZ = face.getEulerZ();
 	}

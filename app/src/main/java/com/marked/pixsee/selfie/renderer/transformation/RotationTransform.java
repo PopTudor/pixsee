@@ -1,6 +1,6 @@
 package com.marked.pixsee.selfie.renderer.transformation;
 
-import com.google.android.gms.vision.face.Face;
+import com.marked.pixsee.model.face.PixseeFace;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.math.vector.Vector3;
@@ -11,14 +11,14 @@ import org.rajawali3d.math.vector.Vector3;
 
 public class RotationTransform extends Transform {
 	/**
-	 * Rotate the object based on face rotation
+	 * Rotate the object based on pixseeFace rotation
 	 *
 	 * @param object3D the object to rotate
-	 * @param face     the face to get the rotation from
+	 * @param pixseeFace     the pixseeFace to get the rotation from
 	 */
 	@Override
-	public void transform(Object3D object3D, Face face) {
-		float eulerZ = face.getEulerZ();
+	public void transform(Object3D object3D, PixseeFace pixseeFace) {
+		float eulerZ = pixseeFace.getEulerZ();
 		object3D.rotateAround(Vector3.Y, eulerZ, false);
 	}
 }

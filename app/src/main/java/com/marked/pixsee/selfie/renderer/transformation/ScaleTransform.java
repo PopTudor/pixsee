@@ -8,7 +8,7 @@ import org.rajawali3d.Object3D;
  * Created by Tudor on 20-Aug-16.
  */
 
-public class ScaleTransform extends Transform {
+public class ScaleTransform extends com.marked.pixsee.selfie.renderer.transformation.Transform {
 
 	/**
 	 * Scale the object based on pixseeFace size
@@ -18,7 +18,7 @@ public class ScaleTransform extends Transform {
 	 */
 	@Override
 	public void transform(Object3D object3D, PixseeFace pixseeFace) {
-		double dist = pixseeFace.center();
+		double dist = pixseeFace.distance();
 		double scaleValue = dist / sCurrentViewportWidth; /* convert from pixels to normalized scale*/
 		object3D.setScale(scaleValue);
 	}

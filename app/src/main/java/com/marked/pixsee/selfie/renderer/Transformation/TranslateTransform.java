@@ -10,18 +10,22 @@ import org.rajawali3d.Object3D;
  */
 
 public class TranslateTransform extends Transform {
-	public static int mFacing;
-	private static float mWidthScaleFactor = 1.0f, mHeightScaleFactor = 1.0f;
+	private float mWidthScaleFactor = 1.0f, mHeightScaleFactor = 1.0f;
 	private int CAMERA_Z;
+	public int mFacing;
 
 	public TranslateTransform(int CAMERA_Z) {
 		this.CAMERA_Z = CAMERA_Z;
 		mFacing = CameraSource.CAMERA_FACING_FRONT;
 	}
 
-	public static void setScaleFactor(float widthScaleFactor, float heightScaleFactor) {
-		TranslateTransform.mWidthScaleFactor = widthScaleFactor;
-		TranslateTransform.mHeightScaleFactor = heightScaleFactor;
+	public void setScaleFactor(float widthScaleFactor, float heightScaleFactor) {
+		mWidthScaleFactor = widthScaleFactor;
+		mHeightScaleFactor = heightScaleFactor;
+	}
+
+	public void setFacing(int facing) {
+		mFacing = facing;
 	}
 
 	/**
@@ -32,8 +36,8 @@ public class TranslateTransform extends Transform {
 	 */
 	@Override
 	public void transform(Object3D object3D, PixseeFace pixseeFace) {
-		float x = translateX(pixseeFace.center());
-		float y = translateY(pixseeFace.center());
+		float x = translateX(pixseeFace.centerX());
+		float y = translateY(pixseeFace.centerY());
 		object3D.setScreenCoordinates(x, y, sCurrentViewportWidth, sCurrentViewportHeight, CAMERA_Z);
 	}
 
