@@ -6,7 +6,7 @@
   compile any other .cpp file.  
   
   If you are using Visual Studio you add .cpp files to your application using
-  the solution explorer window.  Specifically, right click on Source Files,
+  the solution explorer window.  Specifically, width click on Source Files,
   then select Add -> Existing Item and select the .cpp files you want to add.
 
   For general information on compiling dlib see http://dlib.net/compile.html

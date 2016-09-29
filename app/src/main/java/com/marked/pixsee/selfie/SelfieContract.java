@@ -32,5 +32,7 @@ class SelfieContract {
 		void displayEmojiActions(boolean showSelfieActions);
 
 		void setCameraTextureViewSize(com.google.android.gms.common.images.Size camSize);
+
+		void showCameraErrorDialog();
 	}
 }

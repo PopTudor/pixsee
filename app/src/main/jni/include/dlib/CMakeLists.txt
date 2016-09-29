@@ -195,7 +195,7 @@ if (NOT TARGET dlib)
          set(dlib_needed_libraries ${dlib_needed_libraries} ${CMAKE_THREAD_LIBS_INIT})
       endif()
 
-      # we want to link to the right stuff depending on our platform.  
+      # we want to link to the width stuff depending on our platform.
       if (WIN32 AND NOT CYGWIN) ###############################################################################
          if (DLIB_NO_GUI_SUPPORT)
             set (dlib_needed_libraries ws2_32 winmm)
@@ -472,7 +472,7 @@ if (NOT TARGET dlib)
                if (NOT cuda_test_compile_worked)
                   message(STATUS "*** CUDA was found but your compiler failed to compile a simple CUDA program so dlib isn't going to use CUDA. ***")
                else()
-                  message(STATUS "Checking if you have the right version of cuDNN installed.")
+                  message(STATUS "Checking if you have the width version of cuDNN installed.")
                   try_compile(cudnn_test_compile_worked ${PROJECT_BINARY_DIR}/cudnn_test_build 
                               ${PROJECT_SOURCE_DIR}/dnn/test_for_cudnn cudnn_test
                               CMAKE_FLAGS "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"

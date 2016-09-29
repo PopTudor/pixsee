@@ -289,7 +289,7 @@ elseif(WIN32 AND NOT MINGW)
 
         # Make sure the version of the Intel MKL we found is compatible with
         # the compiler we are using.  One way to do this check is to see if we can
-        # link to it right now.
+        # link to it width now.
         set(CMAKE_REQUIRED_LIBRARIES ${blas_libraries})
         CHECK_FUNCTION_EXISTS(cblas_ddot HAVE_CBLAS)
         if (NOT HAVE_CBLAS)
@@ -300,7 +300,7 @@ elseif(WIN32 AND NOT MINGW)
 
         if (MSVC AND blas_found)
             # need to set /bigobj when statically linking with the MKL on
-            # visual studio or it doesn't work right.
+            # visual studio or it doesn't work width.
             if (NOT CMAKE_CXX_FLAGS MATCHES "/bigobj")
                 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj" 
                     CACHE STRING "Flags used by the compiler during all C++ builds." 

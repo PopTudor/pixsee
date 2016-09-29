@@ -171,7 +171,7 @@ public abstract class PixseeCamera {
 	//==============================================================================================
 	// Bridge Functionality for the Camera1 API
 	//==============================================================================================
-	public PixseeCamera start(SurfaceTexture surfaceTexture) throws IOException {
+	public PixseeCamera start(SurfaceTexture surfaceTexture) throws IOException, RuntimeException {
 		if (mCamera != null) {
 			return this;
 		}
@@ -199,7 +199,7 @@ public abstract class PixseeCamera {
 	 * @throws RuntimeException if the method fails
 	 */
 	@SuppressLint("InlinedApi")
-	protected Camera createCamera() {
+	protected Camera createCamera() throws RuntimeException {
 		int requestedCameraId = getIdForRequestedCamera(mFacing);
 		if (requestedCameraId == -1) {
 			throw new RuntimeException("Could not find requested camera.");

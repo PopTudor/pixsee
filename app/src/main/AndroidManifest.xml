@@ -62,7 +62,7 @@
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="face" />
+            android:value="pixseeFace"/>
 
         <activity
             android:name="com.facebook.FacebookActivity"

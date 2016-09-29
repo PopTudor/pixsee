@@ -4,10 +4,9 @@ package com.marked.pixsee.model.face;
  * Created by Tudor on 29-Sep-16.
  */
 
-public abstract class Face {
-	private float mLeft, mRight, mTop, mBottom;
-	private float mEulerX, mEulerY, mEulerZ;
-
+public abstract class PixseeFace {
+	protected float mLeft, mRight, mTop, mBottom;
+	protected float mEulerX, mEulerY, mEulerZ;
 
 	public float centerX() {
 		return (mLeft + mRight) / 2;

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
+import com.marked.pixsee.model.face.PixseeFace;
 import com.marked.pixsee.model.face.VisionFace;
 
 /**
@@ -13,6 +14,7 @@ import com.marked.pixsee.model.face.VisionFace;
 public class SelfieTrackerAR extends Tracker<Face> {
 	private static final String TAG = "FACE_TRACKER_***";
 	private TrackerCallback trackerCallback;
+	private VisionFace mFace;
 
 	public SelfieTrackerAR(TrackerCallback trackerCallback) {
 		this.trackerCallback = trackerCallback;
@@ -28,14 +30,17 @@ public class SelfieTrackerAR extends Tracker<Face> {
 	@Override
 	public void onNewItem(int id, Face item) {
 		super.onNewItem(id, item);
-		trackerCallback.onNewItem(id, new VisionFace(item));
+		mFace = new VisionFace();
+		mFace.setFace(item);
+		trackerCallback.onNewItem(id, mFace);
 		Log.i(TAG, "Awesome person detected.  Hello!");
 	}
 
 	@Override
 	public void onUpdate(Detector.Detections<Face> detections, Face item) {
 		super.onUpdate(detections, item);
-		trackerCallback.onUpdate(new VisionFace(item));
+		mFace.setFace(item);
+		trackerCallback.onUpdate(mFace);
 	}
 
 	@Override
@@ -51,9 +56,9 @@ public class SelfieTrackerAR extends Tracker<Face> {
 	}
 
 	interface TrackerCallback {
-		void onNewItem(int id, com.marked.pixsee.model.face.Face face);
+		void onNewItem(int id, PixseeFace pixseeFace);
 
-		void onUpdate(com.marked.pixsee.model.face.Face face);
+		void onUpdate(PixseeFace pixseeFace);
 
 		void onDone();
 	}

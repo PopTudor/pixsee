@@ -54,20 +54,23 @@ class FacePresenter implements SelfieContract.Presenter {
 		mView.get().displayEmojiActions(true);
 		startCamera();
 	}
+
 	@Override
 	public void onAvailableCameraSurfaceTexture(SurfaceTexture cameraSurfaceTexture, int width, int height) {
 		mCameraSurfaceTexture = cameraSurfaceTexture;
 		startCamera();
 	}
 
-	private void startCamera(){
+	private void startCamera() {
 		try {
-			if (mCameraSurfaceTexture!=null) {
+			if (mCameraSurfaceTexture != null) {
 				cameraSource.start(mCameraSurfaceTexture);
 				setPreviewSizes();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (RuntimeException cameraNotAvailable) {
+			mView.get().showCameraErrorDialog();
 		}
 	}
 

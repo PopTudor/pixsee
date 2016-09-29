@@ -35,7 +35,7 @@ namespace dlib
                 - #lbp[r][c] == the uniform LBP for the 3x3 pixel window centered on img[r][c].  
                   In particular, this is a value in the range 0 to 58 inclusive. 
             - We use the idea of uniform LBPs from the paper: 
-                Face Description with Local Binary Patterns: Application to Face Recognition
+                PixseeFace Description with Local Binary Patterns: Application to PixseeFace Recognition
                 by Ahonen, Hadid, and Pietikainen.
     !*/
 
@@ -116,7 +116,7 @@ namespace dlib
             - This function extracts the high-dimensional LBP feature described in the
               paper:
                 Blessing of Dimensionality: High-dimensional Feature and Its Efficient
-                Compression for Face Verification by Dong Chen, Xudong Cao, Fang Wen, and
+                Compression for PixseeFace Verification by Dong Chen, Xudong Cao, Fang Wen, and
                 Jian Sun
             - #feats == the high-dimensional LBP descriptor.  It is the concatenation of
               many LBP histograms, each extracted from different scales and from different

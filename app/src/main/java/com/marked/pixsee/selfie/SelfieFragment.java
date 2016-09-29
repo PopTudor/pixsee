@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -41,11 +41,7 @@ import rx.functions.Action1;
 import static com.marked.pixsee.selfie.PictureDetailShareFragment.OnPictureDetailShareListener;
 
 public class SelfieFragment extends Fragment implements OnPictureDetailShareListener, SelfieContract.View, Injectable, Permissions {
-	public static final String PHOTO_EXTRA = "PHOTO";
-	public static final String PHOTO_RENDERER_EXTRA = "PHOTO_RENDERER";
 	private static final String TAG = SelfieFragment.class + "***";
-	private static final int RC_HANDLE_CAMERA_PERM = 2;
-	private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
 	@Inject
 	SelfieContract.Presenter mFacePresenter;
@@ -235,6 +231,15 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	}
 
 	@Override
+	public void showCameraErrorDialog() {
+		new AlertDialog.Builder(getActivity())
+				.setCancelable(true)
+				.setTitle("Camera Error")
+				.setMessage("Camera could not be opened. Please restart your phone and try again !")
+				.show();
+	}
+
+	@Override
 	public void injectComponent() {
 		ActivityComponent daggerActivityComponent = DaggerActivityComponent.builder()
 				                                            .appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
@@ -275,7 +280,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 
 		@Override
 		public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-			mFacePresenter.onAvailableCameraSurfaceTexture(surface,width,height);
+			mFacePresenter.onAvailableCameraSurfaceTexture(surface, width, height);
 		}
 
 		@Override

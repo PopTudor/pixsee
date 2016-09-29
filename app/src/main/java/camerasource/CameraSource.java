@@ -45,7 +45,7 @@ public class CameraSource extends PixseeCamera {
 	 * @throws IOException if the camera's preview texture or display could not be initialized
 	 */
 	@Override
-	public PixseeCamera start(SurfaceTexture surfaceTexture) throws IOException {
+	public PixseeCamera start(SurfaceTexture surfaceTexture) throws IOException, RuntimeException {
 		synchronized (mCameraLock) {
 			super.start(surfaceTexture);
 

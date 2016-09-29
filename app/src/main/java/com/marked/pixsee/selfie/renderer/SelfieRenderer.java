@@ -5,7 +5,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.google.android.gms.common.images.Size;
-import com.marked.pixsee.model.face.Face;
+import com.marked.pixsee.model.face.PixseeFace;
 import com.marked.pixsee.selfie.SelfieFragment.OnFavoritesListener;
 import com.marked.pixsee.selfie.data.SelfieObject;
 import com.marked.pixsee.selfie.renderer.transformation.RotationTransform;
@@ -83,21 +83,22 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 		if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
 			float widthScaleFactor = (float) mCurrentViewportWidth / (float) mPreviewWidth;
 			float heightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
+			Transform.setCurrentViewport(mCurrentViewportWidth, mCurrentViewportHeight);
 			TranslateTransform.setScaleFactor(widthScaleFactor, heightScaleFactor);
 		}
 	}
 
 	@Override
-	public void onNewItem(int id, Face face) {
+	public void onNewItem(int id, PixseeFace pixseeFace) {
 		if (loadedObject != null)
 			loadedObject.setVisible(true);
 	}
 
 	@Override
-	public void onUpdate(Face face) {
-		if (loadedObject != null && face != null) {
+	public void onUpdate(PixseeFace pixseeFace) {
+		if (loadedObject != null && pixseeFace != null) {
 			for (Transform it : mTransforms)
-				it.transform(loadedObject, face);
+				it.transform(loadedObject, pixseeFace);
 		}
 	}
 
@@ -111,12 +112,6 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	public void onModelLoadFailed(ALoader loader) {
 		Log.d(TAG, "onModelLoadFailed: ");
 		onDone();
-	}
-
-	@Override
-	public void setViewPort(int width, int height) {
-		super.setViewPort(width, height);
-		Transform.setCurrentViewport(width, height);
 	}
 
 	/**
@@ -155,18 +150,8 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	}
 
 //	private void translation(Object3D object3D, VisionDetRet ret) {
-//		float x = translateX(ret.getLeft() + ret.getRight() / 2);
-//		float y = translateY(ret.getTop() + ret.getBottom() / 2);
+//		float x = translateX(ret.getLeft() + ret.getWidth() / 2);
+//		float y = translateY(ret.getTop() + ret.getHeight() / 2);
 //		object3D.setScreenCoordinates(x, y, mCurrentViewportWidth, mCurrentViewportHeight, CAMERA_Z);
 //	}
-
-//	@Override
-//	public void onUpdate(VisionDetRet ret) {
-//		if (loadedObject != null && ret != null) {
-//			scale(loadedObject, ret);
-//			translation(loadedObject, ret);
-//		}
-//	}
-
-
 }

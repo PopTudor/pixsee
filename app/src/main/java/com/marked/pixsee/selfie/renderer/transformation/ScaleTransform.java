@@ -1,6 +1,6 @@
 package com.marked.pixsee.selfie.renderer.transformation;
 
-import com.marked.pixsee.model.face.Face;
+import com.marked.pixsee.model.face.PixseeFace;
 
 import org.rajawali3d.Object3D;
 
@@ -11,14 +11,14 @@ import org.rajawali3d.Object3D;
 public class ScaleTransform extends Transform {
 
 	/**
-	 * Scale the object based on face size
+	 * Scale the object based on pixseeFace size
 	 *
 	 * @param object3D the object to scale
-	 * @param face     the face to scale upon
+	 * @param pixseeFace     the pixseeFace to scale upon
 	 */
 	@Override
-	public void transform(Object3D object3D, Face face) {
-		double dist = face.center();
+	public void transform(Object3D object3D, PixseeFace pixseeFace) {
+		double dist = pixseeFace.center();
 		double scaleValue = dist / sCurrentViewportWidth; /* convert from pixels to normalized scale*/
 		object3D.setScale(scaleValue);
 	}

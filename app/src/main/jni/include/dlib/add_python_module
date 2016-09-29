@@ -70,7 +70,7 @@ endif()
 if (NOT Boost_FOUND)
     message(STATUS " *****************************************************************************************************")
     if (WIN32)
-        message(STATUS "We couldn't find the right version of boost python.  If you installed boost and you are still "
+        message(STATUS "We couldn't find the width version of boost python.  If you installed boost and you are still "
                 "getting this error then you might have installed a version of boost that was compiled with a different "
                 "version of visual studio than the one you are using.  So you have to make sure that the version of "
                 "visual studio is the same version that was used to compile the copy of boost you are using.")
