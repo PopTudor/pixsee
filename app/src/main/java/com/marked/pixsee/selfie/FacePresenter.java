@@ -6,16 +6,15 @@ import android.support.annotation.NonNull;
 import com.google.android.gms.common.images.Size;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
+import com.pixsee.camerasource.PictureCallback;
+import com.pixsee.camerasource.PixseeCamera;
+import com.pixsee.camerasource.ShutterCallback;
 
 import org.rajawali3d.renderer.ISurfaceRenderer;
 import org.rajawali3d.renderer.Renderer;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-
-import camerasource.PictureCallback;
-import camerasource.PixseeCamera;
-import camerasource.ShutterCallback;
 
 /**
  * Created by Tudor on 2016-05-10.

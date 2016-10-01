@@ -1,10 +1,11 @@
 package com.marked.pixsee.selfie;
 
+import com.pixsee.di.components.ActivityComponent;
+import com.pixsee.di.scopes.FragmentScope;
+
 import org.rajawali3d.renderer.Renderer;
 
 import dagger.Component;
-import dependencyInjection.components.ActivityComponent;
-import dependencyInjection.scopes.FragmentScope;
 
 /**
  * Created by Tudor on 4/24/2016.

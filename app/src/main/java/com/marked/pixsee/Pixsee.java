@@ -8,15 +8,15 @@ import com.facebook.FacebookSdk;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.pixsee.di.components.AppComponent;
+import com.pixsee.di.components.DaggerAppComponent;
+import com.pixsee.di.modules.AppModule;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
-import dependencyInjection.components.AppComponent;
-import dependencyInjection.components.DaggerAppComponent;
-import dependencyInjection.modules.AppModule;
 import io.fabric.sdk.android.Fabric;
 
 /**

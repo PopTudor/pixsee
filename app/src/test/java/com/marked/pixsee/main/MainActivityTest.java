@@ -13,6 +13,7 @@ import com.marked.pixsee.chat.ChatActivity;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.profile.ProfileFragment;
+import com.pixsee.di.modules.FakeActivityModule;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,8 +28,6 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
-import dependencyInjection.modules.FakeActivityModule;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -39,8 +38,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 23)
 public class MainActivityTest {
-	ActivityController<MainActivity> mMainActivity;
 	private User mUser = UserUtilTest.getUserTest();
+	ActivityController<MainActivity> mMainActivity;
 
 	@Before
 	public void setUp() throws Exception {

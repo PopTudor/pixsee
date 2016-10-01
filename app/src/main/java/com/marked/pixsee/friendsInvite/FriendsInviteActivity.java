@@ -15,9 +15,8 @@ import com.marked.pixsee.friendsInvite.addUsername.AddUsernameFragment;
 import com.marked.pixsee.friendsInvite.commands.ClickAddUser;
 import com.marked.pixsee.friendsInvite.commands.ClickShareUsername;
 import com.marked.pixsee.model.user.User;
-
-import dependencyInjection.components.DaggerActivityComponent;
-import dependencyInjection.modules.ActivityModule;
+import com.pixsee.di.components.DaggerActivityComponent;
+import com.pixsee.di.modules.ActivityModule;
 
 public class FriendsInviteActivity extends AppCompatActivity implements FriendsInviteContract.View,View.OnClickListener {
 	private FriendsInviteContract.Presenter mPresenter;

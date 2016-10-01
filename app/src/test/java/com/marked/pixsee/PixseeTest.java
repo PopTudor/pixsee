@@ -1,8 +1,8 @@
 package com.marked.pixsee;
 
-import dependencyInjection.components.AppComponent;
-import dependencyInjection.components.DaggerFakeAppComponent;
-import dependencyInjection.modules.FakeAppModule;
+import com.pixsee.di.components.AppComponent;
+import com.pixsee.di.components.DaggerFakeAppComponent;
+import com.pixsee.di.modules.FakeAppModule;
 
 /**
  * Created by Tudor on 22-Jul-16.

@@ -26,15 +26,15 @@ import com.marked.pixsee.selfie.commands.FavTwoClick;
 import com.marked.pixsee.selfie.data.SelfieObject;
 import com.marked.pixsee.selfie.renderer.RenderSurfaceView;
 import com.marked.pixsee.utility.Permissions;
+import com.pixsee.camerasource.CameraTextureView;
+import com.pixsee.di.Injectable;
+import com.pixsee.di.components.ActivityComponent;
+import com.pixsee.di.components.DaggerActivityComponent;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import camerasource.CameraTextureView;
-import dependencyInjection.Injectable;
-import dependencyInjection.components.ActivityComponent;
-import dependencyInjection.components.DaggerActivityComponent;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -42,21 +42,15 @@ import static com.marked.pixsee.selfie.PictureDetailShareFragment.OnPictureDetai
 
 public class SelfieFragment extends Fragment implements OnPictureDetailShareListener, SelfieContract.View, Injectable, Permissions {
 	private static final String TAG = SelfieFragment.class + "***";
-
+	private RenderSurfaceView mRendererSurfaceView;
+	private CameraTextureView mCameraTextureview;
+	private ViewGroup mBottomLayout;
+	private OnSelfieInteractionListener mOnSelfieInteractionListener;
 	@Inject
 	SelfieContract.Presenter mFacePresenter;
-
 	@Inject
 	@Named(value = "cameraTexture")
 	TextureView.SurfaceTextureListener mCameraTextureAvailable;
-
-
-	private RenderSurfaceView mRendererSurfaceView;
-
-	private CameraTextureView mCameraTextureview;
-
-	private ViewGroup mBottomLayout;
-	private OnSelfieInteractionListener mOnSelfieInteractionListener;
 
 	public SelfieFragment() {
 	}

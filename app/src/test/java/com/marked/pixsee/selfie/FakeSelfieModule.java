@@ -10,16 +10,16 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 import com.marked.pixsee.selfie.renderer.SelfieTrackerAR;
+import com.pixsee.camerasource.CameraSource;
+import com.pixsee.di.scopes.FragmentScope;
 
 import org.mockito.Mockito;
 import org.rajawali3d.renderer.Renderer;
 
 import javax.inject.Named;
 
-import camerasource.CameraSource;
 import dagger.Module;
 import dagger.Provides;
-import dependencyInjection.scopes.FragmentScope;
 
 /**
  * Created by tudor on 10.08.2016.

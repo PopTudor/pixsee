@@ -23,15 +23,15 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.friendsInvite.addUsername.di.AddUserModule;
 import com.marked.pixsee.friendsInvite.addUsername.di.DaggerAddUserComponent;
 import com.marked.pixsee.model.user.User;
+import com.pixsee.di.components.ActivityComponent;
+import com.pixsee.di.components.DaggerActivityComponent;
+import com.pixsee.di.modules.ActivityModule;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import dependencyInjection.components.ActivityComponent;
-import dependencyInjection.components.DaggerActivityComponent;
-import dependencyInjection.modules.ActivityModule;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -42,11 +42,11 @@ import rx.functions.Func1;
  * create an instance of this fragment.
  */
 public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnActionExpandListener, AddUsernameContract.View {
-	@Inject
-	AddUsernameContract.Presenter mPresenter;
 	private RecyclerView mUsersRecyclerview;
 	private UsersAdapter mUsersAdapter;
 	private Subscription subscription;
+	@Inject
+	AddUsernameContract.Presenter mPresenter;
 
 	public AddUsernameFragment() {
 		// Required empty public constructor

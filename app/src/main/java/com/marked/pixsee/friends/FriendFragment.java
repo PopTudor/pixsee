@@ -31,15 +31,14 @@ import com.marked.pixsee.friends.di.DaggerFriendsComponent;
 import com.marked.pixsee.friends.di.FriendModule;
 import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
 import com.marked.pixsee.model.user.User;
+import com.pixsee.di.Injectable;
+import com.pixsee.di.components.ActivityComponent;
+import com.pixsee.di.components.DaggerActivityComponent;
+import com.pixsee.di.modules.ActivityModule;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import dependencyInjection.Injectable;
-import dependencyInjection.components.ActivityComponent;
-import dependencyInjection.components.DaggerActivityComponent;
-import dependencyInjection.modules.ActivityModule;
 
 
 /**
@@ -55,30 +54,17 @@ import dependencyInjection.modules.ActivityModule;
 public class FriendFragment extends Fragment implements Injectable,
 		FriendsContract.View , SwipeRefreshLayout.OnRefreshListener {
 	public static int REQUEST_INVITE = 11;
-
-	@Inject
-	FriendsContract.Presenter mPresenter;
-	MenuItemCompat.OnActionExpandListener expandListener = new MenuItemCompat.OnActionExpandListener() {
-		@Override
-		public boolean onMenuItemActionExpand(MenuItem item) {
-			return true;
-		}
-
-		@Override
-		public boolean onMenuItemActionCollapse(MenuItem item) {
-			mPresenter.loadMore(50);
-			return true;
-		}
-	};
 	private RecyclerView mFriendsRecyclerview;
 	private FriendsAdapter mFriendsAdapter;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
-
-	//	lateinit private var mFabMenu: FloatingActionMenu
 	/**
 	 * Used to open a friend's cards collection
 	 */
 	private FriendFragmentInteractionListener mCallback;
+	@Inject
+	FriendsContract.Presenter mPresenter;
+
+	//	lateinit private var mFabMenu: FloatingActionMenu
 	private SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
 		@Override
 		public boolean onQueryTextSubmit(String query) {
@@ -90,6 +76,18 @@ public class FriendFragment extends Fragment implements Injectable,
 		public boolean onQueryTextChange(String query) {
 			mPresenter.loadMore(10, query);
 			return false;
+		}
+	};
+	MenuItemCompat.OnActionExpandListener expandListener = new MenuItemCompat.OnActionExpandListener() {
+		@Override
+		public boolean onMenuItemActionExpand(MenuItem item) {
+			return true;
+		}
+
+		@Override
+		public boolean onMenuItemActionCollapse(MenuItem item) {
+			mPresenter.loadMore(50);
+			return true;
 		}
 	};
 

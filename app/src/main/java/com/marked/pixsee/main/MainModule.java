@@ -3,11 +3,11 @@ package com.marked.pixsee.main;
 import android.content.Context;
 
 import com.marked.pixsee.model.user.UserDatasource;
+import com.pixsee.di.scopes.ActivityScope;
+import com.pixsee.di.scopes.Repository;
 
 import dagger.Module;
 import dagger.Provides;
-import dependencyInjection.scopes.ActivityScope;
-import dependencyInjection.scopes.Repository;
 
 /**
  * Created by Tudor on 2016-05-27.

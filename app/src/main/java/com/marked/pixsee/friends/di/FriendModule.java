@@ -3,11 +3,11 @@ package com.marked.pixsee.friends.di;
 import com.marked.pixsee.friends.FriendPresenter;
 import com.marked.pixsee.friends.FriendsContract;
 import com.marked.pixsee.model.user.UserDatasource;
+import com.pixsee.di.scopes.FragmentScope;
+import com.pixsee.di.scopes.Repository;
 
 import dagger.Module;
 import dagger.Provides;
-import dependencyInjection.scopes.FragmentScope;
-import dependencyInjection.scopes.Repository;
 
 /**
  * Created by Tudor Pop on 18-Mar-16.

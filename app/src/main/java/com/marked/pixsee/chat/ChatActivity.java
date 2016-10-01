@@ -21,12 +21,12 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.selfie.PictureDetailSendFragment;
 import com.marked.pixsee.selfie.SelfieFragment;
+import com.pixsee.di.components.ActivityComponent;
+import com.pixsee.di.components.DaggerActivityComponent;
+import com.pixsee.di.modules.ActivityModule;
 
 import java.io.File;
 
-import dependencyInjection.components.ActivityComponent;
-import dependencyInjection.components.DaggerActivityComponent;
-import dependencyInjection.modules.ActivityModule;
 import rx.Observable;
 
 /**

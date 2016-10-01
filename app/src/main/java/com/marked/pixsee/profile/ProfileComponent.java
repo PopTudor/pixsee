@@ -1,8 +1,9 @@
 package com.marked.pixsee.profile;
 
+import com.pixsee.di.components.ActivityComponent;
+import com.pixsee.di.scopes.FragmentScope;
+
 import dagger.Component;
-import dependencyInjection.components.ActivityComponent;
-import dependencyInjection.scopes.FragmentScope;
 
 /**
  * Created by Tudor on 07-Jun-16.

@@ -7,6 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.PixseeTest;
 import com.marked.pixsee.main.MainActivity;
+import com.pixsee.di.components.DaggerFakeActivityComponent;
+import com.pixsee.di.components.FakeActivityComponent;
+import com.pixsee.di.components.FakeAppComponent;
+import com.pixsee.di.modules.FakeActivityModule;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.junit.Assert;
@@ -19,10 +23,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.support.v4.SupportFragmentController;
 
-import dependencyInjection.components.DaggerFakeActivityComponent;
-import dependencyInjection.components.FakeActivityComponent;
-import dependencyInjection.components.FakeAppComponent;
-import dependencyInjection.modules.FakeActivityModule;
 import rx.Observable;
 
 import static org.mockito.Mockito.doReturn;
@@ -33,11 +33,11 @@ import static org.mockito.Mockito.doReturn;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class,sdk = 23,application = PixseeTest.class)
 public class SelfieFragmentTest extends SelfieFragment {
+	// Robolectric Controllers
+	private SupportFragmentController<SelfieFragmentTest> fragmentController;
 	String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 	@Mock
 	RxPermissions rxPermissions;
-	// Robolectric Controllers
-	private SupportFragmentController<SelfieFragmentTest> fragmentController;
 
 	@Before
 	public void setUp() throws Exception {

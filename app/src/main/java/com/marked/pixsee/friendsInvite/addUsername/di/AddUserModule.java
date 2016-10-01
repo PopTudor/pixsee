@@ -6,13 +6,13 @@ import com.marked.pixsee.model.database.DatabaseContract;
 import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.model.user.UserDatasource;
 import com.marked.pixsee.networking.ServerConstants;
+import com.pixsee.di.scopes.FragmentScope;
+import com.pixsee.di.scopes.Repository;
 
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
-import dependencyInjection.scopes.FragmentScope;
-import dependencyInjection.scopes.Repository;
 import retrofit2.Retrofit;
 
 /**

@@ -2,13 +2,13 @@ package com.marked.pixsee.profile;
 
 import com.marked.pixsee.model.user.UserDatasource;
 import com.marked.pixsee.utility.BitmapUtils;
+import com.pixsee.di.scopes.FragmentScope;
+import com.pixsee.di.scopes.Repository;
 
 import java.io.File;
 
 import dagger.Module;
 import dagger.Provides;
-import dependencyInjection.scopes.FragmentScope;
-import dependencyInjection.scopes.Repository;
 
 /**
  * Created by Tudor on 07-Jun-16.

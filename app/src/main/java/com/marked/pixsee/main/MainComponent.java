@@ -1,8 +1,9 @@
 package com.marked.pixsee.main;
 
+import com.pixsee.di.modules.ActivityModule;
+import com.pixsee.di.scopes.ActivityScope;
+
 import dagger.Component;
-import dependencyInjection.modules.ActivityModule;
-import dependencyInjection.scopes.ActivityScope;
 
 /**
  * Created by Tudor on 2016-05-27.

@@ -35,6 +35,9 @@ import com.marked.pixsee.entry.EntryActivity;
 import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
 import com.marked.pixsee.model.database.DatabaseContract;
 import com.marked.pixsee.model.user.User;
+import com.pixsee.di.components.ActivityComponent;
+import com.pixsee.di.components.DaggerActivityComponent;
+import com.pixsee.di.modules.ActivityModule;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
@@ -42,18 +45,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import dependencyInjection.components.ActivityComponent;
-import dependencyInjection.components.DaggerActivityComponent;
-import dependencyInjection.modules.ActivityModule;
 import rx.functions.Action1;
 
 public class ProfileFragment extends Fragment implements ProfileContract.View{
 	private static String USER_EXTRA = "PROFILE_FRAGMENT_USER";
-	@Inject
-	ProfileContract.Presenter mPresenter;
 	private User mUser;
 	private PictureAdapter mPictureAdapter;
 	private ProfileFragmentInteraction mProfileFragmentInteraction;
+	@Inject
+	ProfileContract.Presenter mPresenter;
 
 
 	public ProfileFragment() {

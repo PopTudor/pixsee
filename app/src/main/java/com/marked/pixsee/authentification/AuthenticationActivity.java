@@ -20,10 +20,9 @@ import com.marked.pixsee.authentification.signup.SignUpEmailFragment;
 import com.marked.pixsee.authentification.signup.SignUpNameFragment;
 import com.marked.pixsee.authentification.signup.SignUpPassFragment;
 import com.marked.pixsee.main.MainActivity;
+import com.pixsee.di.modules.ActivityModule;
 
 import javax.inject.Inject;
-
-import dependencyInjection.modules.ActivityModule;
 
 public class AuthenticationActivity
 		extends AppCompatActivity
@@ -31,10 +30,10 @@ public class AuthenticationActivity
 		SignUpEmailFragment.SignUpEmailFragmentInteraction,
 		SignUpPassFragment.SignUpPassFragmentInteraction,
 		AuthenticationContract.View,LoginFragment.LoginInteractionListener {
-	@Inject
-	AuthenticationContract.Presenter mPresenter;
 	private FragmentManager mFragmentManager;
 	private ProgressDialog mProgressDialog;
+	@Inject
+	AuthenticationContract.Presenter mPresenter;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

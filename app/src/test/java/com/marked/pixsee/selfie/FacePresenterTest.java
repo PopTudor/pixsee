@@ -3,6 +3,9 @@ package com.marked.pixsee.selfie;
 import android.graphics.SurfaceTexture;
 
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
+import com.pixsee.camerasource.CameraSource;
+import com.pixsee.camerasource.PictureCallback;
+import com.pixsee.camerasource.ShutterCallback;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,10 +14,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import camerasource.CameraSource;
-import camerasource.PictureCallback;
-import camerasource.ShutterCallback;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -26,15 +25,13 @@ import static org.mockito.Mockito.verify;
  * Created by Tudor on 12-Aug-16.
  */
 public class FacePresenterTest {
+	private FacePresenter mFacePresenter;
 	@Mock
 	SelfieContract.View mView;
 	@Mock
 	SelfieRenderer mRenderer;
 	@Mock
 	CameraSource mCameraSource;
-
-	private FacePresenter mFacePresenter;
-
 
 	@Before
 	public void setUp() throws Exception {

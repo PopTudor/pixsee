@@ -24,14 +24,14 @@ import com.marked.pixsee.profile.ProfileFragment;
 import com.marked.pixsee.selfie.PictureDetailSendFragment;
 import com.marked.pixsee.selfie.PictureDetailShareFragment;
 import com.marked.pixsee.selfie.SelfieFragment;
+import com.pixsee.di.Injectable;
+import com.pixsee.di.modules.ActivityModule;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
-import dependencyInjection.Injectable;
-import dependencyInjection.modules.ActivityModule;
 import rx.Observable;
 
 import static com.marked.pixsee.selfie.SelfieFragment.OnSelfieInteractionListener;
@@ -42,11 +42,11 @@ public class MainActivity
 		PictureDetailShareFragment.OnPictureDetailShareListener, OnSelfieInteractionListener,
 		PictureDetailSendFragment.OnPictureDetailSendListener, ProfileFragment.ProfileFragmentInteraction {
 	public static final int START_CAMERA_REQUEST_CODE = 100;
-	public ActivityModule activityModule;
-	@Inject
-	MainContract.Presenter mPresenter;
 	private AHBottomNavigation mBottomNavigation;
 	private PictureActionStrategy mPictureActionStrategy;
+	@Inject
+	MainContract.Presenter mPresenter;
+	public ActivityModule activityModule;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

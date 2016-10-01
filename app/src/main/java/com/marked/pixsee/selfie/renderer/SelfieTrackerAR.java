@@ -5,8 +5,8 @@ import android.util.Log;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
-import com.marked.pixsee.model.face.PixseeFace;
-import com.marked.pixsee.model.face.VisionFace;
+import com.pixsee.face.PixseeFace;
+import com.pixsee.face.VisionFace;
 
 /**
  * Created by Tudor on 5/6/2016.

@@ -5,12 +5,12 @@ import com.marked.pixsee.model.database.DatabaseContract;
 import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.networking.UploadAPI;
+import com.pixsee.di.scopes.FragmentScope;
 
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
-import dependencyInjection.scopes.FragmentScope;
 import retrofit2.Retrofit;
 
 /**

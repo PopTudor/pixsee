@@ -1,4 +1,4 @@
-package dependencyInjection.modules;
+package com.pixsee.di.modules;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -15,10 +15,10 @@ import com.marked.pixsee.model.user.UserDatasource;
 import com.marked.pixsee.model.user.UserDatasourceFake;
 import com.marked.pixsee.model.user.UserDiskDatasource;
 import com.marked.pixsee.model.user.UserRepository;
-import dependencyInjection.injection.Local;
-import dependencyInjection.injection.Remote;
-import dependencyInjection.injection.Repository;
-import dependencyInjection.scopes.ActivityScope;
+import com.pixsee.di.injection.Local;
+import com.pixsee.di.injection.Remote;
+import com.pixsee.di.injection.Repository;
+import com.pixsee.di.scopes.ActivityScope;
 
 import javax.inject.Named;
 

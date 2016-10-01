@@ -1,6 +1,6 @@
 package com.marked.pixsee.selfie.renderer.transformation;
 
-import com.marked.pixsee.model.face.PixseeFace;
+import com.pixsee.face.PixseeFace;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.math.vector.Vector3;
