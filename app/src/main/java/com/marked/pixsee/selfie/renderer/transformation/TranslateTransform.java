@@ -1,7 +1,7 @@
 package com.marked.pixsee.selfie.renderer.transformation;
 
 import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.face.Face;
+import com.pixsee.face.PixseeFace;
 
 import org.rajawali3d.Object3D;
 
@@ -10,30 +10,28 @@ import org.rajawali3d.Object3D;
  */
 
 public class TranslateTransform extends Transform {
-	public static int mFacing;
-	private static float mWidthScaleFactor = 1.0f, mHeightScaleFactor = 1.0f;
 	private int CAMERA_Z;
+	public int mFacing;
 
 	public TranslateTransform(int CAMERA_Z) {
 		this.CAMERA_Z = CAMERA_Z;
 		mFacing = CameraSource.CAMERA_FACING_FRONT;
 	}
 
-	public static void setScaleFactor(float widthScaleFactor, float heightScaleFactor) {
-		TranslateTransform.mWidthScaleFactor = widthScaleFactor;
-		TranslateTransform.mHeightScaleFactor = heightScaleFactor;
+	public void setFacing(int facing) {
+		mFacing = facing;
 	}
 
 	/**
-	 * Translate the object based on face location
+	 * Translate the object based on pixseeFace location
 	 *
 	 * @param object3D the object to translate
-	 * @param face     the face to get it's position
+	 * @param pixseeFace     the pixseeFace to get it's position
 	 */
 	@Override
-	public void transform(Object3D object3D, Face face) {
-		float x = translateX(face.getPosition().x + face.getWidth() / 2);
-		float y = translateY(face.getPosition().y + face.getHeight() / 2);
+	public void transform(Object3D object3D, PixseeFace pixseeFace) {
+		float x = translateX(pixseeFace.centerX());
+		float y = translateY(pixseeFace.centerY());
 		object3D.setScreenCoordinates(x, y, sCurrentViewportWidth, sCurrentViewportHeight, CAMERA_Z);
 	}
 

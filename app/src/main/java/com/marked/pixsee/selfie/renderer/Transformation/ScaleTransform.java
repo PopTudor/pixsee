@@ -1,53 +1,25 @@
 package com.marked.pixsee.selfie.renderer.transformation;
 
-import com.google.android.gms.vision.face.Face;
-import com.tzutalin.dlib.VisionDetRet;
+import com.pixsee.face.PixseeFace;
 
-import org.jetbrains.annotations.NotNull;
 import org.rajawali3d.Object3D;
 
 /**
  * Created by Tudor on 20-Aug-16.
  */
 
-public class ScaleTransform extends Transform {
-
-	private static double calculateFaceCenter(Face face) {
-		float x1 = face.getPosition().x;
-		float y1 = face.getPosition().y;
-		float x2 = face.getWidth();
-		float y2 = face.getHeight();
-		return Math.sqrt(Math.pow(x1 - x2, 2.0) + Math.pow(y1 - y2, 2.0));
-	}
-
-	private static double calculateFaceCenter(VisionDetRet face) {
-		float x1 = face.getLeft();
-		float y1 = face.getTop();
-		float x2 = face.getRight();
-		float y2 = face.getBottom();
-		return Math.sqrt(Math.pow(x1 - x2, 2.0) + Math.pow(y1 - y2, 2.0));
-	}
+public class ScaleTransform extends com.marked.pixsee.selfie.renderer.transformation.Transform {
 
 	/**
-	 * Scale the object based on face size
+	 * Scale the object based on pixseeFace size
 	 *
 	 * @param object3D the object to scale
-	 * @param face     the face to scale upon
+	 * @param pixseeFace     the pixseeFace to scale upon
 	 */
 	@Override
-	public void transform(Object3D object3D, Face face) {
-		double dist = calculateFaceCenter(face);
+	public void transform(Object3D object3D, PixseeFace pixseeFace) {
+		double dist = pixseeFace.distance();
 		double scaleValue = dist / sCurrentViewportWidth; /* convert from pixels to normalized scale*/
 		object3D.setScale(scaleValue);
-	}
-
-	private void scale(Object3D object3D, VisionDetRet ret) {
-//		double dist = Utils.calculateFaceCenter(ret);
-//		double scaleValue = dist / mDefaultViewportWidth; /* convert from pixels to normalized scale*/
-//		object3D.setScale(scaleValue);
-	}
-
-	private void scale(@NotNull Object3D object3D, @NotNull Face face) {
-
 	}
 }

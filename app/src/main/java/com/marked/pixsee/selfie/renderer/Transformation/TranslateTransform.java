@@ -10,18 +10,12 @@ import org.rajawali3d.Object3D;
  */
 
 public class TranslateTransform extends Transform {
-	private float mWidthScaleFactor = 1.0f, mHeightScaleFactor = 1.0f;
 	private int CAMERA_Z;
 	public int mFacing;
 
 	public TranslateTransform(int CAMERA_Z) {
 		this.CAMERA_Z = CAMERA_Z;
 		mFacing = CameraSource.CAMERA_FACING_FRONT;
-	}
-
-	public void setScaleFactor(float widthScaleFactor, float heightScaleFactor) {
-		mWidthScaleFactor = widthScaleFactor;
-		mHeightScaleFactor = heightScaleFactor;
 	}
 
 	public void setFacing(int facing) {

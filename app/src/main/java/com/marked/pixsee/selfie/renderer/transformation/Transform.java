@@ -1,6 +1,6 @@
 package com.marked.pixsee.selfie.renderer.transformation;
 
-import com.marked.pixsee.model.face.PixseeFace;
+import com.pixsee.face.PixseeFace;
 
 import org.rajawali3d.Object3D;
 
@@ -9,6 +9,7 @@ import org.rajawali3d.Object3D;
  */
 
 public abstract class Transform {
+	protected static float mWidthScaleFactor = 1.0f, mHeightScaleFactor = 1.0f;
 	protected static int sCurrentViewportWidth, sCurrentViewportHeight;
 
 	public static void setCurrentViewport(int currentViewportWidth, int currentViewportHeight) {
@@ -16,5 +17,9 @@ public abstract class Transform {
 		sCurrentViewportHeight = currentViewportHeight;
 	}
 
+	public static void setScaleFactor(float widthScaleFactor, float heightScaleFactor) {
+		mWidthScaleFactor = widthScaleFactor;
+		mHeightScaleFactor = heightScaleFactor;
+	}
 	public abstract void transform(Object3D object3D, PixseeFace pixseeFace);
 }

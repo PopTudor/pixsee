@@ -22,6 +22,7 @@ import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.renderer.Renderer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -33,8 +34,7 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	private static final String TAG = "***********";
 	private static final int CAMERA_Z = 6;
 	private final Object mLock = new Object();
-	private ArrayList<Transform> mTransforms = new ArrayList<>(3);
-	private TranslateTransform mTranslateTransform;
+	private List<Transform> mTransforms = new ArrayList<>(3);
 	private int mPreviewWidth, mPreviewHeight;
 	private Object3D loadedObject = null;
 
@@ -56,13 +56,9 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	}
 
 	private void initTransforms() {
-		mTranslateTransform = new TranslateTransform(CAMERA_Z);
-		ScaleTransform scaleTransform = new ScaleTransform();
-		RotationTransform rotationTransform = new RotationTransform();
-
-		mTransforms.add(scaleTransform);
-		mTransforms.add(rotationTransform);
-		mTransforms.add(mTranslateTransform);
+		mTransforms.add(new ScaleTransform());
+		mTransforms.add(new RotationTransform());
+		mTransforms.add(new TranslateTransform(CAMERA_Z));
 	}
 
 	@Override
@@ -93,7 +89,7 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 		if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
 			float widthScaleFactor = (float) mCurrentViewportWidth / (float) mPreviewWidth;
 			float heightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
-			mTranslateTransform.setScaleFactor(widthScaleFactor, heightScaleFactor);
+			Transform.setScaleFactor(widthScaleFactor, heightScaleFactor);
 		}
 	}
 
@@ -135,22 +131,25 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, On
 	 * shown on the face. This sets the preview width/height of the rendering surface to be the same
 	 * as the camera surface so their sizes will match when overlapped
 	 */
-	public void setCameraInfo(Size size,int facing){
+	public void setCameraInfo(Size size, int facing) {
 		int min = Math.min(size.getWidth(), size.getHeight());
 		int max = Math.max(size.getWidth(), size.getHeight());
 		if (Utils.isPortraitMode(mContext)) {
 			// Swap width and height sizes when in portrait, since it will be rotated by
 			// 90 degrees
-			setCameraInfo(min,max,facing);
+			setCameraInfo(min, max, facing);
 		} else {
-			setCameraInfo(max,min,facing);
+			setCameraInfo(max, min, facing);
 		}
 	}
+
 	private void setCameraInfo(int previewWidth, int previewHeight, int facing) {
 		synchronized (mLock) {
 			mPreviewWidth = previewWidth;
 			mPreviewHeight = previewHeight;
-			mTranslateTransform.setFacing(facing);
+			for (Transform transform : mTransforms)
+				if (transform instanceof TranslateTransform)
+					((TranslateTransform) transform).setFacing(facing);
 		}
 	}
 
