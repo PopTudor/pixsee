@@ -17,8 +17,10 @@ import java.util.List;
  */
 interface ChatContract {
 
-	interface Presenter extends BasePresenter{
+	interface Presenter extends BasePresenter {
 		void loadMore(int limit, boolean forceUpdate);
+
+		void onTyping(boolean typing);
 
 		void loadMore(int limit, User user);
 
@@ -26,7 +28,7 @@ interface ChatContract {
 
 		void isTyping(boolean typing);
 
-		void chatClicked(Message message,int position);
+		void chatClicked(Message message, int position);
 
 		void sendMessage(@NonNull Message message);
 
@@ -48,6 +50,8 @@ interface ChatContract {
 		void chatImageClicked(Uri uri);
 
 		void setThatUser(User thatUser);
+
+		void newMessage(Message message);
 	}
 
 	interface View extends BaseView<Presenter> {

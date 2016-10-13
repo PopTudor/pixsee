@@ -62,6 +62,11 @@ class MainPresenter implements MainContract.Presenter {
 	}
 
 	@Override
+	public void detach() {
+
+	}
+
+	@Override
 	public void friendRequest(@NonNull User user) {
 		mWeakView.get().showFriendRequestDialog(user);
 	}

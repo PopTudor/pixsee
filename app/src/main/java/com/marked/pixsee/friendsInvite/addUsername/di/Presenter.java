@@ -42,6 +42,11 @@ class Presenter implements AddUsernameContract.Presenter {
 	}
 
 	@Override
+	public void detach() {
+
+	}
+
+	@Override
 	public void search(@NonNull String usernameOrEmail) {
 		if (usernameOrEmail.isEmpty())
 			return;

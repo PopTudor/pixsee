@@ -7,8 +7,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.design.widget.FloatingActionButton;
@@ -26,8 +24,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.custom.ChatAdapter;
 import com.marked.pixsee.chat.data.Message;
@@ -37,21 +33,13 @@ import com.marked.pixsee.di.Injectable;
 import com.marked.pixsee.fullscreenImage.ImageFullscreenActivity;
 import com.marked.pixsee.model.database.DatabaseContract;
 import com.marked.pixsee.model.user.User;
-import com.marked.pixsee.networking.ServerConstants;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 import tyrantgit.explosionfield.ExplosionField;
 
 /**
@@ -75,10 +63,8 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	private ChatAdapter mChatAdapter;
 	private LinearLayoutManager mLinearLayoutManager;
 	private ExplosionField mExplosionField;
-	private Socket mSocket;
+
 	private CardView mPictureTakenContainer;
-    private Emitter.Listener onMessage;
-    private Emitter.Listener onTyping;
 	private EditText messageEditText;
 	private RecyclerView messagesRecyclerView;
 	@Inject
@@ -112,18 +98,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		super.onCreate(savedInstanceState);
 		mChatAdapter = new ChatAdapter(this);
 		mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-		try {
-			mSocket = IO.socket(ServerConstants.SERVER);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		onMessage = onNewMessage();
-		onTyping = onTyping();
-
-		mSocket.on(ChatFragment.ON_NEW_MESSAGE, onMessage);
-		mSocket.on(ChatFragment.ON_TYPING, onTyping);
-
-		mSocket.connect();
 	}
 
 	@Override
@@ -135,7 +109,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		messagesRecyclerView.addItemDecoration(new SpaceItemDecorator(15));
 		messagesRecyclerView.setAdapter(mChatAdapter);
 		messageEditText = (EditText) rootView.findViewById(R.id.messageEditText);
-		messageEditText.addTextChangedListener(new  TextWatcher(){
+		messageEditText.addTextChangedListener(new TextWatcher() {
 			boolean mTyping = false;
 
 			@Override
@@ -147,7 +121,8 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				if (!mTyping && count > 0) mTyping = true;
 				if (mTyping && count == 0) mTyping = false;
-				onTyping(mTyping);
+
+				mPresenter.onTyping(mTyping);
 				if (s.length()>0)
 					switchButonImage(R.drawable.ic_send_24dp);
 				else if (s.length()==0 && mPictureTakenContainer.getVisibility() == View.GONE)
@@ -174,7 +149,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 							.build();
 
 					//		doGcmSendUpstreamMessage(message);
-					mSocket.emit(ChatFragment.ON_NEW_MESSAGE,  message.toJSON());
+					mPresenter.newMessage(message);
 					message.setMessageType(MessageConstants.MessageType.ME_MESSAGE);
 					mPresenter.sendMessage(message);
 				} else if(!messageEditText.isEnabled()) {
@@ -207,18 +182,12 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	@Override
 	public void imageSent(Message message) {
-		mSocket.emit(ChatFragment.ON_NEW_MESSAGE,  message.toJSON());
+
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		try {
-			mSocket.emit(ChatFragment.ON_NEW_ROOM, new JSONObject(String.format("{from:%s,to:%s,to_token:\'%s\'}",mThisUser, mThatUser
-					.getUserID(),mThatUser.getToken())));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 		mPresenter.loadMore(50,mThatUser);
 	}
 
@@ -243,14 +212,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	public void onPause() {
 		super.onPause();
 		isInForeground = false;
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		mSocket.off(ChatFragment.ON_NEW_MESSAGE, onMessage);
-		mSocket.off(ChatFragment.ON_TYPING, onTyping);
-		mSocket.disconnect();
+		mPresenter.detach();
 	}
 
 	@Override
@@ -263,81 +225,11 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		}catch (ClassCastException e) {
 			throw new ClassCastException(getActivity().toString() + " must implement OnArticleSelectedListener");
 		}
-		mPresenter.attach();
 		mThatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
-//		mThisUser = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(GCMConstants.USER_ID, null);
 		mPresenter.setThatUser(mThatUser);
+		mPresenter.attach();
 		mExplosionField = ExplosionField.attach2Window(getActivity());
 	}
-
-	public void onTyping(boolean typing) {
-		try {
-			mSocket.emit(ChatFragment.ON_TYPING, new JSONObject(String.format("{from:%s,to:%s,typing:%s,to_token:\'%s\'}", mThisUser.getUserID(),
-					mThatUser.getUserID(),
-					typing,mThatUser.getToken())));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-    private Emitter.Listener onNewMessage() {
-        return new Emitter.Listener() {
-            @Override
-            public void call(final Object... args) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            JSONObject json = new JSONObject(args[0].toString());
-	                        Gson gson = new GsonBuilder().create();
-	                        Message message = gson.fromJson(json.toString(), Message.class);
-
-	                        if (message.getMessageType()==MessageConstants.MessageType.YOU_IMAGE) {
-		                        message = new Message.Builder()
-				                        .date(message.getDate())
-				                        .id(message.getId())
-				                        .messageType(MessageConstants.MessageType.YOU_IMAGE)
-				                        .from(message.getFrom())
-				                        // the database doesn't have from but in this case from & to are the same
-				                        // from refers to app's user like 'from me to you'
-				                        .to(message.getFrom())
-				                        .addData(MessageConstants.DATA_BODY,ServerConstants.SERVER_USER_IMAGE+"/?img="+message.getData()
-						                        .get(MessageConstants.DATA_BODY))
-				                        .build();
-	                        }
-	                        if (message.getMessageType()==MessageConstants.MessageType.ME_MESSAGE)
-	                            message.setMessageType(MessageConstants.MessageType.YOU_MESSAGE);
-                            mPresenter.receiveMessage(message);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-        };
-    }
-
-	/**
-	 * keep track if the user is interacting with the app. If not, disconnect the socket
-	 */
-
-    public Emitter.Listener onTyping() { // // FIXME: 23-Jun-16 gets called twice when I click a friend
-        Emitter.Listener onTyping = new Emitter.Listener() {
-            @Override
-            public void call(final Object... args) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        boolean typing = (boolean) args[0];
-                        mPresenter.isTyping(typing);
-                    }
-                });
-
-            }
-        };
-
-        return onTyping;
-    }
 
 	@Override
 	public void pop() {

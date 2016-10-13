@@ -1,7 +1,7 @@
 package com.marked.pixsee.selfie.renderer.transformation;
 
 import com.google.android.gms.vision.CameraSource;
-import com.pixsee.face.PixseeFace;
+import com.marked.pixsee.face.PixseeFace;
 
 import org.rajawali3d.Object3D;
 

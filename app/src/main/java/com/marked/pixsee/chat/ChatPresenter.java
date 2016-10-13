@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.google.gson.JsonObject;
+import com.marked.pixsee.RxBus;
 import com.marked.pixsee.chat.data.ChatDatasource;
 import com.marked.pixsee.chat.data.ChatRepository;
 import com.marked.pixsee.chat.data.Message;
@@ -11,6 +12,9 @@ import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.networking.UploadAPI;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -30,6 +34,7 @@ import rx.schedulers.Schedulers;
  */
 class ChatPresenter implements ChatContract.Presenter {
 	private final UploadAPI mUploadAPI;
+	private final ChattingInterface mChatClient;
 	private WeakReference<ChatContract.View> mView;
 	private ChatDatasource mRepository;
 	private User mAppsUser;
@@ -38,10 +43,11 @@ class ChatPresenter implements ChatContract.Presenter {
 	private File mPictureFile;
 	private User mThatUser;
 
-	public ChatPresenter(ChatContract.View mView, ChatRepository mRepository, User appsUser, UploadAPI uploadAPI) {
+	public ChatPresenter(ChatContract.View mView, ChatRepository mRepository, User appsUser, UploadAPI uploadAPI, ChattingInterface chatClient) {
 		this.mRepository = mRepository;
 		mUploadAPI = uploadAPI;
 		this.mView = new WeakReference<>(mView);
+		mChatClient = chatClient;
 		this.mView.get().setPresenter(this);
 		mAppsUser = appsUser;
 	}
@@ -50,6 +56,21 @@ class ChatPresenter implements ChatContract.Presenter {
 	@Override
 	public void attach() {
 		loadMore(50, true);
+		mChatClient.connect();
+		try {
+			mChatClient.emit(ChatFragment.ON_NEW_ROOM,
+					new JSONObject(String.format("{from:%s,to:%s,to_token:\'%s\'}",
+							mAppsUser.getUserID(),
+							mThatUser.getUserID(),
+							mThatUser.getToken())));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void detach() {
+		mChatClient.disconnect();
 	}
 
 	@Override
@@ -76,6 +97,17 @@ class ChatPresenter implements ChatContract.Presenter {
 		mView.get().addMessage(message);
 	}
 
+	public void onTyping(boolean typing) {
+		try {
+			mChatClient.emit(ChatFragment.ON_TYPING,
+					new JSONObject(String.format("{from:%s,to:%s,typing:%s,to_token:\'%s\'}",
+							mAppsUser.getUserID(),
+							mThatUser.getUserID(), typing, mThatUser.getToken())));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void setThatUser(User thatUser) {
 		mThatUser = thatUser;
@@ -89,7 +121,7 @@ class ChatPresenter implements ChatContract.Presenter {
 			RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-com.marked.pixsee.data"), file);
 			// MultipartBody.Part is used to send also the actual file name
 			MultipartBody.Part body = MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
-			mUploadAPI.upload(mAppsUser.getUserID(),mThatUser.getUserID(),body)
+			mUploadAPI.upload(mAppsUser.getUserID(), mThatUser.getUserID(), body)
 					.subscribeOn(Schedulers.io())
 					.observeOn(AndroidSchedulers.mainThread())
 					.doOnSubscribe(new Action0() {
@@ -106,13 +138,13 @@ class ChatPresenter implements ChatContract.Presenter {
 //								String prepareImage = ServerConstants.SERVER_USER_IMAGE.replace(ServerConstants.SCHEME_HTTP, "")
 //										+ "/" + responseBody.body().get("pictureName").getAsString();
 								Message message1 = new Message.Builder()
-										.messageType(MessageConstants.MessageType.YOU_IMAGE)
-										.date(message.getDate())
-										.from(message.getFrom())
-										.to(message.getTo())
-										.addData(MessageConstants.DATA_BODY, responseBody.body().get("pictureName").getAsString())
-										.build();
-								mView.get().imageSent(message1);
+										                   .messageType(MessageConstants.MessageType.YOU_IMAGE)
+										                   .date(message.getDate())
+										                   .from(message.getFrom())
+										                   .to(message.getTo())
+										                   .addData(MessageConstants.DATA_BODY, responseBody.body().get("pictureName").getAsString())
+										                   .build();
+								mChatClient.emit(ChatFragment.ON_NEW_MESSAGE, message.toJSON());
 							}
 						}
 					}, new Action1<Throwable>() {
@@ -122,6 +154,23 @@ class ChatPresenter implements ChatContract.Presenter {
 						}
 					});
 		}
+	}
+
+	@Override
+	public void newMessage(Message message) {
+		mChatClient.emit(ChatFragment.ON_NEW_MESSAGE, message.toJSON());
+		RxBus.getInstance().register(Boolean.class, new Action1<Boolean>() {
+			@Override
+			public void call(Boolean aBoolean) {
+				isTyping(aBoolean);
+			}
+		});
+		RxBus.getInstance().register(Message.class, new Action1<Message>() {
+			@Override
+			public void call(Message message) {
+				receiveMessage(message);
+			}
+		});
 	}
 
 	@Override
@@ -145,8 +194,8 @@ class ChatPresenter implements ChatContract.Presenter {
 		if (typing && mShowTypingAnimation) {
 			mShowTypingAnimation = false;
 			Message typingMessage = new Message.Builder()
-					.messageType(MessageConstants.MessageType.TYPING)
-					.build();
+					                        .messageType(MessageConstants.MessageType.TYPING)
+					                        .build();
 			mView.get().addMessage(typingMessage);
 		}
 		if (!typing) {

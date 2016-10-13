@@ -29,7 +29,7 @@ class ChatModule {
 	public ChatContract.Presenter providePresenter(ChatRepository repository, @Named(DatabaseContract.AppsUser.TABLE_NAME) User user,
 	                                               @Named(ServerConstants.SERVER) Retrofit retrofit) {
 		UploadAPI uploadAPI = retrofit.create(UploadAPI.class);
-		ChatPresenter chatPresenter = new ChatPresenter(view, repository, user,uploadAPI);
+		ChatPresenter chatPresenter = new ChatPresenter(view, repository, user, uploadAPI, new ChatClient());
 		return chatPresenter;
 	}
 }

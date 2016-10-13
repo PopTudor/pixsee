@@ -19,6 +19,11 @@ class Presenter implements FriendsInviteContract.Presenter {
 	}
 
 	@Override
+	public void detach() {
+
+	}
+
+	@Override
 	public void addFriendClicked() {
 		mView.get().showAddFriend();
 	}

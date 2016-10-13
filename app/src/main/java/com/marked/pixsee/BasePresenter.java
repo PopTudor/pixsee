@@ -5,4 +5,6 @@ package com.marked.pixsee;
  */
 public interface BasePresenter {
 	void attach();
+
+	void detach();
 }

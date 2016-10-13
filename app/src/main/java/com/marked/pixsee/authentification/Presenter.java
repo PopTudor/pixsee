@@ -51,6 +51,11 @@ public class Presenter implements AuthenticationContract.Presenter {
 		mView.get().showLoginStep();
 	}
 
+	@Override
+	public void detach() {
+
+	}
+
 	/**
 	 * Sends a request to the server to check if the email is already in the database.
 	 * If the email is registered we notify him. Else we show the next step.

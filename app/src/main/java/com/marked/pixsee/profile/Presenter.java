@@ -41,6 +41,11 @@ class Presenter implements ProfileContract.Presenter {
 	}
 
 	@Override
+	public void detach() {
+
+	}
+
+	@Override
 	public void logOut() {
 		mUserDatasource.deleteAllUsers();
 	}

@@ -101,4 +101,8 @@ class FacePresenter implements SelfieContract.Presenter {
 
 	}
 
+	@Override
+	public void detach() {
+
+	}
 }
