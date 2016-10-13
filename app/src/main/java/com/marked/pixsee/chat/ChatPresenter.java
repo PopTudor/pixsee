@@ -93,6 +93,7 @@ class ChatPresenter implements ChatContract.Presenter {
 
 	public void onTyping(boolean typing) {
 		try {
+
 			mChatClient.emit(ChatFragment.ON_TYPING,
 					new JSONObject(String.format("{from:%s,to:%s,typing:%s,to_token:\'%s\'}",
 							mAppsUser.getUserID(),

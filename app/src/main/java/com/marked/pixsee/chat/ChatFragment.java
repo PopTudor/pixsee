@@ -305,6 +305,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void injectComponent() {
 		User thatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
+		mThatUser = thatUser;
 // as long as ChatComponent != null, objects annotated with @FragmentScope are in memory
 		DaggerChatComponent.builder().activityComponent(((ChatActivity) getActivity()).getActivityComponent())
 				.chatModule(new ChatModule(this, thatUser))

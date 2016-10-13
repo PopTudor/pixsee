@@ -60,7 +60,7 @@ class ChatClient implements ChattingInterface {
 
 	@Override
 	public void emit(String event, Object... objects) {
-		mSocket.emit(event, objects, mAppUser.getUserID());
+		mSocket.emit(event, objects);
 	}
 
 	private Emitter.Listener onNewMessage() {
@@ -105,7 +105,6 @@ class ChatClient implements ChattingInterface {
 	 */
 
 	public Emitter.Listener onTyping() { // // FIXME: 23-Jun-16 gets called twice when I click a friend
-
 		return new Emitter.Listener() {
 			@Override
 			public void call(final Object... args) {
