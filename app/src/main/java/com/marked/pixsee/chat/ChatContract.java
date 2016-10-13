@@ -22,8 +22,6 @@ interface ChatContract {
 
 		void onTyping(boolean typing);
 
-		void loadMore(int limit, User user);
-
 		void execute(Command command);
 
 		void isTyping(boolean typing);

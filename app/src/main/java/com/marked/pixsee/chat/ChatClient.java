@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.marked.pixsee.RxBus;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.networking.ServerConstants;
 
 import org.json.JSONException;
@@ -24,11 +25,15 @@ import io.socket.emitter.Emitter;
  */
 
 class ChatClient implements ChattingInterface {
+	private final User mAppUser;
+	private final User mThatUser;
 	private Socket mSocket;
 	private Emitter.Listener onMessage;
 	private Emitter.Listener onTyping;
 
-	public ChatClient() {
+	ChatClient(User appUser, User thatUser) {
+		mAppUser = appUser;
+		mThatUser = thatUser;
 		try {
 			mSocket = IO.socket(ServerConstants.SERVER);
 		} catch (URISyntaxException e) {
@@ -55,7 +60,7 @@ class ChatClient implements ChattingInterface {
 
 	@Override
 	public void emit(String event, Object... objects) {
-		mSocket.emit(event, objects);
+		mSocket.emit(event, objects, mAppUser.getUserID());
 	}
 
 	private Emitter.Listener onNewMessage() {
@@ -100,7 +105,8 @@ class ChatClient implements ChattingInterface {
 	 */
 
 	public Emitter.Listener onTyping() { // // FIXME: 23-Jun-16 gets called twice when I click a friend
-		Emitter.Listener onTyping = new Emitter.Listener() {
+
+		return new Emitter.Listener() {
 			@Override
 			public void call(final Object... args) {
 				new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -113,8 +119,6 @@ class ChatClient implements ChattingInterface {
 
 			}
 		};
-
-		return onTyping;
 	}
 
 }

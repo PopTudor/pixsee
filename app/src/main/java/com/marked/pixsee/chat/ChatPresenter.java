@@ -43,7 +43,7 @@ class ChatPresenter implements ChatContract.Presenter {
 	private File mPictureFile;
 	private User mThatUser;
 
-	public ChatPresenter(ChatContract.View mView, ChatRepository mRepository, User appsUser, UploadAPI uploadAPI, ChattingInterface chatClient) {
+	ChatPresenter(ChatContract.View mView, ChatRepository mRepository, User appsUser, UploadAPI uploadAPI, ChattingInterface chatClient) {
 		this.mRepository = mRepository;
 		mUploadAPI = uploadAPI;
 		this.mView = new WeakReference<>(mView);
@@ -66,29 +66,23 @@ class ChatPresenter implements ChatContract.Presenter {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		RxBus.getInstance().register(Boolean.class, new Action1<Boolean>() {
+			@Override
+			public void call(Boolean aBoolean) {
+				isTyping(aBoolean);
+			}
+		});
+		RxBus.getInstance().register(Message.class, new Action1<Message>() {
+			@Override
+			public void call(Message message) {
+				receiveMessage(message);
+			}
+		});
 	}
 
 	@Override
 	public void detach() {
 		mChatClient.disconnect();
-	}
-
-	@Override
-	public void loadMore(int limit, User friendId) {
-		mRepository.getMessages(friendId)
-				.subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Action1<List<Message>>() {
-					@Override
-					public void call(List<Message> messages) {
-						mView.get().showMessages(messages);
-					}
-				}, new Action1<Throwable>() {
-					@Override
-					public void call(Throwable throwable) {
-						mView.get().showEmptyMessages();
-					}
-				});
 	}
 
 	@Override
@@ -102,7 +96,9 @@ class ChatPresenter implements ChatContract.Presenter {
 			mChatClient.emit(ChatFragment.ON_TYPING,
 					new JSONObject(String.format("{from:%s,to:%s,typing:%s,to_token:\'%s\'}",
 							mAppsUser.getUserID(),
-							mThatUser.getUserID(), typing, mThatUser.getToken())));
+							mThatUser.getUserID(),
+							typing,
+							mThatUser.getToken())));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -135,8 +131,6 @@ class ChatPresenter implements ChatContract.Presenter {
 						public void call(Response<JsonObject> responseBody) {
 							if (responseBody.isSuccessful()) {
 								sendMessage(message);
-//								String prepareImage = ServerConstants.SERVER_USER_IMAGE.replace(ServerConstants.SCHEME_HTTP, "")
-//										+ "/" + responseBody.body().get("pictureName").getAsString();
 								Message message1 = new Message.Builder()
 										                   .messageType(MessageConstants.MessageType.YOU_IMAGE)
 										                   .date(message.getDate())
@@ -144,7 +138,7 @@ class ChatPresenter implements ChatContract.Presenter {
 										                   .to(message.getTo())
 										                   .addData(MessageConstants.DATA_BODY, responseBody.body().get("pictureName").getAsString())
 										                   .build();
-								mChatClient.emit(ChatFragment.ON_NEW_MESSAGE, message.toJSON());
+								mChatClient.emit(ChatFragment.ON_NEW_MESSAGE, message1.toJSON());
 							}
 						}
 					}, new Action1<Throwable>() {
@@ -159,18 +153,6 @@ class ChatPresenter implements ChatContract.Presenter {
 	@Override
 	public void newMessage(Message message) {
 		mChatClient.emit(ChatFragment.ON_NEW_MESSAGE, message.toJSON());
-		RxBus.getInstance().register(Boolean.class, new Action1<Boolean>() {
-			@Override
-			public void call(Boolean aBoolean) {
-				isTyping(aBoolean);
-			}
-		});
-		RxBus.getInstance().register(Message.class, new Action1<Message>() {
-			@Override
-			public void call(Message message) {
-				receiveMessage(message);
-			}
-		});
 	}
 
 	@Override
@@ -232,7 +214,20 @@ class ChatPresenter implements ChatContract.Presenter {
 
 	@Override
 	public void loadMore(int limit, boolean forceUpdate) {
-
+		mRepository.getMessages(mThatUser)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Action1<List<Message>>() {
+					@Override
+					public void call(List<Message> messages) {
+						mView.get().showMessages(messages);
+					}
+				}, new Action1<Throwable>() {
+					@Override
+					public void call(Throwable throwable) {
+						mView.get().showEmptyMessages();
+					}
+				});
 	}
 
 	@Override

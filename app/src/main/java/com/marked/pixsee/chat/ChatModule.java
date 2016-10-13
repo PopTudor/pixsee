@@ -19,17 +19,31 @@ import retrofit2.Retrofit;
 @Module
 class ChatModule {
 	private ChatContract.View view;
+	private User mThatUser;
 
-	public ChatModule(ChatContract.View view) {
+	ChatModule(ChatContract.View view, User thatUser) {
 		this.view = view;
+		mThatUser = thatUser;
 	}
 
 	@Provides
 	@FragmentScope
-	public ChatContract.Presenter providePresenter(ChatRepository repository, @Named(DatabaseContract.AppsUser.TABLE_NAME) User user,
-	                                               @Named(ServerConstants.SERVER) Retrofit retrofit) {
+	ChatContract.Presenter providePresenter(ChatRepository repository,
+	                                        @Named(DatabaseContract.AppsUser.TABLE_NAME) User user,
+	                                        @Named(ServerConstants.SERVER) Retrofit retrofit,
+	                                        ChattingInterface chattingInterface) {
 		UploadAPI uploadAPI = retrofit.create(UploadAPI.class);
-		ChatPresenter chatPresenter = new ChatPresenter(view, repository, user, uploadAPI, new ChatClient());
+		ChatPresenter chatPresenter = new ChatPresenter(view, repository, user, uploadAPI, chattingInterface);
+		chatPresenter.setThatUser(mThatUser);
+
 		return chatPresenter;
 	}
+
+	@Provides
+	@FragmentScope
+	ChattingInterface provideChattingInterface(@Named(DatabaseContract.AppsUser.TABLE_NAME) User appsUser) {
+		return new ChatClient(appsUser, mThatUser);
+	}
+
+
 }

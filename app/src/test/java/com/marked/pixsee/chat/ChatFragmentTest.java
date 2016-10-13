@@ -47,7 +47,7 @@ public class ChatFragmentTest extends ChatFragment {
 	@Override
 	public void injectComponent() {
 		DaggerChatComponent.builder().activityComponent(((ChatActivity) getActivity()).getActivityComponent())
-				.chatModule(new ChatModule(this))
+				.chatModule(new ChatModule(this, thatUser))
 				.build()
 				.inject(this);
 		FakeAppComponent fakeAppComponent = (FakeAppComponent) ((PixseeTest) getActivity().getApplication()).getAppComponent();

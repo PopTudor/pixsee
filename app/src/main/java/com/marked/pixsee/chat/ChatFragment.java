@@ -188,18 +188,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void onStart() {
 		super.onStart();
-		mPresenter.loadMore(50,mThatUser);
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-//		try {
-//			mSocket.emit(ChatFragment.ON_NEW_ROOM, new JSONObject(String.format("{from:%s,to:%s,to_token:\'%s\'}",mThisUser, mThatUser
-//					.getUserID(),mThatUser.getToken())));
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
+		mPresenter.loadMore(50, true);
 	}
 
 	@Override
@@ -219,16 +208,18 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		injectComponent();
+		checkFragmentInteraction(context);
+		mPresenter.attach();
+		mExplosionField = ExplosionField.attach2Window(getActivity());
+	}
+
+	private void checkFragmentInteraction(Context context) {
 		try {
 			ChatFragmentInteraction listener = (ChatFragmentInteraction) context;
 			mPresenter.setChatInteraction(listener);
-		}catch (ClassCastException e) {
-			throw new ClassCastException(getActivity().toString() + " must implement OnArticleSelectedListener");
+		} catch (ClassCastException e) {
+			throw new ClassCastException(getActivity().toString() + " must implement OnFragmentInteractionListener");
 		}
-		mThatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
-		mPresenter.setThatUser(mThatUser);
-		mPresenter.attach();
-		mExplosionField = ExplosionField.attach2Window(getActivity());
 	}
 
 	@Override
@@ -313,9 +304,10 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	@Override
 	public void injectComponent() {
+		User thatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
 // as long as ChatComponent != null, objects annotated with @FragmentScope are in memory
 		DaggerChatComponent.builder().activityComponent(((ChatActivity) getActivity()).getActivityComponent())
-				.chatModule(new ChatModule(this))
+				.chatModule(new ChatModule(this, thatUser))
 				.build()
 				.inject(this);
 	}
