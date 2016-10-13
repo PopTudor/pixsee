@@ -81,7 +81,7 @@ android {
         }
         debug {
             debuggable true
-            buildConfigField(String, Server_ip, "\"192.168.0.101\"")
+            buildConfigField(String, Server_ip, "\"192.168.100.4\"")
 //            shrinkResources true
 //            minifyEnabled true
 //            proguardFiles(files { file('./proguard').listFiles() })

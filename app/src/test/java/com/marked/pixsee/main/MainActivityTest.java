@@ -10,10 +10,10 @@ import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
 import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.chat.ChatActivity;
+import com.marked.pixsee.di.modules.FakeActivityModule;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.profile.ProfileFragment;
-import com.pixsee.di.modules.FakeActivityModule;
 
 import org.junit.After;
 import org.junit.Before;

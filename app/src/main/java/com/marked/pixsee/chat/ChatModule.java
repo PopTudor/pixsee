@@ -1,11 +1,11 @@
 package com.marked.pixsee.chat;
 
 import com.marked.pixsee.chat.data.ChatRepository;
+import com.marked.pixsee.di.scopes.FragmentScope;
 import com.marked.pixsee.model.database.DatabaseContract;
 import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.networking.UploadAPI;
-import com.pixsee.di.scopes.FragmentScope;
 
 import javax.inject.Named;
 

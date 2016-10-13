@@ -11,12 +11,12 @@ import android.view.View;
 
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
+import com.marked.pixsee.di.components.DaggerActivityComponent;
+import com.marked.pixsee.di.modules.ActivityModule;
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameFragment;
 import com.marked.pixsee.friendsInvite.commands.ClickAddUser;
 import com.marked.pixsee.friendsInvite.commands.ClickShareUsername;
 import com.marked.pixsee.model.user.User;
-import com.pixsee.di.components.DaggerActivityComponent;
-import com.pixsee.di.modules.ActivityModule;
 
 public class FriendsInviteActivity extends AppCompatActivity implements FriendsInviteContract.View,View.OnClickListener {
 	private FriendsInviteContract.Presenter mPresenter;

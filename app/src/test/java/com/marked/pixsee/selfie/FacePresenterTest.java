@@ -2,10 +2,10 @@ package com.marked.pixsee.selfie;
 
 import android.graphics.SurfaceTexture;
 
+import com.marked.pixsee.camerasource.CameraSource;
+import com.marked.pixsee.camerasource.PictureCallback;
+import com.marked.pixsee.camerasource.ShutterCallback;
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
-import com.pixsee.camerasource.CameraSource;
-import com.pixsee.camerasource.PictureCallback;
-import com.pixsee.camerasource.ShutterCallback;
 
 import org.junit.Before;
 import org.junit.Test;

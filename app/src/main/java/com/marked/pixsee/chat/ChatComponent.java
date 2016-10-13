@@ -1,7 +1,7 @@
 package com.marked.pixsee.chat;
 
-import com.pixsee.di.components.ActivityComponent;
-import com.pixsee.di.scopes.FragmentScope;
+import com.marked.pixsee.di.components.ActivityComponent;
+import com.marked.pixsee.di.scopes.FragmentScope;
 
 import dagger.Component;
 

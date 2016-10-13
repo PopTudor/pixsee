@@ -1,9 +1,9 @@
 package com.marked.pixsee.authentification.di;
 
 import com.marked.pixsee.authentification.AuthenticationActivity;
-import com.pixsee.di.components.AppComponent;
-import com.pixsee.di.modules.ActivityModule;
-import com.pixsee.di.scopes.ActivityScope;
+import com.marked.pixsee.di.components.AppComponent;
+import com.marked.pixsee.di.modules.ActivityModule;
+import com.marked.pixsee.di.scopes.ActivityScope;
 
 import dagger.Component;
 

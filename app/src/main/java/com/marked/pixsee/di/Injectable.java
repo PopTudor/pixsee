@@ -1,0 +1,14 @@
+package com.marked.pixsee.di;
+
+/**
+ * Created by Tudor on 26-Jul-16.
+ * Inherit this interface in production code and then in tests create a private class that inherits the
+ * production activity/fragment and override this method to be able to switch the component and it's modules
+ */
+public interface Injectable {
+
+	/**
+	 * override this for easy and dynamic swap of dependencies
+	 */
+	void injectComponent();
+}

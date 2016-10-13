@@ -1,10 +1,10 @@
 package com.marked.pixsee.friends.di;
 
+import com.marked.pixsee.di.scopes.FragmentScope;
+import com.marked.pixsee.di.scopes.Repository;
 import com.marked.pixsee.friends.FriendPresenter;
 import com.marked.pixsee.friends.FriendsContract;
 import com.marked.pixsee.model.user.UserDatasource;
-import com.pixsee.di.scopes.FragmentScope;
-import com.pixsee.di.scopes.Repository;
 
 import dagger.Module;
 import dagger.Provides;

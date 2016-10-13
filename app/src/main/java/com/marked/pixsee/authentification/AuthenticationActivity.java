@@ -19,8 +19,8 @@ import com.marked.pixsee.authentification.login.LoginFragment;
 import com.marked.pixsee.authentification.signup.SignUpEmailFragment;
 import com.marked.pixsee.authentification.signup.SignUpNameFragment;
 import com.marked.pixsee.authentification.signup.SignUpPassFragment;
+import com.marked.pixsee.di.modules.ActivityModule;
 import com.marked.pixsee.main.MainActivity;
-import com.pixsee.di.modules.ActivityModule;
 
 import javax.inject.Inject;
 

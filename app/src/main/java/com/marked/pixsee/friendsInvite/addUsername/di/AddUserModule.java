@@ -1,13 +1,13 @@
 package com.marked.pixsee.friendsInvite.addUsername.di;
 
+import com.marked.pixsee.di.scopes.FragmentScope;
+import com.marked.pixsee.di.scopes.Repository;
 import com.marked.pixsee.friendsInvite.addUsername.AddUserAPI;
 import com.marked.pixsee.friendsInvite.addUsername.AddUsernameContract;
 import com.marked.pixsee.model.database.DatabaseContract;
 import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.model.user.UserDatasource;
 import com.marked.pixsee.networking.ServerConstants;
-import com.pixsee.di.scopes.FragmentScope;
-import com.pixsee.di.scopes.Repository;
 
 import javax.inject.Named;
 

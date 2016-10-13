@@ -7,12 +7,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.marked.pixsee.di.scopes.ActivityScope;
 import com.marked.pixsee.friends.data.FriendContractDB;
 import com.marked.pixsee.friends.data.FriendsAPI;
 import com.marked.pixsee.friendsInvite.addUsername.AddUserAPI;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.utility.GCMConstants;
-import com.pixsee.di.scopes.ActivityScope;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,8 @@
 package com.marked.pixsee.main;
 
+import com.marked.pixsee.di.scopes.ActivityScope;
+import com.marked.pixsee.di.scopes.Repository;
 import com.marked.pixsee.model.user.UserDatasource;
-import com.pixsee.di.scopes.ActivityScope;
-import com.pixsee.di.scopes.Repository;
 
 import org.mockito.Mockito;
 

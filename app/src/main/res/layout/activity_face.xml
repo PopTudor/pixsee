@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:foregroundGravity="center_vertical|center_horizontal">
 
-        <com.pixsee.camerasource.CameraTextureView
+        <com.marked.pixsee.camerasource.CameraTextureView
             android:id="@+id/camera_texture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

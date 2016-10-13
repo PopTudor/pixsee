@@ -16,6 +16,8 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.ChatActivity;
+import com.marked.pixsee.di.Injectable;
+import com.marked.pixsee.di.modules.ActivityModule;
 import com.marked.pixsee.friends.FriendFragment;
 import com.marked.pixsee.main.strategy.PictureActionStrategy;
 import com.marked.pixsee.main.strategy.ProfilePictureStrategy;
@@ -24,8 +26,6 @@ import com.marked.pixsee.profile.ProfileFragment;
 import com.marked.pixsee.selfie.PictureDetailSendFragment;
 import com.marked.pixsee.selfie.PictureDetailShareFragment;
 import com.marked.pixsee.selfie.SelfieFragment;
-import com.pixsee.di.Injectable;
-import com.pixsee.di.modules.ActivityModule;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

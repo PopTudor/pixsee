@@ -6,11 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.PixseeTest;
+import com.marked.pixsee.di.components.DaggerFakeActivityComponent;
+import com.marked.pixsee.di.components.FakeActivityComponent;
+import com.marked.pixsee.di.components.FakeAppComponent;
+import com.marked.pixsee.di.modules.FakeActivityModule;
 import com.marked.pixsee.main.MainActivity;
-import com.pixsee.di.components.DaggerFakeActivityComponent;
-import com.pixsee.di.components.FakeActivityComponent;
-import com.pixsee.di.components.FakeAppComponent;
-import com.pixsee.di.modules.FakeActivityModule;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.junit.Assert;

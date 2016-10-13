@@ -5,13 +5,13 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.google.android.gms.common.images.Size;
+import com.marked.pixsee.face.PixseeFace;
 import com.marked.pixsee.selfie.SelfieFragment.OnFavoritesListener;
 import com.marked.pixsee.selfie.data.SelfieObject;
 import com.marked.pixsee.selfie.renderer.transformation.RotationTransform;
 import com.marked.pixsee.selfie.renderer.transformation.ScaleTransform;
 import com.marked.pixsee.selfie.renderer.transformation.Transform;
 import com.marked.pixsee.selfie.renderer.transformation.TranslateTransform;
-import com.pixsee.face.PixseeFace;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;

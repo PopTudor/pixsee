@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.support.annotation.DrawableRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -25,10 +24,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.marked.pixsee.R;
@@ -36,10 +33,11 @@ import com.marked.pixsee.chat.custom.ChatAdapter;
 import com.marked.pixsee.chat.data.Message;
 import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.commons.SpaceItemDecorator;
+import com.marked.pixsee.di.Injectable;
 import com.marked.pixsee.fullscreenImage.ImageFullscreenActivity;
+import com.marked.pixsee.model.database.DatabaseContract;
 import com.marked.pixsee.model.user.User;
 import com.marked.pixsee.networking.ServerConstants;
-import com.marked.pixsee.utility.GCMConstants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,16 +45,13 @@ import org.json.JSONObject;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-import rx.Observable;
-import rx.Subscriber;
-import rx.schedulers.Schedulers;
 import tyrantgit.explosionfield.ExplosionField;
 
 /**
@@ -65,7 +60,7 @@ import tyrantgit.explosionfield.ExplosionField;
  * in two-pane mode (on tablets) or a [ChatDetailActivity]
  * on handsets.
  */
-public class ChatFragment extends Fragment implements ChatContract.View, ChatAdapter.ChatInteraction {
+public class ChatFragment extends Fragment implements ChatContract.View, ChatAdapter.ChatInteraction, Injectable {
 	public static final String ON_NEW_MESSAGE = "onMessage";
 	public static final String ON_NEW_ROOM = "onRoom";
 	public static final String ON_EXIT_ROOM = "onRoom";
@@ -76,9 +71,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	 * @return if the app is in foreground or not
 	 */
 	public static boolean isInForeground = false;
-	@Inject
-	ChatContract.Presenter mPresenter;
-	private String mThisUser;
 	private User mThatUser;
 	private ChatAdapter mChatAdapter;
 	private LinearLayoutManager mLinearLayoutManager;
@@ -89,6 +81,11 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
     private Emitter.Listener onTyping;
 	private EditText messageEditText;
 	private RecyclerView messagesRecyclerView;
+	@Inject
+	ChatContract.Presenter mPresenter;
+	@Inject
+	@Named(DatabaseContract.AppsUser.TABLE_NAME)
+	User mThisUser;
 
 	public static ChatFragment newInstance(Parcelable parcelable) {
 		Bundle bundle = new Bundle();
@@ -172,7 +169,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 					Message message = new Message.Builder()
 							.addData(MessageConstants.DATA_BODY, text)
 							.messageType(MessageConstants.MessageType.YOU_MESSAGE)
-							.from(mThisUser)
+							                  .from(mThisUser.getUserID())
 							.to(mThatUser.getUserID())
 							.build();
 
@@ -184,7 +181,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 					Message message = new Message.Builder()
 							.messageType(MessageConstants.MessageType.ME_IMAGE)
 							.addData(MessageConstants.DATA_BODY, mPresenter.getPictureFile().getAbsolutePath())
-							.from(mThisUser)
+							                  .from(mThisUser.getUserID())
 							.to(mThatUser.getUserID())
 							.build();
 					mPresenter.sendImage(message);
@@ -211,51 +208,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void imageSent(Message message) {
 		mSocket.emit(ChatFragment.ON_NEW_MESSAGE,  message.toJSON());
-	}
-
-	/**
-	 * Send a message to the server using GCM
-	 *
-	 * @param message The message to send
-	 */
-	private void doGcmSendUpstreamMessage(Message message) {
-		final FirebaseMessaging gcm = FirebaseMessaging.getInstance();
-		final String senderId = getString(R.string.gcm_defaultSenderId);
-		final String msgId = UUID.randomUUID().toString();
-		String token = mThatUser.getToken();
-		final Bundle data = message.toBundle();
-		data.putString(GCMConstants.TOKEN, token);
-
-		if (msgId.isEmpty())
-			return;
-		rx.Observable.create(new Observable.OnSubscribe<String>() {
-			@Override
-			public void call(Subscriber<? super String> subscriber) {
-//				try {
-//					RemoteMessage remoteMessage = new RemoteMessage();
-//					gcm.send(senderId + GCMConstants.SERVER_UPSTREAM_ADRESS, msgId, com.marked.pixsee.data);
-					subscriber.onCompleted();
-//				} catch (IOException e) {
-//					subscriber.onError(e);
-//				}
-			}
-		})
-				.subscribeOn(Schedulers.computation())
-				.subscribe(new Subscriber<String>() {
-					@Override
-					public void onCompleted() {
-
-					}
-
-					@Override
-					public void onError(Throwable e) {
-						Toast.makeText(getActivity(), "Send message failed", Toast.LENGTH_SHORT).show();
-					}
-
-					@Override
-					public void onNext(String s) {
-					}
-				});
 	}
 
 	@Override
@@ -304,11 +256,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		// as long as ChatComponent != null, objects annotated with @FragmentScope are in memory
-		DaggerChatComponent.builder().activityComponent(((ChatActivity)getActivity()).getActivityComponent())
-				.chatModule(new ChatModule(this))
-				.build()
-				.inject(this);
+		injectComponent();
 		try {
 			ChatFragmentInteraction listener = (ChatFragmentInteraction) context;
 			mPresenter.setChatInteraction(listener);
@@ -317,14 +265,14 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		}
 		mPresenter.attach();
 		mThatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
-		mThisUser = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(GCMConstants.USER_ID, null);
+//		mThisUser = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(GCMConstants.USER_ID, null);
 		mPresenter.setThatUser(mThatUser);
 		mExplosionField = ExplosionField.attach2Window(getActivity());
 	}
 
 	public void onTyping(boolean typing) {
 		try {
-			mSocket.emit(ChatFragment.ON_TYPING, new JSONObject(String.format("{from:%s,to:%s,typing:%s,to_token:\'%s\'}",mThisUser,
+			mSocket.emit(ChatFragment.ON_TYPING, new JSONObject(String.format("{from:%s,to:%s,typing:%s,to_token:\'%s\'}", mThisUser.getUserID(),
 					mThatUser.getUserID(),
 					typing,mThatUser.getToken())));
 		} catch (JSONException e) {
@@ -420,6 +368,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void chatClicked(View view, Message message,int position) {
 		mPresenter.chatClicked(message,position);
+		view.setClickable(false);
 		mExplosionField.explode(view);
 	}
 
@@ -469,6 +418,16 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	public void pictureTaken(File file) {
 		mPresenter.pictureTaken(file);
 	}
+
+	@Override
+	public void injectComponent() {
+// as long as ChatComponent != null, objects annotated with @FragmentScope are in memory
+		DaggerChatComponent.builder().activityComponent(((ChatActivity) getActivity()).getActivityComponent())
+				.chatModule(new ChatModule(this))
+				.build()
+				.inject(this);
+	}
+
 	interface ChatFragmentInteraction{
 		void onCameraClick();
 	}

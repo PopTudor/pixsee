@@ -8,10 +8,10 @@ import android.view.TextureView;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
+import com.marked.pixsee.camerasource.CameraSource;
+import com.marked.pixsee.di.scopes.FragmentScope;
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
 import com.marked.pixsee.selfie.renderer.SelfieTrackerAR;
-import com.pixsee.camerasource.CameraSource;
-import com.pixsee.di.scopes.FragmentScope;
 
 import org.mockito.Mockito;
 import org.rajawali3d.renderer.Renderer;

@@ -31,13 +31,13 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
+import com.marked.pixsee.di.components.ActivityComponent;
+import com.marked.pixsee.di.components.DaggerActivityComponent;
+import com.marked.pixsee.di.modules.ActivityModule;
 import com.marked.pixsee.entry.EntryActivity;
 import com.marked.pixsee.friendsInvite.FriendsInviteActivity;
 import com.marked.pixsee.model.database.DatabaseContract;
 import com.marked.pixsee.model.user.User;
-import com.pixsee.di.components.ActivityComponent;
-import com.pixsee.di.components.DaggerActivityComponent;
-import com.pixsee.di.modules.ActivityModule;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;

@@ -1,7 +1,7 @@
 package com.marked.pixsee.main;
 
-import com.pixsee.di.modules.FakeActivityModule;
-import com.pixsee.di.scopes.ActivityScope;
+import com.marked.pixsee.di.modules.FakeActivityModule;
+import com.marked.pixsee.di.scopes.ActivityScope;
 
 import dagger.Component;
 

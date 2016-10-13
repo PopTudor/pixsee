@@ -1,9 +1,9 @@
 package com.marked.pixsee.profile;
 
+import com.marked.pixsee.di.scopes.FragmentScope;
+import com.marked.pixsee.di.scopes.Repository;
 import com.marked.pixsee.model.user.UserDatasource;
 import com.marked.pixsee.utility.BitmapUtils;
-import com.pixsee.di.scopes.FragmentScope;
-import com.pixsee.di.scopes.Repository;
 
 import java.io.File;
 

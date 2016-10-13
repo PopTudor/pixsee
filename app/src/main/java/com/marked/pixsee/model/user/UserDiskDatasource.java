@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 import com.marked.pixsee.chat.data.MessageContract;
+import com.marked.pixsee.di.scopes.ActivityScope;
 import com.marked.pixsee.friends.data.FriendContractDB;
 import com.marked.pixsee.friends.mapper.CursorToUserMapper;
 import com.marked.pixsee.friends.mapper.UserToCvMapper;
@@ -15,7 +16,6 @@ import com.marked.pixsee.friends.specifications.GetFriendsSpecification;
 import com.marked.pixsee.friends.specifications.GetFriendsStartingWith;
 import com.marked.pixsee.model.Mapper;
 import com.marked.pixsee.model.database.DatabaseContract;
-import com.pixsee.di.scopes.ActivityScope;
 
 import java.util.ArrayList;
 import java.util.List;

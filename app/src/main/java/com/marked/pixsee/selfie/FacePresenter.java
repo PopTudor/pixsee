@@ -4,11 +4,11 @@ import android.graphics.SurfaceTexture;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.common.images.Size;
+import com.marked.pixsee.camerasource.PictureCallback;
+import com.marked.pixsee.camerasource.PixseeCamera;
+import com.marked.pixsee.camerasource.ShutterCallback;
 import com.marked.pixsee.commands.Command;
 import com.marked.pixsee.selfie.renderer.SelfieRenderer;
-import com.pixsee.camerasource.PictureCallback;
-import com.pixsee.camerasource.PixseeCamera;
-import com.pixsee.camerasource.ShutterCallback;
 
 import org.rajawali3d.renderer.ISurfaceRenderer;
 import org.rajawali3d.renderer.Renderer;

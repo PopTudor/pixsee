@@ -5,10 +5,10 @@ import android.content.SharedPreferences;
 import com.marked.pixsee.authentification.AuthenticationContract;
 import com.marked.pixsee.authentification.Presenter;
 import com.marked.pixsee.authentification.login.LoginAPI;
+import com.marked.pixsee.di.scopes.ActivityScope;
+import com.marked.pixsee.di.scopes.Repository;
 import com.marked.pixsee.model.user.UserDatasource;
 import com.marked.pixsee.networking.ServerConstants;
-import com.pixsee.di.scopes.ActivityScope;
-import com.pixsee.di.scopes.Repository;
 
 import javax.inject.Named;
 
