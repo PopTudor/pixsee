@@ -1,5 +1,6 @@
 package com.marked.pixsee.chat;
 
+import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.chat.data.ChatRepository;
 import com.marked.pixsee.di.scopes.FragmentScope;
 import com.marked.pixsee.model.database.DatabaseContract;
@@ -30,7 +31,7 @@ public class FakeChatModule {
 	public ChatContract.Presenter providePresenter(ChatRepository repository, @Named(DatabaseContract.AppsUser.TABLE_NAME) User user,
 	                                               @Named(ServerConstants.SERVER) Retrofit retrofit) {
 		UploadAPI uploadAPI = retrofit.create(UploadAPI.class);
-		ChatPresenter chatPresenter = new ChatPresenter(view, repository, user, uploadAPI);
+		ChatPresenter chatPresenter = new ChatPresenter(view, repository, user, uploadAPI, new ChatClient(user, UserUtilTest.getUserTest()));
 		return chatPresenter;
 	}
 }

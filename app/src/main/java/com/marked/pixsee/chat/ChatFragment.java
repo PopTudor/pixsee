@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
@@ -16,7 +17,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,18 +27,15 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
 import com.marked.pixsee.chat.custom.ChatAdapter;
 import com.marked.pixsee.chat.data.Message;
-import com.marked.pixsee.chat.data.MessageConstants;
 import com.marked.pixsee.commons.SpaceItemDecorator;
 import com.marked.pixsee.di.Injectable;
 import com.marked.pixsee.fullscreenImage.ImageFullscreenActivity;
-import com.marked.pixsee.model.database.DatabaseContract;
 import com.marked.pixsee.model.user.User;
 
 import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import tyrantgit.explosionfield.ExplosionField;
 
@@ -49,17 +46,12 @@ import tyrantgit.explosionfield.ExplosionField;
  * on handsets.
  */
 public class ChatFragment extends Fragment implements ChatContract.View, ChatAdapter.ChatInteraction, Injectable {
-	public static final String ON_NEW_MESSAGE = "onMessage";
-	public static final String ON_NEW_ROOM = "onRoom";
-	public static final String ON_EXIT_ROOM = "onRoom";
-	public static final String ON_TYPING = "onTyping";
 	/**
 	 * Check if the user is using the app
 	 *
 	 * @return if the app is in foreground or not
 	 */
 	public static boolean isInForeground = false;
-	private User mThatUser;
 	private ChatAdapter mChatAdapter;
 	private LinearLayoutManager mLinearLayoutManager;
 	private ExplosionField mExplosionField;
@@ -69,9 +61,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	private RecyclerView messagesRecyclerView;
 	@Inject
 	ChatContract.Presenter mPresenter;
-	@Inject
-	@Named(DatabaseContract.AppsUser.TABLE_NAME)
-	User mThisUser;
 
 	public static ChatFragment newInstance(Parcelable parcelable) {
 		Bundle bundle = new Bundle();
@@ -109,64 +98,25 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 		messagesRecyclerView.addItemDecoration(new SpaceItemDecorator(15));
 		messagesRecyclerView.setAdapter(mChatAdapter);
 		messageEditText = (EditText) rootView.findViewById(R.id.messageEditText);
-		messageEditText.addTextChangedListener(new TextWatcher() {
-			boolean mTyping = false;
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (!mTyping && count > 0) mTyping = true;
-				if (mTyping && count == 0) mTyping = false;
-
-				mPresenter.onTyping(mTyping);
-				if (s.length()>0)
-					switchButonImage(R.drawable.ic_send_24dp);
-				else if (s.length()==0 && mPictureTakenContainer.getVisibility() == View.GONE)
-					switchButonImage(R.drawable.ic_camera_24dp);
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-
-		});
+		messageEditText.addTextChangedListener(new ChatTextWatcher());
 		rootView.findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				String text = messageEditText.getText().toString();
-				if (!text.isEmpty())
-					messageEditText.setText("");
 				if (!text.isEmpty()){
-					Message message = new Message.Builder()
-							.addData(MessageConstants.DATA_BODY, text)
-							.messageType(MessageConstants.MessageType.YOU_MESSAGE)
-							                  .from(mThisUser.getUserID())
-							.to(mThatUser.getUserID())
-							.build();
-
-					//		doGcmSendUpstreamMessage(message);
-					mPresenter.newMessage(message);
-					message.setMessageType(MessageConstants.MessageType.ME_MESSAGE);
-					mPresenter.sendMessage(message);
+					messageEditText.setText("");
+					mPresenter.sendMessage(text);
 				} else if(!messageEditText.isEnabled()) {
-					Message message = new Message.Builder()
-							.messageType(MessageConstants.MessageType.ME_IMAGE)
-							.addData(MessageConstants.DATA_BODY, mPresenter.getPictureFile().getAbsolutePath())
-							                  .from(mThisUser.getUserID())
-							.to(mThatUser.getUserID())
-							.build();
-					mPresenter.sendImage(message);
+					mPresenter.sendImage();
 				} else {
 					mPresenter.onCameraClick();
 				}
 			}
 		});
-		rootView.findViewById(R.id.sendButton)
-				.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(),R.color.transparent)));
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			rootView.findViewById(R.id.sendButton)
+					.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(), R.color.transparent)));
+		}
 
 		((FloatingActionButton)rootView.findViewById(R.id.sendButton))
 				.getDrawable().setColorFilter(ContextCompat.getColor(getActivity(),R.color.teal), PorterDuff.Mode.SRC_ATOP);
@@ -305,7 +255,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	@Override
 	public void injectComponent() {
 		User thatUser = getArguments().getParcelable(ChatActivity.EXTRA_CONTACT);
-		mThatUser = thatUser;
 // as long as ChatComponent != null, objects annotated with @FragmentScope are in memory
 		DaggerChatComponent.builder().activityComponent(((ChatActivity) getActivity()).getActivityComponent())
 				.chatModule(new ChatModule(this, thatUser))
@@ -315,5 +264,31 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	interface ChatFragmentInteraction{
 		void onCameraClick();
+	}
+
+	private class ChatTextWatcher implements android.text.TextWatcher {
+		boolean mTyping = false;
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			if (!mTyping && count > 0) mTyping = true;
+			if (mTyping && count == 0) mTyping = false;
+
+			mPresenter.onTyping(mTyping);
+			if (s.length() > 0)
+				switchButonImage(R.drawable.ic_send_24dp);
+			else if (s.length() == 0 && mPictureTakenContainer.getVisibility() == View.GONE)
+				switchButonImage(R.drawable.ic_camera_24dp);
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+		}
+
 	}
 }

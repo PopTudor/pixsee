@@ -30,7 +30,9 @@ interface ChatContract {
 
 		void sendMessage(@NonNull Message message);
 
-		void sendImage(@NonNull Message message);
+		void sendMessage(@NonNull String message);
+
+		void sendImage();
 
 		void receiveMessage(@NonNull Message message);
 
@@ -49,7 +51,6 @@ interface ChatContract {
 
 		void setThatUser(User thatUser);
 
-		void newMessage(Message message);
 	}
 
 	interface View extends BaseView<Presenter> {

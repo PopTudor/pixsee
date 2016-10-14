@@ -11,10 +11,13 @@ import com.marked.pixsee.networking.UploadAPI;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
 
 import java.io.File;
 import java.util.List;
@@ -27,13 +30,13 @@ import rx.Observable;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * Created by Tudor on 18-Jun-16.
  */
+@RunWith(RobolectricTestRunner.class)
 public class ChatPresenterTest {
 	@Mock
 	ChatContract.View mView;
@@ -45,6 +48,9 @@ public class ChatPresenterTest {
 	@Mock
 	UploadAPI uploadAPI;
 
+	@Mock
+	ChattingInterface mChattingInterface;
+
 	ChatPresenter mPresenter;
 	List<Message> mExpectedMessages = MessageTestUtils.getRandomMessageList(3);
 
@@ -52,7 +58,7 @@ public class ChatPresenterTest {
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		mPresenter = new ChatPresenter(mView, mChatRepository,new User("abc","abc","abc","abc"), uploadAPI);
+		mPresenter = new ChatPresenter(mView, mChatRepository, new User("abc", "abc", "abc", "abc"), uploadAPI, mChattingInterface);
 		mPresenter.setChatInteraction(mChatFragmentInteraction);
 		TestSchedulerProxy.get();
 	}
@@ -62,7 +68,7 @@ public class ChatPresenterTest {
 		when(mChatRepository.getMessages(any(User.class)))
 				.thenReturn(Observable.just(mExpectedMessages));
 
-		mPresenter.loadMore(50, any(User.class));
+		mPresenter.loadMore(50, true);
 
 		verify(mChatRepository).getMessages(any(User.class));
 		verify(mView).showMessages(mExpectedMessages);
@@ -73,7 +79,7 @@ public class ChatPresenterTest {
 		when(mChatRepository.getMessages(any(User.class)))
 				.thenReturn(Observable.<List<Message>>error(new Error()));
 
-		mPresenter.loadMore(50, any(User.class));
+		mPresenter.loadMore(50, true);
 
 		verify(mChatRepository).getMessages(any(User.class));
 		verify(mView).showEmptyMessages();
@@ -89,6 +95,7 @@ public class ChatPresenterTest {
 
 	@Test
 	public void testSendMessage() throws Exception {
+		Mockito.doNothing().when(mChattingInterface).emit(anyString());
 		Message message = MessageTestUtils.getRandomMessage();
 		mPresenter.sendMessage(message);
 		verify(mChatRepository).saveMessage(message);
@@ -162,12 +169,5 @@ public class ChatPresenterTest {
 	public void testClearImageButton() throws Exception {
 		mPresenter.clearImageButton();
 		verify(mView).showPictureContainer(false);
-	}
-
-	@Test
-	public void testAttach() throws Exception {
-		ChatContract.Presenter presenter = spy(mPresenter);
-		presenter.attach();
-		verify(presenter).loadMore(50, true);
 	}
 }
