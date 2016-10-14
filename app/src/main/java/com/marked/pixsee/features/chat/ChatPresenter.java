@@ -169,7 +169,7 @@ class ChatPresenter implements ChatContract.Presenter {
 		Message message = new Message.Builder()
 				                  .addData(MessageConstants.DATA_BODY, text)
 				                  .messageType(MessageConstants.MessageType.YOU_MESSAGE)
-				                  .from(mThatUser.getUserID())
+				                  .from(mAppsUser.getUserID())
 				                  .to(mThatUser.getUserID())
 				                  .build();
 		sendMessage(message);

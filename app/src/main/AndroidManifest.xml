@@ -126,11 +126,11 @@
         <activity
             android:name=".features.chat.ChatActivity"
             android:label="FriendDetailActivity"
-            android:parentActivityName=".features.main.MainActivity"
+            android:parentActivityName=".main.MainActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.main.MainActivity"/>
+                android:value=".main.MainActivity"/>
         </activity>
 
         <provider
@@ -138,8 +138,8 @@
             android:authorities="com.facebook.app.FacebookContentProvider1677465395803625"
             android:exported="true" />
 
-        <activity android:name=".features.main.MainActivity"></activity>
-        <activity android:name=".features.friendsInvite.FriendsInviteActivity"></activity>
+        <activity android:name=".main.MainActivity"/>
+        <activity android:name=".features.friendsInvite.FriendsInviteActivity"/>
     </application>
 
 </manifest>

@@ -77,20 +77,24 @@ class ChatClient implements ChattingInterface {
 							JSONObject json = new JSONObject(args[0].toString());
 							Gson gson = new GsonBuilder().create();
 							Message message = gson.fromJson(json.toString(), Message.class);
+							Message.Builder builder = new Message.Builder()
+									                          .date(message.getDate())
+									                          .id(message.getId())
+									                          .from(message.getFrom())
+									                          // the database doesn't have from but in this case from & to are the same
+									                          // from & to are switching here
+									                          // I get message from you and now to send message back to you
+									                          // to becomes from
+									                          .to(message.getFrom())
+									                          .addData(message.getData());
 
 							if (message.getMessageType() == MessageConstants.MessageType.YOU_IMAGE) {
-								message = new Message.Builder()
-										          .date(message.getDate())
-										          .id(message.getId())
-										          .messageType(MessageConstants.MessageType.YOU_IMAGE)
-										          .from(message.getFrom())
-										          // the database doesn't have from but in this case from & to are the same
-										          // from refers to app's user like 'from me to you'
-										          .to(message.getFrom())
-										          .addData(MessageConstants.DATA_BODY, ServerConstants.SERVER_USER_IMAGE + "/?img=" + message.getData()
-												                                                                                              .get(MessageConstants.DATA_BODY))
-										          .build();
+								builder.messageType(MessageConstants.MessageType.YOU_IMAGE)
+										.addData(MessageConstants.DATA_BODY,
+												ServerConstants.SERVER_USER_IMAGE +
+														"/?img=" + message.getData().get(MessageConstants.DATA_BODY));
 							}
+							message = builder.build();
 							if (message.getMessageType() == MessageConstants.MessageType.ME_MESSAGE)
 								message.setMessageType(MessageConstants.MessageType.YOU_MESSAGE);
 							RxBus.getInstance().post(message);

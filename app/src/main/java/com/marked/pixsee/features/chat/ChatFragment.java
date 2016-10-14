@@ -136,12 +136,6 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-		mPresenter.loadMore(50, true);
-	}
-
-	@Override
 	public void onResume() {
 		super.onResume();
 		isInForeground = true;

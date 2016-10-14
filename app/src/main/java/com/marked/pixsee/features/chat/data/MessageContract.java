@@ -19,7 +19,7 @@ public class MessageContract implements BaseColumns {
 			+ "("
 			+ BaseColumns._ID +
 			" INTEGER PRIMARY KEY AUTOINCREMENT," +
-			COLUMN_ID + " TEXT,"
+			                                          COLUMN_ID + " TEXT UNIQUE,"
 			+ COLUMN_DATA_BODY + " TEXT,"
 			+ COLUMN_TYPE + " INTEGER,"
 			+ COLUMN_DATE + " TEXT,"
