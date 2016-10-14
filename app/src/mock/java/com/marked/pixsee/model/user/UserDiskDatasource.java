@@ -11,7 +11,7 @@ import rx.Observable;
 /**
  * Created by Tudor on 23-Jul-16.
  */
-public class UserDatasourceFake implements UserDatasource {
+public class UserDiskDatasource implements UserDatasource {
 
 	@Override
 	public Observable<List<User>> getUsers() {

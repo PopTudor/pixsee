@@ -28,8 +28,6 @@ interface ChatContract {
 
 		void chatClicked(Message message, int position);
 
-		void sendMessage(@NonNull Message message);
-
 		void sendMessage(@NonNull String message);
 
 		void sendImage();

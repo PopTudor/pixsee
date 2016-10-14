@@ -121,7 +121,7 @@ class ChatPresenter implements ChatContract.Presenter {
 		if (message.getMessageType() == MessageConstants.MessageType.ME_IMAGE) {
 			File file = new File(message.getData().get(MessageConstants.DATA_BODY));
 			// create RequestBody instance from file
-			RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-com.marked.pixsee.data"), file);
+			RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
 			// MultipartBody.Part is used to send also the actual file name
 			MultipartBody.Part body = MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
 			mUploadAPI.upload(mAppsUser.getUserID(), mThatUser.getUserID(), body)
@@ -157,8 +157,7 @@ class ChatPresenter implements ChatContract.Presenter {
 		}
 	}
 
-	@Override
-	public void sendMessage(@NonNull Message message) {
+	private void sendMessage(@NonNull Message message) {
 		mChatClient.emit(ChatClient.ON_NEW_MESSAGE, message.toJSON());
 		message.setMessageType(MessageConstants.MessageType.ME_MESSAGE);
 		mRepository.saveMessage(message);
@@ -173,10 +172,7 @@ class ChatPresenter implements ChatContract.Presenter {
 				                  .from(mThatUser.getUserID())
 				                  .to(mThatUser.getUserID())
 				                  .build();
-		mChatClient.emit(ChatClient.ON_NEW_MESSAGE, message.toJSON());
-		message.setMessageType(MessageConstants.MessageType.ME_MESSAGE);
-		mRepository.saveMessage(message);
-		mView.get().addMessage(message);
+		sendMessage(message);
 	}
 
 	@Override

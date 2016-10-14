@@ -89,6 +89,14 @@ android {
 
         }
     }
+    productFlavors {
+        prod {
+
+        }
+        mock {
+
+        }
+    }
 
     // Always show the result of every unit test, even if it passes.
     testOptions.unitTests.all {
