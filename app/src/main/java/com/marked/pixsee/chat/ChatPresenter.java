@@ -58,7 +58,7 @@ class ChatPresenter implements ChatContract.Presenter {
 		loadMore(50, true);
 		mChatClient.connect();
 		try {
-			mChatClient.emit(ChatFragment.ON_NEW_ROOM,
+			mChatClient.emit(ChatClient.ON_NEW_ROOM,
 					new JSONObject(String.format("{from:%s,to:%s,to_token:\'%s\'}",
 							mAppsUser.getUserID(),
 							mThatUser.getUserID(),
@@ -93,8 +93,7 @@ class ChatPresenter implements ChatContract.Presenter {
 
 	public void onTyping(boolean typing) {
 		try {
-
-			mChatClient.emit(ChatFragment.ON_TYPING,
+			mChatClient.emit(ChatClient.ON_TYPING,
 					new JSONObject(String.format("{from:%s,to:%s,typing:%s,to_token:\'%s\'}",
 							mAppsUser.getUserID(),
 							mThatUser.getUserID(),
@@ -111,7 +110,14 @@ class ChatPresenter implements ChatContract.Presenter {
 	}
 
 	@Override
-	public void sendImage(@NonNull final Message message) {
+	public void sendImage() {
+		final Message message = new Message.Builder()
+				                        .messageType(MessageConstants.MessageType.ME_IMAGE)
+				                        .addData(MessageConstants.DATA_BODY, mPictureFile.getAbsolutePath())
+				                        .from(mAppsUser.getUserID())
+				                        .to(mThatUser.getUserID())
+				                        .build();
+
 		if (message.getMessageType() == MessageConstants.MessageType.ME_IMAGE) {
 			File file = new File(message.getData().get(MessageConstants.DATA_BODY));
 			// create RequestBody instance from file
@@ -139,7 +145,7 @@ class ChatPresenter implements ChatContract.Presenter {
 										                   .to(message.getTo())
 										                   .addData(MessageConstants.DATA_BODY, responseBody.body().get("pictureName").getAsString())
 										                   .build();
-								mChatClient.emit(ChatFragment.ON_NEW_MESSAGE, message1.toJSON());
+								mChatClient.emit(ChatClient.ON_NEW_MESSAGE, message1.toJSON());
 							}
 						}
 					}, new Action1<Throwable>() {
@@ -152,12 +158,23 @@ class ChatPresenter implements ChatContract.Presenter {
 	}
 
 	@Override
-	public void newMessage(Message message) {
-		mChatClient.emit(ChatFragment.ON_NEW_MESSAGE, message.toJSON());
+	public void sendMessage(@NonNull Message message) {
+		mChatClient.emit(ChatClient.ON_NEW_MESSAGE, message.toJSON());
+		message.setMessageType(MessageConstants.MessageType.ME_MESSAGE);
+		mRepository.saveMessage(message);
+		mView.get().addMessage(message);
 	}
 
 	@Override
-	public void sendMessage(@NonNull Message message) {
+	public void sendMessage(@NonNull String text) {
+		Message message = new Message.Builder()
+				                  .addData(MessageConstants.DATA_BODY, text)
+				                  .messageType(MessageConstants.MessageType.YOU_MESSAGE)
+				                  .from(mThatUser.getUserID())
+				                  .to(mThatUser.getUserID())
+				                  .build();
+		mChatClient.emit(ChatClient.ON_NEW_MESSAGE, message.toJSON());
+		message.setMessageType(MessageConstants.MessageType.ME_MESSAGE);
 		mRepository.saveMessage(message);
 		mView.get().addMessage(message);
 	}

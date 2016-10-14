@@ -25,6 +25,9 @@ import io.socket.emitter.Emitter;
  */
 
 class ChatClient implements ChattingInterface {
+	public static final String ON_NEW_MESSAGE = "onMessage";
+	public static final String ON_NEW_ROOM = "onRoom";
+	public static final String ON_TYPING = "onTyping";
 	private final User mAppUser;
 	private final User mThatUser;
 	private Socket mSocket;
@@ -47,14 +50,14 @@ class ChatClient implements ChattingInterface {
 	@Override
 	public void connect() {
 		mSocket.connect();
-		mSocket.on(ChatFragment.ON_NEW_MESSAGE, onMessage);
-		mSocket.on(ChatFragment.ON_TYPING, onTyping);
+		mSocket.on(ON_NEW_MESSAGE, onMessage);
+		mSocket.on(ON_TYPING, onTyping);
 	}
 
 	@Override
 	public void disconnect() {
-		mSocket.off(ChatFragment.ON_NEW_MESSAGE, onMessage);
-		mSocket.off(ChatFragment.ON_TYPING, onTyping);
+		mSocket.off(ON_NEW_MESSAGE, onMessage);
+		mSocket.off(ON_TYPING, onTyping);
 		mSocket.disconnect();
 	}
 
