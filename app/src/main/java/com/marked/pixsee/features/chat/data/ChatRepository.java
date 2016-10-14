@@ -2,6 +2,7 @@ package com.marked.pixsee.features.chat.data;
 
 import android.support.annotation.NonNull;
 
+import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
 
 import java.util.ArrayList;

@@ -5,17 +5,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.features.chat.data.Message;
+import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.features.chat.data.MessageConstants;
 
 
 /**
  * Created by Tudor Pop on 04-Dec-15.
  */
-public class MessageHolder extends RecyclerView.ViewHolder implements Bindable{
+class MessageHolder extends RecyclerView.ViewHolder implements Bindable {
 	private TextView mMessageTextView;
 
-	public MessageHolder(View itemView) {
+	MessageHolder(View itemView) {
 		super(itemView);
 		mMessageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
 

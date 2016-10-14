@@ -8,18 +8,18 @@ import android.view.View;
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
-import com.marked.pixsee.features.chat.data.Message;
+import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.features.chat.data.MessageConstants;
 
 /**
  * Created by Tudor Pop on 04-Dec-15.
  */
-public class ImageHolder extends RecyclerView.ViewHolder implements Bindable{
+class ImageHolder extends RecyclerView.ViewHolder implements Bindable {
 	private Context context;
 
 	private SimpleDraweeView mImage;
 
-	public ImageHolder(View itemView, Context context) {
+	ImageHolder(View itemView, Context context) {
 		super(itemView);
 		this.context = context;
 		this.mImage = (SimpleDraweeView) itemView.findViewById(R.id.imageNetwork);

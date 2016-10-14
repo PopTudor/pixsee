@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 
 import com.marked.pixsee.data.Mapper;
+import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.features.chat.mapper.CursorToMessageMapper;
 import com.marked.pixsee.features.chat.mapper.MessageToCVMapper;

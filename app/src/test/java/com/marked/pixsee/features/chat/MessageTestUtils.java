@@ -1,6 +1,6 @@
 package com.marked.pixsee.features.chat;
 
-import com.marked.pixsee.features.chat.data.Message;
+import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.features.chat.data.MessageConstants;
 
 import java.util.ArrayList;

@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.commands.Command;
+import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.features.chat.data.Message;
 
 import java.io.File;
 import java.util.List;

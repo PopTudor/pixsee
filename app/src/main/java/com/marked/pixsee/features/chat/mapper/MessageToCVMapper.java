@@ -3,7 +3,7 @@ package com.marked.pixsee.features.chat.mapper;
 import android.content.ContentValues;
 
 import com.marked.pixsee.data.Mapper;
-import com.marked.pixsee.features.chat.data.Message;
+import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.features.chat.data.MessageConstants;
 
 import java.util.Map;

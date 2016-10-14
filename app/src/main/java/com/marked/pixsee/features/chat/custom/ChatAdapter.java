@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.features.chat.data.Message;
+import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.features.chat.data.MessageConstants;
 
 import java.util.ArrayList;

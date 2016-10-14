@@ -26,10 +26,10 @@ import android.widget.EditText;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
 import com.marked.pixsee.commons.SpaceItemDecorator;
+import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.di.Injectable;
 import com.marked.pixsee.features.chat.custom.ChatAdapter;
-import com.marked.pixsee.features.chat.data.Message;
 import com.marked.pixsee.features.fullscreenImage.ImageFullscreenActivity;
 
 import java.io.File;

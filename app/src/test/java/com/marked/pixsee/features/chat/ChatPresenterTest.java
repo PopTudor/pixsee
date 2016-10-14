@@ -4,9 +4,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.marked.pixsee.TestSchedulerProxy;
 import com.marked.pixsee.UserUtilTest;
+import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.features.chat.data.ChatRepository;
-import com.marked.pixsee.features.chat.data.Message;
 import com.marked.pixsee.networking.UploadAPI;
 
 import org.junit.Before;

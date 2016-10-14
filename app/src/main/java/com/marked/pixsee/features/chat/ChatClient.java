@@ -6,8 +6,8 @@ import android.os.Looper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.marked.pixsee.RxBus;
+import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.features.chat.data.Message;
 import com.marked.pixsee.features.chat.data.MessageConstants;
 import com.marked.pixsee.networking.ServerConstants;
 
@@ -95,6 +95,7 @@ class ChatClient implements ChattingInterface {
 														"/?img=" + message.getData().get(MessageConstants.DATA_BODY));
 							}
 							message = builder.build();
+
 							if (message.getMessageType() == MessageConstants.MessageType.ME_MESSAGE)
 								message.setMessageType(MessageConstants.MessageType.YOU_MESSAGE);
 							RxBus.getInstance().post(message);

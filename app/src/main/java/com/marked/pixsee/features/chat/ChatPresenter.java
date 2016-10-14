@@ -6,10 +6,10 @@ import android.support.annotation.NonNull;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.RxBus;
 import com.marked.pixsee.commands.Command;
+import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.features.chat.data.ChatDatasource;
 import com.marked.pixsee.features.chat.data.ChatRepository;
-import com.marked.pixsee.features.chat.data.Message;
 import com.marked.pixsee.features.chat.data.MessageConstants;
 import com.marked.pixsee.networking.UploadAPI;
 
