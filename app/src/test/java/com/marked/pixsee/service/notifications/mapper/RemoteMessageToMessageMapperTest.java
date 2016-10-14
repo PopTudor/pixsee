@@ -2,8 +2,8 @@ package com.marked.pixsee.service.notifications.mapper;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.BuildConfig;
-import com.marked.pixsee.chat.data.Message;
-import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.features.chat.data.Message;
+import com.marked.pixsee.features.chat.data.MessageConstants;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import static com.marked.pixsee.chat.data.MessageConstants.DATA_BODY;
+import static com.marked.pixsee.features.chat.data.MessageConstants.DATA_BODY;
 import static org.hamcrest.Matchers.any;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;

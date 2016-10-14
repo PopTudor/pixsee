@@ -8,17 +8,17 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.marked.pixsee.data.database.DatabaseContract;
+import com.marked.pixsee.data.database.PixyDatabase;
+import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.data.user.UserDatasource;
+import com.marked.pixsee.data.user.UserDiskDatasource;
+import com.marked.pixsee.data.user.UserNetworkDatasource;
+import com.marked.pixsee.data.user.UserRepository;
 import com.marked.pixsee.di.scopes.ActivityScope;
 import com.marked.pixsee.di.scopes.Local;
 import com.marked.pixsee.di.scopes.Remote;
 import com.marked.pixsee.di.scopes.Repository;
-import com.marked.pixsee.model.database.DatabaseContract;
-import com.marked.pixsee.model.database.PixyDatabase;
-import com.marked.pixsee.model.user.User;
-import com.marked.pixsee.model.user.UserDatasource;
-import com.marked.pixsee.model.user.UserDiskDatasource;
-import com.marked.pixsee.model.user.UserNetworkDatasource;
-import com.marked.pixsee.model.user.UserRepository;
 
 import javax.inject.Named;
 

@@ -1,14 +1,14 @@
 <RelativeLayout
-	android:id="@+id/root"
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="#EEEEEE"
-	android:fitsSystemWindows="true"
-	tools:context=".chat.ChatActivity"
-	tools:ignore="MergeRootFrame">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    android:fitsSystemWindows="true"
+    tools:context=".features.chat.ChatActivity"
+    tools:ignore="MergeRootFrame">
 
 	<android.support.design.widget.AppBarLayout
 		android:id="@+id/app_bar"

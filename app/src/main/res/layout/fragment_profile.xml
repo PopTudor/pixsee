@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    tools:context="com.marked.pixsee.profile.ProfileFragment"
+    tools:context=".features.profile.ProfileFragment"
     >
 
     <android.support.design.widget.AppBarLayout
@@ -20,9 +20,9 @@
         app:layout_scrollFlags="scroll|snap">
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            app:expandedTitleTextAppearance="@style/CollapsedAppBar"
-            app:collapsedTitleTextAppearance="@style/CollapsedAppBar"
             android:layout_height="match_parent"
+            app:collapsedTitleTextAppearance="@style/CollapsedAppBar"
+            app:expandedTitleTextAppearance="@style/CollapsedAppBar"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
         <android.support.v7.widget.Toolbar
@@ -63,12 +63,12 @@
                 android:layout_width="92dp"
                 android:layout_height="92dp"
                 android:layout_marginLeft="16dp"
+                android:background="@color/transparent"
                 fresco:backgroundImage="@color/light_gray"
                 fresco:placeholderImage="@drawable/ic_photo_camera_24dp"
                 fresco:roundAsCircle="true"
                 fresco:roundingBorderColor="#FAFAFA"
                 fresco:roundingBorderWidth="4dp"
-                android:background="@color/transparent"
                 />
             <TextView
                 android:id="@+id/nameTextview"
@@ -79,9 +79,9 @@
                 android:layout_below="@+id/iconSimpleDraweeView"
                 android:layout_marginTop="8dp"
                 android:maxLines="2"
+                android:maxWidth="200dp"
                 android:text="Name"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:maxWidth="200dp"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
             <TextView
                 android:id="@+id/usernameTextview"
@@ -90,31 +90,31 @@
                 android:layout_alignLeft="@+id/nameTextview"
                 android:layout_alignStart="@+id/nameTextview"
                 android:layout_below="@+id/nameTextview"
-                android:text="username"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:maxLines="1"
                 android:maxWidth="200dp"
-                android:maxLines="1"/>
+                android:text="username"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <ImageButton
                 android:id="@+id/inviteFriendsImageButton"
                 style="@style/Base.Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/iconSimpleDraweeView"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="8dp"
                 android:background="@drawable/round_corner_button"
                 android:elevation="0dp"
-                android:src="@drawable/ic_person_add_24dp"
-                android:layout_alignBottom="@+id/iconSimpleDraweeView"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="8dp"/>
+                android:src="@drawable/ic_person_add_24dp"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/cardRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:layout_below="@+id/usernameTextview"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>

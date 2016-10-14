@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.os.Build;
 
 import com.marked.pixsee.R;
+import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.main.MainActivity;
-import com.marked.pixsee.model.user.User;
 
 /**
  * Created by Tudor on 22-Jul-16.

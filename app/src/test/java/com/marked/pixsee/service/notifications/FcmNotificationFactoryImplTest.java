@@ -3,7 +3,7 @@ package com.marked.pixsee.service.notifications;
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
-import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.features.chat.data.MessageConstants;
 
 import org.junit.Assert;
 import org.junit.Before;

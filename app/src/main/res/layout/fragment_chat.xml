@@ -1,51 +1,51 @@
-<RelativeLayout android:id="@+id/contact_detail"
-    style="?android:attr/textAppearanceLarge"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="16dp"
-    android:textIsSelectable="true"
-    tools:context=".chat.ChatFragment"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/contact_detail"
+                style="?android:attr/textAppearanceLarge"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="16dp"
+                android:textIsSelectable="true"
+                tools:context=".features.chat.ChatFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messagesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/linearLayout">
+        android:layout_above="@+id/linearLayout"
+        android:layout_alignParentTop="true">
 
     </android.support.v7.widget.RecyclerView>
     <android.support.v7.widget.CardView
+        android:id="@+id/pictureTakenContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/pictureTakenContainer"
-        android:visibility="gone"
         android:layout_above="@+id/linearLayout"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="8dp">
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
+        android:visibility="gone">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="2dp">
 
             <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/picture"
                 android:layout_width="160dp"
                 android:layout_height="160dp"
-                android:id="@+id/picture"
                 android:layout_centerHorizontal="true"/>
 
             <ImageButton
+                android:id="@+id/clearImageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/clearImageButton"
+                android:layout_alignEnd="@+id/picture"
                 android:layout_alignParentTop="true"
                 android:layout_alignRight="@+id/picture"
-                app:srcCompat="@drawable/ic_cancel_24dp"
-                android:layout_alignEnd="@+id/picture"
-                android:background="@color/transparent"/>
+                android:background="@color/transparent"
+                app:srcCompat="@drawable/ic_cancel_24dp"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
@@ -59,40 +59,40 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:orientation="horizontal"
         android:background="@color/white"
+        android:orientation="horizontal"
         >
 
         <EditText android:id="@+id/messageEditText"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:layout_weight="10"
-            android:capitalize="sentences"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="Say hi"
-            android:inputType="textCapSentences|textShortMessage|textMultiLine"
-            android:paddingLeft="8dp" android:background="@color/white"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
+                  android:layout_width="match_parent"
+                  android:layout_height="32dp"
+                  android:layout_alignParentLeft="true"
+                  android:layout_alignParentTop="true"
+                  android:layout_weight="10"
+                  android:background="@color/white"
+                  android:capitalize="sentences"
+                  android:focusable="true"
+                  android:focusableInTouchMode="true" android:hint="Say hi"
+                  android:inputType="textCapSentences|textShortMessage|textMultiLine"
+                  android:paddingLeft="8dp"
              />
 
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/sendButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="8dp"
             android:layout_weight="0"
-            android:id="@+id/sendButton"
             android:background="@color/transparent"
+            android:elevation="0dp"
             android:scaleType="center"
             android:src="@drawable/ic_camera_24dp"
             android:translationZ="0dp"
-            android:elevation="0dp"
-            app:fabSize="mini"
             app:elevation="0dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="8dp" />
+            app:fabSize="mini"/>
     </RelativeLayout>
 </RelativeLayout>

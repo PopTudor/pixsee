@@ -8,9 +8,9 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
 import com.marked.pixsee.UserUtilTest;
+import com.marked.pixsee.data.Mapper;
+import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.main.MainActivity;
-import com.marked.pixsee.model.Mapper;
-import com.marked.pixsee.model.user.User;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,13 +31,12 @@ import static org.robolectric.RuntimeEnvironment.application;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 23)
 public class FriendRequestNotificationTest {
-    @Mock
-    Mapper<RemoteMessage, User> mRemoteMessageUserMapper;
-
     private User mUser;
     private String FRIEND_REQUEST_TAG;
     private Notification actualNotification;
     private Intent actualIntent;
+	@Mock
+	Mapper<RemoteMessage, User> mRemoteMessageUserMapper;
 
     public FriendRequestNotificationTest() {
         FRIEND_REQUEST_TAG = application.getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION);

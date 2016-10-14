@@ -2,8 +2,8 @@ package com.marked.pixsee.service.notifications.mapper;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.BuildConfig;
-import com.marked.pixsee.friends.data.FriendConstants;
-import com.marked.pixsee.model.user.User;
+import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.features.friends.data.FriendConstants;
 
 import org.junit.Assert;
 import org.junit.Before;

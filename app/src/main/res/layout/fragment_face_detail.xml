@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fullscreenContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".selfie.PictureDetailShareFragment">
+    tools:context=".features.selfie.PictureDetailShareFragment">
 
     <RelativeLayout
         android:id="@+id/fullscreenAppBar"
@@ -19,13 +18,13 @@
             android:id="@+id/pixseeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pixsee app"
-            android:textColor="#ffffff"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:text="Pixsee app"
+            android:textColor="#ffffff"/>
 
     </RelativeLayout>
 
@@ -37,8 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|top"
         android:background="@android:color/transparent"
-        app:elevation="0dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:elevation="0dp">
 
 
 

@@ -1,12 +1,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/material_grey_100"
     android:padding="16dp"
-    tools:context=".authentification.signup.SignUpPassFragment">
+    tools:context=".features.authentification.signup.SignUpPassFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -18,37 +17,37 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
+        android:layout_marginTop="16dp"
         android:text="Pick a username"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
-        android:textSize="@dimen/abc_text_size_headline_material"
-        android:layout_marginTop="16dp"/>
+        android:textSize="@dimen/abc_text_size_headline_material"/>
 
     <Button
         android:id="@+id/finishButton"
         style="@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/view3"
+        android:layout_marginTop="16dp"
         android:background="@color/primary"
         android:clickable="true"
         android:text="Finish"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#ffffff"
-        android:layout_below="@+id/view3"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"/>
+        android:textColor="#ffffff"/>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/view3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/view4"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/view4"
         android:layout_marginTop="16dp">
 
         <AutoCompleteTextView
@@ -68,11 +67,11 @@
         android:id="@+id/view4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView3"
         android:layout_marginTop="16dp">
 
         <AutoCompleteTextView

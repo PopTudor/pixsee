@@ -6,7 +6,7 @@ import android.content.Context;
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
-import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.features.chat.data.MessageConstants;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,10 +27,10 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class GCMListenerServiceTest {
-	private GCMListenerService mGCMListenerService;
-	private ShadowService shadowService;
 	private final ShadowNotificationManager mShadowNotificationManager =
 			shadowOf((NotificationManager) application.getSystemService(Context.NOTIFICATION_SERVICE));
+	private GCMListenerService mGCMListenerService;
+	private ShadowService shadowService;
 	private RemoteMessage mRemoteMessage;
 
 	@Before

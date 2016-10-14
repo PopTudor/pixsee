@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
 
-import static com.marked.pixsee.selfie.renderer.Utils.isPortraitMode;
+import static com.marked.pixsee.features.selfie.renderer.Utils.isPortraitMode;
 
 /**
  * Created by Tudor on 15-Aug-16.

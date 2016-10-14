@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".authentification.login.LoginFragment"
     android:id="@+id/containerFragment"
-    android:background="@color/material_grey_100"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/material_grey_100"
     android:padding="16dp"
-    >
+    tools:context=".features.authentification.login.LoginFragment"
+>
 
     <Button
         android:id="@+id/logInButtonPixy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/view4"
+        android:layout_marginTop="8dp"
         android:background="@color/primary"
         android:capitalize="words"
         android:enabled="true"
@@ -24,13 +29,7 @@
         android:text="@string/log_in_with_pixy"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
         android:textColor="#ffffff"
-        android:textSize="@dimen/abc_text_size_button_material"
-        android:layout_below="@+id/view4"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="8dp"/>
+        android:textSize="@dimen/abc_text_size_button_material"/>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/view"
@@ -53,12 +52,12 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/view4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/view"
-        android:id="@+id/view4">
+        android:layout_below="@+id/view">
 
         <EditText
             android:id="@+id/passwordEditText"
@@ -86,13 +85,13 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Password recovery"
-        android:visibility="gone"
-        android:textAlignment="center"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
         android:layout_alignTop="@+id/logInButtonPixy"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="66dp"/>
+        android:layout_marginTop="66dp"
+        android:text="Password recovery"
+        android:textAlignment="center"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/signUpButton"

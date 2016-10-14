@@ -6,9 +6,9 @@ import android.content.Intent;
 
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
-import com.marked.pixsee.chat.ChatActivity;
-import com.marked.pixsee.chat.data.Message;
-import com.marked.pixsee.chat.data.MessageConstants;
+import com.marked.pixsee.features.chat.ChatActivity;
+import com.marked.pixsee.features.chat.data.Message;
+import com.marked.pixsee.features.chat.data.MessageConstants;
 
 import org.junit.Before;
 import org.junit.Test;

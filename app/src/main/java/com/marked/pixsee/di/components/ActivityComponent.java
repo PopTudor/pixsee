@@ -5,14 +5,14 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 
+import com.marked.pixsee.data.database.DatabaseContract;
+import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.di.modules.ActivityModule;
 import com.marked.pixsee.di.scopes.ActivityScope;
 import com.marked.pixsee.di.scopes.Local;
 import com.marked.pixsee.di.scopes.Remote;
 import com.marked.pixsee.di.scopes.Repository;
-import com.marked.pixsee.model.database.DatabaseContract;
-import com.marked.pixsee.model.user.User;
-import com.marked.pixsee.model.user.UserDatasource;
 import com.marked.pixsee.networking.ServerConstants;
 
 import javax.inject.Named;
