@@ -20,7 +20,7 @@ import com.marked.pixsee.features.authentification.login.LoginFragment;
 import com.marked.pixsee.features.authentification.signup.SignUpEmailFragment;
 import com.marked.pixsee.features.authentification.signup.SignUpNameFragment;
 import com.marked.pixsee.features.authentification.signup.SignUpPassFragment;
-import com.marked.pixsee.main.MainActivity;
+import com.marked.pixsee.features.main.MainActivity;
 
 import javax.inject.Inject;
 

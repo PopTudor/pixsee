@@ -23,12 +23,12 @@ import com.marked.pixsee.camerasource.CameraTextureView;
 import com.marked.pixsee.di.Injectable;
 import com.marked.pixsee.di.components.ActivityComponent;
 import com.marked.pixsee.di.components.DaggerActivityComponent;
+import com.marked.pixsee.features.main.MainActivity;
 import com.marked.pixsee.features.selfie.commands.FavOneClick;
 import com.marked.pixsee.features.selfie.commands.FavThreeClick;
 import com.marked.pixsee.features.selfie.commands.FavTwoClick;
 import com.marked.pixsee.features.selfie.data.SelfieObject;
 import com.marked.pixsee.features.selfie.renderer.RenderSurfaceView;
-import com.marked.pixsee.main.MainActivity;
 import com.marked.pixsee.utility.Permissions;
 import com.tbruyelle.rxpermissions.RxPermissions;
 

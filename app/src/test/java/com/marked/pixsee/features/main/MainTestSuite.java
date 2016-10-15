@@ -1,7 +1,8 @@
-package com.marked.pixsee.main;
+package com.marked.pixsee.features.main;
 
-import com.marked.pixsee.main.strategy.ProfilePictureStrategyTest;
-import com.marked.pixsee.main.strategy.ShareStrategyTest;
+
+import com.marked.pixsee.features.main.strategy.ProfilePictureStrategyTest;
+import com.marked.pixsee.features.main.strategy.ShareStrategyTest;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

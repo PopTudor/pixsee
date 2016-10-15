@@ -159,7 +159,6 @@ class ChatPresenter implements ChatContract.Presenter {
 
 	private void sendMessage(@NonNull Message message) {
 		mChatClient.emit(ChatClient.ON_NEW_MESSAGE, message.toJSON());
-		message.setMessageType(MessageConstants.MessageType.ME_MESSAGE);
 		mRepository.saveMessage(message);
 		mView.get().addMessage(message);
 	}

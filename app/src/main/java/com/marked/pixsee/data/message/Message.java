@@ -67,6 +67,7 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 		id = UUID.randomUUID().toString();
 	}
 	public Message(Parcel parcelIn) {
+		data = Collections.unmodifiableMap(Collections.<String, String>emptyMap());
 		List<String> keys = new ArrayList<>();
 		List<String> values = new ArrayList<>();
 		parcelIn.readStringList(keys);

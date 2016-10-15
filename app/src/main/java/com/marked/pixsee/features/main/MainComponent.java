@@ -1,4 +1,4 @@
-package com.marked.pixsee.main;
+package com.marked.pixsee.features.main;
 
 import com.marked.pixsee.di.modules.ActivityModule;
 import com.marked.pixsee.di.scopes.ActivityScope;

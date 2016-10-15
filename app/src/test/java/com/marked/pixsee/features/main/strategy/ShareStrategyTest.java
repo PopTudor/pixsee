@@ -1,7 +1,7 @@
-package com.marked.pixsee.main.strategy;
+package com.marked.pixsee.features.main.strategy;
 
 import com.marked.pixsee.BuildConfig;
-import com.marked.pixsee.main.MainActivity;
+import com.marked.pixsee.features.main.MainActivity;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

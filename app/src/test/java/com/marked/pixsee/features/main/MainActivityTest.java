@@ -1,4 +1,4 @@
-package com.marked.pixsee.main;
+package com.marked.pixsee.features.main;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -169,7 +169,7 @@ public class MainActivityTest {
 		Mockito.verify(mMainActivity.get().mPresenter).profileImageClicked();
 	}
 
-	private static class MainActivity extends com.marked.pixsee.main.MainActivity {
+	private static class MainActivity extends com.marked.pixsee.features.main.MainActivity {
 		@Override
 		public void injectComponent() {
 			DaggerFakeMainComponent.builder()

@@ -10,7 +10,7 @@ import android.util.Log;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.features.authentification.AuthenticationActivity;
-import com.marked.pixsee.main.MainActivity;
+import com.marked.pixsee.features.main.MainActivity;
 import com.marked.pixsee.utility.GCMConstants;
 
 import bolts.AppLinks;

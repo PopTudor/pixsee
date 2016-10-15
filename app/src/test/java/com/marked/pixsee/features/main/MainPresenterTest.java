@@ -1,11 +1,11 @@
-package com.marked.pixsee.main;
+package com.marked.pixsee.features.main;
 
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserRepository;
-import com.marked.pixsee.main.strategy.ProfilePictureStrategy;
-import com.marked.pixsee.main.strategy.ShareStrategy;
+import com.marked.pixsee.features.main.strategy.ProfilePictureStrategy;
+import com.marked.pixsee.features.main.strategy.ShareStrategy;
 
 import org.junit.Before;
 import org.junit.Test;

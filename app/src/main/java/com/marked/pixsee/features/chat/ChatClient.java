@@ -86,11 +86,11 @@ class ChatClient implements ChattingInterface {
 									                          // I get message from you and now to send message back to you
 									                          // to becomes from
 									                          .to(message.getFrom())
+									                          .messageType(message.getMessageType())
 									                          .addData(message.getData());
 
 							if (message.getMessageType() == MessageConstants.MessageType.YOU_IMAGE) {
-								builder.messageType(MessageConstants.MessageType.YOU_IMAGE)
-										.addData(MessageConstants.DATA_BODY,
+								builder.addData(MessageConstants.DATA_BODY,
 												ServerConstants.SERVER_USER_IMAGE +
 														"/?img=" + message.getData().get(MessageConstants.DATA_BODY));
 							}

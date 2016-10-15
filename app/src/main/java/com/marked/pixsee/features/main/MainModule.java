@@ -1,4 +1,4 @@
-package com.marked.pixsee.main;
+package com.marked.pixsee.features.main;
 
 import android.content.Context;
 

@@ -1,4 +1,4 @@
-package com.marked.pixsee.main.strategy;
+package com.marked.pixsee.features.main.strategy;
 
 import android.support.v4.app.FragmentActivity;
 

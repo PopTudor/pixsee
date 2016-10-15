@@ -1,4 +1,4 @@
-package com.marked.pixsee.main;
+package com.marked.pixsee.features.main;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,12 +20,12 @@ import com.marked.pixsee.di.Injectable;
 import com.marked.pixsee.di.modules.ActivityModule;
 import com.marked.pixsee.features.chat.ChatActivity;
 import com.marked.pixsee.features.friends.FriendFragment;
+import com.marked.pixsee.features.main.strategy.PictureActionStrategy;
+import com.marked.pixsee.features.main.strategy.ProfilePictureStrategy;
 import com.marked.pixsee.features.profile.ProfileFragment;
 import com.marked.pixsee.features.selfie.PictureDetailSendFragment;
 import com.marked.pixsee.features.selfie.PictureDetailShareFragment;
 import com.marked.pixsee.features.selfie.SelfieFragment;
-import com.marked.pixsee.main.strategy.PictureActionStrategy;
-import com.marked.pixsee.main.strategy.ProfilePictureStrategy;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

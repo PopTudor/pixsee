@@ -1,4 +1,4 @@
-package com.marked.pixsee.main;
+package com.marked.pixsee.features.main;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -6,7 +6,7 @@ import android.support.v7.app.AlertDialog;
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.main.strategy.PictureActionStrategy;
+import com.marked.pixsee.features.main.strategy.PictureActionStrategy;
 
 /**
  * Created by Tudor on 2016-05-27.
