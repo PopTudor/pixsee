@@ -10,7 +10,7 @@ import com.marked.pixsee.R;
 import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.main.MainActivity;
+import com.marked.pixsee.features.main.MainActivity;
 
 import org.junit.Before;
 import org.junit.Test;

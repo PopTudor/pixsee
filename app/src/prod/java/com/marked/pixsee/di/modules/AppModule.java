@@ -2,7 +2,7 @@ package com.marked.pixsee.di.modules;
 
 import android.app.Application;
 
-import com.marked.pixsee.PixseeTest;
+import com.facebook.appevents.AppEventsLogger;
 import com.marked.pixsee.networking.ServerConstants;
 
 import javax.inject.Named;
@@ -17,28 +17,29 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by Tudor on 22-Jul-16.
+ * Created by Tudor Pop on 16-Mar-16.
  */
 @Module
-public class FakeAppModule {
-	Application mApplication;
+public class AppModule {
+	private Application application;
 
-	public FakeAppModule(PixseeTest application) {
-		mApplication = application;
+	public AppModule(Application application) {
+		this.application = application;
 	}
 
 	@Provides
 	@Singleton
 	Application providesApplication() {
-		return mApplication;
+		AppEventsLogger.activateApp(application);
+		return application;
 	}
 
 	@Provides
 	@Singleton
-	okhttp3.OkHttpClient providesHTTPClient() {
+	OkHttpClient providesHTTPClient() {
 		HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
 		loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-		okhttp3.OkHttpClient httpClient = new okhttp3.OkHttpClient.Builder()
+		OkHttpClient httpClient = new OkHttpClient.Builder()
 				.addInterceptor(loggingInterceptor)
 				.build();
 		return httpClient;

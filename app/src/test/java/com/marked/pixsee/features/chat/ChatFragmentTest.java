@@ -6,10 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.PixseeTest;
 import com.marked.pixsee.UserUtilTest;
-import com.marked.pixsee.di.components.DaggerFakeActivityComponent;
-import com.marked.pixsee.di.components.FakeActivityComponent;
-import com.marked.pixsee.di.components.FakeAppComponent;
-import com.marked.pixsee.di.modules.FakeActivityModule;
+import com.marked.pixsee.di.components.ActivityComponent;
+import com.marked.pixsee.di.components.AppComponent;
+import com.marked.pixsee.di.components.DaggerActivityComponent;
+import com.marked.pixsee.di.modules.ActivityModule;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,14 +50,14 @@ public class ChatFragmentTest extends ChatFragment {
 				.chatModule(new ChatModule(this, UserUtilTest.getUserTest()))
 				.build()
 				.inject(this);
-		FakeAppComponent fakeAppComponent = (FakeAppComponent) ((PixseeTest) getActivity().getApplication()).getAppComponent();
-		FakeActivityComponent activityComponent = DaggerFakeActivityComponent.builder()
-				                                          .fakeAppComponent(fakeAppComponent)
-				                                          .fakeActivityModule(new FakeActivityModule((AppCompatActivity) getActivity()))
+		AppComponent appComponent = ((PixseeTest) getActivity().getApplication()).getAppComponent();
+		ActivityComponent activityComponent = DaggerActivityComponent.builder()
+				                                      .appComponent(appComponent)
+				                                      .activityModule(new ActivityModule((AppCompatActivity) getActivity()))
 				                                          .build();
-		DaggerFakeChatComponent.builder()
-				.fakeActivityComponent(activityComponent)
-				.fakeChatModule(new FakeChatModule(this))
+		DaggerChatComponent.builder()
+				.activityComponent(activityComponent)
+				.chatModule(new ChatModule(this, UserUtilTest.getUserTest()))
 				.build();
 	}
 }

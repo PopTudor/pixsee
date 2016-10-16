@@ -62,6 +62,7 @@ android {
     archivesBaseName = rootProject.projectDir.getName()
     dexOptions {
         incremental true
+        javaMaxHeapSize "4g"
     }
     buildTypes {
         def String = "String"
@@ -81,20 +82,12 @@ android {
         }
         debug {
             debuggable true
-            buildConfigField(String, Server_ip, "\"192.168.0.104\"")
+            buildConfigField(String, Server_ip, "\"192.168.0.101\"")
 //            shrinkResources true
 //            minifyEnabled true
 //            proguardFiles(files { file('./proguard').listFiles() })
             multiDexEnabled true
 
-        }
-        jnidebug {
-
-            // This copies the debuggable attribute and debug signing configurations.
-            initWith debug
-
-            applicationIdSuffix ".jnidebug"
-            jniDebuggable false
         }
     }
     productFlavors {

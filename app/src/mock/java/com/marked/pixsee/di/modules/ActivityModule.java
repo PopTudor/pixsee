@@ -3,40 +3,38 @@ package com.marked.pixsee.di.modules;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.DatabaseErrorHandler;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.data.database.PixyDatabase;
+import com.marked.pixsee.data.user.FakeUser;
+import com.marked.pixsee.data.user.FakeUserDatasource;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
-import com.marked.pixsee.data.user.UserDiskDatasource;
-import com.marked.pixsee.data.user.UserNetworkDatasource;
-import com.marked.pixsee.data.user.UserRepository;
 import com.marked.pixsee.di.scopes.ActivityScope;
 import com.marked.pixsee.di.scopes.Local;
 import com.marked.pixsee.di.scopes.Remote;
 import com.marked.pixsee.di.scopes.Repository;
-
-import org.mockito.Mockito;
 
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
 
+
 /**
  * Created by Tudor on 24-Jul-16.
  */
 @Module
 @ActivityScope
-public class FakeActivityModule {
+public class ActivityModule {
 	private AppCompatActivity activity;
 
-	public FakeActivityModule(AppCompatActivity activity) {
+	public ActivityModule(AppCompatActivity activity) {
 		this.activity = activity;
 	}
 
@@ -77,33 +75,53 @@ public class FakeActivityModule {
 	@Provides
 	@ActivityScope
 	SQLiteOpenHelper provideDatabase() {
-		return Mockito.mock(PixyDatabase.class);
+		return new FakeDatabase(activity,"test",null,1);
 	}
 
 	@Provides
 	@ActivityScope
 	@Local
 	UserDatasource provideUserRepositoryLocal(SQLiteOpenHelper database) {
-		return Mockito.mock(UserDiskDatasource.class);
+		return new FakeUserDatasource();
 	}
 	@Provides
 	@ActivityScope
 	@Remote
 	UserDatasource provideUserRepositoryRemote(SharedPreferences preferences) {
-		return Mockito.mock(UserNetworkDatasource.class);
+		return new FakeUserDatasource();
 	}
 
 	@Provides
 	@ActivityScope
 	@Repository
 	UserDatasource provideUserRepository(@Local UserDatasource local, @Remote UserDatasource remote) {
-		return Mockito.mock(UserRepository.class);
+		return new FakeUserDatasource();
 	}
 
 	@Provides
 	@ActivityScope
 	@Named(DatabaseContract.AppsUser.TABLE_NAME)
 	User provideAppsUser(@Repository UserDatasource repository){
-		return UserUtilTest.getUserTest();
+		return new FakeUser();
+	}
+
+	private class FakeDatabase extends SQLiteOpenHelper{
+		public FakeDatabase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+			super(context, name, factory, version);
+		}
+
+		public FakeDatabase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, DatabaseErrorHandler errorHandler) {
+			super(context, name, factory, version, errorHandler);
+		}
+
+		@Override
+		public void onCreate(SQLiteDatabase db) {
+
+		}
+
+		@Override
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+		}
 	}
 }

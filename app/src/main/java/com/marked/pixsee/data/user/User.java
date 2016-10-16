@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by Tudor Pop on 28-Nov-15.
  */
-public final class User implements Parcelable, Comparable<User> {
+public class User implements Parcelable, Comparable<User> {
 	public static final String TAG = "user_tag";
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator<User>() {
 		@Override

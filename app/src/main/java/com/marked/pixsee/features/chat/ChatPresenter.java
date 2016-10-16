@@ -3,6 +3,7 @@ package com.marked.pixsee.features.chat;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.RxBus;
 import com.marked.pixsee.commands.Command;
@@ -56,16 +57,8 @@ class ChatPresenter implements ChatContract.Presenter {
 	@Override
 	public void attach() {
 		loadMore(50, true);
-		mChatClient.connect();
-		try {
-			mChatClient.emit(ChatClient.ON_NEW_ROOM,
-					new JSONObject(String.format("{from:%s,to:%s,to_token:\'%s\'}",
-							mAppsUser.getUserID(),
-							mThatUser.getUserID(),
-							mThatUser.getToken())));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		connect();
+
 		RxBus.getInstance().register(Boolean.class, new Action1<Boolean>() {
 			@Override
 			public void call(Boolean aBoolean) {
@@ -78,6 +71,16 @@ class ChatPresenter implements ChatContract.Presenter {
 				receiveMessage(message);
 			}
 		});
+	}
+
+	private void connect() {
+		mChatClient.connect();
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("user", new Gson().toJson(mAppsUser, User.class));
+		jsonObject.addProperty("from", mAppsUser.getUserID());
+		jsonObject.addProperty("to", mThatUser.getUserID());
+		jsonObject.addProperty("to_token", mThatUser.getToken());
+		mChatClient.emit(ChatClient.ON_NEW_ROOM, jsonObject);
 	}
 
 	@Override
@@ -167,7 +170,6 @@ class ChatPresenter implements ChatContract.Presenter {
 	public void sendMessage(@NonNull String text) {
 		Message message = new Message.Builder()
 				                  .addData(MessageConstants.DATA_BODY, text)
-				                  .messageType(MessageConstants.MessageType.YOU_MESSAGE)
 				                  .from(mAppsUser.getUserID())
 				                  .to(mThatUser.getUserID())
 				                  .build();

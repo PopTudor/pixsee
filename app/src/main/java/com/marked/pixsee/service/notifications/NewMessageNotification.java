@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import com.google.gson.Gson;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.message.Message;
+import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.features.chat.ChatActivity;
 import com.marked.pixsee.features.chat.data.MessageConstants;
 
@@ -15,6 +17,8 @@ import com.marked.pixsee.features.chat.data.MessageConstants;
  * Created by Tudor on 22-Jul-16.
  */
 class NewMessageNotification extends FcmNotification<Message> {
+	Gson mGson = new Gson();
+
     NewMessageNotification(Context context, Message notificationObject) {
         super(context, notificationObject);
     }
@@ -24,14 +28,19 @@ class NewMessageNotification extends FcmNotification<Message> {
         Intent intent = new Intent(mContext, ChatActivity.class);
         intent.setAction(mContext.getString(R.string.NEW_MESSAGE_NOTIFICATION_ACTION));
         intent.putExtra(mContext.getString(R.string.NEW_MESSAGE_NOTIFICATION_ACTION), notificationObject);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            intent.addCategory(Notification.CATEGORY_MESSAGE);
+	    intent.putExtra(ChatActivity.EXTRA_CONTACT, getUserFromMessageData());
+	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		    intent.addCategory(Notification.CATEGORY_MESSAGE);
         }
         return intent;
     }
 
-    @Override
-    Notification.Builder createNotificationBuilder() {
+	private User getUserFromMessageData() {
+		return mGson.fromJson(notificationObject.getData().get("user"), User.class);
+	}
+
+	@Override
+	Notification.Builder createNotificationBuilder() {
         Notification.Builder builder = new Notification.Builder(mContext)
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE |
                         Notification.DEFAULT_LIGHTS | Notification.PRIORITY_HIGH)

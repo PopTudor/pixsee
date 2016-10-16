@@ -10,7 +10,7 @@ import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
 import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.di.modules.FakeActivityModule;
+import com.marked.pixsee.di.modules.ActivityModule;
 import com.marked.pixsee.features.chat.ChatActivity;
 import com.marked.pixsee.features.friends.FriendFragment;
 import com.marked.pixsee.features.profile.ProfileFragment;
@@ -172,9 +172,9 @@ public class MainActivityTest {
 	private static class MainActivity extends com.marked.pixsee.features.main.MainActivity {
 		@Override
 		public void injectComponent() {
-			DaggerFakeMainComponent.builder()
-					.fakeActivityModule(new FakeActivityModule(this))
-					.fakeMainModule(new FakeMainModule())
+			DaggerMainComponent.builder()
+					.activityModule(new ActivityModule(this))
+					.mainModule(new MainModule())
 					.build()
 					.inject(this);
 		}

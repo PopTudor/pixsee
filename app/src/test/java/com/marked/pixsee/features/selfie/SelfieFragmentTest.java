@@ -6,11 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.PixseeTest;
-import com.marked.pixsee.di.components.DaggerFakeActivityComponent;
-import com.marked.pixsee.di.components.FakeActivityComponent;
-import com.marked.pixsee.di.components.FakeAppComponent;
-import com.marked.pixsee.di.modules.FakeActivityModule;
-import com.marked.pixsee.main.MainActivity;
+import com.marked.pixsee.di.components.ActivityComponent;
+import com.marked.pixsee.di.components.DaggerActivityComponent;
+import com.marked.pixsee.di.modules.ActivityModule;
+import com.marked.pixsee.features.main.MainActivity;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.junit.Assert;
@@ -63,14 +62,14 @@ public class SelfieFragmentTest extends SelfieFragment {
 
 	@Override
 	public void injectComponent() {
-		FakeActivityComponent activityComponent = DaggerFakeActivityComponent.builder()
-				                                          .fakeAppComponent((FakeAppComponent) ((PixseeTest) getActivity().getApplication())
+		ActivityComponent activityComponent = DaggerActivityComponent.builder()
+				                                      .appComponent(((PixseeTest) getActivity().getApplication())
 						                                                                               .getAppComponent())
-				.fakeActivityModule(new FakeActivityModule((AppCompatActivity) getActivity()))
+				                                      .activityModule(new ActivityModule((AppCompatActivity) getActivity()))
 				.build();
 
 		DaggerFakeSelfieComponent.builder()
-				.fakeActivityComponent(activityComponent)
+				.activityComponent(activityComponent)
 				.fakeSelfieModule(new FakeSelfieModule())
 				.build()
 				.inject(this);

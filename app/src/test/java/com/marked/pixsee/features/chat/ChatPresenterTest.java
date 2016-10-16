@@ -1,6 +1,9 @@
 package com.marked.pixsee.features.chat;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.marked.pixsee.TestSchedulerProxy;
 import com.marked.pixsee.UserUtilTest;
@@ -57,7 +60,7 @@ public class ChatPresenterTest {
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		mPresenter = new ChatPresenter(mView, mChatRepository, new User("abc", "abc", "abc", "abc"), uploadAPI, mChattingInterface);
+		mPresenter = new ChatPresenter(mView, mChatRepository, UserUtilTest.getUserTest(), uploadAPI, mChattingInterface);
 		mPresenter.setChatInteraction(mChatFragmentInteraction);
 		mPresenter.setThatUser(UserUtilTest.getUserTest());
 		TestSchedulerProxy.get();
@@ -162,4 +165,26 @@ public class ChatPresenterTest {
 		mPresenter.clearImageButton();
 		verify(mView).showPictureContainer(false);
 	}
+
+	@Test
+	public void attachConnect_shouldEmitAppUserAndTargetUser() {
+		when(mChatRepository.getMessages(any(User.class))).thenReturn(Observable.just(mExpectedMessages));
+
+		ArgumentCaptor<JsonObject> jsonObjectArgumentCaptor = ArgumentCaptor.forClass(JsonObject.class);
+		mPresenter.attach();
+		verify(mChattingInterface).emit(anyString(), jsonObjectArgumentCaptor.capture());
+
+		String from = jsonObjectArgumentCaptor.getValue().get("from").getAsString();
+		String to = jsonObjectArgumentCaptor.getValue().get("to").getAsString();
+		String toToken = jsonObjectArgumentCaptor.getValue().get("to_token").getAsString();
+		JsonElement jsonElement = jsonObjectArgumentCaptor.getValue().get("user");
+		JsonElement result = new JsonParser().parse(jsonElement.getAsString());
+		User user = new Gson().fromJson(result, User.class);
+
+		assertEquals(from, UserUtilTest.getUserTest().getUserID());
+		assertEquals(to, UserUtilTest.getUserTest().getUserID());
+		assertEquals(toToken, UserUtilTest.getUserTest().getToken());
+		UserUtilTest.assertUserProperties(UserUtilTest.getUserTest(), user);
+	}
+
 }

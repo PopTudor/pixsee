@@ -11,13 +11,22 @@ import com.marked.pixsee.features.chat.data.MessageConstants;
 public class RemoteMessageToMessageMapper implements Mapper<RemoteMessage, Message> {
 	@Override
 	public Message map(RemoteMessage remoteMessage) {
+		String to = getNotNullString(remoteMessage.getData().get(MessageConstants.TO));
+		String from = getNotNullString(remoteMessage.getData().get(MessageConstants.FROM));
+
 		return new Message.Builder()
 				.addData(remoteMessage.getData())
-				.to(remoteMessage.getData().get(MessageConstants.TO))
-				.from(remoteMessage.getData().get(MessageConstants.FROM))
+				       .to(to)
+				       .from(from)
 				.messageType(getMessageType(remoteMessage))
 				.date(String.valueOf(remoteMessage.getSentTime()))
 				.build();
+	}
+
+	private String getNotNullString(String s) {
+		if (s == null)
+			throw new NullPointerException();
+		return s;
 	}
 
 	private int getMessageType(RemoteMessage remoteMessage){

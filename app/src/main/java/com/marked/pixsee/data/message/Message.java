@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 	 * Gets the payload data, which is immutable.
 	 * IN DATA ADD ALL OTHER OPTIONS LIKE to/from/date/messageType
 	 */
-	Map<String, String> data;
+	private Map<String, String> data;
 
 	protected Message(Builder builder) {
 		data = Collections.unmodifiableMap(builder.data);
@@ -63,11 +64,14 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 		date = builder.date;
 		id = builder.id;
 	}
+
 	private Message() {
 		id = UUID.randomUUID().toString();
+		data = new HashMap<>();
 	}
+
 	public Message(Parcel parcelIn) {
-		data = Collections.unmodifiableMap(Collections.<String, String>emptyMap());
+		this();
 		List<String> keys = new ArrayList<>();
 		List<String> values = new ArrayList<>();
 		parcelIn.readStringList(keys);
