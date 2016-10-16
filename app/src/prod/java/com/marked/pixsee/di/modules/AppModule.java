@@ -3,6 +3,7 @@ package com.marked.pixsee.di.modules;
 import android.app.Application;
 
 import com.facebook.appevents.AppEventsLogger;
+import com.google.gson.Gson;
 import com.marked.pixsee.networking.ServerConstants;
 
 import javax.inject.Named;
@@ -54,5 +55,11 @@ public class AppModule {
 				.baseUrl(ServerConstants.SERVER)
 				.client(client)
 				.build();
+	}
+
+	@Provides
+	@Singleton
+	Gson provideGson() {
+		return new Gson();
 	}
 }

@@ -2,6 +2,7 @@ package com.marked.pixsee.di.components;
 
 import android.app.Application;
 
+import com.google.gson.Gson;
 import com.marked.pixsee.di.modules.AppModule;
 import com.marked.pixsee.networking.ServerConstants;
 
@@ -18,6 +19,9 @@ import retrofit2.Retrofit;
 @Singleton
 @Component(modules = {AppModule.class})
 public interface AppComponent {
+
+	Gson gson();
+
 	Application application();
 
 	@Named(ServerConstants.SERVER)

@@ -7,20 +7,27 @@ import android.content.Intent;
 import android.os.Build;
 
 import com.google.gson.Gson;
+import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.di.Injectable;
+import com.marked.pixsee.di.components.AppComponent;
 import com.marked.pixsee.features.chat.ChatActivity;
 import com.marked.pixsee.features.chat.data.MessageConstants;
+
+import javax.inject.Inject;
 
 /**
  * Created by Tudor on 22-Jul-16.
  */
-class NewMessageNotification extends FcmNotification<Message> {
-	Gson mGson = new Gson();
+class NewMessageNotification extends FcmNotification<Message> implements Injectable {
+	@Inject
+	Gson mGson;
 
     NewMessageNotification(Context context, Message notificationObject) {
         super(context, notificationObject);
+	    injectComponent();
     }
 
     @Override
@@ -63,4 +70,10 @@ class NewMessageNotification extends FcmNotification<Message> {
 
         return taskStackBuilder;
     }
+
+	@Override
+	public void injectComponent() {
+		AppComponent appComponent = ((Pixsee) mContext.getApplicationContext()).getAppComponent();
+		DaggerNotificationComponent.builder().appComponent(appComponent).build().inject(this);
+	}
 }
