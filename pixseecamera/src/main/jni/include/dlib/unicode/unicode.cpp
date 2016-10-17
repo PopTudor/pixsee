@@ -4,7 +4,6 @@
 #define DLIB_UNICODe_CPp_
 
 #include "unicode.h"
-#include "../string.h"
 
 namespace dlib {
 
