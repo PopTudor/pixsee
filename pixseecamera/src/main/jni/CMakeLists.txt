@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.6)
 set(CMAKE_VERBOSE_MAKEFILE on)
 set(libs "${CMAKE_SOURCE_DIR}/../jniLibs")
 
+# jniLibs opencv libraries should be moved to openCVLibrary310 module but I'm not sure if
+# the includes will work after that
 
 #--------------------------------------------------- dlib -----------------------------------------------------#
 add_library(libdlib STATIC IMPORTED)

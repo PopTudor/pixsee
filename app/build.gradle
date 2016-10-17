@@ -29,13 +29,13 @@ def versionPatch = 2
 def versionSmallPatch = 1
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '24.0.2'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.3'
 
     defaultConfig {
         applicationId 'com.marked.pixsee'
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch * 10 +versionSmallPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -49,16 +49,9 @@ android {
 //                include 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'arm64-v8a','mips','mips64'
 //            }
 //        }
-        ndk {
-            abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'arm64-v8a'
-        }
-        externalNativeBuild {
-            cmake {
-                arguments '-DANDROID_PLATFORM=android-13', '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static'
-                cppFlags "-frtti", "-fexceptions"
-            }
-        }
+
     }
+
     archivesBaseName = rootProject.projectDir.getName()
     dexOptions {
         incremental true
@@ -90,6 +83,7 @@ android {
 
         }
     }
+
     productFlavors {
         prod {
 
@@ -105,16 +99,11 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
-    externalNativeBuild {
-        cmake {
-            path 'src/main/jni/CMakeLists.txt'
-        }
-    }
 }
 
 dependencies {
-    def supportVersion = "23.4.0"
-    compile project(':openCVLibrary310')
+    def supportVersion = "24.2.1"
+    compile project(':pixseecamera')
     compile('io.socket:socket.io-client:0.6.3') {
         exclude group: 'org.json', module: 'json'
     }
