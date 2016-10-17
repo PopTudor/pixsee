@@ -4,12 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.data.user.UserDiskDatasource;
@@ -53,11 +51,6 @@ public class ActivityModule {
 		return LocalBroadcastManager.getInstance(activity);
 	}
 
-	@Provides
-	@ActivityScope
-	SharedPreferences provideSharedPreferences() {
-		return PreferenceManager.getDefaultSharedPreferences(activity);
-	}
 
 	@Provides
 	@ActivityScope
@@ -69,12 +62,6 @@ public class ActivityModule {
 	@ActivityScope
 	Context provideContext() {
 		return activity;
-	}
-
-	@Provides
-	@ActivityScope
-	SQLiteOpenHelper provideDatabase() {
-		return PixyDatabase.getInstance(activity);
 	}
 
 	@Provides

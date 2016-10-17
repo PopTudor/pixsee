@@ -1,6 +1,8 @@
 package com.marked.pixsee.di.components;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.gson.Gson;
 import com.marked.pixsee.di.modules.AppModule;
@@ -21,6 +23,10 @@ import retrofit2.Retrofit;
 public interface AppComponent {
 
 	Gson gson();
+
+	SQLiteOpenHelper provideSqLiteOpenHelper();
+
+	SharedPreferences provideSharedPreferences();
 
 	Application application();
 

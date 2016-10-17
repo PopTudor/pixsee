@@ -1,9 +1,13 @@
 package com.marked.pixsee.di.modules;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
 
 import com.facebook.appevents.AppEventsLogger;
 import com.google.gson.Gson;
+import com.marked.pixsee.data.database.PixyDatabase;
 import com.marked.pixsee.networking.ServerConstants;
 
 import javax.inject.Named;
@@ -55,6 +59,18 @@ public class AppModule {
 				.baseUrl(ServerConstants.SERVER)
 				.client(client)
 				.build();
+	}
+
+	@Provides
+	@Singleton
+	SharedPreferences provideSharedPreferences() {
+		return PreferenceManager.getDefaultSharedPreferences(application);
+	}
+
+	@Provides
+	@Singleton
+	SQLiteOpenHelper provideDatabase() {
+		return PixyDatabase.getInstance(application);
 	}
 
 	@Provides
