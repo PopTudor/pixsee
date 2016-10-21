@@ -236,7 +236,8 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	@Override
 	public void injectComponent() {
 		ActivityComponent daggerActivityComponent = DaggerActivityComponent.builder()
-				                                            .appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
+				                                            .sessionComponent(((Pixsee) getActivity().getApplication())
+						                                                              .getSessionComponent())
 				                                            .activityModule(((MainActivity) getActivity()).activityModule).build();
 		SelfieComponent mSelfieComponent = DaggerSelfieComponent.builder()
 				                                   .selfieModule(new SelfieModule(this))

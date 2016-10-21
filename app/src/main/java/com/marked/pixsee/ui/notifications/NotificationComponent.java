@@ -1,15 +1,15 @@
 package com.marked.pixsee.ui.notifications;
 
-import com.marked.pixsee.injection.components.AppComponent;
-import com.marked.pixsee.injection.scopes.UserScope;
+import com.marked.pixsee.injection.components.SessionComponent;
+import com.marked.pixsee.injection.scopes.Instance;
 
 import dagger.Component;
 
 /**
  * Created by Tudor on 16-Oct-16.
  */
-@UserScope
-@Component(dependencies = AppComponent.class)
+@Component(dependencies = {SessionComponent.class})
+@Instance
 interface NotificationComponent {
 	void inject(NewMessageNotification newMessageNotification);
 }

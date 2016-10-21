@@ -63,8 +63,9 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		ActivityComponent component =  DaggerActivityComponent.builder()
-				.activityModule(new ActivityModule((AppCompatActivity) getActivity()))
-				.appComponent(((Pixsee)getActivity().getApplication()).getAppComponent()).build();
+				                               .activityModule(new ActivityModule((AppCompatActivity) getActivity()))
+				                               .sessionComponent(((Pixsee) getActivity().getApplication()).getSessionComponent())
+				                               .build();
 		DaggerAddUserComponent.builder()
 				.activityComponent(component)
 				.addUserModule(new AddUserModule(this))

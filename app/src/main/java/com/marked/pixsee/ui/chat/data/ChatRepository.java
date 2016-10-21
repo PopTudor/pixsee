@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.injection.scopes.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ import rx.schedulers.Schedulers;
  * }
  *
  */
+@Session
 public class ChatRepository implements ChatDatasource {
 	private final List<Message> cache = new ArrayList<>();
 	private ChatDatasource disk;

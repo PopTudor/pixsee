@@ -33,7 +33,7 @@ import rx.Observable;
  * An activity representing a single Contact detail screen. This
  * activity is only used on handset devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link com.marked.pixsee.main.MainActivity}.
+ * in a {@link com.marked.pixsee.ui.main.MainActivity}.
  * <p/>
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link ChatFragment}.
@@ -55,16 +55,16 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.Chat
 		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 		// as long as activity component != null, objects with @ActivityScope are in memory
 		mActivityComponent = DaggerActivityComponent.builder()
-				.appComponent(((Pixsee) getApplication()).getAppComponent())
-				.activityModule(new ActivityModule(this))
-				.build();
+				                     .sessionComponent(((Pixsee) getApplication()).getSessionComponent())
+				                     .activityModule(new ActivityModule(this))
+				                     .build();
 
 		User user = getIntent().getParcelableExtra(EXTRA_CONTACT);
 		mFragment = ChatFragment.newInstance(user);
 		getSupportActionBar().setTitle(user.getName());
 
 		/*send the clicked contact to the fragment*/
-		getSupportFragmentManager().beginTransaction()
+		getFragmentManager().beginTransaction()
 				.add(R.id.fragmentContainer, mFragment, "contactDetailFragment").commit();
 		// Show the Up button in the action bar.
 		Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.ic_arrow_24dp);
@@ -132,7 +132,7 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.Chat
 	public void pictureTaken(File picture) {
 		getSupportFragmentManager().popBackStackImmediate();/* after the picture is saved on disk, we get it's location and continue
 		resuming the camera preview; here we stop that and send the file to chat fragment*/
-		((ChatFragment) getSupportFragmentManager().findFragmentByTag("contactDetailFragment")).pictureTaken(picture);
+		((ChatFragment) getFragmentManager().findFragmentByTag("contactDetailFragment")).pictureTaken(picture);
 	}
 
 	public ActivityComponent getActivityComponent() {

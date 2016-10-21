@@ -7,8 +7,8 @@ import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.PixseeTest;
 import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.injection.components.ActivityComponent;
-import com.marked.pixsee.injection.components.AppComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
+import com.marked.pixsee.injection.components.SessionComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
 
 import org.junit.Before;
@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.support.v4.SupportFragmentController;
+import org.robolectric.util.FragmentController;
 
 /**
  * Created by Tudor on 13-Oct-16.
@@ -26,13 +26,13 @@ import org.robolectric.shadows.support.v4.SupportFragmentController;
 @Config(constants = BuildConfig.class, sdk = 23, application = PixseeTest.class)
 public class ChatFragmentTest extends ChatFragment {
 	// Robolectric Controllers
-	private SupportFragmentController<ChatFragmentTest> fragmentController;
+	private FragmentController<ChatFragmentTest> fragmentController;
 
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		// Robolectric Controllers
-		fragmentController = SupportFragmentController.of(this, ChatActivity.class);
+		fragmentController = FragmentController.of(this, ChatActivity.class);
 		Intent intent = new Intent();
 		intent.putExtra(ChatActivity.EXTRA_CONTACT, UserUtilTest.getUserTest());
 		fragmentController.withIntent(intent);
@@ -50,9 +50,9 @@ public class ChatFragmentTest extends ChatFragment {
 				.chatModule(new ChatModule(this, UserUtilTest.getUserTest()))
 				.build()
 				.inject(this);
-		AppComponent appComponent = ((PixseeTest) getActivity().getApplication()).getAppComponent();
+		SessionComponent appComponent = ((PixseeTest) getActivity().getApplication()).getSessionComponent();
 		ActivityComponent activityComponent = DaggerActivityComponent.builder()
-				                                      .appComponent(appComponent)
+				                                      .sessionComponent(appComponent)
 				                                      .activityModule(new ActivityModule((AppCompatActivity) getActivity()))
 				                                          .build();
 		DaggerChatComponent.builder()

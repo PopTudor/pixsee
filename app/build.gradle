@@ -29,13 +29,13 @@ def versionPatch = 2
 def versionSmallPatch = 1
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.3'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId 'com.marked.pixsee'
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch * 10 +versionSmallPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -102,15 +102,16 @@ android {
 }
 
 dependencies {
-    def supportVersion = "24.2.1"
-    compile project(':pixseecamera')
+    def supportVersion = "25.0.0"
+    //    compile project(':pixseecamera')
     compile('io.socket:socket.io-client:0.6.3') {
         exclude group: 'org.json', module: 'json'
     }
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
-    // GOOGLE
+    compile "com.android.support:support-v4:$supportVersion"
+    compile "com.android.support:support-compat:$supportVersion"
     compile "com.android.support:appcompat-v7: $supportVersion"
     compile "com.android.support:recyclerview-v7: $supportVersion"
     compile "com.android.support:design: $supportVersion"

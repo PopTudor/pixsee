@@ -358,9 +358,9 @@ public class FriendFragment extends Fragment implements Injectable,
 	@Override
 	public void injectComponent() {
 		ActivityComponent activityComponent = DaggerActivityComponent.builder()
-				.appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
-				.activityModule(new ActivityModule((AppCompatActivity) getContext()))
-				.build();
+				                                      .sessionComponent(((Pixsee) getActivity().getApplication()).getSessionComponent())
+				                                      .activityModule(new ActivityModule((AppCompatActivity) getContext()))
+				                                      .build();
 
 		DaggerFriendsComponent.builder().activityComponent(activityComponent)
 				.friendModule(new FriendModule(this)).build().inject(this);

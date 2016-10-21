@@ -1,4 +1,4 @@
-package com.marked.pixsee.ui.authentification.di;
+package com.marked.pixsee.ui.authentification.injection;
 
 import android.content.SharedPreferences;
 

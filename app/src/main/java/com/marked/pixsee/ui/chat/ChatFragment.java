@@ -1,5 +1,6 @@
 package com.marked.pixsee.ui.chat;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -11,7 +12,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -229,7 +229,7 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 
 	private void switchButonImage(@DrawableRes int resId) {
 		Drawable drawable = ContextCompat.getDrawable(getActivity(), resId);
-		drawable.setColorFilter(ContextCompat.getColor(getContext(),R.color.teal), PorterDuff.Mode.SRC_ATOP);
+		drawable.setColorFilter(ContextCompat.getColor(getActivity(), R.color.teal), PorterDuff.Mode.SRC_ATOP);
 		((FloatingActionButton) getView().findViewById(R.id.sendButton)).setImageDrawable(drawable);
 	}
 

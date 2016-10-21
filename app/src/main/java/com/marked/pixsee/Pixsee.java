@@ -10,7 +10,10 @@ import com.facebook.imagepipeline.backends.okhttp.OkHttpImagePipelineConfigFacto
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.marked.pixsee.injection.components.AppComponent;
 import com.marked.pixsee.injection.components.DaggerAppComponent;
+import com.marked.pixsee.injection.components.DaggerSessionComponent;
+import com.marked.pixsee.injection.components.SessionComponent;
 import com.marked.pixsee.injection.modules.AppModule;
+import com.marked.pixsee.injection.modules.UserModule;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -24,12 +27,14 @@ import io.fabric.sdk.android.Fabric;
  */
 public class Pixsee extends Application {
 	private AppComponent appComponent;
+	private SessionComponent mSessionComponent;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
 		appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
+		mSessionComponent = DaggerSessionComponent.builder().userModule(new UserModule()).appComponent(appComponent).build();
 		OkHttpClient client = new OkHttpClient();
 		client.interceptors().add(new com.squareup.okhttp.Interceptor() {
 			@Override
@@ -54,6 +59,10 @@ public class Pixsee extends Application {
 		Fresco.initialize(this, config);
 		FacebookSdk.sdkInitialize(getApplicationContext());
 		Fabric.with(this, new Crashlytics());
+	}
+
+	public SessionComponent getSessionComponent() {
+		return mSessionComponent;
 	}
 
 	public AppComponent getAppComponent() {

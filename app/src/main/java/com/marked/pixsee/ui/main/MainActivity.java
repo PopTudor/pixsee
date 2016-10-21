@@ -82,7 +82,7 @@ public class MainActivity
 		DaggerMainComponent.builder()
 				.activityModule(activityModule)
 				.mainModule(new MainModule())
-				.appComponent(((Pixsee) getApplication()).getAppComponent())
+				.sessionComponent(((Pixsee) getApplication()).getSessionComponent())
 				.build()
 				.inject(this);
 	}

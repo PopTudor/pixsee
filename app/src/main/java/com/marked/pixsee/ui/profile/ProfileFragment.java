@@ -47,7 +47,7 @@ import javax.inject.Inject;
 
 import rx.functions.Action1;
 
-public class ProfileFragment extends Fragment implements ProfileContract.View{
+public class ProfileFragment extends Fragment implements ProfileContract.View {
 	private static String USER_EXTRA = "PROFILE_FRAGMENT_USER";
 	private User mUser;
 	private PictureAdapter mPictureAdapter;
@@ -80,16 +80,16 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 		super.onAttach(context);
 		try {
 			mProfileFragmentInteraction = (ProfileFragmentInteraction) context;
-		}catch (ClassCastException e){
-			throw new ClassCastException(context.getPackageName()+" must implement "+ProfileFragmentInteraction.class.getCanonicalName());
+		} catch (ClassCastException e) {
+			throw new ClassCastException(context.getPackageName() + " must implement " + ProfileFragmentInteraction.class.getCanonicalName());
 		}
 		mUser = getArguments().getParcelable(USER_EXTRA);
 
 		ActivityComponent component = DaggerActivityComponent
-				.builder()
-				.appComponent(((Pixsee) getActivity().getApplication()).getAppComponent())
-				.activityModule(new ActivityModule((AppCompatActivity)getActivity()))
-				.build();
+				                              .builder()
+				                              .sessionComponent(((Pixsee) getActivity().getApplication()).getSessionComponent())
+				                              .activityModule(new ActivityModule((AppCompatActivity) getActivity()))
+				                              .build();
 		DaggerProfileComponent.builder().activityComponent(component)
 				.profileModule(new ProfileModule(this))
 				.build()
@@ -120,19 +120,19 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 		((AppCompatActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar));
 		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Profile");
 
-		((TextView)rootView.findViewById(R.id.nameTextview)).setText(mUser.getName());
-		((TextView)rootView.findViewById(R.id.usernameTextview)).setText(mUser.getUsername());
-		if (mUser.getIconUrl()!=null) // // TODO: 12-Jun-16 remove this and make mUser.getIconUrl() to always have an Url
-			((SimpleDraweeView)rootView.findViewById(R.id.iconSimpleDraweeView)).setImageURI(Uri.parse(mUser.getIconUrl()));
+		((TextView) rootView.findViewById(R.id.nameTextview)).setText(mUser.getName());
+		((TextView) rootView.findViewById(R.id.usernameTextview)).setText(mUser.getUsername());
+		if (mUser.getIconUrl() != null) // // TODO: 12-Jun-16 remove this and make mUser.getIconUrl() to always have an Url
+			((SimpleDraweeView) rootView.findViewById(R.id.iconSimpleDraweeView)).setImageURI(Uri.parse(mUser.getIconUrl()));
 
-		ImageButton inviteFriendsImageButton = ((ImageButton)rootView.findViewById(R.id.inviteFriendsImageButton));
+		ImageButton inviteFriendsImageButton = ((ImageButton) rootView.findViewById(R.id.inviteFriendsImageButton));
 		inviteFriendsImageButton.getDrawable()
-				.setColorFilter(ContextCompat.getColor(getActivity(),R.color.accent), PorterDuff.Mode.SRC_ATOP);
+				.setColorFilter(ContextCompat.getColor(getActivity(), R.color.accent), PorterDuff.Mode.SRC_ATOP);
 		inviteFriendsImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -149,10 +149,10 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 		((Toolbar) rootView.findViewById(R.id.toolbar)).getOverflowIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 		// Inflate the layout for this fragment
 		RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.cardRecyclerView);
-		recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false));
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 		recyclerView.setAdapter(mPictureAdapter);
 
-		return rootView ;
+		return rootView;
 	}
 
 	@Override
@@ -170,12 +170,12 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_more,menu);
+		inflater.inflate(R.menu.menu_more, menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()){
+		switch (item.getItemId()) {
 			case R.id.logoutButton:
 				mPresenter.logOut();
 				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -203,8 +203,8 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 	}
 
 	public void setProfilePicture(File profilePicture) {
-		((SimpleDraweeView) getView().findViewById(R.id.iconSimpleDraweeView)).setImageURI(Uri.parse("file://"+profilePicture.getAbsolutePath()));
-		mUser.setIconUrl("file://"+profilePicture.getAbsolutePath());
+		((SimpleDraweeView) getView().findViewById(R.id.iconSimpleDraweeView)).setImageURI(Uri.parse("file://" + profilePicture.getAbsolutePath()));
+		mUser.setIconUrl("file://" + profilePicture.getAbsolutePath());
 		mPresenter.saveAppUser(mUser);
 	}
 
@@ -213,7 +213,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View{
 		mPresenter = presenter;
 	}
 
-	public interface ProfileFragmentInteraction{
+	public interface ProfileFragmentInteraction {
 		void onTakeProfilePictureClick();
 	}
 

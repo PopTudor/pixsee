@@ -13,9 +13,10 @@ import android.widget.Toast;
 
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
+import com.marked.pixsee.injection.Injectable;
 import com.marked.pixsee.injection.modules.ActivityModule;
-import com.marked.pixsee.ui.authentification.di.AuthenticationModule;
-import com.marked.pixsee.ui.authentification.di.DaggerAuthenticationComponent;
+import com.marked.pixsee.ui.authentification.injection.AuthenticationModule;
+import com.marked.pixsee.ui.authentification.injection.DaggerAuthenticationComponent;
 import com.marked.pixsee.ui.authentification.login.LoginFragment;
 import com.marked.pixsee.ui.authentification.signup.SignUpEmailFragment;
 import com.marked.pixsee.ui.authentification.signup.SignUpNameFragment;
@@ -29,7 +30,7 @@ public class AuthenticationActivity
 		implements SignUpNameFragment.SignUpNameFragmentInteraction,
 		SignUpEmailFragment.SignUpEmailFragmentInteraction,
 		SignUpPassFragment.SignUpPassFragmentInteraction,
-		AuthenticationContract.View,LoginFragment.LoginInteractionListener {
+				           AuthenticationContract.View, LoginFragment.LoginInteractionListener, Injectable {
 	private FragmentManager mFragmentManager;
 	private ProgressDialog mProgressDialog;
 	@Inject
@@ -41,11 +42,7 @@ public class AuthenticationActivity
 		setContentView(R.layout.activity_sign_up);
 		mFragmentManager = getSupportFragmentManager();
 		mProgressDialog = new ProgressDialog(this);
-		DaggerAuthenticationComponent.builder()
-				.appComponent(((Pixsee) getApplication()).getAppComponent())
-				.activityModule(new ActivityModule(this))
-				.authenticationModule(new AuthenticationModule(this))
-				.build().inject(this);
+		injectComponent();
 	}
 
 	@Override
@@ -154,6 +151,15 @@ public class AuthenticationActivity
 	@Override
 	public void onLoginClicked(String email, String password) {
 		mPresenter.handleLogin(email, password);
+	}
+
+	@Override
+	public void injectComponent() {
+		DaggerAuthenticationComponent.builder()
+				.sessionComponent(((Pixsee) getApplication()).getSessionComponent())
+				.activityModule(new ActivityModule(this))
+				.authenticationModule(new AuthenticationModule(this))
+				.build().inject(this);
 	}
 }
 
