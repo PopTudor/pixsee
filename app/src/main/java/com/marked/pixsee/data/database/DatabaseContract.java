@@ -2,9 +2,9 @@ package com.marked.pixsee.data.database;
 
 import android.provider.BaseColumns;
 
-import com.marked.pixsee.features.chat.data.MessageContract;
-import com.marked.pixsee.features.friends.data.FriendConstants;
-import com.marked.pixsee.features.friends.data.FriendContractDB;
+import com.marked.pixsee.ui.chat.data.MessageContract;
+import com.marked.pixsee.ui.friends.data.FriendConstants;
+import com.marked.pixsee.ui.friends.data.FriendContractDB;
 
 /**
  * Created by Tudor Pop on 26-Jan-16.

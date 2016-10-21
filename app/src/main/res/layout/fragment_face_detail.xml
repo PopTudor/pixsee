@@ -5,7 +5,7 @@
     android:id="@+id/fullscreenContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.selfie.PictureDetailShareFragment">
+    tools:context=".ui.selfie.PictureDetailShareFragment">
 
     <RelativeLayout
         android:id="@+id/fullscreenAppBar"

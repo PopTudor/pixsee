@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/material_grey_100"
     android:padding="16dp"
-    tools:context=".features.authentification.signup.SignUpNameFragment">
+    tools:context=".ui.authentification.signup.SignUpNameFragment">
 
     <TextView
         android:id="@+id/textView3"

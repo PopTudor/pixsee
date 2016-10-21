@@ -70,7 +70,7 @@
             android:label="@string/app_name"
         />
         <activity
-            android:name=".features.entry.EntryActivity"
+            android:name=".ui.entry.EntryActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -96,13 +96,13 @@
         </activity>
 
         <!-- [START gcm_listener] -->
-        <service android:name=".service.GCMListenerService">
+        <service android:name=".ui.notifications.GCMListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <!-- [START instanceId_listener] -->
-        <service android:name=".service.GCMInstanceIDListenerService">
+        <service android:name=".ui.notifications.GCMInstanceIDListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -111,7 +111,7 @@
 
 
         <activity
-            android:name=".features.authentification.AuthenticationActivity"
+            android:name=".ui.authentification.AuthenticationActivity"
             android:screenOrientation="portrait" />
 
         <meta-data
@@ -119,18 +119,18 @@
             android:value="578f43a0aa4a22391ecc912451e1514f1af55ce4" />
 
         <activity
-            android:name=".features.fullscreenImage.ImageFullscreenActivity"
+            android:name=".ui.fullscreenImage.ImageFullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".features.chat.ChatActivity"
+            android:name=".ui.chat.ChatActivity"
             android:label="FriendDetailActivity"
-            android:parentActivityName=".features.main.MainActivity"
+            android:parentActivityName=".ui.main.MainActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.main.MainActivity"/>
+                android:value=".ui.main.MainActivity"/>
         </activity>
 
         <provider
@@ -138,8 +138,8 @@
             android:authorities="com.facebook.app.FacebookContentProvider1677465395803625"
             android:exported="true" />
 
-        <activity android:name=".features.main.MainActivity"/>
-        <activity android:name=".features.friendsInvite.FriendsInviteActivity"/>
+        <activity android:name=".ui.main.MainActivity"/>
+        <activity android:name=".ui.friendsInvite.FriendsInviteActivity"/>
     </application>
 
 </manifest>

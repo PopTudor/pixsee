@@ -1,8 +1,8 @@
 package com.marked.pixsee;
 
-import com.marked.pixsee.di.components.AppComponent;
-import com.marked.pixsee.di.components.DaggerAppComponent;
-import com.marked.pixsee.di.modules.AppModule;
+import com.marked.pixsee.injection.components.AppComponent;
+import com.marked.pixsee.injection.components.DaggerAppComponent;
+import com.marked.pixsee.injection.modules.AppModule;
 
 /**
  * Created by Tudor on 22-Jul-16.

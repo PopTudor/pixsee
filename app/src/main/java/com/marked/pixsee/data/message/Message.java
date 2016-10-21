@@ -7,7 +7,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-import com.marked.pixsee.features.chat.data.MessageConstants;
+import com.marked.pixsee.ui.chat.data.MessageConstants;
 
 import org.json.JSONException;
 import org.json.JSONObject;

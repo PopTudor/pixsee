@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:scrollbarStyle="outsideOverlay"
-    tools:context=".features.authentification.AuthenticationActivity"
+    tools:context=".ui.authentification.AuthenticationActivity"
     >
 
 </android.support.design.widget.CoordinatorLayout>

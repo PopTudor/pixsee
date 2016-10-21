@@ -1,4 +1,4 @@
-package com.marked.pixsee.di.modules;
+package com.marked.pixsee.injection.modules;
 
 import android.app.Application;
 

@@ -1,9 +1,9 @@
-package com.marked.pixsee.features.chat;
+package com.marked.pixsee.ui.chat;
 
 import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.di.scopes.FragmentScope;
-import com.marked.pixsee.features.chat.data.ChatRepository;
+import com.marked.pixsee.injection.scopes.FragmentScope;
+import com.marked.pixsee.ui.chat.data.ChatRepository;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.networking.UploadAPI;
 

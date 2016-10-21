@@ -9,13 +9,13 @@ import android.support.annotation.NonNull;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.Mapper;
 import com.marked.pixsee.data.database.DatabaseContract;
-import com.marked.pixsee.di.scopes.ActivityScope;
-import com.marked.pixsee.features.chat.data.MessageContract;
-import com.marked.pixsee.features.friends.data.FriendContractDB;
-import com.marked.pixsee.features.friends.mapper.CursorToUserMapper;
-import com.marked.pixsee.features.friends.mapper.UserToCvMapper;
-import com.marked.pixsee.features.friends.specifications.GetFriendsSpecification;
-import com.marked.pixsee.features.friends.specifications.GetFriendsStartingWith;
+import com.marked.pixsee.injection.scopes.ActivityScope;
+import com.marked.pixsee.ui.chat.data.MessageContract;
+import com.marked.pixsee.ui.friends.data.FriendContractDB;
+import com.marked.pixsee.ui.friends.mapper.CursorToUserMapper;
+import com.marked.pixsee.ui.friends.mapper.UserToCvMapper;
+import com.marked.pixsee.ui.friends.specifications.GetFriendsSpecification;
+import com.marked.pixsee.ui.friends.specifications.GetFriendsStartingWith;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import javax.inject.Inject;
 
 import rx.Observable;
 
-import static com.marked.pixsee.features.friends.data.FriendContractDB.TABLE_NAME;
+import static com.marked.pixsee.ui.friends.data.FriendContractDB.TABLE_NAME;
 
 /**
  * Created by Tudor on 2016-05-20.

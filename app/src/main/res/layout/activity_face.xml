@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             />
 
-        <com.marked.pixsee.features.selfie.renderer.RenderSurfaceView
+        <com.marked.pixsee.ui.selfie.renderer.RenderSurfaceView
             android:id="@+id/renderer_texture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
