@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.injection.Injectable;
@@ -81,6 +82,7 @@ public class MainActivity
 		DaggerMainComponent.builder()
 				.activityModule(activityModule)
 				.mainModule(new MainModule())
+				.appComponent(((Pixsee) getApplication()).getAppComponent())
 				.build()
 				.inject(this);
 	}
