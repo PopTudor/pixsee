@@ -100,7 +100,6 @@ public class ActivityModule {
 
 	@Provides
 	@ActivityScope
-	@Named(DatabaseContract.AppsUser.TABLE_NAME)
 	User provideAppsUser(@Repository UserDatasource repository){
 		return new FakeUser();
 	}

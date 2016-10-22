@@ -29,7 +29,7 @@ public class ChatModule {
 
 	@Provides
 	@FragmentScope
-	public ChatContract.Presenter providePresenter(ChatRepository repository, @Named(DatabaseContract.AppsUser.TABLE_NAME) User user,
+	public ChatContract.Presenter providePresenter(ChatRepository repository, User user,
 	                                               @Named(ServerConstants.SERVER) Retrofit retrofit) {
 		UploadAPI uploadAPI = retrofit.create(UploadAPI.class);
 		ChatPresenter chatPresenter = new ChatPresenter(view, repository, user, uploadAPI, new ChatClient(user, mUser));

@@ -14,8 +14,6 @@ import com.marked.pixsee.injection.scopes.Remote;
 import com.marked.pixsee.injection.scopes.Repository;
 import com.marked.pixsee.injection.scopes.Session;
 
-import javax.inject.Named;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -49,7 +47,6 @@ public class UserModule {
 
 	@Provides
 	@Session
-	@Named(DatabaseContract.AppsUser.TABLE_NAME)
 	User provideAppsUser(@Repository UserDatasource repository) {
 		return repository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
 	}

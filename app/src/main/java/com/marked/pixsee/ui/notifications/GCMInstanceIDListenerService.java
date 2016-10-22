@@ -21,7 +21,6 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.gson.JsonObject;
-import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.networking.ServerConstants;
 
@@ -42,7 +41,6 @@ public class GCMInstanceIDListenerService extends FirebaseInstanceIdService {
 	@Named(ServerConstants.SERVER)
 	Retrofit mRetrofit;
 	@Inject
-	@Named(DatabaseContract.AppsUser.TABLE_NAME)
 	User mUser;
 
 	/**

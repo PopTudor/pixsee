@@ -15,9 +15,4 @@ public class PixseeTest extends Pixsee{
 		super.onCreate();
 		mAppComponentFake = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
 	}
-
-	@Override
-	public AppComponent getAppComponent() {
-		return mAppComponentFake;
-	}
 }
