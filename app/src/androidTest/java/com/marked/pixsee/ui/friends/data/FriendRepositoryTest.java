@@ -2,7 +2,6 @@ package com.marked.pixsee.ui.friends.data;
 
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
@@ -33,8 +32,8 @@ public class FriendRepositoryTest {
 		context = InstrumentationRegistry.getTargetContext();
 		pixydb = PixyDatabase.getInstance(context);
 		UserDiskDatasource friendsDiskDatasource = new UserDiskDatasource(pixydb);
-		UserNetworkDatasource friendsNetworkDatasource = new UserNetworkDatasource(PreferenceManager.getDefaultSharedPreferences(context));
-		friendRepository = new UserRepository(friendsDiskDatasource, friendsNetworkDatasource);
+		UserNetworkDatasource friendsNetworkDatasource;
+//		friendRepository = new UserRepository(friendsDiskDatasource, friendsNetworkDatasource);
 	}
 
 	@Test

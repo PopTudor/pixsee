@@ -31,13 +31,13 @@ class NewMessageNotification extends FcmNotification<Message> implements Injecta
     NewMessageNotification(Context context, Message notificationObject) {
         super(context, notificationObject);
 	    injectComponent();
+	    mChatRepository.saveMessage(notificationObject);
     }
 
     @Override
     Intent createIntent() {
         Intent intent = new Intent(mContext, ChatActivity.class);
         intent.setAction(mContext.getString(R.string.NEW_MESSAGE_NOTIFICATION_ACTION));
-        intent.putExtra(mContext.getString(R.string.NEW_MESSAGE_NOTIFICATION_ACTION), notificationObject);
 	    intent.putExtra(ChatActivity.EXTRA_CONTACT, getUserFromMessageData());
 	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 		    intent.addCategory(Notification.CATEGORY_MESSAGE);

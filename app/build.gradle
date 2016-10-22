@@ -29,13 +29,13 @@ def versionPatch = 2
 def versionSmallPatch = 1
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 23
     buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId 'com.marked.pixsee'
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 23
         versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch * 10 +versionSmallPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -112,6 +112,7 @@ dependencies {
     }
     compile "com.android.support:support-v4:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
+    compile "com.android.support:cardview-v7:$supportVersion"
     compile "com.android.support:appcompat-v7: $supportVersion"
     compile "com.android.support:recyclerview-v7: $supportVersion"
     compile "com.android.support:design: $supportVersion"

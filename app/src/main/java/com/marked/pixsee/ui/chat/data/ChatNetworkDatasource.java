@@ -1,23 +1,18 @@
 package com.marked.pixsee.ui.chat.data;
 
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.networking.ServerConstants;
-import com.marked.pixsee.utility.GCMConstants;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 
 /**
@@ -25,8 +20,7 @@ import rx.Observable;
  */
 public class ChatNetworkDatasource implements ChatDatasource {
 	private final Retrofit retrofit;
-	private final String userid;
-	private final Gson gson = new Gson();
+	private final Gson gson;
 
 	/*
 	* https://frogermcs.github.io/dependency-injection-with-dagger-2-the-api/
@@ -47,20 +41,9 @@ public class ChatNetworkDatasource implements ChatDatasource {
 	* }
 	* */
 	@Inject
-	public ChatNetworkDatasource(SharedPreferences sharedPreferences) {
-		HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-		loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-		OkHttpClient httpClient = new OkHttpClient.Builder()
-				                          .addInterceptor(loggingInterceptor)
-				                          .build();
-		retrofit = new Retrofit.Builder()
-				           .baseUrl(ServerConstants.SERVER)
-				           .addConverterFactory(GsonConverterFactory.create())
-				           .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-				           .client(httpClient)
-				           .build();
-
-		userid = sharedPreferences.getString(GCMConstants.USER_ID, "");
+	public ChatNetworkDatasource(@Named(ServerConstants.SERVER) Retrofit retrofit, Gson gson) {
+		this.retrofit = retrofit;
+		this.gson = gson;
 	}
 
     /**

@@ -26,8 +26,16 @@ import io.fabric.sdk.android.Fabric;
  * Created by Tudor Pop on 17-Feb-16.
  */
 public class Pixsee extends Application {
-	private AppComponent appComponent;
-	private SessionComponent mSessionComponent;
+	private static AppComponent appComponent;
+	private static SessionComponent mSessionComponent;
+
+	public static AppComponent getAppComponent() {
+		return appComponent;
+	}
+
+	public static SessionComponent getSessionComponent() {
+		return mSessionComponent;
+	}
 
 	@Override
 	public void onCreate() {
@@ -59,13 +67,5 @@ public class Pixsee extends Application {
 		Fresco.initialize(this, config);
 		FacebookSdk.sdkInitialize(getApplicationContext());
 		Fabric.with(this, new Crashlytics());
-	}
-
-	public SessionComponent getSessionComponent() {
-		return mSessionComponent;
-	}
-
-	public AppComponent getAppComponent() {
-		return appComponent;
 	}
 }

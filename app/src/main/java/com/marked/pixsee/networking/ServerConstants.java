@@ -19,6 +19,8 @@ public interface ServerConstants {
 	String FRIENDS_REJECTED = FRIENDS+"/rejected";
 	String FRIENDS_REQUEST = FRIENDS+"/request";
 	String MESSAGES = "messages";
+	String PUSH_SERVICE = "push/";
+
 	String USER_FRIENDS = USER +"/"+"friends";
 	String RECOVERY = "recovery";
 	String LOGIN = "login";
@@ -28,6 +30,7 @@ public interface ServerConstants {
 
 	String SERVER = BASE_URL + PORT;
 	String SERVER_UPLOAD = SERVER+UPLOAD;
+	String SERVER_PUSH_SERVICE = PUSH_SERVICE;
 	String SERVER_USER = SERVER + USER;
 	String SERVER_USER_IMAGE = SERVER + USER+"/"+IMAGE;
 	String SERVER_USER_FRIENDS = SERVER_USER + "/" + FRIENDS;
