@@ -1,6 +1,5 @@
 package com.marked.pixsee.ui.authentification;
 
-import android.content.SharedPreferences;
 import android.util.Patterns;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -8,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.data.user.UserDatasource;
+import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.networking.HTTPStatusCodes;
 import com.marked.pixsee.ui.authentification.login.LoginAPI;
 import com.marked.pixsee.utility.GCMConstants;
@@ -30,19 +29,19 @@ import rx.schedulers.Schedulers;
  */
 public class Presenter implements AuthenticationContract.Presenter {
 	private final WeakReference<AuthenticationContract.View> mView;
+	private final Gson mGson;
 	private final LoginAPI mLoginAPI;
-	private final UserDatasource mDatasource;
-	private final SharedPreferences mPreferences;
+	private final UserManager mManager;
 	private String mName;
 	private String mEmail;
 	private String mPassword;
 	private String mUsername;
 
-	public Presenter(AuthenticationContract.View view, LoginAPI loginAPI, UserDatasource datasource, SharedPreferences preferences) {
+	public Presenter(AuthenticationContract.View view, LoginAPI loginAPI, UserManager manager, Gson gson) {
 		mLoginAPI = loginAPI;
-		mDatasource = datasource;
-		mPreferences = preferences;
+		mManager = manager;
 		mView = new WeakReference<AuthenticationContract.View>(view);
+		mGson = gson;
 		mView.get().setPresenter(this);
 	}
 
@@ -145,20 +144,13 @@ public class Presenter implements AuthenticationContract.Presenter {
 						@Override
 						public void onNext(Response<JsonObject> response) {
 							if (response.isSuccessful() && response.code() == HTTPStatusCodes.REQUEST_OK) {
-								Gson gson = new Gson();
-								User user = gson.fromJson(response.body().get("user").getAsJsonObject(), User.class);
-								mDatasource.saveAppUser(user);
-							/* You should store a boolean that indicates whether the generated token has been
-							 sent to your server. If the boolean is false, send the token to your server,
-                             otherwise your server should have already received the token.
-                             */
+								User user = mGson.fromJson(response.body().get("user").getAsJsonObject(), User.class);
 								JsonArray friends;
 								if (response.body().get(GCMConstants.FRIENDS).getAsJsonArray() == null)
 									friends = new JsonArray();
 								else
 									friends = response.body().get(GCMConstants.FRIENDS).getAsJsonArray();
-								mPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply();/* if sent_token_to_server == true, we are registered*/
-								mPreferences.edit().putString(GCMConstants.USER_ID, user.getUserID()).apply();
+								mManager.saveUser(user);
 								mView.get().showMainScreen();
 							} else if (response.code() == HTTPStatusCodes.NOT_FOUND) {
 								mView.get().showToast("The email does not exist");
@@ -262,18 +254,9 @@ public class Presenter implements AuthenticationContract.Presenter {
 					@Override
 					public void onNext(Response<JsonObject> response) {
 						if (response.isSuccessful()) {
-							Gson gson = new Gson();
-							User user = gson.fromJson(response.body().get("user").getAsJsonObject(), User.class);
-							mDatasource.saveAppUser(user);
-
-							// You should store a boolean that indicates whether the generated token has been
-							// sent to your server. If the boolean is false, send the token to your server,
-							// otherwise your server should have already received the token.
-							mPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, true).apply();/* if sent_token_to_server == true, we are registered*/
-							mPreferences.edit().putString(GCMConstants.USER_ID, user.getUserID()).apply();
+							User user = mGson.fromJson(response.body().get("user").getAsJsonObject(), User.class);
+							mManager.saveUser(user);
 							mView.get().showMainScreen();
-						} else {
-							mPreferences.edit().putBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, false).apply();
 						}
 					}
 				});

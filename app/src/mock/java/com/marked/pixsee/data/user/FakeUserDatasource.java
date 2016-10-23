@@ -40,11 +40,6 @@ public class FakeUserDatasource implements UserDatasource {
 	}
 
 	@Override
-	public Observable saveAppUser(@NonNull User user) {
-		return Observable.empty();
-	}
-
-	@Override
 	public void saveUser(@NonNull List<User> user) {
 
 	}

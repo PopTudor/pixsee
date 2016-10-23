@@ -74,6 +74,8 @@ public class FcmNotificationFactoryImplTest {
         return new RemoteMessage.Builder("abc")
                 .addData(MessageConstants.MESSAGE_TYPE, String.valueOf("2"))
                 .addData(CLICK_ACTION, clickAction)
-                .build();
+		               .addData(MessageConstants.TO, "abc")
+		               .addData(MessageConstants.FROM, "abc")
+		               .build();
     }
 }

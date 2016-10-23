@@ -84,8 +84,13 @@ public class UserRepository implements UserDatasource {
         return network.getUsers(byName);
     }
 
-    @Override
-    public void saveUser(@NonNull List<User> users) {
+	@Override
+	public Observable<List<User>> getFriendsWithEmail(String startingWithEmail) {
+		return network.getFriendsWithEmail(startingWithEmail);
+	}
+
+	@Override
+	public void saveUser(@NonNull List<User> users) {
         disk.saveUser(users);
         network.saveUser(users);
         cache.addAll(users);
@@ -96,12 +101,6 @@ public class UserRepository implements UserDatasource {
 		cache.add(item);
 		disk.saveUser(item);
 		return network.saveUser(item);
-	}
-
-	@Override
-	public Observable saveAppUser(@NonNull User user) {
-		disk.saveAppUser(user);
-		return network.saveAppUser(user);
 	}
 
 	@Override

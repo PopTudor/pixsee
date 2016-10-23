@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 /**
  * Created by Tudor on 23-Oct-16.
+ * Use this class to keep a reference to the app's user
  */
 
 public class UserManager {
@@ -28,7 +29,7 @@ public class UserManager {
 		mSharedPreferences.edit().putString(GCMConstants.APP_USER, appUser).apply();
 	}
 
-	public User loadUser() {
+	private User loadUser() {
 		String user = mSharedPreferences.getString(GCMConstants.APP_USER, "{}");
 		appUser = mGson.fromJson(user, User.class);
 		return appUser;

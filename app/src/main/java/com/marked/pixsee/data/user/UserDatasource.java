@@ -25,8 +25,6 @@ public interface UserDatasource {
 
 	Observable<JsonObject> saveUser(@NonNull User user);
 
-	Observable saveAppUser(@NonNull User user);
-
 	void saveUser(@NonNull List<User> user);
 
 	Observable<List<User>> refreshUsers();

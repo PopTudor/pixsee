@@ -1,5 +1,6 @@
 package com.marked.pixsee.ui.profile;
 
+import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.data.user.UserRepository;
 
 import org.junit.Assert;
@@ -30,6 +31,8 @@ public class PresenterTest {
 	UserRepository mUserDatasource;
 	@Mock
 	File mPublicPictureDirectoryFile ;
+	@Mock
+	UserManager mUserManager;
 
 	@Captor
 	ArgumentCaptor<List<String>> mListArgumentCaptor;
@@ -38,15 +41,9 @@ public class PresenterTest {
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		when(mPublicPictureDirectoryFile.listFiles()).thenReturn(mFiles);
-		mPresenter = new Presenter(mView, mUserDatasource, mPublicPictureDirectoryFile);
+		mPresenter = new Presenter(mView, mUserDatasource, mUserManager, mPublicPictureDirectoryFile);
 	}
 
-	@Test
-	public void testSaveAppUser() throws Exception {
-		User mUser = new User("", "", "", "");
-		mPresenter.saveAppUser(mUser);
-		verify(mUserDatasource).saveAppUser(mUser);
-	}
 
 	@Test
 	public void testLogOut() throws Exception {

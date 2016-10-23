@@ -1,10 +1,8 @@
 package com.marked.pixsee.ui.authentification.injection;
 
-import android.content.SharedPreferences;
-
-import com.marked.pixsee.data.user.UserDatasource;
+import com.google.gson.Gson;
+import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.injection.scopes.ActivityScope;
-import com.marked.pixsee.injection.scopes.Repository;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.ui.authentification.AuthenticationContract;
 import com.marked.pixsee.ui.authentification.Presenter;
@@ -31,8 +29,7 @@ public class AuthenticationModule {
 	@ActivityScope
 	@Provides
 	AuthenticationContract.Presenter providePresenter(@Named(ServerConstants.SERVER) Retrofit retrofit,
-	                                                  @Repository UserDatasource datasource,
-	                                                  SharedPreferences preferences) {
-		return new Presenter(mView, retrofit.create(LoginAPI.class),datasource,preferences);
+	                                                  UserManager manager, Gson gson) {
+		return new Presenter(mView, retrofit.create(LoginAPI.class), manager, gson);
 	}
 }

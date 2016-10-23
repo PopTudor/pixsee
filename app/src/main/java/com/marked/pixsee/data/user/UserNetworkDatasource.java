@@ -1,29 +1,20 @@
 package com.marked.pixsee.data.user;
 
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.marked.pixsee.injection.scopes.ActivityScope;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.ui.friends.data.FriendContractDB;
 import com.marked.pixsee.ui.friends.data.FriendsAPI;
-import com.marked.pixsee.ui.friendsInvite.addUsername.AddUserAPI;
-import com.marked.pixsee.utility.GCMConstants;
+import com.marked.pixsee.ui.friendsInvite.addUsername.FriendRequestAPI;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -31,29 +22,15 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Tudor on 2016-05-20.
  */
-@ActivityScope
 public class UserNetworkDatasource implements UserDatasource {
-	private final HttpLoggingInterceptor loggingInterceptor;
-	private final OkHttpClient httpClient;
-	private final Retrofit retrofit;
-	private final String userid;
-	private final Gson gson = new Gson();
+	private final Retrofit mRetrofit;
+	private final Gson mGson;
+	private final UserManager mUserManager;
 
-	@Inject
-	public UserNetworkDatasource(SharedPreferences sharedPreferences) {
-		loggingInterceptor = new HttpLoggingInterceptor();
-		loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-		httpClient = new OkHttpClient.Builder()
-				.addInterceptor(loggingInterceptor)
-				.build();
-		retrofit = new Retrofit.Builder()
-				.baseUrl(ServerConstants.SERVER)
-				.addConverterFactory(GsonConverterFactory.create())
-				.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-				.client(httpClient)
-				.build();
-
-		userid = sharedPreferences.getString(GCMConstants.USER_ID, "");
+	public UserNetworkDatasource(UserManager userManager, Retrofit retrofit, Gson gson) {
+		this.mRetrofit = retrofit;
+		this.mGson = gson;
+		mUserManager = userManager;
 	}
 
 	/**
@@ -63,28 +40,33 @@ public class UserNetworkDatasource implements UserDatasource {
 	 */
 	@Override
 	public Observable<List<User>> getUsers(String startingWith) {
-		return retrofit.create(AddUserAPI.class)
-				.getFriendsWithEmail(startingWith)
-				.subscribeOn(Schedulers.io())
-				.map(new Func1<JsonObject, JsonArray>() {
-					@Override
-					public JsonArray call(JsonObject jsonObject) {
-						return jsonObject.get(ServerConstants.USERS).getAsJsonArray();
-					}
-				})
-				.flatMap(new Func1<JsonArray, Observable<JsonElement>>() {
-					@Override
-					public Observable<JsonElement> call(JsonArray jsonElements) {
-						return Observable.from(jsonElements);
-					}
-				})
-				.map(new Func1<JsonElement, User>() {
-					@Override
-					public User call(JsonElement jsonObject) {
-						return gson.fromJson(jsonObject.toString(), User.class);
-					}
-				})
-				.toList();
+		return Observable.empty();
+	}
+
+	@Override
+	public Observable<List<User>> getFriendsWithEmail(String startingWithEmail) {
+		return mRetrofit.create(FriendRequestAPI.class)
+				       .getFriendsWithEmail(startingWithEmail)
+				       .subscribeOn(Schedulers.io())
+				       .map(new Func1<JsonObject, JsonArray>() {
+					       @Override
+					       public JsonArray call(JsonObject jsonObject) {
+						       return jsonObject.get(ServerConstants.USERS).getAsJsonArray();
+					       }
+				       })
+				       .flatMap(new Func1<JsonArray, Observable<JsonElement>>() {
+					       @Override
+					       public Observable<JsonElement> call(JsonArray jsonElements) {
+						       return Observable.from(jsonElements);
+					       }
+				       })
+				       .map(new Func1<JsonElement, User>() {
+					       @Override
+					       public User call(JsonElement jsonObject) {
+						       return mGson.fromJson(jsonObject.toString(), User.class);
+					       }
+				       })
+				       .toList();
 	}
 
 	@Override
@@ -94,8 +76,8 @@ public class UserNetworkDatasource implements UserDatasource {
 
 	@Override
 	public Observable<List<User>> getUsers() {
-		return retrofit.create(FriendsAPI.class)
-				.getFriendsOfUser(userid)
+		return mRetrofit.create(FriendsAPI.class)
+				       .getUsers(mUserManager.getAppUser().getUserID())
 				.subscribeOn(Schedulers.io())
 				.map(new Func1<JsonObject, JsonArray>() {
 					@Override
@@ -108,7 +90,7 @@ public class UserNetworkDatasource implements UserDatasource {
 					public List<User> call(JsonArray jsonElements) {
 						final List<User> cache = new ArrayList<User>();
 						for (JsonElement it : jsonElements)
-							cache.add(gson.fromJson(it.toString(), User.class));
+							cache.add(mGson.fromJson(it.toString(), User.class));
 						return cache;
 					}
 				});
@@ -128,14 +110,9 @@ public class UserNetworkDatasource implements UserDatasource {
 
 	@Override
 	public Observable<JsonObject> saveUser(@NonNull User user) {
-		return retrofit.create(FriendsAPI.class)
-				.friendAccepted(user.getUserID(),userid)
+		return mRetrofit.create(FriendsAPI.class)
+				       .friendAccepted(user.getUserID(), mUserManager.getAppUser().getUserID())
 				.subscribeOn(Schedulers.io());
-	}
-
-	@Override
-	public Observable saveAppUser(@NonNull User user) {
-		return Observable.empty();
 	}
 
 	@Override
