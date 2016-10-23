@@ -11,7 +11,7 @@ public interface GCMConstants {
 
 
 	String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
-	String USER_ID = FriendConstants.ID;
+	String APP_USER = FriendConstants.ID;
 	String FRIENDS = "friends";
 	String ACTION_SIGNUP = String.format("%s.SIGNUP", PACKAGE_NAME);
 	String ACTION_LOGIN = String.format("%s.LOGIN", PACKAGE_NAME);

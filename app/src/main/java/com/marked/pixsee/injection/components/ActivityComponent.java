@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.injection.scopes.ActivityScope;
+import com.marked.pixsee.ui.entry.EntryActivity;
 
 import dagger.Component;
 
@@ -14,6 +15,9 @@ import dagger.Component;
 @Component(modules = {ActivityModule.class}, dependencies = SessionComponent.class)
 @ActivityScope
 public interface ActivityComponent extends SessionComponent {
+
+	void inject(EntryActivity entryActivity);
+
 	AppCompatActivity provideAppCompatActivity();
 
 	Context provideContext();

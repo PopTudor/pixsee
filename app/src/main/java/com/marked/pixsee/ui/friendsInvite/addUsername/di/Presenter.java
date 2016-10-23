@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
-import com.marked.pixsee.ui.friendsInvite.addUsername.AddUserAPI;
 import com.marked.pixsee.ui.friendsInvite.addUsername.AddUsernameContract;
+import com.marked.pixsee.ui.friendsInvite.addUsername.FriendRequestAPI;
 
 import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
@@ -25,15 +25,15 @@ class Presenter implements AddUsernameContract.Presenter {
 	private final WeakReference<AddUsernameContract.View> mView;
 	private final UserDatasource repository;
 	private final User mAppsUser;
-	private final AddUserAPI mAddUserAPI;
+	private final FriendRequestAPI mFriendRequestAPI;
 
 
-	public Presenter(AddUsernameContract.View view, UserDatasource repository, User appUser, AddUserAPI mAddUserAPI) {
+	public Presenter(AddUsernameContract.View view, UserDatasource repository, User appUser, FriendRequestAPI mFriendRequestAPI) {
 		this.mView = new WeakReference<>(view);
 		this.mView.get().setPresenter(this);
 		this.repository = repository;
 		this.mAppsUser = appUser;
-		this.mAddUserAPI = mAddUserAPI;
+		this.mFriendRequestAPI = mFriendRequestAPI;
 	}
 
 	@Override
@@ -69,7 +69,7 @@ class Presenter implements AddUsernameContract.Presenter {
 
 	@Override
 	public void onClick(User user, int position) {
-		mAddUserAPI.friendRequest(mAppsUser,user.getToken())
+		mFriendRequestAPI.friendRequest(mAppsUser, user.getToken())
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Observer<Response<JsonObject>>() {

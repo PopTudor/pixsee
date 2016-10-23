@@ -30,7 +30,7 @@ public class FriendsInviteActivity extends AppCompatActivity implements FriendsI
 		mPresenter = new Presenter(this);
 		mAppsUser = DaggerActivityComponent.builder().activityModule(new ActivityModule(this))
 				            .sessionComponent(((Pixsee) getApplication()).getSessionComponent())
-				            .build().provideUser();
+				            .build().provideUserManager().getAppUser();
 
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);

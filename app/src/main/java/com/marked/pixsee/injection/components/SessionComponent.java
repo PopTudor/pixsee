@@ -1,7 +1,7 @@
 package com.marked.pixsee.injection.components;
 
-import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
+import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.injection.modules.UserModule;
 import com.marked.pixsee.injection.scopes.Local;
 import com.marked.pixsee.injection.scopes.Remote;
@@ -26,7 +26,7 @@ public interface SessionComponent extends AppComponent {
 	@Repository
 	UserDatasource provideUserRepository();
 
-	User provideUser();
+	UserManager provideUserManager();
 
 	ChatRepository provideChatRepository();
 }

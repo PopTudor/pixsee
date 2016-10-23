@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.FakeUser;
 import com.marked.pixsee.data.user.FakeUserDatasource;
 import com.marked.pixsee.data.user.User;
@@ -19,8 +18,6 @@ import com.marked.pixsee.injection.scopes.ActivityScope;
 import com.marked.pixsee.injection.scopes.Local;
 import com.marked.pixsee.injection.scopes.Remote;
 import com.marked.pixsee.injection.scopes.Repository;
-
-import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;

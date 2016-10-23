@@ -3,36 +3,45 @@ package com.marked.pixsee.ui.entry;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.data.user.UserManager;
+import com.marked.pixsee.injection.components.DaggerActivityComponent;
+import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.ui.authentification.AuthenticationActivity;
 import com.marked.pixsee.ui.main.MainActivity;
-import com.marked.pixsee.utility.GCMConstants;
+
+import javax.inject.Inject;
 
 import bolts.AppLinks;
 
 
 public class EntryActivity extends AppCompatActivity {
-	private boolean mUserRegistered;
 	private Intent whatToStartIntent;
+	@Inject
+	UserManager mManager;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mUserRegistered = PreferenceManager.getDefaultSharedPreferences(this)
-		                                   .getBoolean(GCMConstants.SENT_TOKEN_TO_SERVER, false);
 		Uri targetUrl = AppLinks.getTargetUrlFromInboundIntent(this, getIntent());
 		if (targetUrl != null) {
 			Log.i("Activity", "App Link Target URL: " + targetUrl.toString());
 		}
+		DaggerActivityComponent
+				.builder()
+				.sessionComponent(Pixsee.getSessionComponent())
+				.activityModule(new ActivityModule(this))
+				.build()
+				.inject(this);
 	}
 
 	public void onResume() {
 		super.onResume();
-		if (mUserRegistered) {
+		if (mManager.getAppUser().getUserID() != null) {
 			whatToStartIntent = new Intent(this, MainActivity.class);
 			whatToStartIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		} else {

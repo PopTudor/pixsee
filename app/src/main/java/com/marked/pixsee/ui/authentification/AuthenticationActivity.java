@@ -156,7 +156,7 @@ public class AuthenticationActivity
 	@Override
 	public void injectComponent() {
 		DaggerAuthenticationComponent.builder()
-				.sessionComponent(((Pixsee) getApplication()).getSessionComponent())
+				.sessionComponent(Pixsee.getSessionComponent())
 				.activityModule(new ActivityModule(this))
 				.authenticationModule(new AuthenticationModule(this))
 				.build().inject(this);

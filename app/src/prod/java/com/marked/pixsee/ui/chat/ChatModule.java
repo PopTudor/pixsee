@@ -1,6 +1,7 @@
 package com.marked.pixsee.ui.chat;
 
 import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.networking.UploadAPI;
@@ -28,11 +29,11 @@ class ChatModule {
 	@Provides
 	@FragmentScope
 	ChatContract.Presenter providePresenter(ChatRepository repository,
-	                                        User user,
+	                                        UserManager user,
 	                                        @Named(ServerConstants.SERVER) Retrofit retrofit,
 	                                        ChattingInterface chattingInterface) {
 		UploadAPI uploadAPI = retrofit.create(UploadAPI.class);
-		ChatPresenter chatPresenter = new ChatPresenter(view, repository, user, uploadAPI, chattingInterface);
+		ChatPresenter chatPresenter = new ChatPresenter(view, repository, user.getAppUser(), uploadAPI, chattingInterface);
 		chatPresenter.setThatUser(mThatUser);
 
 		return chatPresenter;
@@ -40,8 +41,8 @@ class ChatModule {
 
 	@Provides
 	@FragmentScope
-	ChattingInterface provideChattingInterface(User appsUser) {
-		return new ChatClient(appsUser, mThatUser);
+	ChattingInterface provideChattingInterface(UserManager appsUser) {
+		return new ChatClient(appsUser.getAppUser(), mThatUser);
 	}
 
 

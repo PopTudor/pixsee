@@ -58,6 +58,11 @@ public class UserDiskDatasource implements UserDatasource {
 	}
 
 	@Override
+	public Observable<List<User>> getFriendsWithEmail(String startingWithEmail) {
+		return Observable.empty();
+	}
+
+	@Override
 	public Observable<User> getUser(@NonNull User UserId) {
 		Cursor cursor = db.getReadableDatabase().query(TABLE_NAME, null, UserId.getUserID()+"=?",
 				new String[]{UserId.getUserID()}, null, null, null);

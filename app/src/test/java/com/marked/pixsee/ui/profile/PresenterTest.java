@@ -1,6 +1,5 @@
 package com.marked.pixsee.ui.profile;
 
-import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserRepository;
 
 import org.junit.Assert;

@@ -6,8 +6,8 @@ import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.injection.scopes.Repository;
 import com.marked.pixsee.networking.ServerConstants;
-import com.marked.pixsee.ui.friendsInvite.addUsername.AddUserAPI;
 import com.marked.pixsee.ui.friendsInvite.addUsername.AddUsernameContract;
+import com.marked.pixsee.ui.friendsInvite.addUsername.FriendRequestAPI;
 
 import javax.inject.Named;
 
@@ -31,7 +31,7 @@ public class AddUserModule {
 	@FragmentScope
 	AddUsernameContract.Presenter providesPresenter(@Repository UserDatasource repository, @Named(ServerConstants.SERVER) Retrofit retrofit) {
 		User user = repository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
-		AddUserAPI addUserAPI = retrofit.create(AddUserAPI.class);
-		return new Presenter(view, repository, user, addUserAPI);
+		FriendRequestAPI friendRequestAPI = retrofit.create(FriendRequestAPI.class);
+		return new Presenter(view, repository, user, friendRequestAPI);
 	}
 }

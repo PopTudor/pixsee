@@ -13,7 +13,7 @@ import rx.Observable;
  */
 public interface FriendsAPI {
 	@GET(ServerConstants.FRIENDS)
-	Observable<JsonObject> getFriendsOfUser(@Query("id") String userId);
+	Observable<JsonObject> getUsers(@Query("id") String userId);
 
 	/**
 	 * Sends a request to server in order to accept a friend

@@ -17,6 +17,8 @@ public interface UserDatasource {
 	Observable<List<User>> getUsers();
 	Observable<List<User>> getUsers(String byName);
 
+	Observable<List<User>> getFriendsWithEmail(String startingWithEmail);
+
 	Observable<User> getUser(@NonNull User userId);
 
 	User getUser(@NonNull String tablename);

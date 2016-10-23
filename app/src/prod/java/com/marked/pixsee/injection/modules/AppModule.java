@@ -1,9 +1,9 @@
 package com.marked.pixsee.injection.modules;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.preference.PreferenceManager;
 
 import com.facebook.appevents.AppEventsLogger;
 import com.google.gson.Gson;
@@ -64,7 +64,7 @@ public class AppModule {
 	@Provides
 	@Singleton
 	SharedPreferences provideSharedPreferences() {
-		return PreferenceManager.getDefaultSharedPreferences(application);
+		return application.getSharedPreferences("pixsee", Context.MODE_PRIVATE);
 	}
 
 	@Provides
