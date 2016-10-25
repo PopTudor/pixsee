@@ -11,6 +11,7 @@ import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.networking.UploadAPI;
 import com.marked.pixsee.ui.chat.data.ChatRepository;
+import com.marked.pixsee.utils.MessageTestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,22 +41,18 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(RobolectricTestRunner.class)
 public class ChatPresenterTest {
+	private ChatPresenter mPresenter;
+	private List<Message> mExpectedMessages = MessageTestUtils.getRandomMessageList(3);
 	@Mock
 	ChatContract.View mView;
 	@Mock
 	ChatRepository mChatRepository;
-
 	@Mock
 	ChatFragment.ChatFragmentInteraction mChatFragmentInteraction;
 	@Mock
 	UploadAPI uploadAPI;
-
 	@Mock
 	ChattingInterface mChattingInterface;
-
-	ChatPresenter mPresenter;
-	List<Message> mExpectedMessages = MessageTestUtils.getRandomMessageList(3);
-
 
 	@Before
 	public void setUp() throws Exception {

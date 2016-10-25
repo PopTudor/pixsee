@@ -60,13 +60,4 @@ public class RemoteMessageToMessageMapperTest {
 		assertEquals(FROM, actualMessage.getFrom());
 		assertEquals(MESSAGE_TYPE, actualMessage.getMessageType().longValue());
 	}
-
-	@Test
-	public void missingMessageType_shouldBeZero() throws Exception {
-		mRemoteMessage = new RemoteMessage.Builder("1").build();
-
-		Message actual = mRemoteMessageToMessageMapper.map(mRemoteMessage);
-
-		assertEquals(0,actual.getMessageType().intValue());
-	}
 }

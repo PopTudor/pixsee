@@ -16,11 +16,20 @@ public class FakeUserDatasource implements UserDatasource {
 
 	@Override
 	public Observable<List<User>> getUsers() {
-		return Observable.just(User.getRandomUsers(10));
+		return getRandomUsers();
 	}
 
 	@Override
 	public Observable<List<User>> getUsers(String byName) {
+		return getRandomUsers();
+	}
+
+	@Override
+	public Observable<List<User>> getFriendsWithEmail(String startingWithEmail) {
+		return getRandomUsers();
+	}
+
+	private Observable<List<User>> getRandomUsers() {
 		return Observable.just(User.getRandomUsers(10));
 	}
 
@@ -46,7 +55,7 @@ public class FakeUserDatasource implements UserDatasource {
 
 	@Override
 	public Observable<List<User>> refreshUsers() {
-		return Observable.just(User.getRandomUsers(10));
+		return getRandomUsers();
 	}
 
 	@Override
@@ -63,4 +72,4 @@ public class FakeUserDatasource implements UserDatasource {
 	public void clear() {
 
 	}
-};
+}

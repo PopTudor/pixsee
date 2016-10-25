@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
 import com.marked.pixsee.BuildConfig;
-import com.marked.pixsee.PixseeTest;
+import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
@@ -23,7 +23,7 @@ import org.robolectric.util.FragmentController;
  * Created by Tudor on 13-Oct-16.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 23, application = PixseeTest.class)
+@Config(constants = BuildConfig.class, sdk = 23, application = Pixsee.class)
 public class ChatFragmentTest extends ChatFragment {
 	// Robolectric Controllers
 	private FragmentController<ChatFragmentTest> fragmentController;
@@ -50,7 +50,7 @@ public class ChatFragmentTest extends ChatFragment {
 				.chatModule(new ChatModule(this, UserUtilTest.getUserTest()))
 				.build()
 				.inject(this);
-		SessionComponent appComponent = ((PixseeTest) getActivity().getApplication()).getSessionComponent();
+		SessionComponent appComponent = Pixsee.getSessionComponent();
 		ActivityComponent activityComponent = DaggerActivityComponent.builder()
 				                                      .sessionComponent(appComponent)
 				                                      .activityModule(new ActivityModule((AppCompatActivity) getActivity()))

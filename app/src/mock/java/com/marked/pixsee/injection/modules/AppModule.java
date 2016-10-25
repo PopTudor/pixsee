@@ -1,7 +1,12 @@
 package com.marked.pixsee.injection.modules;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.gson.Gson;
+import com.marked.pixsee.data.database.FakeDatabase;
 import com.marked.pixsee.networking.ServerConstants;
 
 import javax.inject.Named;
@@ -20,16 +25,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 @Module
 public class AppModule {
-	Application mApplication;
+	Application application;
 
 	public AppModule(Application application) {
-		mApplication = application;
+		this.application = application;
 	}
 
 	@Provides
 	@Singleton
 	Application providesApplication() {
-		return mApplication;
+		return application;
 	}
 
 	@Provides
@@ -45,6 +50,7 @@ public class AppModule {
 
 	@Provides
 	@Named(ServerConstants.SERVER)
+	@Singleton
 	Retrofit providesRetrofit(OkHttpClient client) {
 		return new Retrofit.Builder()
 				.addConverterFactory(GsonConverterFactory.create())
@@ -52,5 +58,23 @@ public class AppModule {
 				.baseUrl(ServerConstants.SERVER)
 				.client(client)
 				.build();
+	}
+
+	@Provides
+	@Singleton
+	SharedPreferences provideSharedPreferences() {
+		return application.getSharedPreferences("pixsee", Context.MODE_PRIVATE);
+	}
+
+	@Provides
+	@Singleton
+	Gson provideGson() {
+		return new Gson();
+	}
+
+	@Provides
+	@Singleton
+	SQLiteOpenHelper provideDatabase() {
+		return new FakeDatabase(application, "test", null, 1);
 	}
 }

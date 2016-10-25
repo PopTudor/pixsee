@@ -7,7 +7,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.marked.pixsee.BuildConfig;
-import com.marked.pixsee.PixseeTest;
+import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.UserUtilTest;
 import com.marked.pixsee.data.user.User;
@@ -176,7 +176,7 @@ public class MainActivityTest {
 			DaggerMainComponent.builder()
 					.activityModule(new ActivityModule(this))
 					.mainModule(new MainModule())
-					.sessionComponent(PixseeTest.getSessionComponent())
+					.sessionComponent(Pixsee.getSessionComponent())
 					.build()
 					.inject(this);
 		}

@@ -45,9 +45,9 @@ public class MainActivity
 	public static final int START_CAMERA_REQUEST_CODE = 100;
 	private AHBottomNavigation mBottomNavigation;
 	private PictureActionStrategy mPictureActionStrategy;
+	private MainComponent mMainComponent;
 	@Inject
 	MainContract.Presenter mPresenter;
-	public ActivityModule activityModule;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,13 +78,13 @@ public class MainActivity
 
 	@Override
 	public void injectComponent() {
-		activityModule = new ActivityModule(this);
-		DaggerMainComponent.builder()
+		ActivityModule activityModule = new ActivityModule(this);
+		mMainComponent = DaggerMainComponent.builder()
 				.activityModule(activityModule)
 				.mainModule(new MainModule())
-				.sessionComponent(((Pixsee) getApplication()).getSessionComponent())
-				.build()
-				.inject(this);
+				                 .sessionComponent(Pixsee.getSessionComponent())
+				                 .build();
+		mMainComponent.inject(this);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -23,7 +24,7 @@ import com.marked.pixsee.camerasource.CameraTextureView;
 import com.marked.pixsee.injection.Injectable;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
-import com.marked.pixsee.ui.main.MainActivity;
+import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.ui.selfie.commands.FavOneClick;
 import com.marked.pixsee.ui.selfie.commands.FavThreeClick;
 import com.marked.pixsee.ui.selfie.commands.FavTwoClick;
@@ -236,9 +237,9 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	@Override
 	public void injectComponent() {
 		ActivityComponent daggerActivityComponent = DaggerActivityComponent.builder()
-				                                            .sessionComponent(((Pixsee) getActivity().getApplication())
-						                                                              .getSessionComponent())
-				                                            .activityModule(((MainActivity) getActivity()).activityModule).build();
+				                                            .sessionComponent(Pixsee.getSessionComponent())
+				                                            .activityModule(new ActivityModule((AppCompatActivity) getActivity()))
+				                                            .build();
 		SelfieComponent mSelfieComponent = DaggerSelfieComponent.builder()
 				                                   .selfieModule(new SelfieModule(this))
 				                                   .activityComponent(daggerActivityComponent)

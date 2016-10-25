@@ -3,7 +3,6 @@ package com.marked.pixsee.ui.notifications;
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
-import com.marked.pixsee.ui.chat.data.MessageConstants;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import static com.marked.pixsee.ui.notifications.FcmNotificationFactoryImpl.InvalidNotificationException;
+import static com.marked.pixsee.utils.RemoteMessage.createRemoteMessage;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.robolectric.RuntimeEnvironment.application;
 
@@ -59,23 +58,10 @@ public class FcmNotificationFactoryImplTest {
         Assert.assertThat(notification, instanceOf(NewMessageNotification.class));
     }
 
-    @Test
-    public void testCreateNotification_shouldCreateEmptyNotification() throws Exception {
-        try {
-            RemoteMessage remoteMessage = createRemoteMessage(INVALID_ACTION);
+	@Test(expected = FcmNotificationFactoryImpl.InvalidNotificationException.class)
+	public void testCreateNotification_shouldCreateEmptyNotification() throws Exception {
+		RemoteMessage remoteMessage = createRemoteMessage(INVALID_ACTION);
 
-            fcmNotificationFactory.createNotification(remoteMessage);
-        } catch (RuntimeException e) {
-            Assert.assertThat(e, instanceOf(InvalidNotificationException.class));
-        }
-    }
-
-    private RemoteMessage createRemoteMessage(String clickAction) {
-        return new RemoteMessage.Builder("abc")
-                .addData(MessageConstants.MESSAGE_TYPE, String.valueOf("2"))
-                .addData(CLICK_ACTION, clickAction)
-		               .addData(MessageConstants.TO, "abc")
-		               .addData(MessageConstants.FROM, "abc")
-		               .build();
-    }
+		fcmNotificationFactory.createNotification(remoteMessage);
+	}
 }

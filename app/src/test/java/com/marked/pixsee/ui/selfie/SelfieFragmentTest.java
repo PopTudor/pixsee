@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 
 import com.marked.pixsee.BuildConfig;
-import com.marked.pixsee.PixseeTest;
+import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.doReturn;
  * Created by tudor on 10.08.2016.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class,sdk = 23,application = PixseeTest.class)
+@Config(constants = BuildConfig.class, application = Pixsee.class)
 public class SelfieFragmentTest extends SelfieFragment {
 	// Robolectric Controllers
 	private SupportFragmentController<SelfieFragmentTest> fragmentController;
@@ -63,8 +63,7 @@ public class SelfieFragmentTest extends SelfieFragment {
 	@Override
 	public void injectComponent() {
 		ActivityComponent activityComponent = DaggerActivityComponent.builder()
-				                                      .sessionComponent(((PixseeTest) getActivity().getApplication())
-						                                                        .getSessionComponent())
+				                                      .sessionComponent(Pixsee.getSessionComponent())
 				                                      .activityModule(new ActivityModule((AppCompatActivity) getActivity()))
 				.build();
 

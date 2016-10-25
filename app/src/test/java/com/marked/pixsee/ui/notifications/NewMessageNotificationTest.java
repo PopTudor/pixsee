@@ -75,15 +75,6 @@ public class NewMessageNotificationTest {
 	}
 
 	@Test
-	public void testIntent_haveRemoteMessageData() throws Exception {
-		Message actual = actualIntent.getParcelableExtra(application.getString(R.string.NEW_MESSAGE_NOTIFICATION_ACTION));
-		/* remote message data == message data*/
-		assertEquals(mMessage.getData().get(MessageConstants.DATA_BODY), actual.getData().get(MessageConstants.DATA_BODY));
-		assertEquals(mMessage.getMessageType().intValue(), actual.getMessageType().intValue());
-		assertEquals(mMessage.getDate(), actual.getDate());
-	}
-
-	@Test
 	public void testIntent_shouldHaveSameActionsGroups() throws Exception {
 		Intent expectedIntent = new Intent(application, ChatActivity.class);
 		expectedIntent.setAction(application.getString(R.string.NEW_MESSAGE_NOTIFICATION_ACTION));

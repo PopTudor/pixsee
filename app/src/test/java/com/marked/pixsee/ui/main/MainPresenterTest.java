@@ -101,8 +101,8 @@ public class MainPresenterTest {
 
 	@Test
 	public void testAttach() throws Exception {
-		MainContract.Presenter presenter = Mockito.spy(mMainPresenter);
-		presenter.attach();
-		Mockito.verify(presenter, Mockito.atLeastOnce()).chatTabClicked();
+		mMainPresenter.attach();
+
+		Mockito.verify(mView, Mockito.atLeastOnce()).showChat(Matchers.anyBoolean());
 	}
 }

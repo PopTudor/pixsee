@@ -6,7 +6,6 @@ import android.content.Context;
 import com.google.firebase.messaging.RemoteMessage;
 import com.marked.pixsee.BuildConfig;
 import com.marked.pixsee.R;
-import com.marked.pixsee.ui.chat.data.MessageConstants;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,6 +17,7 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowNotificationManager;
 import org.robolectric.shadows.ShadowService;
 
+import static com.marked.pixsee.utils.RemoteMessage.createRemoteMessage;
 import static org.robolectric.RuntimeEnvironment.application;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -56,21 +56,5 @@ public class GCMListenerServiceTest {
 		mGCMListenerService.onMessageReceived(mRemoteMessage);
 
 		Assert.assertEquals(1, mShadowNotificationManager.size());
-	}
-	@Test
-	public void testInvalidNotification_shouldNotBeSentToNotificationManager() throws Exception {
-		mRemoteMessage = createRemoteMessage("invalid");
-
-		mGCMListenerService.onMessageReceived(mRemoteMessage);
-
-		Assert.assertEquals(0, mShadowNotificationManager.size());
-	}
-
-	private RemoteMessage createRemoteMessage(String clickAction) {
-		return new RemoteMessage
-				.Builder("abc")
-				.addData(MessageConstants.NOTIFICATION_ACTION_CLICK, clickAction)
-				.addData("from", "xyz")
-				.build();
 	}
 }
