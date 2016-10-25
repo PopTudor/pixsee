@@ -2,9 +2,9 @@ package com.marked.pixsee.ui.main;
 
 import android.support.annotation.NonNull;
 
-import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
+import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.ui.main.strategy.ProfilePictureStrategy;
 import com.marked.pixsee.ui.main.strategy.ShareStrategy;
 
@@ -16,10 +16,12 @@ import java.lang.ref.WeakReference;
 class MainPresenter implements MainContract.Presenter {
 	private WeakReference<MainContract.View> mWeakView;
 	private UserDatasource mRepository;
+	private UserManager mUserManager;
 
-	public MainPresenter(MainContract.View view, UserDatasource userDatasource) {
+	MainPresenter(MainContract.View view, UserDatasource userDatasource, UserManager userManager) {
 		this.mRepository = userDatasource;
 		this.mWeakView = new WeakReference<>(view);
+		mUserManager = userManager;
 		this.mWeakView.get().setPresenter(this);
 	}
 
@@ -40,8 +42,7 @@ class MainPresenter implements MainContract.Presenter {
 
 	@Override
 	public void profileTabClicked() {
-		User user = mRepository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
-		mWeakView.get().showProfile(user);
+		mWeakView.get().showProfile(mUserManager.getAppUser());
 	}
 
 	@Override

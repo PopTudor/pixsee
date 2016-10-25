@@ -1,8 +1,8 @@
 package com.marked.pixsee.ui.main;
 
 import com.google.gson.JsonObject;
-import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.data.user.User;
+import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.data.user.UserRepository;
 import com.marked.pixsee.ui.main.strategy.ProfilePictureStrategy;
 import com.marked.pixsee.ui.main.strategy.ShareStrategy;
@@ -29,13 +29,16 @@ public class MainPresenterTest {
 	MainPresenter mMainPresenter;
 	@Captor
 	ArgumentCaptor<User> mArgumentCaptor;
+	@Mock
+	UserManager mUserManager;
 
 	User mUser = new User("", "", "", "");
 
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		mMainPresenter = new MainPresenter(mView, mUserRepository);
+		mMainPresenter = new MainPresenter(mView, mUserRepository, mUserManager);
+		Mockito.when(mUserManager.getAppUser()).thenReturn(mUser);
 	}
 
 	@Test
@@ -79,10 +82,9 @@ public class MainPresenterTest {
 	@Test
 	public void testProfileTabClicked() throws Exception {
 		Mockito.doReturn(mUser).when(mUserRepository).getUser(Matchers.anyString());
-		User user = mUserRepository.getUser(DatabaseContract.AppsUser.TABLE_NAME);
 
 		mMainPresenter.profileTabClicked();
-		Mockito.verify(mView).showProfile(user);
+		Mockito.verify(mView).showProfile(mUser);
 	}
 
 	@Test

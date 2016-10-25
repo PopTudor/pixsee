@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.Mapper;
-import com.marked.pixsee.data.database.DatabaseContract;
 import com.marked.pixsee.injection.scopes.ActivityScope;
 import com.marked.pixsee.ui.chat.data.MessageContract;
 import com.marked.pixsee.ui.friends.data.FriendContractDB;
@@ -98,7 +97,6 @@ public class UserDiskDatasource implements UserDatasource {
 	@Override
 	public void deleteAllUsers() {
 		db.getWritableDatabase().execSQL(FriendContractDB.DELETE_TABLE);
-		db.getWritableDatabase().execSQL(DatabaseContract.AppsUser.DELETE_TABLE);
 		db.getWritableDatabase().execSQL(MessageContract.DELETE_TABLE);
 		db.close();
 	}

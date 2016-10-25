@@ -40,4 +40,8 @@ public class UserManager {
 			return loadUser();
 		return appUser;
 	}
+
+	public void clear() {
+		mSharedPreferences.edit().clear().commit();
+	}
 }

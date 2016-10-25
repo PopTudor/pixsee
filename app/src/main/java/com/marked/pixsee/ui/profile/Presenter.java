@@ -50,6 +50,7 @@ class Presenter implements ProfileContract.Presenter {
 
 	@Override
 	public void logOut() {
+		mUserManager.clear();
 		mUserDatasource.deleteAllUsers();
 	}
 
