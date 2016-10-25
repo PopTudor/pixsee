@@ -24,8 +24,6 @@ import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
-import com.marked.pixsee.ui.friendsInvite.addUsername.di.AddUserModule;
-import com.marked.pixsee.ui.friendsInvite.addUsername.di.DaggerAddUserComponent;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -64,7 +62,7 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 		super.onAttach(context);
 		ActivityComponent component =  DaggerActivityComponent.builder()
 				                               .activityModule(new ActivityModule((AppCompatActivity) getActivity()))
-				                               .sessionComponent(((Pixsee) getActivity().getApplication()).getSessionComponent())
+				                               .sessionComponent(Pixsee.getSessionComponent())
 				                               .build();
 		DaggerAddUserComponent.builder()
 				.activityComponent(component)

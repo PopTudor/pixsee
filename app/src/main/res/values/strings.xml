@@ -70,4 +70,6 @@
     <string name="alert_internet_connection">Check your internet connection !</string>
     <string name="NEW_MESSAGE_NOTIFICATION_ACTION">com.marked.pixsee.NEW_MESSAGE</string>
     <string name="FRIEND_REQUEST_NOTIFICATION_ACTION">com.marked.pixsee.FRIEND_REQUEST</string>
+    <string name="button_share_username">Share Username</string>
+    <string name="button_search_username_or_email">Search Username or Email</string>
 </resources>

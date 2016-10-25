@@ -18,6 +18,8 @@ public interface ActivityComponent extends SessionComponent {
 
 	void inject(EntryActivity entryActivity);
 
+	void inject(AppCompatActivity friendsInviteActivity);
+
 	AppCompatActivity provideAppCompatActivity();
 
 	Context provideContext();

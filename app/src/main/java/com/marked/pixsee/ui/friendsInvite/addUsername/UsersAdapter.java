@@ -15,11 +15,11 @@ import java.util.List;
 /**
  * Created by Tudor on 03-Jun-16.
  */
-public class UsersAdapter extends RecyclerView.Adapter<UserVH> {
+class UsersAdapter extends RecyclerView.Adapter<UserVH> {
 	private final List<User> mUsersList;
 	private final UserInteraction mInteraction;
 
-	public UsersAdapter(@Nullable UserInteraction userInteraction) {
+	UsersAdapter(@Nullable UserInteraction userInteraction) {
 		mInteraction = userInteraction;
 		mUsersList = new ArrayList<>(5);
 	}
@@ -30,7 +30,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UserVH> {
 		return new UserVH(v,mInteraction);
 	}
 
-	public List<User> getUsersList() {
+	List<User> getUsersList() {
 		return mUsersList;
 	}
 

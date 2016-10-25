@@ -1,12 +1,10 @@
-package com.marked.pixsee.ui.friendsInvite.addUsername.di;
+package com.marked.pixsee.ui.friendsInvite.addUsername;
 
 import android.support.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
-import com.marked.pixsee.ui.friendsInvite.addUsername.AddUsernameContract;
-import com.marked.pixsee.ui.friendsInvite.addUsername.FriendRequestAPI;
 
 import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;

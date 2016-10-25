@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Tudor on 03-Jun-16.
  */
-public interface AddUsernameContract {
+interface AddUsernameContract {
 	interface Presenter extends BasePresenter, UsersAdapter.UserInteraction {
 		void search(String usernameOrEmail);
 

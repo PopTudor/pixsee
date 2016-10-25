@@ -1,12 +1,10 @@
-package com.marked.pixsee.ui.friendsInvite.addUsername.di;
+package com.marked.pixsee.ui.friendsInvite.addUsername;
 
 import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.injection.scopes.Repository;
 import com.marked.pixsee.networking.ServerConstants;
-import com.marked.pixsee.ui.friendsInvite.addUsername.AddUsernameContract;
-import com.marked.pixsee.ui.friendsInvite.addUsername.FriendRequestAPI;
 
 import javax.inject.Named;
 
@@ -19,10 +17,10 @@ import retrofit2.Retrofit;
  */
 @Module
 @FragmentScope
-public class AddUserModule {
+class AddUserModule {
 	private AddUsernameContract.View view;
 
-	public AddUserModule(AddUsernameContract.View view) {
+	AddUserModule(AddUsernameContract.View view) {
 		this.view = view;
 	}
 

@@ -13,14 +13,14 @@ import com.marked.pixsee.data.user.User;
 /**
  * Created by Tudor on 03-Jun-16.
  */
-public class UserVH extends RecyclerView.ViewHolder {
+class UserVH extends RecyclerView.ViewHolder {
 	private final UsersAdapter.UserInteraction mInteraction;
 	private SimpleDraweeView simpleDraweeView;
 	private TextView nameTextView;
 	private TextView emailTextView;
 	private Button addButton;
 
-	public UserVH(View itemView, UsersAdapter.UserInteraction mInteraction) {
+	UserVH(View itemView, UsersAdapter.UserInteraction mInteraction) {
 		super(itemView);
 		this.mInteraction = mInteraction;
 		simpleDraweeView = (SimpleDraweeView) itemView.findViewById(R.id.iconSimpleDraweeView);
@@ -29,7 +29,7 @@ public class UserVH extends RecyclerView.ViewHolder {
 		addButton = (Button) itemView.findViewById(R.id.addButton);
 	}
 
-	public void bind(final User user) {
+	void bind(final User user) {
 		if (user.getIconUrl() != null)
 			simpleDraweeView.setImageURI(Uri.parse(user.getIconUrl()));
 		nameTextView.setText(user.getName());
