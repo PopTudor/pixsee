@@ -2,6 +2,7 @@ package com.marked.pixsee.ui.main;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.JsonObject;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.data.user.UserManager;
@@ -9,6 +10,8 @@ import com.marked.pixsee.ui.main.strategy.ProfilePictureStrategy;
 import com.marked.pixsee.ui.main.strategy.ShareStrategy;
 
 import java.lang.ref.WeakReference;
+
+import rx.functions.Action1;
 
 /**
  * Created by Tudor on 2016-05-27.
@@ -29,10 +32,19 @@ class MainPresenter implements MainContract.Presenter {
 	public void friendRequest(User user, boolean accepted) {
 		if (accepted){
 			mRepository.saveUser(user)
-			.subscribe();
+					.subscribe(new Action1<JsonObject>() {
+						@Override
+						public void call(JsonObject jsonObject) {
+							refreshFriendList();
+						}
+					});
 		} else {
 
 		}
+	}
+
+	private void refreshFriendList() {
+		mWeakView.get().refreshFriendList();
 	}
 
 	@Override

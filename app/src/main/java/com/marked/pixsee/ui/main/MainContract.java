@@ -36,5 +36,7 @@ interface MainContract {
 		void showCamera(@NonNull PictureActionStrategy actionStrategy);
 
 		void hideBottomNavigation();
+
+		void refreshFriendList();
 	}
 }

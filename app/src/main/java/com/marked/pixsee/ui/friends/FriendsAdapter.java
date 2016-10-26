@@ -34,7 +34,7 @@ class FriendsAdapter extends RecyclerView.Adapter<FriendVH> {
 		return new FriendVH(v,friendFragmentInteractionListener);
 	}
 
-	public void setDataSet(List<User> dataSet) {
+	void setDataSet(List<User> dataSet) {
 		mDataSet.clear();
 		mDataSet.addAll(dataSet);
 	}

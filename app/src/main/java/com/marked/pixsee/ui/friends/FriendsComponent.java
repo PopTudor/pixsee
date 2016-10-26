@@ -12,6 +12,6 @@ import dagger.Component;
  */
 @FragmentScope
 @Component(modules = {FriendModule.class}, dependencies = {ActivityComponent.class})
-public interface FriendsComponent {
+interface FriendsComponent {
 	void inject(FriendFragment friendFragment);
 }

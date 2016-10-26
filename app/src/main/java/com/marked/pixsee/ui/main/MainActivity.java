@@ -42,6 +42,9 @@ public class MainActivity
 		implements MainContract.View, Injectable, FriendFragment.FriendFragmentInteractionListener,
 		PictureDetailShareFragment.OnPictureDetailShareListener, OnSelfieInteractionListener,
 		PictureDetailSendFragment.OnPictureDetailSendListener, ProfileFragment.ProfileFragmentInteraction {
+	public static final String FRAGMENT_CHATS = "Chats";
+	public static final String FRAGMENT_PROFILE = "Profile";
+	public static final String FRAGMENT_CAMERA = "Camera";
 	public static final int START_CAMERA_REQUEST_CODE = 100;
 	private AHBottomNavigation mBottomNavigation;
 	private PictureActionStrategy mPictureActionStrategy;
@@ -56,12 +59,16 @@ public class MainActivity
 		injectComponent();
 		mBottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 		// Create items
-		AHBottomNavigationItem item1 = new AHBottomNavigationItem(
-				"Chats", ContextCompat.getDrawable(this, R.drawable.ic_chat_24dp), ContextCompat.getColor(this, R.color.white));
-		AHBottomNavigationItem item2 = new AHBottomNavigationItem(
-				"Camera", ContextCompat.getDrawable(this, R.drawable.ic_photo_camera_24dp), ContextCompat.getColor(this, R.color.white));
-		AHBottomNavigationItem item3 = new AHBottomNavigationItem(
-				"Profile", ContextCompat.getDrawable(this, R.drawable.ic_person_24dp), ContextCompat.getColor(this, R.color.white));
+		int whiteColor = ContextCompat.getColor(this, R.color.white);
+		AHBottomNavigationItem item1 = new AHBottomNavigationItem(FRAGMENT_CHATS,
+				                                                         ContextCompat.getDrawable(this, R.drawable.ic_chat_24dp),
+				                                                         whiteColor);
+		AHBottomNavigationItem item2 = new AHBottomNavigationItem(FRAGMENT_CAMERA,
+				                                                         ContextCompat.getDrawable(this, R.drawable.ic_photo_camera_24dp),
+				                                                         whiteColor);
+		AHBottomNavigationItem item3 = new AHBottomNavigationItem(FRAGMENT_PROFILE,
+				                                                         ContextCompat.getDrawable(this, R.drawable.ic_person_24dp),
+				                                                         whiteColor);
 
 		// Add items
 		mBottomNavigation.addItem(item1);
@@ -99,6 +106,14 @@ public class MainActivity
 		newFriendRequest(intent);
 	}
 
+	@Override
+	public void refreshFriendList() {
+		FriendFragment chatFragment = (FriendFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_CHATS);
+		if (chatFragment != null) {
+			chatFragment.refreshFriendList();
+		}
+	}
+
 	void newFriendRequest(Intent intent){
 		/* this will enter when the user is not using the app and gets a friend request from FCM */
 		User user = intent.getParcelableExtra(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION));
@@ -115,21 +130,21 @@ public class MainActivity
 	public void showProfile(@NonNull User user) {
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.mainContainer, ProfileFragment.newInstance(user), "profile")
+				.replace(R.id.mainContainer, ProfileFragment.newInstance(user), FRAGMENT_PROFILE)
 				.commit();
 	}
 
 	@Override
 	public void showChat(boolean show) {
 		Fragment fragment = FriendFragment.newInstance();
-		getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, fragment).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, fragment, FRAGMENT_CHATS).commit();
 	}
 
 	@Override
 	public void showCamera(@NonNull PictureActionStrategy actionStrategy) {
 		mPictureActionStrategy = actionStrategy;
 		Fragment fragment = SelfieFragment.newInstance();
-		getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, fragment, "camera").addToBackStack(null).commit();
+		getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, fragment, FRAGMENT_CAMERA).addToBackStack(null).commit();
 	}
 
 	@Override
@@ -149,14 +164,14 @@ public class MainActivity
 
 	@Override
 	public void stop() {
-		((SelfieFragment) getSupportFragmentManager().findFragmentByTag("camera")).resumeSelfie();
+		((SelfieFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_CAMERA)).resumeSelfie();
 	}
 
 	@Override
 	public void pictureTaken(File picture) {
 		if (mPictureActionStrategy instanceof ProfilePictureStrategy) {
 			getSupportFragmentManager().popBackStackImmediate(); // pop the camera fragment
-			((ProfileFragment) getSupportFragmentManager().findFragmentByTag("profile")).setProfilePicture(picture);
+			((ProfileFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_PROFILE)).setProfilePicture(picture);
 		}
 	}
 
@@ -170,7 +185,7 @@ public class MainActivity
 	 */
 	@Override
 	public void resumeSelfie() {
-		((SelfieFragment) getSupportFragmentManager().findFragmentByTag("camera")).resumeSelfie();
+		((SelfieFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_CAMERA)).resumeSelfie();
 	}
 
 	@Override
@@ -216,7 +231,7 @@ public class MainActivity
 	private static class OnTabSelectedHandler implements AHBottomNavigation.OnTabSelectedListener {
 		private WeakReference<MainContract.Presenter> mPresenterWeakReference;
 
-		public OnTabSelectedHandler(MainContract.Presenter presenterWeakReference) {
+		OnTabSelectedHandler(MainContract.Presenter presenterWeakReference) {
 			mPresenterWeakReference = new WeakReference<>(presenterWeakReference);
 		}
 

@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Tudor Pop on 15-Mar-16.
  * This specifies the contract between the view and the presenter.
  */
-public interface FriendsContract {
+interface FriendsContract {
 	interface Presenter extends BasePresenter {
 
 		void loadMore(final int limit,boolean forceUpdate);

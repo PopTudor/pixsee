@@ -12,11 +12,11 @@ import com.marked.pixsee.R;
 /**
  * Created by Tudor on 6/1/2016.
  */
-public class LineDiverDecoration extends RecyclerView.ItemDecoration {
+class LineDiverDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
 
-    public LineDiverDecoration(Context context) {
-        mDivider = ContextCompat.getDrawable(context,R.drawable.line_divider);
+	LineDiverDecoration(Context context) {
+		mDivider = ContextCompat.getDrawable(context,R.drawable.line_divider);
     }
 
     @Override

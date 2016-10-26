@@ -34,6 +34,7 @@ import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.ui.friendsInvite.FriendsInviteActivity;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -117,7 +118,6 @@ public class FriendFragment extends Fragment implements Injectable,
 		mFriendsRecyclerview = (RecyclerView) rootView.findViewById(R.id.friendsRecyclerview);
 		setUpRecyclerView();
 		//		setUpFab();
-		setupListeners(rootView);
 
 		mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
 		mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -193,15 +193,6 @@ public class FriendFragment extends Fragment implements Injectable,
 		} catch (ClassCastException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void setupListeners(View rootView) {
-//		mBinding.vuforiaCamera.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				mPresenter.getOpenCamera().execute();
-//			}
-//		});
 	}
 
 	void setUpRecyclerView() {
@@ -362,6 +353,11 @@ public class FriendFragment extends Fragment implements Injectable,
 
 		DaggerFriendsComponent.builder().activityComponent(activityComponent)
 				.friendModule(new FriendModule(this)).build().inject(this);
+	}
+
+	public void refreshFriendList() {
+		mFriendsAdapter.setDataSet(Collections.<User>emptyList());
+		mPresenter.loadMore(50);
 	}
 
 
