@@ -32,8 +32,6 @@ import com.marked.pixsee.injection.Injectable;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
-import com.marked.pixsee.ui.friends.di.DaggerFriendsComponent;
-import com.marked.pixsee.ui.friends.di.FriendModule;
 import com.marked.pixsee.ui.friendsInvite.FriendsInviteActivity;
 
 import java.util.List;

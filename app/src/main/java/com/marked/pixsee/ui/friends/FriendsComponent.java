@@ -1,8 +1,7 @@
-package com.marked.pixsee.ui.friends.di;
+package com.marked.pixsee.ui.friends;
 
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.scopes.FragmentScope;
-import com.marked.pixsee.ui.friends.FriendFragment;
 
 import dagger.Component;
 

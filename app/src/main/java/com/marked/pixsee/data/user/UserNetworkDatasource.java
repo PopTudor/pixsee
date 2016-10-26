@@ -46,7 +46,7 @@ public class UserNetworkDatasource implements UserDatasource {
 	@Override
 	public Observable<List<User>> getFriendsWithEmail(String startingWithEmail) {
 		return mRetrofit.create(FriendRequestAPI.class)
-				       .getFriendsWithEmail(startingWithEmail)
+				       .getUsersWithEmail(startingWithEmail)
 				       .subscribeOn(Schedulers.io())
 				       .map(new Func1<JsonObject, JsonArray>() {
 					       @Override

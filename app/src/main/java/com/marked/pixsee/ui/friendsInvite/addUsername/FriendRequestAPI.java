@@ -17,7 +17,7 @@ import rx.Observable;
  */
 public interface FriendRequestAPI {
 	@GET(ServerConstants.USERS)
-	Observable<JsonObject> getFriendsWithEmail(@Query("email") String email);
+	Observable<JsonObject> getUsersWithEmail(@Query("email") String email);
 
 	@Multipart
 	@POST(ServerConstants.FRIENDS_REQUEST)

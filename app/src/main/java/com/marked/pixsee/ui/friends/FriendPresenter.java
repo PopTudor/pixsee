@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserDatasource;
+import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.ui.commands.Command;
 
 import java.lang.ref.WeakReference;
@@ -12,8 +13,6 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -24,16 +23,15 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Tudor Pop on 23-Mar-16.
  */
-public class FriendPresenter implements FriendsContract.Presenter {
+@FragmentScope
+class FriendPresenter implements FriendsContract.Presenter {
 	private UserDatasource repository;
 	private WeakReference<FriendsContract.View> mView;
 	private int size = 0;
 
-	@Inject
-	public FriendPresenter(FriendsContract.View view, UserDatasource repository) {
+	FriendPresenter(FriendsContract.View view, UserDatasource repository) {
 		this.repository = repository;
 		this.mView = new WeakReference<>(view);
-		this.mView.get().setPresenter(this);
 	}
 
 	@Override

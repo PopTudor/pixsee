@@ -1,9 +1,8 @@
 package com.marked.pixsee.ui.friendsInvite.addUsername;
 
-import com.marked.pixsee.data.user.UserDatasource;
+import com.google.gson.Gson;
 import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.injection.scopes.FragmentScope;
-import com.marked.pixsee.injection.scopes.Repository;
 import com.marked.pixsee.networking.ServerConstants;
 
 import javax.inject.Named;
@@ -26,9 +25,8 @@ class AddUserModule {
 
 	@Provides
 	@FragmentScope
-	AddUsernameContract.Presenter providesPresenter(@Repository UserDatasource repository, @Named(ServerConstants.SERVER) Retrofit
-			                                                                                       retrofit, UserManager userManager) {
+	AddUsernameContract.Presenter providesPresenter(@Named(ServerConstants.SERVER) Retrofit retrofit, UserManager userManager, Gson gson) {
 		FriendRequestAPI friendRequestAPI = retrofit.create(FriendRequestAPI.class);
-		return new Presenter(view, repository, userManager.getAppUser(), friendRequestAPI);
+		return new Presenter(view, userManager.getAppUser(), friendRequestAPI, gson);
 	}
 }
