@@ -6,10 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.marked.pixsee.networking.ServerConstants;
 import com.marked.pixsee.ui.friends.data.FriendContractDB;
 import com.marked.pixsee.ui.friends.data.FriendsAPI;
-import com.marked.pixsee.ui.friendsInvite.addUsername.FriendRequestAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,33 +38,24 @@ public class UserNetworkDatasource implements UserDatasource {
 	 */
 	@Override
 	public Observable<List<User>> getUsers(String startingWith) {
-		return Observable.empty();
-	}
-
-	@Override
-	public Observable<List<User>> getFriendsWithEmail(String startingWithEmail) {
-		return mRetrofit.create(FriendRequestAPI.class)
-				       .getUsersWithEmail(startingWithEmail)
+		return mRetrofit.create(FriendsAPI.class)
+				       .getUsers(startingWith)
 				       .subscribeOn(Schedulers.io())
 				       .map(new Func1<JsonObject, JsonArray>() {
 					       @Override
 					       public JsonArray call(JsonObject jsonObject) {
-						       return jsonObject.get(ServerConstants.USERS).getAsJsonArray();
+						       return jsonObject.getAsJsonArray(FriendContractDB.TABLE_NAME);
 					       }
 				       })
-				       .flatMap(new Func1<JsonArray, Observable<JsonElement>>() {
+				       .map(new Func1<JsonArray, List<User>>() {
 					       @Override
-					       public Observable<JsonElement> call(JsonArray jsonElements) {
-						       return Observable.from(jsonElements);
+					       public List<User> call(JsonArray jsonElements) {
+						       final List<User> list = new ArrayList<User>();
+						       for (JsonElement it : jsonElements)
+							       list.add(mGson.fromJson(it.toString(), User.class));
+						       return list;
 					       }
-				       })
-				       .map(new Func1<JsonElement, User>() {
-					       @Override
-					       public User call(JsonElement jsonObject) {
-						       return mGson.fromJson(jsonObject.toString(), User.class);
-					       }
-				       })
-				       .toList();
+				       });
 	}
 
 	@Override
@@ -76,24 +65,7 @@ public class UserNetworkDatasource implements UserDatasource {
 
 	@Override
 	public Observable<List<User>> getUsers() {
-		return mRetrofit.create(FriendsAPI.class)
-				       .getUsers(mUserManager.getAppUser().getUserID())
-				.subscribeOn(Schedulers.io())
-				.map(new Func1<JsonObject, JsonArray>() {
-					@Override
-					public JsonArray call(JsonObject jsonObject) {
-						return jsonObject.getAsJsonArray(FriendContractDB.TABLE_NAME);
-					}
-				})
-				.map(new Func1<JsonArray, List<User>>() {
-					@Override
-					public List<User> call(JsonArray jsonElements) {
-						final List<User> cache = new ArrayList<User>();
-						for (JsonElement it : jsonElements)
-							cache.add(mGson.fromJson(it.toString(), User.class));
-						return cache;
-					}
-				});
+		return getUsers(mUserManager.getAppUser().getUserID());
 	}
 
 	@Override

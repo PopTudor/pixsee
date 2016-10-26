@@ -85,11 +85,6 @@ public class UserRepository implements UserDatasource {
     }
 
 	@Override
-	public Observable<List<User>> getFriendsWithEmail(String startingWithEmail) {
-		return network.getFriendsWithEmail(startingWithEmail);
-	}
-
-	@Override
 	public void saveUser(@NonNull List<User> users) {
         disk.saveUser(users);
         network.saveUser(users);

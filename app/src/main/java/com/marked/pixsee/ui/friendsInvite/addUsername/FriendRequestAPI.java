@@ -15,7 +15,7 @@ import rx.Observable;
 /**
  * Created by Tudor on 03-Jun-16.
  */
-public interface FriendRequestAPI {
+interface FriendRequestAPI {
 	@GET(ServerConstants.USERS)
 	Observable<JsonObject> getUsersWithEmail(@Query("email") String email);
 

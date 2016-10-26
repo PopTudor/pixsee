@@ -35,10 +35,10 @@ class FriendPresenter implements FriendsContract.Presenter {
 	}
 
 	@Override
-	public void loadMore(int limit, @NonNull String email) {
-		if (email.isEmpty())
+	public void loadMore(int limit, @NonNull String byName) {
+		if (byName.isEmpty())
 			return;
-		repository.getFriendsWithEmail(email)
+		repository.getUsers(byName)
 				.debounce(500, TimeUnit.MILLISECONDS)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())

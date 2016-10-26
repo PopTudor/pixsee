@@ -15,9 +15,8 @@ import rx.Observable;
  */
 public interface UserDatasource {
 	Observable<List<User>> getUsers();
-	Observable<List<User>> getUsers(String byName);
 
-	Observable<List<User>> getFriendsWithEmail(String startingWithEmail);
+	Observable<List<User>> getUsers(String byName);
 
 	Observable<User> getUser(@NonNull User userId);
 

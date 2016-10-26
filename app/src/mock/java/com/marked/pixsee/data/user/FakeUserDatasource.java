@@ -24,11 +24,6 @@ public class FakeUserDatasource implements UserDatasource {
 		return getRandomUsers();
 	}
 
-	@Override
-	public Observable<List<User>> getFriendsWithEmail(String startingWithEmail) {
-		return getRandomUsers();
-	}
-
 	private Observable<List<User>> getRandomUsers() {
 		return Observable.just(User.getRandomUsers(10));
 	}
