@@ -44,13 +44,15 @@ public class User implements Parcelable, Comparable<User> {
 		this.userName = userName;
 	}
 
-	public User(String id, String name, String email, String pushToken) {
-		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.pushToken = pushToken;
+	public User() {
 	}
 
+	public User(String email, String userName, String password, String pushToken) {
+		this.email = email;
+		this.pushToken = pushToken;
+		this.password = password;
+		this.userName = userName;
+	}
 
 	public User(Parcel parcelIn) {
 		this.id = parcelIn.readString();

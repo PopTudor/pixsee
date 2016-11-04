@@ -100,15 +100,20 @@ public class Presenter implements AuthenticationContract.Presenter {
 	 * Modify this method to associate the user's GCM registration token with any server-side account
 	 * maintained by your application. If the user already has an account, update his registration token in case it's outdated
 	 *
-	 * @param email    The email of the account.
+	 * @param usernameOrEmail    The email of the account.
 	 *                 *
 	 * @param password The password to login
 	 *                 *
 	 */
 	@Override
-	public void handleLogin(String email, String password) {
-		if (validateLogin(email, password)) {
-			mLoginAPI.login(email, password, FirebaseInstanceId.getInstance().getToken())
+	public void handleLogin(String usernameOrEmail, String password) {
+		if (validateLogin(usernameOrEmail, password)) {
+			User user = new User();
+			setUsernameOrEmail(user, usernameOrEmail);
+			user.setPushToken(FirebaseInstanceId.getInstance().getToken());
+			user.setPassword(password);
+
+			mLoginAPI.login(user)
 					.filter(new Func1<Response<JsonObject>, Boolean>() {
 						@Override
 						public Boolean call(Response<JsonObject> jsonObjectResponse) {
@@ -152,15 +157,19 @@ public class Presenter implements AuthenticationContract.Presenter {
 		}
 	}
 
-	private boolean validateLogin(String email, String password) {
-		if (email.isEmpty()) {
-			mView.get().showToast("The email field is empty");
+	private void setUsernameOrEmail(User user, String email) {
+		if (Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches())
+			user.setEmail(email);
+		else
+			user.setUserName(email);
+	}
+
+	private boolean validateLogin(String userNameOrEmail, String password) {
+		if (userNameOrEmail.isEmpty()) {
+			mView.get().showToast("The Username field is empty");
 			return false;
 		} else if (password.isEmpty()) {
 			mView.get().showToast("The password field is empty");
-			return false;
-		} else if (!Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()) {
-			mView.get().showToast("You must enter a valid email");
 			return false;
 		}
 		return true;

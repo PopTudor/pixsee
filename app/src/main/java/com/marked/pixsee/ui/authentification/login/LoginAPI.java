@@ -44,9 +44,6 @@ public interface LoginAPI {
 	@HEAD(ServerConstants.USER)
 	Observable<Response<Void>> hasAccount(@Query("email") String email);
 
-	@FormUrlEncoded
 	@POST(ServerConstants.SERVER_LOGIN)
-	Observable<Response<JsonObject>> login(@Field("email") String email,
-	                                       @Field("password") String password,
-	                                       @Field("pushToken") String token);
+	Observable<Response<JsonObject>> login(@Body User user);
 }
