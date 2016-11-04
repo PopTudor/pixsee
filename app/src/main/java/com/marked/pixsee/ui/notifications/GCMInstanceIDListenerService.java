@@ -56,7 +56,7 @@ public class GCMInstanceIDListenerService extends FirebaseInstanceIdService {
 		String token = FirebaseInstanceId.getInstance().getToken();
 		if (mUser == null) return;
 		mRetrofit.create(PushService.class)
-				.tokenRefresh(token, mUser.getUserID())
+				.tokenRefresh(token, mUser.getId())
 				.retry()
 				.subscribe(new Subscriber<Response<JsonObject>>() {
 					@Override

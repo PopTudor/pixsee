@@ -126,9 +126,9 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
 		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Profile");
 
 		((TextView) rootView.findViewById(R.id.nameTextview)).setText(mUser.getName());
-		((TextView) rootView.findViewById(R.id.usernameTextview)).setText(mUser.getUsername());
-		if (mUser.getIconUrl() != null) // // TODO: 12-Jun-16 remove this and make mUser.getIconUrl() to always have an Url
-			((SimpleDraweeView) rootView.findViewById(R.id.iconSimpleDraweeView)).setImageURI(Uri.parse(mUser.getIconUrl()));
+		((TextView) rootView.findViewById(R.id.usernameTextview)).setText(mUser.getUserName());
+//		if (mUser.getIconUrl() != null) // // TODO: 12-Jun-16 remove this and make mUser.getIconUrl() to always have an Url
+//			((SimpleDraweeView) rootView.findViewById(R.id.iconSimpleDraweeView)).setImageURI(Uri.parse(mUser.getIconUrl()));
 
 		ImageButton inviteFriendsImageButton = ((ImageButton) rootView.findViewById(R.id.inviteFriendsImageButton));
 		inviteFriendsImageButton.getDrawable()
@@ -204,7 +204,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
 
 	public void setProfilePicture(File profilePicture) {
 		((SimpleDraweeView) getView().findViewById(R.id.iconSimpleDraweeView)).setImageURI(Uri.parse("file://" + profilePicture.getAbsolutePath()));
-		mUser.setIconUrl("file://" + profilePicture.getAbsolutePath());
+//		mUser.setIconUrl("file://" + profilePicture.getAbsolutePath());
 		mPresenter.saveAppUser(mUser);
 	}
 

@@ -178,9 +178,9 @@ public class ChatPresenterTest {
 		JsonElement result = new JsonParser().parse(jsonElement.getAsString());
 		User user = new Gson().fromJson(result, User.class);
 
-		assertEquals(from, UserUtilTest.getUserTest().getUserID());
-		assertEquals(to, UserUtilTest.getUserTest().getUserID());
-		assertEquals(toToken, UserUtilTest.getUserTest().getToken());
+		assertEquals(from, UserUtilTest.getUserTest().getId());
+		assertEquals(to, UserUtilTest.getUserTest().getId());
+		assertEquals(toToken, UserUtilTest.getUserTest().getPushToken());
 		UserUtilTest.assertUserProperties(UserUtilTest.getUserTest(), user);
 	}
 

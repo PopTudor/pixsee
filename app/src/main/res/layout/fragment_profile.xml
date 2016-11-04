@@ -92,7 +92,7 @@
                 android:layout_below="@+id/nameTextview"
                 android:maxLines="1"
                 android:maxWidth="200dp"
-                android:text="username"
+                android:text="userName"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <ImageButton

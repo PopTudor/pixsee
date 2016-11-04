@@ -27,58 +27,43 @@ public class User implements Parcelable, Comparable<User> {
 			return new User[size];
 		}
 	};
-	@SerializedName(value = "userID", alternate = {"_id"})
-	String userID;
+	@SerializedName(value = "userId", alternate = {"id"})
+	String id;
 	String name;
 	String email;
-	String token;
+	String pushToken;
 	String password;
-	String coverUrl;
-	String username;
-	String iconUrl;
+	String userName;
 
-	public User(String userID, String name, String email, String token, String password, String coverUrl, String iconUrl,  String username) {
-		this.userID = userID;
+	public User(String id, String name, String email, String pushToken, String password, String userName) {
+		this.id = id;
 		this.name = name;
 		this.email = email;
-		this.token = token;
+		this.pushToken = pushToken;
 		this.password = password;
-		this.coverUrl = coverUrl;
-		this.iconUrl = iconUrl;
-		this.username = username;
+		this.userName = userName;
 	}
 
-	public User(String userID, String name, String email, String token, String password, String coverUrl, String iconUrl) {
-		this(userID, name, email, token, password, coverUrl, iconUrl, null);
-	}
-
-	public User(String userID, String name, String email, String token, String password, String coverUrl) {
-		this(userID, name, email, token, password, coverUrl, null);
-	}
-
-	public User(String userID, String name, String email, String token, String password) {
-		this(userID, name, email, token, password, null);
-	}
-
-	public User(String userID, String name, String email, String token) {
-		this(userID, name, email, token, null, null, null, null);
+	public User(String id, String name, String email, String pushToken) {
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.pushToken = pushToken;
 	}
 
 
 	public User(Parcel parcelIn) {
-		this.userID = parcelIn.readString();
+		this.id = parcelIn.readString();
 		this.name = parcelIn.readString();
 		this.email = parcelIn.readString();
-		this.token = parcelIn.readString();
+		this.pushToken = parcelIn.readString();
 		this.password = parcelIn.readString();
-		this.coverUrl = parcelIn.readString();
-		this.iconUrl = parcelIn.readString();
-		this.username = parcelIn.readString();
+		this.userName = parcelIn.readString();
 	}
 
 	public User(Bundle extras) {
-		this(extras.getString("userID"), extras.getString("name"), extras.getString("email"), extras.getString("token")
-				, null, extras.getString("coverUrl"), extras.getString("iconUrl"), extras.getString("username"));
+		this(extras.getString("id"), extras.getString("name"), extras.getString("email"), extras.getString("pushToken")
+				, null, extras.getString("userName"));
 	}
 
 	public static List<User> getRandomUsers(int num) {
@@ -87,17 +72,17 @@ public class User implements Parcelable, Comparable<User> {
 		for (int i = 0; i < num; i++) {
 			String name = names[(int) (Math.random() * names.length)];
 			String email = name.replace(" ", "") + "@gmail.com";
-			users.add(new User(UUID.randomUUID().toString(), name, email, name + email, null, null, null, name));
+			users.add(new User(UUID.randomUUID().toString(), name, email, name + email, null, name));
 		}
 		return users;
 	}
 
-	public String getUserID() {
-		return userID;
+	public String getId() {
+		return id;
 	}
 
-	public void setUserID(String userID) {
-		this.userID = userID;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	@Override
@@ -106,22 +91,20 @@ public class User implements Parcelable, Comparable<User> {
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(userID);
+		dest.writeString(id);
 		dest.writeString(name);
 		dest.writeString(email);
-		dest.writeString(token);
+		dest.writeString(pushToken);
 		dest.writeString(password);
-		dest.writeString(coverUrl);
-		dest.writeString(iconUrl);
-		dest.writeString(username);
+		dest.writeString(userName);
 	}
 
-	public String getToken() {
-		return token;
+	public String getPushToken() {
+		return pushToken;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public void setPushToken(String pushToken) {
+		this.pushToken = pushToken;
 	}
 
 	public String getName() {
@@ -148,28 +131,12 @@ public class User implements Parcelable, Comparable<User> {
 		this.email = email;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getCoverUrl() {
-		return coverUrl;
-	}
-
-	public void setCoverUrl(String coverUrl) {
-		this.coverUrl = coverUrl;
-	}
-
-	public String getIconUrl() {
-		return iconUrl;
-	}
-
-	public void setIconUrl(String iconUrl) {
-		this.iconUrl = iconUrl;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	@Override

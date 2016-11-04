@@ -77,9 +77,9 @@ class ChatPresenter implements ChatContract.Presenter {
 		mChatClient.connect();
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("user", new Gson().toJson(mAppsUser, User.class));
-		jsonObject.addProperty("from", mAppsUser.getUserID());
-		jsonObject.addProperty("to", mThatUser.getUserID());
-		jsonObject.addProperty("to_token", mThatUser.getToken());
+		jsonObject.addProperty("from", mAppsUser.getId());
+		jsonObject.addProperty("to", mThatUser.getId());
+		jsonObject.addProperty("to_token", mThatUser.getPushToken());
 		mChatClient.emit(ChatClient.ON_NEW_ROOM, jsonObject);
 	}
 
@@ -98,10 +98,10 @@ class ChatPresenter implements ChatContract.Presenter {
 		try {
 			mChatClient.emit(ChatClient.ON_TYPING,
 					new JSONObject(String.format("{from:%s,to:%s,typing:%s,to_token:\'%s\'}",
-							mAppsUser.getUserID(),
-							mThatUser.getUserID(),
+							mAppsUser.getId(),
+							mThatUser.getId(),
 							typing,
-							mThatUser.getToken())));
+							mThatUser.getPushToken())));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -117,8 +117,8 @@ class ChatPresenter implements ChatContract.Presenter {
 		final Message message = new Message.Builder()
 				                        .messageType(MessageConstants.MessageType.ME_IMAGE)
 				                        .addData(MessageConstants.DATA_BODY, mPictureFile.getAbsolutePath())
-				                        .from(mAppsUser.getUserID())
-				                        .to(mThatUser.getUserID())
+				                        .from(mAppsUser.getId())
+				                        .to(mThatUser.getId())
 				                        .build();
 
 		if (message.getMessageType() == MessageConstants.MessageType.ME_IMAGE) {
@@ -127,7 +127,7 @@ class ChatPresenter implements ChatContract.Presenter {
 			RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
 			// MultipartBody.Part is used to send also the actual file name
 			MultipartBody.Part body = MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
-			mUploadAPI.upload(mAppsUser.getUserID(), mThatUser.getUserID(), body)
+			mUploadAPI.upload(mAppsUser.getId(), mThatUser.getId(), body)
 					.subscribeOn(Schedulers.io())
 					.observeOn(AndroidSchedulers.mainThread())
 					.doOnSubscribe(new Action0() {
@@ -170,8 +170,8 @@ class ChatPresenter implements ChatContract.Presenter {
 	public void sendMessage(@NonNull String text) {
 		Message message = new Message.Builder()
 				                  .addData(MessageConstants.DATA_BODY, text)
-				                  .from(mAppsUser.getUserID())
-				                  .to(mThatUser.getUserID())
+				                  .from(mAppsUser.getId())
+				                  .to(mThatUser.getId())
 				                  .build();
 		sendMessage(message);
 	}

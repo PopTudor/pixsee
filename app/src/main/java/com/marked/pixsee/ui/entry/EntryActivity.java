@@ -41,7 +41,7 @@ public class EntryActivity extends AppCompatActivity {
 
 	public void onResume() {
 		super.onResume();
-		if (mManager.getAppUser().getUserID() != null) {
+		if (mManager.getAppUser().getId() != null) {
 			whatToStartIntent = new Intent(this, MainActivity.class);
 			whatToStartIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		} else {

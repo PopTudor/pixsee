@@ -6,13 +6,13 @@ import com.marked.pixsee.BuildConfig;
  * Created by Tudor Pop on 03-Jan-16.
  */
 public interface ServerConstants {
-	String PORT = ":3000/";
+	String PORT = ":3000";
 	String SCHEME_HTTP = "http://";
 	String IP = BuildConfig.SERVER_IP;
 	String BASE_URL = SCHEME_HTTP + IP;
+	String CONTEXT = "/api/";
 	/* ENDPOINTS */
-	String USER = "user";
-	String USERS = "users";
+	String USER = "users";
 
 	String FRIENDS = "friends";
 	String FRIENDS_ACCEPTED = FRIENDS+"/accepted";
@@ -28,7 +28,7 @@ public interface ServerConstants {
 	String IMAGE = "image";
 
 
-	String SERVER = BASE_URL + PORT;
+	String SERVER = BASE_URL + PORT + CONTEXT;
 	String SERVER_UPLOAD = SERVER+UPLOAD;
 	String SERVER_PUSH_SERVICE = PUSH_SERVICE;
 	String SERVER_USER = SERVER + USER;
@@ -36,5 +36,5 @@ public interface ServerConstants {
 	String SERVER_USER_FRIENDS = SERVER_USER + "/" + FRIENDS;
 	String SERVER_USER_RECOVERY = SERVER_USER + "/" + RECOVERY;
 
-	String SERVER_USER_LOGIN = SERVER_USER + "/" + LOGIN;
+	String SERVER_LOGIN = SERVER + LOGIN + "/";
 }

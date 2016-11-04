@@ -23,8 +23,7 @@ public class CursorToUserMapper implements Mapper<Cursor, User> {
 	public User map(Cursor cursor) {
 		if (!hasIndexses)
 			readColumnIndex(cursor);
-		return new User(cursor.getString(id), cursor.getString(name), cursor.getString(email), cursor.getString(token),null,
-				cursor.getString(coverUrl),cursor.getString(iconUrl),cursor.getString(username));
+		return new User(cursor.getString(id), cursor.getString(name), cursor.getString(email), cursor.getString(token), null, cursor.getString(username));
 	}
 
 	/**

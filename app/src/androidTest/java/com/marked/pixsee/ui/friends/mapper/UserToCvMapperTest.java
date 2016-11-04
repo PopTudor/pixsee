@@ -26,16 +26,14 @@ public class UserToCvMapperTest {
 	@Test
 	public void testMap() throws Exception {
 		User user = new User("id_123", "name_user1", "user1@email.com",
-				"someToken", "password", "http://someurl.com", "http://someicon.com", "user1");
+				                    "someToken", "password", "user1");
 		ContentValues result = userToCvMapper.map(user);
 
-		Assert.assertEquals(user.getUserID(),result.getAsString(FriendConstants.ID));
+		Assert.assertEquals(user.getId(), result.getAsString(FriendConstants.ID));
 		Assert.assertEquals(user.getName(),result.getAsString(FriendConstants.NAME));
 		Assert.assertEquals(user.getEmail(),result.getAsString(FriendConstants.EMAIL));
-		Assert.assertEquals(user.getToken(),result.getAsString(FriendConstants.TOKEN));
+		Assert.assertEquals(user.getPushToken(), result.getAsString(FriendConstants.TOKEN));
 		Assert.assertEquals(user.getPassword(),result.getAsString(FriendConstants.PASSWORD));
-		Assert.assertEquals(user.getCoverUrl(),result.getAsString(FriendConstants.COVER_URL));
-		Assert.assertEquals(user.getIconUrl(),result.getAsString(FriendConstants.ICON_URL));
-		Assert.assertEquals(user.getUsername(),result.getAsString(FriendConstants.USERNAME));
+		Assert.assertEquals(user.getUserName(), result.getAsString(FriendConstants.USERNAME));
 	}
 }

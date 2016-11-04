@@ -17,9 +17,7 @@ public class CvToUserMapper implements Mapper<ContentValues, User> {
 		String email = values.getAsString(FriendContractDB.COLUMN_EMAIL);
 		String token = values.getAsString(FriendContractDB.COLUMN_TOKEN) ;
 		String username = values.getAsString(FriendContractDB.COLUMN_USERNAME) ;
-		String coverurl = values.getAsString(FriendContractDB.COLUMN_COVER_URL) ;
-		String iconurl = values.getAsString(FriendContractDB.COLUMN_ICON_URL) ;
 
-		return new User(id, name, email, token,null,coverurl,iconurl,username);
+		return new User(id, name, email, token, null, username);
 	}
 }

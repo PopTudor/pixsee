@@ -39,22 +39,18 @@ public class CursorToUserMapperTest {
 
 	@Test
 	public void testMap() throws Exception {
-		User user = new User("123", "abc", "abc@gmail.com", "xyz123", null, "https://someCover", "https://someIcon", "sweet");
-		Mockito.when(mCursor.getString(1)).thenReturn(user.getUserID());
+		User user = new User("123", "abc", "abc@gmail.com", "xyz123", null, "sweet");
+		Mockito.when(mCursor.getString(1)).thenReturn(user.getId());
 		Mockito.when(mCursor.getString(2)).thenReturn(user.getName());
-		Mockito.when(mCursor.getString(3)).thenReturn(user.getCoverUrl());
 		Mockito.when(mCursor.getString(4)).thenReturn(user.getEmail());
-		Mockito.when(mCursor.getString(5)).thenReturn(user.getUsername());
-		Mockito.when(mCursor.getString(6)).thenReturn(user.getIconUrl());
-		Mockito.when(mCursor.getString(7)).thenReturn(user.getToken());
+		Mockito.when(mCursor.getString(5)).thenReturn(user.getUserName());
+		Mockito.when(mCursor.getString(7)).thenReturn(user.getPushToken());
 
 		User user1 = mCursorToUserMapper.map(mCursor);
-		Assert.assertEquals(user.getUsername(),user1.getUsername());
-		Assert.assertEquals(user.getCoverUrl(),user1.getCoverUrl());
-		Assert.assertEquals(user.getIconUrl(),user1.getIconUrl());
+		Assert.assertEquals(user.getUserName(), user1.getUserName());
 		Assert.assertEquals(user.getName(),user1.getName());
 		Assert.assertEquals(user.getEmail(),user1.getEmail());
-		Assert.assertEquals(user.getToken(),user1.getToken());
+		Assert.assertEquals(user.getPushToken(), user1.getPushToken());
 		Assert.assertEquals(user.getPassword(),user1.getPassword());
 	}
 }

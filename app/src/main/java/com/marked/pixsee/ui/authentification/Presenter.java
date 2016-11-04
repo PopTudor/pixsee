@@ -4,13 +4,11 @@ import android.util.Patterns;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.networking.HTTPStatusCodes;
 import com.marked.pixsee.ui.authentification.login.LoginAPI;
-import com.marked.pixsee.utility.GCMConstants;
 
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
@@ -144,19 +142,11 @@ public class Presenter implements AuthenticationContract.Presenter {
 						@Override
 						public void onNext(Response<JsonObject> response) {
 							if (response.isSuccessful() && response.code() == HTTPStatusCodes.REQUEST_OK) {
-								User user = mGson.fromJson(response.body().get("user").getAsJsonObject(), User.class);
-								JsonArray friends;
-								if (response.body().get(GCMConstants.FRIENDS).getAsJsonArray() == null)
-									friends = new JsonArray();
-								else
-									friends = response.body().get(GCMConstants.FRIENDS).getAsJsonArray();
+								User user = mGson.fromJson(response.body().getAsJsonObject(), User.class);
 								mManager.saveUser(user);
 								mView.get().showMainScreen();
-							} else if (response.code() == HTTPStatusCodes.NOT_FOUND) {
-								mView.get().showToast("The email does not exist");
-							} else if (response.code() == HTTPStatusCodes.UNPROCESSABLE_ENTITY) {
-								mView.get().showToast("The password is not correct");
-							}
+							} else
+								mView.get().showToast("Invalid Credentials");
 						}
 					});
 		}

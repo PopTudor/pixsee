@@ -1,6 +1,5 @@
 package com.marked.pixsee.ui.friends;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -45,8 +44,8 @@ class FriendVH extends RecyclerView.ViewHolder {
 		//		mFriendIconImageView.setImageURI(uri, context);
 		//todo get in parse a contact's profile image
 		FRIEND_CLICK = new FriendClick(friend);
-		if (friend.getIconUrl() != null)
-			simpleDraweeView.setImageURI(Uri.parse(friend.getIconUrl()));
+//		if (friend.getIconUrl() != null)
+//			simpleDraweeView.setImageURI(Uri.parse(friend.getIconUrl()));
 		friendNameTextView.setText(friend.getName());
 		itemView.setOnClickListener(FRIEND_CLICK); // // TODO: 31.05.2016 how can this be done with a single line of code ?
 		friendNameTextView.setOnClickListener(FRIEND_CLICK);

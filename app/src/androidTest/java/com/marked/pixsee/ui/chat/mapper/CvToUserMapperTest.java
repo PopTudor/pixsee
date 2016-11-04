@@ -35,9 +35,9 @@ public class CvToUserMapperTest {
 
 		User user = mUserToCvMapper.map(mContentValues);
 
-		assertThat(user.getUserID(), equalTo(id));
+		assertThat(user.getId(), equalTo(id));
 		assertThat(user.getName(), equalTo(name));
 		assertThat(user.getEmail(), equalTo(email));
-		assertThat(user.getToken(), equalTo(token));
+		assertThat(user.getPushToken(), equalTo(token));
 	}
 }

@@ -60,7 +60,7 @@ class Presenter implements AddUsernameContract.Presenter {
 				.map(new Func1<JsonObject, JsonArray>() {
 					@Override
 					public JsonArray call(JsonObject jsonObject) {
-						return jsonObject.get(ServerConstants.USERS).getAsJsonArray();
+						return jsonObject.get(ServerConstants.USER).getAsJsonArray();
 					}
 				})
 				.flatMap(new Func1<JsonArray, Observable<JsonElement>>() {
@@ -93,7 +93,7 @@ class Presenter implements AddUsernameContract.Presenter {
 
 	@Override
 	public void onClick(User user, int position) {
-		mFriendRequestAPI.friendRequest(mAppsUser, user.getToken())
+		mFriendRequestAPI.friendRequest(mAppsUser, user.getPushToken())
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Observer<Response<JsonObject>>() {

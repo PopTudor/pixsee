@@ -6,6 +6,6 @@ package com.marked.pixsee.data.user;
 
 public class FakeUser extends User {
 	public FakeUser() {
-		super("testId", "testName", "testEmail", "testToken", "testPassword", "testCoverUrl", "testIconUrl", "testUsername");
+		super("testId", "testName", "testEmail", "testToken", "testPassword",  "testUsername");
 	}
 }

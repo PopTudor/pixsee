@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 public class UserToCvMapperTest {
 	private UserToCvMapper mUserToCvMapper = new UserToCvMapper();
-	private User mUser           = new User("123", "Duyald Dawnflame", "dawnflame@gmai.com", "321321");
+	private User mUser = new User("123", "Duyald Dawnflame", "dawnflame@gmai.com", "321321", null, "username");
 
 	@Test
 	public void testMap() throws Exception {
@@ -29,9 +29,9 @@ public class UserToCvMapperTest {
 		String email = contentValues.getAsString(FriendContractDB.COLUMN_EMAIL);
 		String token = contentValues.getAsString(FriendContractDB.COLUMN_TOKEN);
 
-		assertThat(mUser.getUserID(), equalTo(id));
+		assertThat(mUser.getId(), equalTo(id));
 		assertThat(mUser.getName(), equalTo(name));
 		assertThat(mUser.getEmail(), equalTo(email));
-		assertThat(mUser.getToken(), equalTo(token));
+		assertThat(mUser.getPushToken(), equalTo(token));
 	}
 }

@@ -36,9 +36,7 @@ public class RemoteMessageToUserMapperTest {
 				.addData(FriendConstants.NAME, NAME)
 				.addData(FriendConstants.EMAIL, EMAIL)
 				.addData(FriendConstants.TOKEN, FROM)
-				.addData(FriendConstants.ICON_URL, ICON_URL)
 				.addData(FriendConstants.USERNAME, USERNAME)
-				.addData(FriendConstants.COVER_URL, COVER)
 				.build();
 	}
 
@@ -46,13 +44,11 @@ public class RemoteMessageToUserMapperTest {
 	public void testMap() throws Exception {
 		RemoteMessageToUserMapper remoteMessageToUserMapper = new RemoteMessageToUserMapper();
 		User user = remoteMessageToUserMapper.map(mRemoteMessage);
-		Assert.assertEquals(user.getUserID(), ID);
+		Assert.assertEquals(user.getId(), ID);
 		Assert.assertEquals(user.getName(), NAME);
 		Assert.assertEquals(user.getEmail(), EMAIL);
-		Assert.assertEquals(user.getToken(), FROM);
-		Assert.assertEquals(user.getIconUrl(), ICON_URL);
-		Assert.assertEquals(user.getUsername(), USERNAME);
+		Assert.assertEquals(user.getPushToken(), FROM);
+		Assert.assertEquals(user.getUserName(), USERNAME);
 		Assert.assertEquals(user.getPassword(), null);
-		Assert.assertEquals(user.getCoverUrl(), COVER);
 	}
 }

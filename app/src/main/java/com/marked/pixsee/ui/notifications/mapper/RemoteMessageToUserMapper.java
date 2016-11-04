@@ -15,8 +15,6 @@ public class RemoteMessageToUserMapper implements Mapper<RemoteMessage,User> {
 				message.getData().get(FriendConstants.NAME),
 				message.getData().get(FriendConstants.EMAIL),
 				message.getData().get(FriendConstants.TOKEN), null,
-				message.getData().get(FriendConstants.COVER_URL),
-				message.getData().get(FriendConstants.ICON_URL),
 				message.getData().get(FriendConstants.USERNAME));
 	}
 }

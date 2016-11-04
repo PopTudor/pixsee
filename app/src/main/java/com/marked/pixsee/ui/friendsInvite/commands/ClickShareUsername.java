@@ -22,7 +22,7 @@ public class ClickShareUsername extends ClickCommand {
 	public void execute() {
 		Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
 		sharingIntent.setType("text/plain");
-		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Add me on Pixsee! Username: "+ mAppsUser.getUsername());
+		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Add me on Pixsee! Username: " + mAppsUser.getUserName());
 		mContext.startActivity(Intent.createChooser(sharingIntent, "Invite friends"));
 	}
 }

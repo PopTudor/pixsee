@@ -54,7 +54,7 @@ public class ChatDiskDatasource implements ChatDatasource {
 		List<Message> users = new ArrayList<>();
 		database.getReadableDatabase().beginTransaction();
 		Cursor cursor = database.getReadableDatabase().query(MessageContract.TABLE_NAME, null, "_to=?",
-				new String[]{friend.getUserID()}, null, null, null);
+				new String[]{friend.getId()}, null, null, null);
 		cursorToMessageMapper = new CursorToMessageMapper(cursor);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {

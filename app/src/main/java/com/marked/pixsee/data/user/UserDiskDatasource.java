@@ -58,8 +58,8 @@ public class UserDiskDatasource implements UserDatasource {
 
 	@Override
 	public Observable<User> getUser(@NonNull User UserId) {
-		Cursor cursor = db.getReadableDatabase().query(TABLE_NAME, null, UserId.getUserID()+"=?",
-				new String[]{UserId.getUserID()}, null, null, null);
+		Cursor cursor = db.getReadableDatabase().query(TABLE_NAME, null, UserId.getId() + "=?",
+				new String[]{UserId.getId()}, null, null, null);
 		cursor.moveToFirst();
 		return Observable.just(cursorToUserMapper.map(cursor));
 	}
@@ -115,7 +115,7 @@ public class UserDiskDatasource implements UserDatasource {
 
 	@Override
 	public void deleteUsers(@NonNull User userId) {
-		db.getWritableDatabase().delete(TABLE_NAME, FriendContractDB._ID + " = ?", new String[]{userId.getUserID()});
+		db.getWritableDatabase().delete(TABLE_NAME, FriendContractDB._ID + " = ?", new String[]{userId.getId()});
 	}
 
 	@Override

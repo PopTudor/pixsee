@@ -13,14 +13,12 @@ public class UserToCvMapper implements Mapper<User,ContentValues> {
 	@Override
 	public ContentValues map(User user) {
 		ContentValues values = new ContentValues();
-		values.put(FriendConstants.ID, user.getUserID());
+		values.put(FriendConstants.ID, user.getId());
 		values.put(FriendConstants.NAME, user.getName());
 		values.put(FriendConstants.EMAIL, user.getEmail());
-		values.put(FriendConstants.TOKEN, user.getToken());
-		values.put(FriendConstants.USERNAME, user.getUsername());
-		values.put(FriendConstants.COVER_URL, user.getCoverUrl());
+		values.put(FriendConstants.TOKEN, user.getPushToken());
+		values.put(FriendConstants.USERNAME, user.getUserName());
 		values.put(FriendConstants.PASSWORD, user.getPassword());
-		values.put(FriendConstants.ICON_URL, user.getIconUrl());
 		return values;
 	}
 }

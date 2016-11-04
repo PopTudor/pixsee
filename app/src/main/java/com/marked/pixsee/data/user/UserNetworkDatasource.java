@@ -65,7 +65,7 @@ public class UserNetworkDatasource implements UserDatasource {
 
 	@Override
 	public Observable<List<User>> getUsers() {
-		return getUsers(mUserManager.getAppUser().getUserID());
+		return getUsers(mUserManager.getAppUser().getId());
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class UserNetworkDatasource implements UserDatasource {
 	@Override
 	public Observable<JsonObject> saveUser(@NonNull User user) {
 		return mRetrofit.create(FriendsAPI.class)
-				       .friendAccepted(user.getUserID(), mUserManager.getAppUser().getUserID())
+				       .friendAccepted(user.getId(), mUserManager.getAppUser().getId())
 				.subscribeOn(Schedulers.io());
 	}
 

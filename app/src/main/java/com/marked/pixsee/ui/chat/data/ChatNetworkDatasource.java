@@ -56,7 +56,7 @@ public class ChatNetworkDatasource implements ChatDatasource {
     @Override
 	public Observable<List<Message>> getMessages(User friend) {
 //		return retrofit.create(MessageAPI.class)
-//				       .getMessagesOfFriend(userid, friendId.getUserID())
+//				       .getMessagesOfFriend(userid, friendId.getId())
 //				       .subscribeOn(Schedulers.io())
 //				       .map(new Func1<JsonObject, JsonArray>() {
 //					       @Override

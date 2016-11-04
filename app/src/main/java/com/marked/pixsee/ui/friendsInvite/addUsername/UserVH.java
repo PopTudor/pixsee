@@ -1,6 +1,5 @@
 package com.marked.pixsee.ui.friendsInvite.addUsername;
 
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -30,13 +29,13 @@ class UserVH extends RecyclerView.ViewHolder {
 	}
 
 	void bind(final User user) {
-		if (user.getIconUrl() != null)
-			simpleDraweeView.setImageURI(Uri.parse(user.getIconUrl()));
+//		if (user.getIconUrl() != null)
+//			simpleDraweeView.setImageURI(Uri.parse(user.getIconUrl()));
 		nameTextView.setText(user.getName());
-		if (user.getUsername() != null)
+		if (user.getUserName() != null)
 			emailTextView.setText(user.getEmail());
 		else
-			emailTextView.setText(user.getUsername());
+			emailTextView.setText(user.getUserName());
 		addButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

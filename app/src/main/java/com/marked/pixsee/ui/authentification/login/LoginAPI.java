@@ -24,9 +24,10 @@ public interface LoginAPI {
 	@FormUrlEncoded
 	@POST(ServerConstants.USER)
 	Observable<Response<JsonObject>> create(@Field("name") String name, @Field("email") String email,
-	                                        @Field("username") String username, @Field("password") String password,
+	                                        @Field("userName") String username, @Field("password") String password,
 	                                        @Field("token") String token);
 
+	@FormUrlEncoded
 	@GET(ServerConstants.USER)
 	Call<JsonObject> read(@Query("email") String email);
 
@@ -38,12 +39,14 @@ public interface LoginAPI {
 	Call<JsonObject> delete(@Body User friend);
 
 	@HEAD(ServerConstants.USER)
-	Observable<Response<Void>> checkUsername(@Query("username") String username);
+	Observable<Response<Void>> checkUsername(@Query("userName") String userName);
 
 	@HEAD(ServerConstants.USER)
 	Observable<Response<Void>> hasAccount(@Query("email") String email);
 
 	@FormUrlEncoded
-	@POST(ServerConstants.LOGIN)
-	Observable<Response<JsonObject>> login(@Field("email") String email, @Field("password") String password, @Field("token") String token);
+	@POST(ServerConstants.SERVER_LOGIN)
+	Observable<Response<JsonObject>> login(@Field("email") String email,
+	                                       @Field("password") String password,
+	                                       @Field("pushToken") String token);
 }
