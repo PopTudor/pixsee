@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,11 +57,9 @@ public class SignUpEmailFragment extends Fragment {
 				} else {
 					String email = emailEditText.getText().toString().trim();
 					if (email.isEmpty())
-						Toast.makeText(getActivity(), "Please enter an email", Toast.LENGTH_SHORT).show();
-					else if (Patterns.EMAIL_ADDRESS.matcher(email).matches())
-						onNextPressed(email);
+						Toast.makeText(getActivity(), "Enter a valid username or email", Toast.LENGTH_SHORT).show();
 					else
-						Toast.makeText(getActivity(), "Invalid email adress", Toast.LENGTH_SHORT).show();
+						onNextPressed(email);
 				}
 			}
 		});

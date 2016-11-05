@@ -1,4 +1,4 @@
-package com.marked.pixsee.ui.friends.data;
+package com.marked.pixsee.data.friends;
 
 /**
  * Created by Tudor Pop on 27-Jan-16.

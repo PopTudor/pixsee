@@ -1,6 +1,6 @@
 package com.marked.pixsee.ui.friends.specifications;
 
-import com.marked.pixsee.ui.friends.data.FriendContractDB;
+import com.marked.pixsee.data.friends.FriendContractDB;
 
 /**
  * Created by Tudor on 2016-05-18.

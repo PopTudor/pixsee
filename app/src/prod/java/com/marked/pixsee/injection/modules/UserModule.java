@@ -3,6 +3,7 @@ package com.marked.pixsee.injection.modules;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.gson.Gson;
+import com.marked.pixsee.data.friends.FriendsAPI;
 import com.marked.pixsee.data.user.UserDatasource;
 import com.marked.pixsee.data.user.UserDiskDatasource;
 import com.marked.pixsee.data.user.UserManager;
@@ -37,7 +38,7 @@ public class UserModule {
 	@Session
 	@Remote
 	UserDatasource provideUserRepositoryRemote(UserManager userManager, @Named(ServerConstants.SERVER) Retrofit retrofit, Gson gson) {
-		return new UserNetworkDatasource(userManager, retrofit, gson);
+		return new UserNetworkDatasource(userManager, retrofit.create(FriendsAPI.class), gson);
 	}
 
 	@Provides

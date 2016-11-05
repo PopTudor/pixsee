@@ -2,8 +2,8 @@ package com.marked.pixsee.ui.friends.mapper;
 
 import android.content.ContentValues;
 
+import com.marked.pixsee.data.friends.FriendContractDB;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.ui.friends.data.FriendContractDB;
 
 import org.junit.Assert;
 import org.junit.Before;

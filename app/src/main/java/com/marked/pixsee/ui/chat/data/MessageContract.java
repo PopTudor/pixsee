@@ -2,7 +2,7 @@ package com.marked.pixsee.ui.chat.data;
 
 import android.provider.BaseColumns;
 
-import com.marked.pixsee.ui.friends.data.FriendContractDB;
+import com.marked.pixsee.data.friends.FriendContractDB;
 
 /**
  * Created by Tudor on 6/2/2016.

@@ -1,4 +1,4 @@
-package com.marked.pixsee.ui.friends.data;
+package com.marked.pixsee.data.friends;
 
 import android.provider.BaseColumns;
 

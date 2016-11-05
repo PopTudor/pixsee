@@ -1,7 +1,7 @@
 package com.marked.pixsee.data.database;
 
+import com.marked.pixsee.data.friends.FriendContractDB;
 import com.marked.pixsee.ui.chat.data.MessageContract;
-import com.marked.pixsee.ui.friends.data.FriendContractDB;
 
 /**
  * Created by Tudor Pop on 26-Jan-16.

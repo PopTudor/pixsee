@@ -3,8 +3,8 @@ package com.marked.pixsee.ui.friends.mapper;
 import android.content.ContentValues;
 
 import com.marked.pixsee.data.Mapper;
+import com.marked.pixsee.data.friends.FriendContractDB;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.ui.friends.data.FriendContractDB;
 
 /**
  * Created by Tudor Pop on 29-Mar-16.

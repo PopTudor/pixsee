@@ -6,13 +6,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.marked.pixsee.ui.friends.data.FriendContractDB;
-import com.marked.pixsee.ui.friends.data.FriendsAPI;
+import com.marked.pixsee.data.friends.FriendsAPI;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Retrofit;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -21,12 +18,12 @@ import rx.schedulers.Schedulers;
  * Created by Tudor on 2016-05-20.
  */
 public class UserNetworkDatasource implements UserDatasource {
-	private final Retrofit mRetrofit;
+	private final FriendsAPI mFriendsAPI;
 	private final Gson mGson;
 	private final UserManager mUserManager;
 
-	public UserNetworkDatasource(UserManager userManager, Retrofit retrofit, Gson gson) {
-		this.mRetrofit = retrofit;
+	public UserNetworkDatasource(UserManager userManager, FriendsAPI friendsAPI, Gson gson) {
+		this.mFriendsAPI = friendsAPI;
 		this.mGson = gson;
 		mUserManager = userManager;
 	}
@@ -38,24 +35,21 @@ public class UserNetworkDatasource implements UserDatasource {
 	 */
 	@Override
 	public Observable<List<User>> getUsers(String startingWith) {
-		return mRetrofit.create(FriendsAPI.class)
-				       .getUsers(startingWith)
+		return mFriendsAPI.getUsers(startingWith)
 				       .subscribeOn(Schedulers.io())
-				       .map(new Func1<JsonObject, JsonArray>() {
+				       .flatMap(new Func1<JsonArray, Observable<JsonElement>>() {
 					       @Override
-					       public JsonArray call(JsonObject jsonObject) {
-						       return jsonObject.getAsJsonArray(FriendContractDB.TABLE_NAME);
+					       public Observable<JsonElement> call(JsonArray jsonElements) {
+						       return Observable.from(jsonElements);
 					       }
 				       })
-				       .map(new Func1<JsonArray, List<User>>() {
+				       .map(new Func1<JsonElement, User>() {
 					       @Override
-					       public List<User> call(JsonArray jsonElements) {
-						       final List<User> list = new ArrayList<User>();
-						       for (JsonElement it : jsonElements)
-							       list.add(mGson.fromJson(it.toString(), User.class));
-						       return list;
+					       public User call(JsonElement jsonElement) {
+						       return mGson.fromJson(jsonElement, User.class);
 					       }
-				       });
+				       })
+				       .toList();
 	}
 
 	@Override
@@ -65,7 +59,21 @@ public class UserNetworkDatasource implements UserDatasource {
 
 	@Override
 	public Observable<List<User>> getUsers() {
-		return getUsers(mUserManager.getAppUser().getId());
+		return mFriendsAPI.getUsers(mUserManager.getAppUser().getId())
+				       .subscribeOn(Schedulers.io())
+				       .flatMap(new Func1<JsonArray, Observable<JsonElement>>() {
+					       @Override
+					       public Observable<JsonElement> call(JsonArray jsonElements) {
+						       return Observable.from(jsonElements);
+					       }
+				       })
+				       .map(new Func1<JsonElement, User>() {
+					       @Override
+					       public User call(JsonElement jsonElement) {
+						       return mGson.fromJson(jsonElement, User.class);
+					       }
+				       })
+				       .toList();
 	}
 
 	@Override
@@ -82,8 +90,7 @@ public class UserNetworkDatasource implements UserDatasource {
 
 	@Override
 	public Observable<JsonObject> saveUser(@NonNull User user) {
-		return mRetrofit.create(FriendsAPI.class)
-				       .friendAccepted(user.getId(), mUserManager.getAppUser().getId())
+		return mFriendsAPI.friendAccepted(user.getId(), mUserManager.getAppUser().getId())
 				.subscribeOn(Schedulers.io());
 	}
 

@@ -17,10 +17,13 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.Authenticator;
+import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.Route;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -49,11 +52,11 @@ public class AppModule {
 	OkHttpClient providesHTTPClient() {
 		HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
 		loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-		OkHttpClient httpClient = new OkHttpClient.Builder()
-				                          .addInterceptor(new AuthorizationInterceptor())
-				                          .addInterceptor(loggingInterceptor)
-				                          .build();
-		return httpClient;
+		return new OkHttpClient.Builder()
+				       .authenticator(new BasicAuthenticator())
+				       .addInterceptor(new BasicInterceptor())
+				       .addInterceptor(loggingInterceptor)
+				       .build();
 	}
 
 	@Provides
@@ -85,14 +88,24 @@ public class AppModule {
 		return new Gson();
 	}
 
-	private class AuthorizationInterceptor implements Interceptor {
+	private class BasicAuthenticator implements Authenticator {
+		@Override
+		public Request authenticate(Route route, Response response) throws IOException {
+//			response.close();
+			return response.request()
+					       .newBuilder()
+					       .header("Authorization", Credentials.basic("USER", "parola"))
+					       .build();
+		}
+	}
+
+	private class BasicInterceptor implements Interceptor {
 		@Override
 		public Response intercept(Chain chain) throws IOException {
-			Request request1 = chain.request()
-					                   .newBuilder()
-					                   .header("Authorization", "N3Plac3Tar3B!n3")
-					                   .build();
-			return chain.proceed(request1);
+			Request request = chain.request().newBuilder()
+					                  .header("Authorization", Credentials.basic("USER", "parola"))
+					                  .build();
+			return chain.proceed(request);
 		}
 	}
 }

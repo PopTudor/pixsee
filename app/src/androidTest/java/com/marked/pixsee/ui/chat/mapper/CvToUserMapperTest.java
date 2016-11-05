@@ -3,8 +3,8 @@ package com.marked.pixsee.ui.chat.mapper;
 import android.content.ContentValues;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.marked.pixsee.data.friends.FriendContractDB;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.ui.friends.data.FriendContractDB;
 import com.marked.pixsee.ui.friends.mapper.CvToUserMapper;
 
 import org.junit.Test;
