@@ -1,9 +1,8 @@
-package com.marked.pixsee.ui.authentification.injection;
+package com.marked.pixsee.ui.authentification;
 
 import com.marked.pixsee.injection.components.SessionComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.injection.scopes.ActivityScope;
-import com.marked.pixsee.ui.authentification.AuthenticationActivity;
 
 import dagger.Component;
 
@@ -12,6 +11,6 @@ import dagger.Component;
  */
 @Component(modules = {AuthenticationModule.class, ActivityModule.class}, dependencies = SessionComponent.class)
 @ActivityScope
-public interface AuthenticationComponent {
+interface AuthenticationComponent {
 	void inject(AuthenticationActivity authenticationActivity);
 }

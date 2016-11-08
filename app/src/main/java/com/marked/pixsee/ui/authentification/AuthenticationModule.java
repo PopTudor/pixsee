@@ -1,12 +1,9 @@
-package com.marked.pixsee.ui.authentification.injection;
+package com.marked.pixsee.ui.authentification;
 
 import com.google.gson.Gson;
 import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.injection.scopes.ActivityScope;
 import com.marked.pixsee.networking.ServerConstants;
-import com.marked.pixsee.ui.authentification.AuthenticationContract;
-import com.marked.pixsee.ui.authentification.Presenter;
-import com.marked.pixsee.ui.authentification.login.LoginAPI;
 
 import javax.inject.Named;
 
@@ -19,10 +16,10 @@ import retrofit2.Retrofit;
  */
 @Module
 @ActivityScope
-public class AuthenticationModule {
+class AuthenticationModule {
 	private AuthenticationContract.View mView;
 
-	public AuthenticationModule(AuthenticationContract.View view) {
+	AuthenticationModule(AuthenticationContract.View view) {
 		mView = view;
 	}
 
@@ -30,6 +27,6 @@ public class AuthenticationModule {
 	@Provides
 	AuthenticationContract.Presenter providePresenter(@Named(ServerConstants.SERVER) Retrofit retrofit,
 	                                                  UserManager manager, Gson gson) {
-		return new Presenter(mView, retrofit.create(LoginAPI.class), manager, gson);
+		return new Presenter(mView, retrofit.create(AuthAPI.class), manager, gson);
 	}
 }

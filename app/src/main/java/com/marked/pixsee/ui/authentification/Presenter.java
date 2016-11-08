@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.networking.HTTPStatusCodes;
-import com.marked.pixsee.ui.authentification.login.LoginAPI;
 
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
@@ -28,17 +27,17 @@ import rx.schedulers.Schedulers;
 public class Presenter implements AuthenticationContract.Presenter {
 	private final WeakReference<AuthenticationContract.View> mView;
 	private final Gson mGson;
-	private final LoginAPI mLoginAPI;
+	private final AuthAPI mAuthAPI;
 	private final UserManager mManager;
 	private String mName;
 	private String mEmail;
 	private String mPassword;
 	private String mUsername;
 
-	public Presenter(AuthenticationContract.View view, LoginAPI loginAPI, UserManager manager, Gson gson) {
-		mLoginAPI = loginAPI;
+	public Presenter(AuthenticationContract.View view, AuthAPI authAPI, UserManager manager, Gson gson) {
+		mAuthAPI = authAPI;
 		mManager = manager;
-		mView = new WeakReference<AuthenticationContract.View>(view);
+		mView = new WeakReference<>(view);
 		mGson = gson;
 		mView.get().setPresenter(this);
 	}
@@ -62,7 +61,7 @@ public class Presenter implements AuthenticationContract.Presenter {
 	 */
 	@Override
 	public void checkEmail(String email) {
-		mLoginAPI.hasAccount(email)
+		mAuthAPI.hasAccount(email)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Subscriber<Response<Void>>() {
@@ -84,10 +83,10 @@ public class Presenter implements AuthenticationContract.Presenter {
 
 					@Override
 					public void onNext(Response<Void> jsonObject) {
-						if (jsonObject.code() == HTTPStatusCodes.REQUEST_CONFLICT)
-							mView.get().showToast("You already have an account");
-						else if (jsonObject.isSuccessful() && jsonObject.code() == HTTPStatusCodes.REQUEST_OK) {
+						if (jsonObject.code() == HTTPStatusCodes.NOT_FOUND)
 							mView.get().showSignupStepPassword();
+						else if (jsonObject.isSuccessful() && jsonObject.code() == HTTPStatusCodes.REQUEST_OK) {
+							mView.get().showToast("You already have an account associated with this email.");
 						}
 					}
 				});
@@ -113,7 +112,7 @@ public class Presenter implements AuthenticationContract.Presenter {
 			user.setPushToken(FirebaseInstanceId.getInstance().getToken());
 			user.setPassword(password);
 
-			mLoginAPI.login(user)
+			mAuthAPI.login(user)
 					.filter(new Func1<Response<JsonObject>, Boolean>() {
 						@Override
 						public Boolean call(Response<JsonObject> jsonObjectResponse) {
@@ -179,7 +178,7 @@ public class Presenter implements AuthenticationContract.Presenter {
 	public void onSaveUsername(final String username) {
 		mUsername = username;
 		mView.get().showDialog("Signing up", "Please wait...");
-		mLoginAPI.checkUsername(username)
+		mAuthAPI.checkUsername(username)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Subscriber<Response<Void>>() {
@@ -236,7 +235,7 @@ public class Presenter implements AuthenticationContract.Presenter {
 	 */
 
 	public void handleActionSignup(String name, String email, String username, String password, String token) {
-		mLoginAPI.create(name, email, username, password, token)
+		mAuthAPI.create(name, email, username, password, token)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Subscriber<Response<JsonObject>>() {

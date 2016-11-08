@@ -15,8 +15,6 @@ import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.injection.Injectable;
 import com.marked.pixsee.injection.modules.ActivityModule;
-import com.marked.pixsee.ui.authentification.injection.AuthenticationModule;
-import com.marked.pixsee.ui.authentification.injection.DaggerAuthenticationComponent;
 import com.marked.pixsee.ui.authentification.login.LoginFragment;
 import com.marked.pixsee.ui.authentification.signup.SignUpEmailFragment;
 import com.marked.pixsee.ui.authentification.signup.SignUpNameFragment;

@@ -24,6 +24,7 @@ public interface ServerConstants {
 	String USER_FRIENDS = USER +"/"+"friends";
 	String RECOVERY = "recovery";
 	String LOGIN = "login";
+	String SIGNUP = "signup";
 	String UPLOAD = "upload";
 	String IMAGE = "image";
 
@@ -33,7 +34,6 @@ public interface ServerConstants {
 	String SERVER_PUSH_SERVICE = PUSH_SERVICE;
 	String SERVER_USER = SERVER + USER;
 	String SERVER_USER_IMAGE = SERVER + USER+"/"+IMAGE;
-	String SERVER_USER_FRIENDS = SERVER_USER + "/" + FRIENDS;
 	String SERVER_USER_RECOVERY = SERVER_USER + "/" + RECOVERY;
 
 	String SERVER_LOGIN = SERVER + LOGIN + "/";

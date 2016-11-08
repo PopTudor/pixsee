@@ -9,7 +9,7 @@ import com.marked.pixsee.ui.authentification.signup.SignUpPassFragment;
 /**
  * Created by Tudor on 13-Jun-16.
  */
-public interface AuthenticationContract {
+interface AuthenticationContract {
 	interface Presenter extends BasePresenter, SignUpNameFragment.SignUpNameFragmentInteraction,SignUpEmailFragment
 			.SignUpEmailFragmentInteraction,SignUpPassFragment.SignUpPassFragmentInteraction{
 

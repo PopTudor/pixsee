@@ -1,4 +1,4 @@
-package com.marked.pixsee.ui.authentification.login;
+package com.marked.pixsee.ui.authentification;
 
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.user.User;
@@ -20,7 +20,9 @@ import rx.Observable;
 /**
  * Created by Tudor Pop on 17-Feb-16.
  */
-public interface LoginAPI {
+interface AuthAPI {
+	String SERVER_SIGNUP_USER = ServerConstants.SIGNUP;
+
 	@FormUrlEncoded
 	@POST(ServerConstants.USER)
 	Observable<Response<JsonObject>> create(@Field("name") String name, @Field("email") String email,
@@ -38,10 +40,10 @@ public interface LoginAPI {
 	@DELETE(ServerConstants.USER)
 	Call<JsonObject> delete(@Body User friend);
 
-	@HEAD(ServerConstants.USER)
+	@HEAD(SERVER_SIGNUP_USER)
 	Observable<Response<Void>> checkUsername(@Query("userName") String userName);
 
-	@HEAD(ServerConstants.USER)
+	@HEAD(SERVER_SIGNUP_USER)
 	Observable<Response<Void>> hasAccount(@Query("email") String email);
 
 	@POST(ServerConstants.SERVER_LOGIN)
