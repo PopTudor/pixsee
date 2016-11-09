@@ -74,10 +74,6 @@ public class AuthenticationActivity
 	}
 
 	@Override
-	public void signupComplete(String name, String email, String username, String password) {
-	}
-
-	@Override
 	public void showMainScreen() {
 		Intent toStart = new Intent(this, MainActivity.class);
 		toStart.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

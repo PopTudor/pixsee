@@ -178,30 +178,7 @@ public class Presenter implements AuthenticationContract.Presenter {
 	public void onSaveUsername(final String username) {
 		mUsername = username;
 		mView.get().showDialog("Signing up", "Please wait...");
-		mAuthAPI.checkUsername(username)
-				.subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Subscriber<Response<Void>>() {
-					@Override
-					public void onCompleted() {
-						mView.get().hideDialog();
-						mView.get().signupComplete(mName, mEmail, mUsername, mPassword);
-					}
-
-					@Override
-					public void onError(Throwable e) {
-						mView.get().hideDialog();
-					}
-
-					@Override
-					public void onNext(Response<Void> voidResponse) {
-						if (voidResponse.isSuccessful() && voidResponse.code() == HTTPStatusCodes.REQUEST_OK) {
-							handleActionSignup(mName, mEmail, mUsername, mPassword, FirebaseInstanceId.getInstance().getToken());
-						} else if (voidResponse.code() == HTTPStatusCodes.REQUEST_CONFLICT) {
-							mView.get().showToast("The username is already taken.");
-						}
-					}
-				});
+		handleActionSignup(mName, mEmail, username, mPassword, FirebaseInstanceId.getInstance().getToken());
 	}
 
 	@Override
@@ -252,10 +229,11 @@ public class Presenter implements AuthenticationContract.Presenter {
 					@Override
 					public void onNext(Response<JsonObject> response) {
 						if (response.isSuccessful()) {
-							User user = mGson.fromJson(response.body().get("user").getAsJsonObject(), User.class);
+							User user = mGson.fromJson(response.body().getAsJsonObject(), User.class);
 							mManager.saveUser(user);
 							mView.get().showMainScreen();
-						}
+						} else
+							mView.get().showToast("This username is taken.");
 					}
 				});
 	}

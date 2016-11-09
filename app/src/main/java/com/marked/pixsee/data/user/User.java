@@ -34,6 +34,7 @@ public class User implements Parcelable, Comparable<User> {
 	String pushToken;
 	String password;
 	String userName;
+	String phone;
 
 	public User(String id, String name, String email, String pushToken, String password, String userName) {
 		this.id = id;
@@ -77,6 +78,14 @@ public class User implements Parcelable, Comparable<User> {
 			users.add(new User(UUID.randomUUID().toString(), name, email, name + email, null, name));
 		}
 		return users;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public String getId() {

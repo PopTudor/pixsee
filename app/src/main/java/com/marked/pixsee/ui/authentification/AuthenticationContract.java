@@ -32,8 +32,6 @@ interface AuthenticationContract {
 
 		void showDialog(String title,String message);
 
-		void signupComplete(String name, String email, String username, String password);
-
 		void showMainScreen();
 
 		void showLoginStep();
