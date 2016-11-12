@@ -15,9 +15,9 @@ import rx.Observable;
 /**
  * Created by Tudor on 03-Jun-16.
  */
-interface FriendRequestAPI {
-	@GET(ServerConstants.USER)
-	Observable<JsonObject> getUsersWithEmail(@Query("email") String email);
+interface SearchAPI {
+	@GET(ServerConstants.SEARCH)
+	Observable<JsonObject> searchUsersByUsername(@Query("username") String username);
 
 	@Multipart
 	@POST(ServerConstants.FRIENDS_REQUEST)

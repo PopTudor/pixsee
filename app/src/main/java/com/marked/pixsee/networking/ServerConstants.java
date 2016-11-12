@@ -13,6 +13,7 @@ public interface ServerConstants {
 	String CONTEXT = "/api/";
 	/* ENDPOINTS */
 	String USER = "users";
+	String SEARCH = "search";
 
 	String FRIENDS = "friends";
 	String FRIENDS_ACCEPTED = FRIENDS+"/accepted";

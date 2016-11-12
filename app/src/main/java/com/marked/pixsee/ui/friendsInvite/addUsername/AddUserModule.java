@@ -26,7 +26,7 @@ class AddUserModule {
 	@Provides
 	@FragmentScope
 	AddUsernameContract.Presenter providesPresenter(@Named(ServerConstants.SERVER) Retrofit retrofit, UserManager userManager, Gson gson) {
-		FriendRequestAPI friendRequestAPI = retrofit.create(FriendRequestAPI.class);
-		return new Presenter(view, userManager.getAppUser(), friendRequestAPI, gson);
+		SearchAPI searchAPI = retrofit.create(SearchAPI.class);
+		return new Presenter(view, userManager.getAppUser(), searchAPI, gson);
 	}
 }

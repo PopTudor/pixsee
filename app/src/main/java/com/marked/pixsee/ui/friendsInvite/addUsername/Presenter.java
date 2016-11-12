@@ -7,7 +7,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.user.User;
-import com.marked.pixsee.networking.ServerConstants;
 
 import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
@@ -29,15 +28,15 @@ class Presenter implements AddUsernameContract.Presenter {
 	private final WeakReference<AddUsernameContract.View> mView;
 	private final Gson mGson;
 	private final User mAppsUser;
-	private final FriendRequestAPI mFriendRequestAPI;
+	private final SearchAPI mSearchAPI;
 
 
-	public Presenter(AddUsernameContract.View view, User appUser, FriendRequestAPI mFriendRequestAPI, Gson gson) {
+	public Presenter(AddUsernameContract.View view, User appUser, SearchAPI mSearchAPI, Gson gson) {
 		this.mView = new WeakReference<>(view);
 		mGson = gson;
 		this.mView.get().setPresenter(this);
 		this.mAppsUser = appUser;
-		this.mFriendRequestAPI = mFriendRequestAPI;
+		this.mSearchAPI = mSearchAPI;
 	}
 
 	@Override
@@ -51,16 +50,16 @@ class Presenter implements AddUsernameContract.Presenter {
 	}
 
 	@Override
-	public void search(@NonNull String usernameOrEmail) {
-		if (usernameOrEmail.isEmpty())
+	public void search(@NonNull String username) {
+		if (username.isEmpty())
 			return;
-		mFriendRequestAPI.getUsersWithEmail(usernameOrEmail)
+		mSearchAPI.searchUsersByUsername(username)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.map(new Func1<JsonObject, JsonArray>() {
 					@Override
 					public JsonArray call(JsonObject jsonObject) {
-						return jsonObject.get(ServerConstants.USER).getAsJsonArray();
+						return jsonObject.getAsJsonArray();
 					}
 				})
 				.flatMap(new Func1<JsonArray, Observable<JsonElement>>() {
@@ -72,7 +71,7 @@ class Presenter implements AddUsernameContract.Presenter {
 				.map(new Func1<JsonElement, User>() {
 					@Override
 					public User call(JsonElement jsonObject) {
-						return mGson.fromJson(jsonObject.toString(), User.class);
+						return mGson.fromJson(jsonObject, User.class);
 					}
 				})
 				.toList()
@@ -93,7 +92,7 @@ class Presenter implements AddUsernameContract.Presenter {
 
 	@Override
 	public void onClick(User user, int position) {
-		mFriendRequestAPI.friendRequest(mAppsUser, user.getPushToken())
+		mSearchAPI.friendRequest(mAppsUser, user.getPushToken())
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Observer<Response<JsonObject>>() {
