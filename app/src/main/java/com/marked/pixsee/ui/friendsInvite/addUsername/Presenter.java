@@ -86,7 +86,7 @@ class Presenter implements AddUsernameContract.Presenter {
 
 	@Override
 	public void onClick(User user, int position) {
-		mSearchAPI.friendRequest(mAppsUser, user.getPushToken())
+		mSearchAPI.friendRequest(mAppsUser, user)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Observer<Response<JsonObject>>() {

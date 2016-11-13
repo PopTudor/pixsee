@@ -24,7 +24,7 @@ class UserVH extends RecyclerView.ViewHolder {
 		this.mInteraction = mInteraction;
 		simpleDraweeView = (SimpleDraweeView) itemView.findViewById(R.id.iconSimpleDraweeView);
 		nameTextView = (TextView) itemView.findViewById(R.id.nameTextview);
-		emailTextView = (TextView) itemView.findViewById(R.id.emailTextview);
+		emailTextView = (TextView) itemView.findViewById(R.id.usernameTextview);
 		addButton = (Button) itemView.findViewById(R.id.addButton);
 	}
 

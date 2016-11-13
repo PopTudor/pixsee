@@ -22,7 +22,7 @@ interface AuthAPI {
 	@FormUrlEncoded
 	@POST(SERVER_SIGNUP_USER)
 	Observable<Response<JsonObject>> create(@Field("name") String name, @Field("email") String email,
-	                                        @Field("userName") String username, @Field("password") String password,
+	                                        @Field("username") String username, @Field("password") String password,
 	                                        @Field("pushToken") String pushToken);
 
 	@HEAD(SERVER_SIGNUP_USER)

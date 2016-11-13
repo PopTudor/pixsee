@@ -31,11 +31,16 @@ class MainPresenter implements MainContract.Presenter {
 	@Override
 	public void friendRequest(User user, boolean accepted) {
 		if (accepted){
-			mRepository.saveUser(user)
+			mRepository.acceptFriend(user)
 					.subscribe(new Action1<JsonObject>() {
 						@Override
 						public void call(JsonObject jsonObject) {
 							refreshFriendList();
+						}
+					}, new Action1<Throwable>() {
+						@Override
+						public void call(Throwable throwable) {
+							throwable.printStackTrace();
 						}
 					});
 		} else {

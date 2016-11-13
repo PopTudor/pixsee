@@ -93,7 +93,7 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 		MenuItemCompat.setOnActionExpandListener(menuItem, this);
 		menuItem.expandActionView();
 		SearchView searchView = ((SearchView) menuItem.getActionView());
-		searchView.setQueryHint("Username or email");
+		searchView.setQueryHint(getString(R.string.button_search_hint));
 		subscription = RxSearchView.queryTextChanges(searchView)
 				// check if it’s not empty (user removed text), if it is
 				// observable chain will stop here until user enters something.

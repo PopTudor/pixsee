@@ -22,5 +22,5 @@ interface SearchAPI {
 
 	@Multipart
 	@POST(ServerConstants.FRIENDS_REQUEST)
-	Observable<Response<JsonObject>> friendRequest(@Part("user") User user, @Part("to") String toToken);
+	Observable<Response<JsonObject>> friendRequest(@Part("sender") User sender, @Part("receiver") User receiver);
 }

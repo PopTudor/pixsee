@@ -163,8 +163,8 @@ public class Presenter implements AuthenticationContract.Presenter {
 			user.setUsername(email);
 	}
 
-	private boolean validateLogin(String userNameOrEmail, String password) {
-		if (userNameOrEmail.isEmpty()) {
+	private boolean validateLogin(String usernameOrEmail, String password) {
+		if (usernameOrEmail.isEmpty()) {
 			mView.get().showToast("The Username field is empty");
 			return false;
 		} else if (password.isEmpty()) {

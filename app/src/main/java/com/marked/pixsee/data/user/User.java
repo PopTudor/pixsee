@@ -27,7 +27,7 @@ public class User implements Parcelable, Comparable<User> {
 			return new User[size];
 		}
 	};
-	@SerializedName(value = "userId", alternate = {"id"})
+	@SerializedName(value = "id", alternate = {"userId"})
 	String id;
 	String name;
 	String email;

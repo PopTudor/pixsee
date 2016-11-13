@@ -5,9 +5,10 @@ import com.google.gson.JsonObject;
 import com.marked.pixsee.networking.ServerConstants;
 
 import retrofit2.http.GET;
-import retrofit2.http.POST;
+import retrofit2.http.Multipart;
+import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 import rx.Observable;
 
 import static com.marked.pixsee.networking.ServerConstants.FRIENDS_ACCEPTED;
@@ -28,8 +29,9 @@ public interface FriendsAPI {
 	 * @param whoAccepts  the user that accepts the friend
 	 * @return
 	 */
-	@POST(FRIENDS_ACCEPTED)
-	Observable<JsonObject> friendAccepted(@Query("who_requested") String whoRequested,@Query("who_accepts") String whoAccepts);
+	@Multipart
+	@PUT(FRIENDS_ACCEPTED)
+	Observable<JsonObject> friendAccepted(@Part("who_requested") String whoRequested, @Part("who_accepted") String whoAccepts);
 
 	/**
 	 * Sends a request to server in order to decline a friend
@@ -37,6 +39,7 @@ public interface FriendsAPI {
 	 * @param whoDeclines  the user that accepts the friend
 	 * @return
 	 */
-	@POST(FRIENDS_REJECTED)
-	Observable<JsonObject> friendRejected(@Query("who_requested") String whoRequested,@Query("who_accepts") String whoDeclines);
+	@Multipart
+	@PUT(FRIENDS_REJECTED)
+	Observable<JsonObject> friendRejected(@Part("who_requested") String whoRequested, @Part("who_accepted") String whoDeclines);
 }

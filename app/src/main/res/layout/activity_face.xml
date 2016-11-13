@@ -97,7 +97,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/round_button"
-            android:backgroundTint="@color/accent_dark"
+            android:backgroundTint="@color/accent"
             android:backgroundTintMode="screen"
             android:onClick="onCameraClick"
             android:tint="@color/white"

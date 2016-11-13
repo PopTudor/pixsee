@@ -16,9 +16,9 @@ public interface ServerConstants {
 	String SEARCH = "search";
 
 	String FRIENDS = "friends";
-	String FRIENDS_ACCEPTED = FRIENDS+"/accepted";
-	String FRIENDS_REJECTED = FRIENDS+"/rejected";
-	String FRIENDS_REQUEST = FRIENDS+"/request";
+	String FRIENDS_ACCEPTED = USER + "/accepted";
+	String FRIENDS_REJECTED = USER + "/rejected";
+	String FRIENDS_REQUEST = USER + "/requests";
 	String MESSAGES = "messages";
 	String PUSH_SERVICE = "push/";
 
