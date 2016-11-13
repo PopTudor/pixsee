@@ -17,7 +17,7 @@ public class UserToCvMapper implements Mapper<User,ContentValues> {
 		values.put(FriendConstants.NAME, user.getName());
 		values.put(FriendConstants.EMAIL, user.getEmail());
 		values.put(FriendConstants.TOKEN, user.getPushToken());
-		values.put(FriendConstants.USERNAME, user.getUserName());
+		values.put(FriendConstants.USERNAME, user.getUsername());
 		values.put(FriendConstants.PASSWORD, user.getPassword());
 		return values;
 	}

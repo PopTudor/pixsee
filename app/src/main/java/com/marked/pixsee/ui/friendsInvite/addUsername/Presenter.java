@@ -56,12 +56,6 @@ class Presenter implements AddUsernameContract.Presenter {
 		mSearchAPI.searchUsersByUsername(username)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
-				.map(new Func1<JsonObject, JsonArray>() {
-					@Override
-					public JsonArray call(JsonObject jsonObject) {
-						return jsonObject.getAsJsonArray();
-					}
-				})
 				.flatMap(new Func1<JsonArray, Observable<JsonElement>>() {
 					@Override
 					public Observable<JsonElement> call(JsonArray jsonElements) {

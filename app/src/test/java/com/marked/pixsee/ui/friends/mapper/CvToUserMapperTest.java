@@ -27,7 +27,7 @@ public class CvToUserMapperTest {
 		mCvToUserMapper = new CvToUserMapper();
 		mUser = new User("123", "abc", "abc@gmail.com", "abczxc", null, "abcD");
 		mContentValues.put(FriendContractDB.COLUMN_ID, mUser.getId());
-		mContentValues.put(FriendContractDB.COLUMN_USERNAME, mUser.getUserName());
+		mContentValues.put(FriendContractDB.COLUMN_USERNAME, mUser.getUsername());
 		mContentValues.put(FriendContractDB.COLUMN_EMAIL, mUser.getEmail());
 		mContentValues.put(FriendContractDB.COLUMN_TOKEN, mUser.getPushToken());
 		mContentValues.put(FriendContractDB.COLUMN_NAME, mUser.getName());
@@ -37,7 +37,7 @@ public class CvToUserMapperTest {
 	public void testMap() throws Exception {
 		User user = mCvToUserMapper.map(mContentValues);
 		Assert.assertEquals(user.getPassword(), mUser.getPassword());
-		Assert.assertEquals(user.getUserName(), mUser.getUserName());
+		Assert.assertEquals(user.getUsername(), mUser.getUsername());
 		Assert.assertEquals(user.getName(), mUser.getName());
 		Assert.assertEquals(user.getEmail(), mUser.getEmail());
 		Assert.assertEquals(user.getId(), mUser.getId());

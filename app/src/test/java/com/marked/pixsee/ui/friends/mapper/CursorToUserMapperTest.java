@@ -43,11 +43,11 @@ public class CursorToUserMapperTest {
 		Mockito.when(mCursor.getString(1)).thenReturn(user.getId());
 		Mockito.when(mCursor.getString(2)).thenReturn(user.getName());
 		Mockito.when(mCursor.getString(4)).thenReturn(user.getEmail());
-		Mockito.when(mCursor.getString(5)).thenReturn(user.getUserName());
+		Mockito.when(mCursor.getString(5)).thenReturn(user.getUsername());
 		Mockito.when(mCursor.getString(7)).thenReturn(user.getPushToken());
 
 		User user1 = mCursorToUserMapper.map(mCursor);
-		Assert.assertEquals(user.getUserName(), user1.getUserName());
+		Assert.assertEquals(user.getUsername(), user1.getUsername());
 		Assert.assertEquals(user.getName(),user1.getName());
 		Assert.assertEquals(user.getEmail(),user1.getEmail());
 		Assert.assertEquals(user.getPushToken(), user1.getPushToken());

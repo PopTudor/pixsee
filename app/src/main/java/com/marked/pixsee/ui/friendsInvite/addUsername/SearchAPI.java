@@ -1,5 +1,6 @@
 package com.marked.pixsee.ui.friendsInvite.addUsername;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.networking.ServerConstants;
@@ -17,7 +18,7 @@ import rx.Observable;
  */
 interface SearchAPI {
 	@GET(ServerConstants.SEARCH)
-	Observable<JsonObject> searchUsersByUsername(@Query("username") String username);
+	Observable<JsonArray> searchUsersByUsername(@Query("username") String username);
 
 	@Multipart
 	@POST(ServerConstants.FRIENDS_REQUEST)

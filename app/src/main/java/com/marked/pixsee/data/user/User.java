@@ -33,26 +33,26 @@ public class User implements Parcelable, Comparable<User> {
 	String email;
 	String pushToken;
 	String password;
-	String userName;
+	String username;
 	String phone;
 
-	public User(String id, String name, String email, String pushToken, String password, String userName) {
+	public User(String id, String name, String email, String pushToken, String password, String username) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.pushToken = pushToken;
 		this.password = password;
-		this.userName = userName;
+		this.username = username;
 	}
 
 	public User() {
 	}
 
-	public User(String email, String userName, String password, String pushToken) {
+	public User(String email, String username, String password, String pushToken) {
 		this.email = email;
 		this.pushToken = pushToken;
 		this.password = password;
-		this.userName = userName;
+		this.username = username;
 	}
 
 	public User(Parcel parcelIn) {
@@ -61,12 +61,12 @@ public class User implements Parcelable, Comparable<User> {
 		this.email = parcelIn.readString();
 		this.pushToken = parcelIn.readString();
 		this.password = parcelIn.readString();
-		this.userName = parcelIn.readString();
+		this.username = parcelIn.readString();
 	}
 
 	public User(Bundle extras) {
 		this(extras.getString("id"), extras.getString("name"), extras.getString("email"), extras.getString("pushToken")
-				, null, extras.getString("userName"));
+				, null, extras.getString("username"));
 	}
 
 	public static List<User> getRandomUsers(int num) {
@@ -107,7 +107,7 @@ public class User implements Parcelable, Comparable<User> {
 		dest.writeString(email);
 		dest.writeString(pushToken);
 		dest.writeString(password);
-		dest.writeString(userName);
+		dest.writeString(username);
 	}
 
 	public String getPushToken() {
@@ -142,12 +142,12 @@ public class User implements Parcelable, Comparable<User> {
 		this.email = email;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	@Override

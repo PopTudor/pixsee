@@ -34,6 +34,6 @@ public class UserToCvMapperTest {
 		Assert.assertEquals(user.getEmail(),result.getAsString(FriendConstants.EMAIL));
 		Assert.assertEquals(user.getPushToken(), result.getAsString(FriendConstants.TOKEN));
 		Assert.assertEquals(user.getPassword(),result.getAsString(FriendConstants.PASSWORD));
-		Assert.assertEquals(user.getUserName(), result.getAsString(FriendConstants.USERNAME));
+		Assert.assertEquals(user.getUsername(), result.getAsString(FriendConstants.USERNAME));
 	}
 }

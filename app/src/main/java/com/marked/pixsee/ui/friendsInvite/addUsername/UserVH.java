@@ -32,10 +32,10 @@ class UserVH extends RecyclerView.ViewHolder {
 //		if (user.getIconUrl() != null)
 //			simpleDraweeView.setImageURI(Uri.parse(user.getIconUrl()));
 		nameTextView.setText(user.getName());
-		if (user.getUserName() != null)
+		if (user.getUsername() != null)
 			emailTextView.setText(user.getEmail());
 		else
-			emailTextView.setText(user.getUserName());
+			emailTextView.setText(user.getUsername());
 		addButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

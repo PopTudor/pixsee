@@ -48,7 +48,7 @@ public class RemoteMessageToUserMapperTest {
 		Assert.assertEquals(user.getName(), NAME);
 		Assert.assertEquals(user.getEmail(), EMAIL);
 		Assert.assertEquals(user.getPushToken(), FROM);
-		Assert.assertEquals(user.getUserName(), USERNAME);
+		Assert.assertEquals(user.getUsername(), USERNAME);
 		Assert.assertEquals(user.getPassword(), null);
 	}
 }

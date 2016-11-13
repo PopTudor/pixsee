@@ -146,7 +146,7 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5]'
     // Facebook SDK
     // RX
-    compile 'io.reactivex:rxjava:1.1.8'
+    compile 'io.reactivex:rxjava:1.2.2'
     // RxJava
     compile 'io.reactivex:rxandroid:1.2.1'
     // RxAndroid

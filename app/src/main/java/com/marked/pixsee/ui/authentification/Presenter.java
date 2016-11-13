@@ -160,7 +160,7 @@ public class Presenter implements AuthenticationContract.Presenter {
 		if (Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches())
 			user.setEmail(email);
 		else
-			user.setUserName(email);
+			user.setUsername(email);
 	}
 
 	private boolean validateLogin(String userNameOrEmail, String password) {
