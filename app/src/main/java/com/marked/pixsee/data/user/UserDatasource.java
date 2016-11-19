@@ -22,7 +22,9 @@ public interface UserDatasource {
 
 	User getUser(@NonNull String tablename);
 
-	Observable<JsonObject> acceptFriend(@NonNull User user);
+	Observable<JsonObject> acceptFriendRequest(@NonNull User user);
+
+	Observable<JsonObject> rejectFriendRequest(@NonNull User user);
 
 	void saveUser(@NonNull List<User> user);
 

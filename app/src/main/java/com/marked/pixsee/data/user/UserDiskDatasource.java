@@ -73,8 +73,13 @@ public class UserDiskDatasource implements UserDatasource {
 	}
 
 	@Override
-	public Observable<JsonObject> acceptFriend(@NonNull User user) {
+	public Observable<JsonObject> acceptFriendRequest(@NonNull User user) {
 		db.getWritableDatabase().insertWithOnConflict(TABLE_NAME, null,userToCvMapper.map(user),SQLiteDatabase.CONFLICT_REPLACE);
+		return Observable.empty();
+	}
+
+	@Override
+	public Observable<JsonObject> rejectFriendRequest(@NonNull User user) {
 		return Observable.empty();
 	}
 

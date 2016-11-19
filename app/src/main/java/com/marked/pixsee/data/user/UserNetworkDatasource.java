@@ -89,9 +89,15 @@ public class UserNetworkDatasource implements UserDatasource {
 
 
 	@Override
-	public Observable<JsonObject> acceptFriend(@NonNull User user) {
+	public Observable<JsonObject> acceptFriendRequest(@NonNull User user) {
 		return mFriendsAPI.friendAccepted(user.getId(), mUserManager.getAppUser().getId())
 				.subscribeOn(Schedulers.io());
+	}
+
+	@Override
+	public Observable<JsonObject> rejectFriendRequest(@NonNull User user) {
+		return mFriendsAPI.friendRejected(user.getId(), mUserManager.getAppUser().getId())
+				       .subscribeOn(Schedulers.io());
 	}
 
 	@Override

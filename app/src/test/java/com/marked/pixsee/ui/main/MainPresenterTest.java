@@ -57,17 +57,17 @@ public class MainPresenterTest {
 	public void testFriendRequestAccepted() throws Exception {
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("test", true);
-		Mockito.doReturn(Observable.just(jsonObject)).when(mUserRepository).acceptFriend(mUser);
+		Mockito.doReturn(Observable.just(jsonObject)).when(mUserRepository).acceptFriendRequest(mUser);
 
 		mMainPresenter.friendRequest(mUser, true);
-		Mockito.verify(mUserRepository).acceptFriend(mUser);
+		Mockito.verify(mUserRepository).acceptFriendRequest(mUser);
 	}
 
 	@Test
 	public void testFriendRequestRejected() throws Exception {
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("test", true);
-		Mockito.doReturn(Observable.just(jsonObject)).when(mUserRepository).acceptFriend(mUser);
+		Mockito.doReturn(Observable.just(jsonObject)).when(mUserRepository).acceptFriendRequest(mUser);
 
 		mMainPresenter.friendRequest(mUser, false);
 	}

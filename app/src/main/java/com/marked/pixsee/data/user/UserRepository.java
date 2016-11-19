@@ -92,10 +92,15 @@ public class UserRepository implements UserDatasource {
     }
 
 	@Override
-	public Observable<JsonObject> acceptFriend(@NonNull User item) {
+	public Observable<JsonObject> acceptFriendRequest(@NonNull User item) {
 		cache.add(item);
-		disk.acceptFriend(item);
-		return network.acceptFriend(item);
+		disk.acceptFriendRequest(item);
+		return network.acceptFriendRequest(item);
+	}
+
+	@Override
+	public Observable<JsonObject> rejectFriendRequest(@NonNull User user) {
+		return network.rejectFriendRequest(user);
 	}
 
 	@Override

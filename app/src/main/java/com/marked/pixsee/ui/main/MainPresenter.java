@@ -29,9 +29,9 @@ class MainPresenter implements MainContract.Presenter {
 	}
 
 	@Override
-	public void friendRequest(User user, boolean accepted) {
+	public void friendRequest(@NonNull User user, boolean accepted) {
 		if (accepted){
-			mRepository.acceptFriend(user)
+			mRepository.acceptFriendRequest(user)
 					.subscribe(new Action1<JsonObject>() {
 						@Override
 						public void call(JsonObject jsonObject) {
@@ -44,7 +44,18 @@ class MainPresenter implements MainContract.Presenter {
 						}
 					});
 		} else {
+			mRepository.rejectFriendRequest(user)
+					.subscribe(new Action1<JsonObject>() {
+						@Override
+						public void call(JsonObject jsonObject) {
 
+						}
+					}, new Action1<Throwable>() {
+						@Override
+						public void call(Throwable throwable) {
+							throwable.printStackTrace();
+						}
+					});
 		}
 	}
 
