@@ -1,6 +1,7 @@
 package com.marked.pixsee.ui.friendsInvite.addUsername;
 
 import com.google.gson.Gson;
+import com.marked.pixsee.data.friends.FriendsAPI;
 import com.marked.pixsee.data.user.UserManager;
 import com.marked.pixsee.injection.scopes.FragmentScope;
 import com.marked.pixsee.networking.ServerConstants;
@@ -26,7 +27,7 @@ class AddUserModule {
 	@Provides
 	@FragmentScope
 	AddUsernameContract.Presenter providesPresenter(@Named(ServerConstants.SERVER) Retrofit retrofit, UserManager userManager, Gson gson) {
-		SearchAPI searchAPI = retrofit.create(SearchAPI.class);
+		FriendsAPI searchAPI = retrofit.create(FriendsAPI.class);
 		return new Presenter(view, userManager.getAppUser(), searchAPI, gson);
 	}
 }

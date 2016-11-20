@@ -49,6 +49,12 @@ class UserVH extends RecyclerView.ViewHolder {
 				mInteraction.onClick(relationship, getAdapterPosition());
 			}
 		});
+		addedButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mInteraction.onClick(relationship, getAdapterPosition());
+			}
+		});
 	}
 
 	private void setupAddButton(String status) {

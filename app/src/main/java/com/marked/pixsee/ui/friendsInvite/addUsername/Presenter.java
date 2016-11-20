@@ -6,15 +6,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.marked.pixsee.data.friends.FriendsAPI;
 import com.marked.pixsee.data.user.User;
 
 import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
-import retrofit2.Response;
 import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -28,15 +27,15 @@ class Presenter implements AddUsernameContract.Presenter {
 	private final WeakReference<AddUsernameContract.View> mView;
 	private final Gson mGson;
 	private final User mAppsUser;
-	private final SearchAPI mSearchAPI;
+	private final FriendsAPI mFriendsAPI;
 
 
-	public Presenter(AddUsernameContract.View view, User appUser, SearchAPI mSearchAPI, Gson gson) {
+	public Presenter(AddUsernameContract.View view, User appUser, FriendsAPI mSearchAPI, Gson gson) {
 		this.mView = new WeakReference<>(view);
 		mGson = gson;
 		this.mView.get().setPresenter(this);
 		this.mAppsUser = appUser;
-		this.mSearchAPI = mSearchAPI;
+		this.mFriendsAPI = mSearchAPI;
 	}
 
 	@Override
@@ -53,7 +52,7 @@ class Presenter implements AddUsernameContract.Presenter {
 	public void search(@NonNull String username) {
 		if (username.isEmpty())
 			return;
-		mSearchAPI.searchUsersByUsername(mAppsUser.getId(), username)
+		mFriendsAPI.searchUsersByUsername(mAppsUser.getId(), username)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.flatMap(new Func1<JsonArray, Observable<JsonElement>>() {
@@ -86,25 +85,44 @@ class Presenter implements AddUsernameContract.Presenter {
 	}
 
 	@Override
-	public void onClick(Relationship relationship, int position) {
-		mSearchAPI.friendRequest(mAppsUser, relationship.user)
-				.subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Observer<Response<JsonObject>>() {
-					@Override
-					public void onCompleted() {
+	public void onClick(final Relationship relationship, int position) {
+		if (relationship.status.equals(Relationship.Status.USER))
+			mFriendsAPI.friendRequest(mAppsUser, relationship.user)
+					.subscribeOn(Schedulers.io())
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(new Action1<Relationship>() {
+						@Override
+						public void call(Relationship relationship1) {
+							mView.get().update(relationship1);
+						}
+					}, new Action1<Throwable>() {
+						@Override
+						public void call(Throwable throwable) {
+							throwable.printStackTrace();
+						}
+					});
+		else if (relationship.status.equals(Relationship.Status.FRIEND) || relationship.status.equals(Relationship.Status.SENT_FRIEND_REQUEST)) {
+			mFriendsAPI.unfriend(mAppsUser.getId(), relationship.getUser().getId())
+					.subscribeOn(Schedulers.io())
+					.observeOn(AndroidSchedulers.mainThread())
+					.doOnNext(new Action1<Relationship>() {
+						@Override
+						public void call(Relationship relationship1) {
+							mView.get().update(relationship1);
+						}
+					})
+					.doOnError(new Action1<Throwable>() {
+						@Override
+						public void call(Throwable throwable) {
+							throwable.printStackTrace();
+						}
+					})
+					.subscribe();
+		}
 
-					}
+	}
 
-					@Override
-					public void onError(Throwable e) {
-
-					}
-
-					@Override
-					public void onNext(Response<JsonObject> jsonObjectResponse) {
-						// TODO: 22-Jul-16 add a green checkbox if friend request was sent successfully
-					}
-				});
+	private Relationship convertToRelationship(JsonObject jsonObject) {
+		return mGson.fromJson(jsonObject, Relationship.class);
 	}
 }

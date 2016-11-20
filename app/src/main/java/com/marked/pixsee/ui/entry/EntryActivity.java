@@ -21,7 +21,7 @@ import bolts.AppLinks;
 
 
 public class EntryActivity extends AppCompatActivity {
-	private Intent whatToStartIntent;
+	private Intent toStartIntent;
 	@Inject
 	UserManager mManager;
 
@@ -42,20 +42,20 @@ public class EntryActivity extends AppCompatActivity {
 	public void onResume() {
 		super.onResume();
 		if (mManager.getAppUser().getId() != null) {
-			whatToStartIntent = new Intent(this, MainActivity.class);
-			whatToStartIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			toStartIntent = new Intent(this, MainActivity.class);
+			toStartIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		} else {
-			whatToStartIntent = new Intent(this, AuthenticationActivity.class);
+			toStartIntent = new Intent(this, AuthenticationActivity.class);
 		}
 		prepareFriendRequest();
-		startActivity(whatToStartIntent);
+		startActivity(toStartIntent);
 		finish();
 	}
 
 	private void prepareFriendRequest() {
 		String action = getIntent().getAction();
 		if (action!=null && action.equals(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION))) {
-			whatToStartIntent.putExtra(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION), new User(getIntent().getExtras()));
+			toStartIntent.putExtra(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION), new User(getIntent().getExtras()));
 		}
 	}
 }

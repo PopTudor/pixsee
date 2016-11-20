@@ -19,6 +19,8 @@ interface AddUsernameContract {
 	interface View extends BaseView<Presenter> {
 		void showUsers(List<Relationship> users);
 
+		void update(Relationship relationship);
+
 		void showNoInternetConnection();
 	}
 }

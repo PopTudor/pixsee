@@ -16,7 +16,7 @@ import static com.marked.pixsee.ui.friendsInvite.addUsername.Relationship.Status
  * Created by Tudor on 20-Nov-16.
  */
 
-class Relationship {
+public class Relationship {
 	User user;
 	String status;
 
@@ -39,6 +39,22 @@ class Relationship {
 
 	public void setStatus(@Status String status) {
 		this.status = status;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Relationship that = (Relationship) o;
+
+		return user.getUsername().equals(that.user.getUsername());
+
+	}
+
+	@Override
+	public int hashCode() {
+		return user.getUsername().hashCode();
 	}
 
 	@Retention(RetentionPolicy.SOURCE)

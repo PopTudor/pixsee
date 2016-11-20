@@ -59,10 +59,10 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		ActivityComponent component =  DaggerActivityComponent.builder()
-				                               .activityModule(new ActivityModule((AppCompatActivity) getActivity()))
-				                               .sessionComponent(Pixsee.getSessionComponent())
-				                               .build();
+		ActivityComponent component = DaggerActivityComponent.builder()
+				                              .activityModule(new ActivityModule((AppCompatActivity) getActivity()))
+				                              .sessionComponent(Pixsee.getSessionComponent())
+				                              .build();
 		DaggerAddUserComponent.builder()
 				.activityComponent(component)
 				.addUserModule(new AddUserModule(this))
@@ -94,31 +94,31 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 		SearchView searchView = ((SearchView) menuItem.getActionView());
 		searchView.setQueryHint(getString(R.string.button_search_hint));
 		subscription = RxSearchView.queryTextChanges(searchView)
-				// check if it’s not empty (user removed text), if it is
-				// observable chain will stop here until user enters something.
-				.filter(new Func1<CharSequence, Boolean>() {
-					@Override
-					public Boolean call(CharSequence charSequence) {
-						if (charSequence != null && charSequence.length() >= 2)
-							return true;
-						mUsersAdapter.getUsersList().clear();
-						mUsersAdapter.notifyDataSetChanged();
-						return false;
-					}
-				})
-				// to prevent making requests too fast (as user may type fast),
-				// throttleLast will emit last item during 100ms from the time
-				// first item is emitted
-				.throttleLast(300, TimeUnit.MILLISECONDS)
-				// debounce will emit item only 200ms after last item is emitted
-				// (after user types in last character)
-				.debounce(500, TimeUnit.MILLISECONDS)
-				.subscribe(new Action1<CharSequence>() {
-					           @Override
-					           public void call(CharSequence charSequence) {
-						           mPresenter.search(charSequence.toString());
-					           }
-				           });
+				               // check if it’s not empty (user removed text), if it is
+				               // observable chain will stop here until user enters something.
+				               .filter(new Func1<CharSequence, Boolean>() {
+					               @Override
+					               public Boolean call(CharSequence charSequence) {
+						               if (charSequence != null && charSequence.length() >= 2)
+							               return true;
+						               mUsersAdapter.getUsersList().clear();
+						               mUsersAdapter.notifyDataSetChanged();
+						               return false;
+					               }
+				               })
+				               // to prevent making requests too fast (as user may type fast),
+				               // throttleLast will emit last item during 400ms from the time
+				               // first item is emitted
+				               .throttleLast(400, TimeUnit.MILLISECONDS)
+				               // debounce will emit item only 500ms after last item is emitted
+				               // (after user types in last character)
+				               .debounce(500, TimeUnit.MILLISECONDS)
+				               .subscribe(new Action1<CharSequence>() {
+					               @Override
+					               public void call(CharSequence charSequence) {
+						               mPresenter.search(charSequence.toString());
+					               }
+				               });
 	}
 
 
@@ -136,6 +136,13 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 	}
 
 	@Override
+	public void onStop() {
+		super.onStop();
+		if (!subscription.isUnsubscribed())
+			subscription.unsubscribe();
+	}
+
+	@Override
 	public void setPresenter(AddUsernameContract.Presenter presenter) {
 		mPresenter = presenter;
 	}
@@ -145,6 +152,13 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 		mUsersAdapter.getUsersList().clear();
 		mUsersAdapter.getUsersList().addAll(users);
 		mUsersAdapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void update(Relationship relationship) {
+		int index = mUsersAdapter.getUsersList().indexOf(relationship);
+		mUsersAdapter.getUsersList().set(index, relationship);
+		mUsersAdapter.notifyItemChanged(index, relationship);
 	}
 
 	@Override

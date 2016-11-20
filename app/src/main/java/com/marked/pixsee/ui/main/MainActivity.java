@@ -122,6 +122,12 @@ public class MainActivity
 	}
 
 	@Override
+	protected void onStop() {
+		super.onStop();
+		getIntent().removeExtra(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION));
+	}
+
+	@Override
 	public void setPresenter(MainContract.Presenter presenter) {
 		mPresenter = presenter;
 	}

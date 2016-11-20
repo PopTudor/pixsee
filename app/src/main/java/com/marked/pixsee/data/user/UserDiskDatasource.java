@@ -80,6 +80,7 @@ public class UserDiskDatasource implements UserDatasource {
 
 	@Override
 	public Observable<JsonObject> rejectFriendRequest(@NonNull User user) {
+		db.getWritableDatabase().delete(TABLE_NAME, "id = ?", new String[]{user.getId()});
 		return Observable.empty();
 	}
 
