@@ -14,12 +14,13 @@ public interface ServerConstants {
 	/* ENDPOINTS */
 	String USER = "users";
 	String SEARCH = "search";
+	String MESSAGES = "messages";
 
 	String FRIENDS = "friends";
 	String FRIENDS_ACCEPTED = USER + "/accepted";
 	String FRIENDS_REJECTED = USER + "/rejected";
 	String FRIENDS_REQUEST = USER + "/requests";
-	String MESSAGES = "messages";
+
 	String PUSH_SERVICE = "push/";
 
 	String USER_FRIENDS = USER +"/"+"friends";

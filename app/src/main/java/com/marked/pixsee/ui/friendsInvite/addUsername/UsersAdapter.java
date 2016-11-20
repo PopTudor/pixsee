@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,21 +15,22 @@ import java.util.List;
  * Created by Tudor on 03-Jun-16.
  */
 class UsersAdapter extends RecyclerView.Adapter<UserVH> {
-	private final List<User> mUsersList;
+	private final List<Relationship> mUsersList;
 	private final UserInteraction mInteraction;
 
 	UsersAdapter(@Nullable UserInteraction userInteraction) {
 		mInteraction = userInteraction;
-		mUsersList = new ArrayList<>(5);
+		mUsersList = new ArrayList<>(20); /* constant from the server; the backend returns at most 20 items, friends + users+ userst that
+		sent/received friend request */
 	}
 
 	@Override
 	public UserVH onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_add_user, parent, false);
-		return new UserVH(v,mInteraction);
+		return new UserVH(v, mInteraction);
 	}
 
-	List<User> getUsersList() {
+	List<Relationship> getUsersList() {
 		return mUsersList;
 	}
 
@@ -45,6 +45,6 @@ class UsersAdapter extends RecyclerView.Adapter<UserVH> {
 	}
 
 	interface UserInteraction {
-		void onClick(User user, int position);
+		void onClick(Relationship relationship, int position);
 	}
 }

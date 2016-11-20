@@ -53,7 +53,7 @@ class Presenter implements AddUsernameContract.Presenter {
 	public void search(@NonNull String username) {
 		if (username.isEmpty())
 			return;
-		mSearchAPI.searchUsersByUsername(username)
+		mSearchAPI.searchUsersByUsername(mAppsUser.getId(), username)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.flatMap(new Func1<JsonArray, Observable<JsonElement>>() {
@@ -62,21 +62,22 @@ class Presenter implements AddUsernameContract.Presenter {
 						return Observable.from(jsonElements);
 					}
 				})
-				.map(new Func1<JsonElement, User>() {
+				.map(new Func1<JsonElement, Relationship>() {
 					@Override
-					public User call(JsonElement jsonObject) {
-						return mGson.fromJson(jsonObject, User.class);
+					public Relationship call(JsonElement jsonObject) {
+						return mGson.fromJson(jsonObject, Relationship.class);
 					}
 				})
 				.toList()
-				.subscribe(new Action1<List<User>>() {
+				.subscribe(new Action1<List<Relationship>>() {
 					@Override
-					public void call(List<User> users) {
+					public void call(List<Relationship> users) {
 						mView.get().showUsers(users);
 					}
 				}, new Action1<Throwable>() {
 					@Override
 					public void call(Throwable throwable) {
+						throwable.printStackTrace();
 						if (throwable instanceof SocketTimeoutException)
 							mView.get().showNoInternetConnection();
 					}
@@ -85,8 +86,8 @@ class Presenter implements AddUsernameContract.Presenter {
 	}
 
 	@Override
-	public void onClick(User user, int position) {
-		mSearchAPI.friendRequest(mAppsUser, user)
+	public void onClick(Relationship relationship, int position) {
+		mSearchAPI.friendRequest(mAppsUser, relationship.user)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Observer<Response<JsonObject>>() {

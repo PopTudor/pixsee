@@ -2,7 +2,6 @@ package com.marked.pixsee.ui.friendsInvite.addUsername;
 
 import com.marked.pixsee.BasePresenter;
 import com.marked.pixsee.BaseView;
-import com.marked.pixsee.data.user.User;
 
 import java.util.List;
 
@@ -14,11 +13,11 @@ interface AddUsernameContract {
 		void search(String usernameOrEmail);
 
 		@Override
-		void onClick(User user, int position);
+		void onClick(Relationship relationship, int position);
 	}
 
 	interface View extends BaseView<Presenter> {
-		void showUsers(List<User> users);
+		void showUsers(List<Relationship> users);
 
 		void showNoInternetConnection();
 	}

@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
-import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
@@ -142,7 +141,7 @@ public class AddUsernameFragment extends Fragment implements MenuItemCompat.OnAc
 	}
 
 	@Override
-	public void showUsers(List<User> users) {
+	public void showUsers(List<Relationship> users) {
 		mUsersAdapter.getUsersList().clear();
 		mUsersAdapter.getUsersList().addAll(users);
 		mUsersAdapter.notifyDataSetChanged();
