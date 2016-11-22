@@ -36,12 +36,12 @@ public interface FriendsAPI {
 	 * Sends a request to server in order to accept a friend
 	 *
 	 * @param whoRequested the user that get's accepted as a friend
-	 * @param whoAccepts   the user that accepts the friend
+	 * @param whoAccepted   the user that accepts the friend
 	 * @return
 	 */
 	@Multipart
 	@PUT(FRIENDS_ACCEPTED)
-	Observable<JsonObject> friendAccepted(@Part("who_requested") String whoRequested, @Part("who_accepted") String whoAccepts);
+	Observable<JsonObject> friendAccepted(@Part("whoRequested") String whoRequested, @Part("whoAccepted") String whoAccepted);
 
 	/**
 	 * Sends a request to server in order to decline a friend
@@ -52,7 +52,7 @@ public interface FriendsAPI {
 	 */
 	@Multipart
 	@PUT(FRIENDS_REJECTED)
-	Observable<JsonObject> friendRejected(@Part("who_requested") String whoRequested, @Part("who_accepted") String whoDeclines);
+	Observable<JsonObject> friendRejected(@Part("whoRequested") String whoRequested, @Part("whoAccepted") String whoDeclines);
 
 	@GET(USER_SEARCH)
 	Observable<JsonArray> searchUsersByUsername(@Path("id") String id, @Query("username") String username);

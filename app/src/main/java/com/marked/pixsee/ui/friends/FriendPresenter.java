@@ -94,21 +94,20 @@ class FriendPresenter implements FriendsContract.Presenter {
 							});
 		} else {
 			repository.getUsers()
-					.flatMap(new Func1<List<User>, Observable<List<User>>>() {
+					.sorted()
+					.observeOn(AndroidSchedulers.mainThread())
+					.filter(new Func1<List<User>, Boolean>() {
 						@Override
-						public Observable<List<User>> call(List<User> users) {
-							return Observable.from(users).toSortedList();
+						public Boolean call(List<User> users) {
+							return users.size() > 0;
 						}
 					})
-					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(new Action1<List<User>>() {
 						           @Override
 						           public void call(List<User> users) {
-							           if (users.size() > 0) {
-								           mView.get().setRecyclerViewVisibility(View.VISIBLE);
-								           mView.get().onFriendsReplace(users);
-								           size = users.size();
-							           }
+							           mView.get().setRecyclerViewVisibility(View.VISIBLE);
+							           mView.get().onFriendsReplace(users);
+							           size = users.size();
 						           }
 					           }
 							, new Action1<Throwable>() {

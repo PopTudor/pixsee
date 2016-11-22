@@ -37,8 +37,9 @@ class ChatClient implements ChattingInterface {
 	ChatClient(User appUser, User thatUser) {
 		mAppUser = appUser;
 		mThatUser = thatUser;
+		final String SERVER_CHAT = ServerConstants.BASE_URL + ServerConstants.PORT;
 		try {
-			mSocket = IO.socket(ServerConstants.SERVER);
+			mSocket = IO.socket(SERVER_CHAT);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}

@@ -38,10 +38,6 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 			return new Message[size];
 		}
 	};
-	/**
-	 * Gets the notification params, which are immutable.
-	 */
-	private Map<String, String> notificationParams;
 	private String to;
 	@SerializedName(value = "from", alternate = {"from_usr"})
 	private String from;
@@ -141,10 +137,6 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 		bundle.putString(MessageConstants.CREATION_DATE, date);
 
 		return bundle;
-	}
-
-	public Map<String, String> getNotificationParams() {
-		return notificationParams;
 	}
 
 	public String getTo() {
