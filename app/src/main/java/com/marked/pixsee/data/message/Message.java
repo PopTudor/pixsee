@@ -9,14 +9,10 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 import com.marked.pixsee.ui.chat.data.MessageConstants;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -42,8 +38,8 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 	@SerializedName(value = "from", alternate = {"from_usr"})
 	private String from;
 	@SerializedName(value = "messageType", alternate = {"type"})
-	private Integer messageType;
-	private String date;
+	private int messageType;
+	private long date;
 	private String id;
 	/**
 	 * Gets the payload data, which is immutable.
@@ -78,7 +74,7 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 		messageType = parcelIn.readInt();
 		to = parcelIn.readString();
 		from = parcelIn.readString();
-		date = parcelIn.readString();
+		date = parcelIn.readLong();
 		id = parcelIn.readString();
 	}
 
@@ -94,49 +90,8 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 		dest.writeInt(messageType);
 		dest.writeString(to);
 		dest.writeString(from);
-		dest.writeString(date);
+		dest.writeLong(date);
 		dest.writeString(id);
-	}
-
-	public JSONObject toJSON() {
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put(MessageConstants.MESSAGE_TYPE, messageType);
-			jsonObject.put(MessageConstants.DATA_PAYLOAD, mapToJSON(data));
-			jsonObject.put(MessageConstants.TO, to);
-			jsonObject.put(MessageConstants.FROM, from);
-			jsonObject.put(MessageConstants.CREATION_DATE, date);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		return jsonObject;
-	}
-
-	private JSONObject mapToJSON(Map<String, String> map) {
-		JSONObject result = new JSONObject();
-
-		try {
-			for (Map.Entry<String, String> it : map.entrySet()) {
-				result.put(it.getKey(), it.getValue());
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	public Bundle toBundle() {
-		Bundle bundle = new Bundle();
-		if (data.containsKey(MessageConstants.DATA_BODY))
-			bundle.putString(MessageConstants.DATA_BODY, data.get(MessageConstants.DATA_BODY));
-		if (to != null && !to.isEmpty())
-			bundle.putString(MessageConstants.TO, to);
-		if (from != null && !from.isEmpty())
-			bundle.putString(MessageConstants.FROM, from);
-		bundle.putString(MessageConstants.CREATION_DATE, date);
-
-		return bundle;
 	}
 
 	public String getTo() {
@@ -147,20 +102,8 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 		return from;
 	}
 
-	public String getDate() {
+	public long getDate() {
 		return date;
-	}
-
-	private void appendMap(StringBuilder builder, String name, Map<String, String> map) {
-		if (!map.isEmpty()) {
-			builder.append(name).append("= {");
-			for (Map.Entry<String, String> entry : map.entrySet()) {
-				builder.append(entry.getKey()).append("=").append(entry.getValue()).append(",");
-			}
-			// Remove trailing ","
-			builder.delete(builder.length() - 1, builder.length());
-			builder.append("}, ");
-		}
 	}
 
 	@Override
@@ -185,19 +128,14 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 	}
 
 	public static class Builder {
-		private LinkedHashMap<String, String> data;
+		private Map<String, String> data = new HashMap<>();
 		// optional parameters
 		private String to;
 		private String from;
-		private String room;
 		private String id = UUID.randomUUID().toString();
 
-		private String date = String.valueOf(new Date().getTime());
+		private long date = new Date().getTime();
 		private int messageType = 0;
-
-		{
-			data = new LinkedHashMap<>();
-		}
 
 		/**
 		 * Adds a key/value pair to the payload data.
@@ -220,7 +158,7 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 			return this;
 		}
 
-		public Builder date(String date) {
+		public Builder date(long date) {
 			this.date = date;
 			return this;
 		}
@@ -251,16 +189,6 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 		}
 
 		/**
-		 * The room where to send the message
-		 *
-		 * @param room
-		 */
-		public Builder room(String room) {
-			this.room = room;
-			return this;
-		}
-
-		/**
 		 * Sets the messageType property (default value is 0).
 		 * MessageType is defined in MessageConstants.MessageType( ME_MESSAGE, YOU_MESSAGE )
 		 * Todo should this be abstracted away with a Decorator ?
@@ -270,70 +198,8 @@ public class Message implements Parcelable, MessageConstants, Comparable<Message
 			return this;
 		}
 
-		/**
-		 * Sets the notification icon.
-		 */
-		public Builder notificationIcon(String value) {
-			data.put(MessageConstants.NOTIFICATION_ICON, value);
-			return this;
-		}
-
-		/**
-		 * Sets the notification title text.
-		 */
-		public Builder notificationTitle(String value) {
-			data.put(MessageConstants.NOTIFICATION_TITLE, value);
-			return this;
-		}
-
-		/**
-		 * Sets the notification body text.
-		 */
-		public Builder notificationBody(String value) {
-			data.put(MessageConstants.NOTIFICATION_BODY, value);
-			return this;
-		}
-
-		/**
-		 * Sets the notification click action.
-		 */
-		public Builder notificationClickAction(String value) {
-			data.put(MessageConstants.NOTIFICATION_ACTION_CLICK, value);
-			return this;
-		}
-
-		/**
-		 * Sets the notification sound.
-		 */
-		public Builder notificationSound(String value) {
-			data.put("sound", value);
-			return this;
-		}
-
-		/**
-		 * Sets the notification tag.
-		 */
-		public Builder notificationTag(String value) {
-			data.put("tag", value);
-			return this;
-		}
-
-		/**
-		 * Sets the notification color.
-		 */
-		public Builder notificationColor(String value) {
-			data.put("color", value);
-			return this;
-		}
-
 		public Message build() {
 			return new Message(this);
 		}
 	}
 }
-
-//	fun message(init:Message.()->Unit):Message{
-//			                           val message=Message()
-//			                           message.init()
-//			                           return message
-//			                           }

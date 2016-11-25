@@ -105,7 +105,7 @@ dependencies {
     def supportVersion = "25.0.1"
     def gservicesVersion = "9.8.0"
     //    compile project(':pixseecamera')
-    compile('io.socket:socket.io-client:0.6.3') {
+    compile('io.socket:socket.io-client:0.8.2') {
         exclude group: 'org.json', module: 'json'
     }
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {

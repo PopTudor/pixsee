@@ -17,8 +17,8 @@ public class MessageToCVMapper implements Mapper<Message, ContentValues> {
 		Map<String,String> data = message.getData();
 		String to = message.getTo();
 		String id = message.getId();
-		Integer messageType = message.getMessageType();
-		String date = message.getDate();
+		int messageType = message.getMessageType();
+		long date = message.getDate();
 
 		ContentValues values = new ContentValues();
 		if (data.containsKey(MessageConstants.DATA_BODY))

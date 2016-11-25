@@ -19,7 +19,7 @@ public class RemoteMessageToMessageMapper implements Mapper<RemoteMessage, Messa
 				       .to(to)
 				       .from(from)
 				.messageType(getMessageType(remoteMessage))
-				.date(String.valueOf(remoteMessage.getSentTime()))
+				       .date(remoteMessage.getSentTime())
 				.build();
 	}
 

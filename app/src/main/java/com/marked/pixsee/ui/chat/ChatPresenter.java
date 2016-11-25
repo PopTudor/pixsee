@@ -43,6 +43,7 @@ class ChatPresenter implements ChatContract.Presenter {
 	private ChatFragment.ChatFragmentInteraction mChatFragmentInteraction;
 	private File mPictureFile;
 	private User mThatUser;
+	private Gson mGson = new Gson();
 
 	ChatPresenter(ChatContract.View mView, ChatRepository mRepository, User appsUser, UploadAPI uploadAPI, ChattingInterface chatClient) {
 		this.mRepository = mRepository;
@@ -76,7 +77,7 @@ class ChatPresenter implements ChatContract.Presenter {
 	private void connect() {
 		mChatClient.connect();
 		JsonObject jsonObject = new JsonObject();
-		jsonObject.addProperty("user", new Gson().toJson(mAppsUser, User.class));
+		jsonObject.addProperty("user", mGson.toJson(mAppsUser, User.class));
 		jsonObject.addProperty("from", mAppsUser.getId());
 		jsonObject.addProperty("to", mThatUser.getId());
 		jsonObject.addProperty("to_token", mThatUser.getPushToken());
@@ -148,7 +149,7 @@ class ChatPresenter implements ChatContract.Presenter {
 										                   .to(message.getTo())
 										                   .addData(MessageConstants.DATA_BODY, responseBody.body().get("pictureName").getAsString())
 										                   .build();
-								mChatClient.emit(ChatClient.ON_NEW_MESSAGE, message1.toJSON());
+								mChatClient.emit(ChatClient.ON_NEW_MESSAGE, mGson.toJson(message1));
 							}
 						}
 					}, new Action1<Throwable>() {
@@ -161,7 +162,7 @@ class ChatPresenter implements ChatContract.Presenter {
 	}
 
 	private void sendMessage(@NonNull Message message) {
-		mChatClient.emit(ChatClient.ON_NEW_MESSAGE, message.toJSON());
+		mChatClient.emit(ChatClient.ON_NEW_MESSAGE, message);
 		mRepository.saveMessage(message);
 		mView.get().addMessage(message);
 	}

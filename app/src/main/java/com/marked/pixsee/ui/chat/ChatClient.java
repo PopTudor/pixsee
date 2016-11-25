@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.marked.pixsee.RxBus;
 import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
@@ -33,6 +32,7 @@ class ChatClient implements ChattingInterface {
 	private Socket mSocket;
 	private Emitter.Listener onMessage;
 	private Emitter.Listener onTyping;
+	private Gson mGson = new Gson();
 
 	ChatClient(User appUser, User thatUser) {
 		mAppUser = appUser;
@@ -64,7 +64,14 @@ class ChatClient implements ChattingInterface {
 
 	@Override
 	public void emit(String event, Object... objects) {
-		mSocket.emit(event, objects);
+		try {
+			for (Object object : objects)
+				mSocket.emit(event, new JSONObject(mGson.toJson(object)));
+			// JSONObject is needed because socketio uses it to parse and compose json strings
+			// https://github.com/socketio/socket.io-client-java#usage
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private Emitter.Listener onNewMessage() {
@@ -76,8 +83,7 @@ class ChatClient implements ChattingInterface {
 					public void run() {
 						try {
 							JSONObject json = new JSONObject(args[0].toString());
-							Gson gson = new GsonBuilder().create();
-							Message message = gson.fromJson(json.toString(), Message.class);
+							Message message = mGson.fromJson(json.toString(), Message.class);
 							Message.Builder builder = new Message.Builder()
 									                          .date(message.getDate())
 									                          .id(message.getId())

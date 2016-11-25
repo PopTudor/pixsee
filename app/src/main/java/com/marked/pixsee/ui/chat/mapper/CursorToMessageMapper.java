@@ -30,7 +30,7 @@ public class CursorToMessageMapper implements Mapper<Cursor,Message> {
 				.messageType(cursor.getInt(type))
 				.to(cursor.getString(to))
 				.addData(MessageContract.COLUMN_DATA_BODY,cursor.getString(bodyText))
-				.date(cursor.getString(date))
+				       .date(cursor.getInt(date))
 				.id(cursor.getString(id))
 				.build();
 	}
