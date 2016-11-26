@@ -10,21 +10,15 @@ import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.ui.main.MainActivity;
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.support.v4.SupportFragmentController;
-
-import rx.Observable;
-
-import static org.mockito.Mockito.doReturn;
 
 /**
  * Created by tudor on 10.08.2016.
@@ -35,8 +29,6 @@ public class SelfieFragmentTest extends SelfieFragment {
 	// Robolectric Controllers
 	private SupportFragmentController<SelfieFragmentTest> fragmentController;
 	String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
-	@Mock
-	RxPermissions rxPermissions;
 
 	@Before
 	public void setUp() throws Exception {
@@ -52,8 +44,6 @@ public class SelfieFragmentTest extends SelfieFragment {
 
 	@Test
 	public void havingPermissions_shouldInjectPresenter() throws Exception {
-		//build
-		doReturn(Observable.just(true)).when(rxPermissions).request(permissions);
 		// operate
 		fragmentController.create();
 		// check
@@ -74,8 +64,4 @@ public class SelfieFragmentTest extends SelfieFragment {
 				.inject(this);
 	}
 
-	@Override
-	public RxPermissions RxPermissions() {
-		return rxPermissions;
-	}
 }

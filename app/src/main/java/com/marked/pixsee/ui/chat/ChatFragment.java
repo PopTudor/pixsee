@@ -13,6 +13,7 @@ import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.marked.pixsee.R;
@@ -117,10 +119,8 @@ public class ChatFragment extends Fragment implements ChatContract.View, ChatAda
 			rootView.findViewById(R.id.sendButton)
 					.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getActivity(), R.color.transparent)));
 		}
-
-		((FloatingActionButton)rootView.findViewById(R.id.sendButton))
-				.getDrawable().setColorFilter(ContextCompat.getColor(getActivity(),R.color.teal), PorterDuff.Mode.SRC_ATOP);
-
+		DrawableCompat.setTint(((FloatingActionButton) rootView.findViewById(R.id.sendButton)).getDrawable(), ContextCompat.getColor(getActivity(), R.color.teal));
+		DrawableCompat.setTint(((ImageButton) rootView.findViewById(R.id.gallery)).getDrawable(), ContextCompat.getColor(getActivity(), R.color.dark_active_icons));
 		rootView.findViewById(R.id.clearImageButton).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

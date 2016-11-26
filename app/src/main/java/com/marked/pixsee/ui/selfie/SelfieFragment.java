@@ -1,6 +1,5 @@
 package com.marked.pixsee.ui.selfie;
 
-import android.Manifest;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
@@ -30,18 +29,15 @@ import com.marked.pixsee.ui.selfie.commands.FavThreeClick;
 import com.marked.pixsee.ui.selfie.commands.FavTwoClick;
 import com.marked.pixsee.ui.selfie.data.SelfieObject;
 import com.marked.pixsee.ui.selfie.renderer.RenderSurfaceView;
-import com.marked.pixsee.utility.Permissions;
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import rx.Observable;
-import rx.functions.Action1;
 
 import static com.marked.pixsee.ui.selfie.PictureDetailShareFragment.OnPictureDetailShareListener;
 
-public class SelfieFragment extends Fragment implements OnPictureDetailShareListener, SelfieContract.View, Injectable, Permissions {
+public class SelfieFragment extends Fragment implements OnPictureDetailShareListener, SelfieContract.View, Injectable {
 	private static final String TAG = SelfieFragment.class + "***";
 	private RenderSurfaceView mRendererSurfaceView;
 	private CameraTextureView mCameraTextureview;
@@ -57,9 +53,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	}
 
 	public static SelfieFragment newInstance() {
-
 		Bundle args = new Bundle();
-
 		SelfieFragment fragment = new SelfieFragment();
 		fragment.setArguments(args);
 		return fragment;
@@ -69,22 +63,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-		// Must be done during an initialization phase like onCreate
-		RxPermissions()
-				.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-				.subscribe(new Action1<Boolean>() {
-					@Override
-					public void call(Boolean granted) {
-						if (granted) { // Always true pre-M
-							// I can control the camera now
-							injectComponent();
-						} else {
-							// Oups permission denied
-							getActivity().onBackPressed();
-						}
-					}
-				});
+		injectComponent();
 	}
 
 	@Nullable
@@ -94,7 +73,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		mBottomLayout = (ViewGroup) view.findViewById(R.id.bottomLayout);
 		mCameraTextureview = (CameraTextureView) view.findViewById(R.id.camera_texture);
 		mCameraTextureview.setSurfaceTextureListener(mCameraTextureAvailable);
-//
+
 		mRendererSurfaceView = (RenderSurfaceView) view.findViewById(R.id.renderer_texture);
 		mRendererSurfaceView.setTransparent(true);
 		mRendererSurfaceView.setSurfaceRenderer(mFacePresenter.getRenderer());
@@ -245,11 +224,6 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 				                                   .activityComponent(daggerActivityComponent)
 				                                   .build();
 		mSelfieComponent.inject(this);
-	}
-
-	@Override
-	public RxPermissions RxPermissions() {
-		return RxPermissions.getInstance(getActivity());
 	}
 
 	// ===============================================================================================

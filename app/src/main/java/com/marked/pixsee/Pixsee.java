@@ -1,6 +1,6 @@
 package com.marked.pixsee;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -25,7 +25,7 @@ import io.fabric.sdk.android.Fabric;
 /**
  * Created by Tudor Pop on 17-Feb-16.
  */
-public class Pixsee extends Application {
+public class Pixsee extends MultiDexApplication {
 	private static AppComponent appComponent;
 	private static SessionComponent mSessionComponent;
 

@@ -88,7 +88,6 @@ set_target_properties(libopencv_videostab PROPERTIES
 #set_target_properties(libopencv_ts PROPERTIES
 #    IMPORTED_LOCATION "${libs}/${ANDROID_ABI}/libopencv_ts.a")
 
-########################### Detection Based Tracker ###########################
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -fexceptions -frtti")
 add_library(detectionBasedTracker SHARED DetectionBasedTracker_jni.cpp)
 

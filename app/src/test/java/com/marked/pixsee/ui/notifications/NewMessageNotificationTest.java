@@ -47,7 +47,7 @@ public class NewMessageNotificationTest {
 				           .addData(MessageConstants.DATA_BODY, MessageConstants.DATA_BODY)
 				           .addData("user", mGson.toJson(testUser))
 				           .messageType(2)
-				           .date("123")
+				           .date(123)
 				           .build();
 		MockitoAnnotations.initMocks(this);
 

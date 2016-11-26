@@ -1,6 +1,7 @@
 package com.marked.pixsee.ui.chat;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
@@ -24,10 +26,12 @@ import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
 import com.marked.pixsee.ui.selfie.PictureDetailSendFragment;
 import com.marked.pixsee.ui.selfie.SelfieFragment;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
 
 import rx.Observable;
+import rx.functions.Action1;
 
 /**
  * An activity representing a single Contact detail screen. This
@@ -94,7 +98,22 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.Chat
 
 	@Override
 	public void onCameraClick() {
-		View view = this.getCurrentFocus();
+		RxPermissions.getInstance(this)
+				.request(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+				.subscribe(new Action1<Boolean>() {
+					@Override
+					public void call(Boolean granted) {
+						if (granted) {
+							showCamera();
+						} else {
+							Toast.makeText(ChatActivity.this, "We need these permissions to take photos.", Toast.LENGTH_LONG).show();
+						}
+					}
+				});
+	}
+
+	private void showCamera() {
+		View view = getCurrentFocus();
 		if (view != null) {
 			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);

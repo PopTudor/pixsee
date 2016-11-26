@@ -38,5 +38,7 @@ interface MainContract {
 		void hideBottomNavigation();
 
 		void refreshFriendList();
+
+		void showBottomNavigation();
 	}
 }

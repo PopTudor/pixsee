@@ -1,5 +1,6 @@
 package com.marked.pixsee.ui.main;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -27,6 +29,7 @@ import com.marked.pixsee.ui.profile.ProfileFragment;
 import com.marked.pixsee.ui.selfie.PictureDetailSendFragment;
 import com.marked.pixsee.ui.selfie.PictureDetailShareFragment;
 import com.marked.pixsee.ui.selfie.SelfieFragment;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -34,14 +37,15 @@ import java.lang.ref.WeakReference;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.functions.Action1;
 
 import static com.marked.pixsee.ui.selfie.SelfieFragment.OnSelfieInteractionListener;
 
 public class MainActivity
 		extends AppCompatActivity
 		implements MainContract.View, Injectable, FriendFragment.FriendFragmentInteractionListener,
-		PictureDetailShareFragment.OnPictureDetailShareListener, OnSelfieInteractionListener,
-		PictureDetailSendFragment.OnPictureDetailSendListener, ProfileFragment.ProfileFragmentInteraction {
+				           PictureDetailShareFragment.OnPictureDetailShareListener, OnSelfieInteractionListener,
+				           PictureDetailSendFragment.OnPictureDetailSendListener, ProfileFragment.ProfileFragmentInteraction {
 	public static final String FRAGMENT_CHATS = "Chats";
 	public static final String FRAGMENT_PROFILE = "Profile";
 	public static final String FRAGMENT_CAMERA = "Camera";
@@ -87,8 +91,8 @@ public class MainActivity
 	public void injectComponent() {
 		ActivityModule activityModule = new ActivityModule(this);
 		mMainComponent = DaggerMainComponent.builder()
-				.activityModule(activityModule)
-				.mainModule(new MainModule())
+				                 .activityModule(activityModule)
+				                 .mainModule(new MainModule())
 				                 .sessionComponent(Pixsee.getSessionComponent())
 				                 .build();
 		mMainComponent.inject(this);
@@ -114,10 +118,10 @@ public class MainActivity
 		}
 	}
 
-	void newFriendRequest(Intent intent){
+	void newFriendRequest(Intent intent) {
 		/* this will enter when the user is not using the app and gets a friend request from FCM */
 		User user = intent.getParcelableExtra(getString(R.string.FRIEND_REQUEST_NOTIFICATION_ACTION));
-		if (user!=null)
+		if (user != null)
 			mPresenter.friendRequest(user);
 	}
 
@@ -149,13 +153,32 @@ public class MainActivity
 	@Override
 	public void showCamera(@NonNull PictureActionStrategy actionStrategy) {
 		mPictureActionStrategy = actionStrategy;
-		Fragment fragment = SelfieFragment.newInstance();
-		getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, fragment, FRAGMENT_CAMERA).addToBackStack(null).commit();
+		RxPermissions.getInstance(this)
+				.request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+				.subscribe(new Action1<Boolean>() {
+					@Override
+					public void call(Boolean granted) {
+						if (granted) {
+							Fragment fragment = SelfieFragment.newInstance();
+							getSupportFragmentManager().beginTransaction().add(R.id.mainContainer, fragment, FRAGMENT_CAMERA).addToBackStack(null).commit();
+						} else {
+							Toast.makeText(MainActivity.this, "We need these permissions in order to function properly.",
+									Toast.LENGTH_LONG)
+									.show();
+							showBottomNavigation();
+						}
+					}
+				});
 	}
 
 	@Override
 	public void hideBottomNavigation() {
 		findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
+	}
+
+	@Override
+	public void showBottomNavigation() {
+		findViewById(R.id.bottom_navigation).setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -197,9 +220,9 @@ public class MainActivity
 	@Override
 	public AlertDialog showFriendRequestDialog(@NonNull final User user) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this)
-				.setCancelable(false)
-				.setTitle("Friend Request")
-				.setMessage(String.format("Accept friend request from %s?", user.getName()));
+				                              .setCancelable(false)
+				                              .setTitle("Friend Request")
+				                              .setMessage(String.format("Accept friend request from %s?", user.getName()));
 
 		builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
@@ -224,6 +247,7 @@ public class MainActivity
 		Intent intent = new Intent(this, ChatActivity.class);
 		intent.putExtra(ChatActivity.EXTRA_CONTACT, friend);
 		startActivity(intent);
+
 	}
 
 	/***************************
@@ -239,6 +263,7 @@ public class MainActivity
 
 		OnTabSelectedHandler(MainContract.Presenter presenterWeakReference) {
 			mPresenterWeakReference = new WeakReference<>(presenterWeakReference);
+
 		}
 
 		@Override
@@ -249,8 +274,9 @@ public class MainActivity
 						mPresenterWeakReference.get().chatTabClicked();
 					break;
 				case 1:
-					if (!wasSelected)
+					if (!wasSelected) {
 						mPresenterWeakReference.get().cameraTabClicked();
+					}
 					break;
 				case 2:
 					if (!wasSelected)
@@ -259,5 +285,6 @@ public class MainActivity
 			}
 
 		}
+
 	}
 }
