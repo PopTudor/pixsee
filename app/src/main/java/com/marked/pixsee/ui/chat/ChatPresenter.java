@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.marked.pixsee.RxBus;
+import com.marked.pixsee.data.chat.Conversation;
+import com.marked.pixsee.data.chat.TypingMessage;
 import com.marked.pixsee.data.message.Message;
 import com.marked.pixsee.data.user.User;
 import com.marked.pixsee.networking.UploadAPI;
@@ -13,9 +15,6 @@ import com.marked.pixsee.ui.chat.data.ChatDatasource;
 import com.marked.pixsee.ui.chat.data.ChatRepository;
 import com.marked.pixsee.ui.chat.data.MessageConstants;
 import com.marked.pixsee.ui.commands.Command;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -29,6 +28,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Tudor on 2016-05-19.
@@ -44,6 +44,7 @@ class ChatPresenter implements ChatContract.Presenter {
 	private File mPictureFile;
 	private User mThatUser;
 	private Gson mGson = new Gson();
+	CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
 	ChatPresenter(ChatContract.View mView, ChatRepository mRepository, User appsUser, UploadAPI uploadAPI, ChattingInterface chatClient) {
 		this.mRepository = mRepository;
@@ -60,32 +61,31 @@ class ChatPresenter implements ChatContract.Presenter {
 		loadMore(50, true);
 		connect();
 
-		RxBus.getInstance().register(Boolean.class, new Action1<Boolean>() {
+		mCompositeSubscription.add(RxBus.getInstance().register(Boolean.class, new Action1<Boolean>() {
 			@Override
 			public void call(Boolean aBoolean) {
 				isTyping(aBoolean);
 			}
-		});
-		RxBus.getInstance().register(Message.class, new Action1<Message>() {
+		}));
+		mCompositeSubscription.add(RxBus.getInstance().register(Message.class, new Action1<Message>() {
 			@Override
 			public void call(Message message) {
 				receiveMessage(message);
 			}
-		});
+		}));
 	}
 
 	private void connect() {
 		mChatClient.connect();
-		JsonObject jsonObject = new JsonObject();
-		jsonObject.addProperty("user", mGson.toJson(mAppsUser, User.class));
-		jsonObject.addProperty("from", mAppsUser.getId());
-		jsonObject.addProperty("to", mThatUser.getId());
-		jsonObject.addProperty("to_token", mThatUser.getPushToken());
-		mChatClient.emit(ChatClient.ON_NEW_ROOM, jsonObject);
+		User user = new User(mAppsUser.getId(), mAppsUser.getName(), mAppsUser.getEmail(),
+				                    mAppsUser.getPushToken(), null, mAppsUser.getUsername());
+		Conversation conversation = new Conversation(user, mThatUser.getId(), mThatUser.getPushToken());
+		mChatClient.emit(ChatClient.ON_NEW_ROOM, conversation);
 	}
 
 	@Override
 	public void detach() {
+		mCompositeSubscription.unsubscribe();
 		mChatClient.disconnect();
 	}
 
@@ -96,16 +96,11 @@ class ChatPresenter implements ChatContract.Presenter {
 	}
 
 	public void onTyping(boolean typing) {
-		try {
-			mChatClient.emit(ChatClient.ON_TYPING,
-					new JSONObject(String.format("{from:%s,to:%s,typing:%s,to_token:\'%s\'}",
-							mAppsUser.getId(),
-							mThatUser.getId(),
-							typing,
-							mThatUser.getPushToken())));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		mChatClient.emit(ChatClient.ON_TYPING, new TypingMessage(mAppsUser.getId(),
+				                                                        mAppsUser.getPushToken(),
+				                                                        mThatUser.getId(),
+				                                                        mThatUser.getPushToken(),
+				                                                        typing));
 	}
 
 	@Override

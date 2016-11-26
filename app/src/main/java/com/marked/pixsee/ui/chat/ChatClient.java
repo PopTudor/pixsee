@@ -27,17 +27,20 @@ class ChatClient implements ChattingInterface {
 	static final String ON_NEW_MESSAGE = "onMessage";
 	static final String ON_NEW_ROOM = "onRoom";
 	static final String ON_TYPING = "onTyping";
+	static final String ON_CONNECT = "onConnect";
+	static final String ON_DISCONNECT = "onDisconnect";
 	private final User mAppUser;
 	private final User mThatUser;
 	private Socket mSocket;
 	private Emitter.Listener onMessage;
 	private Emitter.Listener onTyping;
+	private Emitter.Listener onConnect;
 	private Gson mGson = new Gson();
 
 	ChatClient(User appUser, User thatUser) {
 		mAppUser = appUser;
 		mThatUser = thatUser;
-		final String SERVER_CHAT = ServerConstants.BASE_URL + ServerConstants.PORT;
+		final String SERVER_CHAT = ServerConstants.BASE_URL + ServerConstants.CHAT_PORT;
 		try {
 			mSocket = IO.socket(SERVER_CHAT);
 		} catch (URISyntaxException e) {
@@ -45,7 +48,16 @@ class ChatClient implements ChattingInterface {
 		}
 		onMessage = onNewMessage();
 		onTyping = onTyping();
+		onConnect = onConnect();
+	}
 
+	private Emitter.Listener onConnect() {
+		return new Emitter.Listener() {
+			@Override
+			public void call(Object... args) {
+
+			}
+		};
 	}
 
 	@Override
@@ -53,10 +65,12 @@ class ChatClient implements ChattingInterface {
 		mSocket.connect();
 		mSocket.on(ON_NEW_MESSAGE, onMessage);
 		mSocket.on(ON_TYPING, onTyping);
+		mSocket.on(ON_CONNECT, onConnect);
 	}
 
 	@Override
 	public void disconnect() {
+		mSocket.emit(ON_DISCONNECT, mAppUser.getId());
 		mSocket.off(ON_NEW_MESSAGE, onMessage);
 		mSocket.off(ON_TYPING, onTyping);
 		mSocket.disconnect();

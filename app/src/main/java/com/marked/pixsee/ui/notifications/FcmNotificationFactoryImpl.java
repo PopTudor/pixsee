@@ -14,6 +14,8 @@ class FcmNotificationFactoryImpl implements GCMListenerService.FcmNotificationFa
 	private final Context mContext;
 	private final String FRIEND_REQUEST;
 	private final String NEW_MESSAGE;
+	private final RemoteMessageToUserMapper mUserMapper = new RemoteMessageToUserMapper();
+	private final RemoteMessageToMessageMapper mMessageMapper = new RemoteMessageToMessageMapper();
 
 
 	FcmNotificationFactoryImpl(Context context) {
@@ -27,9 +29,9 @@ class FcmNotificationFactoryImpl implements GCMListenerService.FcmNotificationFa
 		// all RemoteMessages have set in the data field an action. This action is set by the server
 		String clickAction = remoteMessage.getData().get("click_action");
 		if (clickAction.equals(FRIEND_REQUEST))
-			return new FriendRequestNotification(mContext, new RemoteMessageToUserMapper().map(remoteMessage));
+			return new FriendRequestNotification(mContext, mUserMapper.map(remoteMessage));
 		else if (clickAction.equals(NEW_MESSAGE))
-			return new NewMessageNotification(mContext, new RemoteMessageToMessageMapper().map(remoteMessage));
+			return new NewMessageNotification(mContext, mMessageMapper.map(remoteMessage));
 		else
 			throw new InvalidNotificationException("The click_action in remoteMessage is not valid !");
 	}

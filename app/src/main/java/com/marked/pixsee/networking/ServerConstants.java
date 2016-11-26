@@ -7,6 +7,7 @@ import com.marked.pixsee.BuildConfig;
  */
 public interface ServerConstants {
 	String PORT = ":3000";
+	String CHAT_PORT = ":4000";
 	String SCHEME_HTTP = "http://";
 	String IP = BuildConfig.SERVER_IP;
 	String BASE_URL = SCHEME_HTTP + IP;

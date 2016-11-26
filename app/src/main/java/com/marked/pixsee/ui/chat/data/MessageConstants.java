@@ -20,7 +20,7 @@ package com.marked.pixsee.ui.chat.data;
 public interface MessageConstants {
 	String TO = "to"; /* message destination, (destination is a better name but GCM uses to)*/
 	String ID = "cloudID"; /* message destination, (destination is a better name but GCM uses to)*/
-	String FROM = "from_usr";  /* source of the message (the app's user id)*/
+	String FROM = "fromUsr";  /* source of the message (the app's user id)*/
 	/* This parameter specifies the predefined key-value pairs of the data payload */
 	String DATA_PAYLOAD = "data"; /* JSON object that holds the body {data: {"body": "some nice text" }  } */
 	String DATA_BODY = "body";

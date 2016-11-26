@@ -47,7 +47,10 @@ class NewMessageNotification extends FcmNotification<Message> implements Injecta
     }
 
 	private User getUserFromMessageData() {
-		return mGson.fromJson(notificationObject.getData().get("user"), User.class);
+		User user = mGson.fromJson(notificationObject.getData().get("user"), User.class);
+		if (user == null)
+			throw new NullPointerException("Json message needs a user property! eg {user:...}");
+		return user;
 	}
 
 	@Override

@@ -65,6 +65,7 @@ public class GCMListenerService extends FirebaseMessagingService {
 				}, new Action1<Throwable>() {
 					@Override
 					public void call(Throwable throwable) {
+						throwable.printStackTrace();
 						Crashlytics.logException(throwable);
 					}
 				});
