@@ -2,14 +2,13 @@ package com.marked.pixsee.camerasource;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.hardware.Camera;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.TextureView;
 import android.view.ViewGroup;
 
-import com.google.android.gms.common.images.Size;
-
-import static com.marked.pixsee.ui.selfie.renderer.Utils.isPortraitMode;
+import static org.pixsee.renderer.Utils.isPortraitMode;
 
 /**
  * Created by Tudor on 15-Aug-16.
@@ -33,10 +32,10 @@ public class CameraTextureView extends TextureView {
 		super(context, attrs, defStyleAttr, defStyleRes);
 	}
 
-	public void setPreviewSize(Size size){
+	public void setPreviewSize(Camera.Size size) {
 		// Swap width and height sizes when in portrait, since it will be rotated 90 degrees
-		int cameraPreviewWidth = size.getWidth();
-		int cameraPreviewHeight = size.getHeight();
+		int cameraPreviewWidth = size.width;
+		int cameraPreviewHeight = size.height;
 		if (isPortraitMode(getContext())) {
 			int tmp = cameraPreviewWidth;
 			//noinspection SuspiciousNameCombination

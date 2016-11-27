@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import com.google.android.gms.common.images.Size;
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
 import com.marked.pixsee.camerasource.CameraTextureView;
@@ -24,22 +23,17 @@ import com.marked.pixsee.injection.Injectable;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
-import com.marked.pixsee.ui.selfie.commands.FavOneClick;
-import com.marked.pixsee.ui.selfie.commands.FavThreeClick;
-import com.marked.pixsee.ui.selfie.commands.FavTwoClick;
-import com.marked.pixsee.ui.selfie.data.SelfieObject;
-import com.marked.pixsee.ui.selfie.renderer.RenderSurfaceView;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import static com.marked.pixsee.ui.selfie.PictureDetailShareFragment.OnPictureDetailShareListener;
 
 public class SelfieFragment extends Fragment implements OnPictureDetailShareListener, SelfieContract.View, Injectable {
 	private static final String TAG = SelfieFragment.class + "***";
-	private RenderSurfaceView mRendererSurfaceView;
 	private CameraTextureView mCameraTextureview;
 	private ViewGroup mBottomLayout;
 	private OnSelfieInteractionListener mOnSelfieInteractionListener;
@@ -73,10 +67,6 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 		mBottomLayout = (ViewGroup) view.findViewById(R.id.bottomLayout);
 		mCameraTextureview = (CameraTextureView) view.findViewById(R.id.camera_texture);
 		mCameraTextureview.setSurfaceTextureListener(mCameraTextureAvailable);
-
-		mRendererSurfaceView = (RenderSurfaceView) view.findViewById(R.id.renderer_texture);
-		mRendererSurfaceView.setTransparent(true);
-		mRendererSurfaceView.setSurfaceRenderer(mFacePresenter.getRenderer());
 
 		return view;
 	}
@@ -152,8 +142,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	}
 
 	public Observable<Bitmap> getPicture() {
-//		return Observable.just(mRendererSurfaceView.getBitmap()).subscribeOn(Schedulers.computation());
-		return Observable.empty();
+		return Observable.just(mCameraTextureview.getDrawingCache()).subscribeOn(Schedulers.computation());
 	}
 
 	//==============================================================================================
@@ -173,35 +162,12 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	}
 
 	private void setupListeners(@NonNull View view) {
-		view.findViewById(R.id.favorite1).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mFacePresenter.execute(new FavOneClick(getContext(), (OnFavoritesListener) mFacePresenter.getRenderer()));
-			}
-		});
-		view.findViewById(R.id.favorite2).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mFacePresenter.execute(new FavTwoClick(getContext(), (OnFavoritesListener) mFacePresenter.getRenderer()));
-			}
-		});
-		view.findViewById(R.id.favorite3).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mFacePresenter.execute(new FavThreeClick(getContext(), (OnFavoritesListener) mFacePresenter.getRenderer()));
-			}
-		});
 		view.findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View cameraButton) {
 				mFacePresenter.takePicture();
 			}
 		});
-	}
-
-	@Override
-	public void setCameraTextureViewSize(Size size) {
-		mCameraTextureview.setPreviewSize(size);
 	}
 
 	@Override
@@ -224,13 +190,6 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 				                                   .activityComponent(daggerActivityComponent)
 				                                   .build();
 		mSelfieComponent.inject(this);
-	}
-
-	// ===============================================================================================
-	// Interaction listener interfaces
-	// ===============================================================================================
-	public interface OnFavoritesListener {
-		void onFavoriteClicked(SelfieObject object);
 	}
 
 	public interface OnSelfieInteractionListener {

@@ -3,17 +3,9 @@ package com.marked.pixsee.ui.selfie;
 import android.graphics.SurfaceTexture;
 import android.support.annotation.NonNull;
 
-import com.google.android.gms.common.images.Size;
-import com.marked.pixsee.camerasource.PictureCallback;
 import com.marked.pixsee.camerasource.PixseeCamera;
-import com.marked.pixsee.camerasource.ShutterCallback;
 import com.marked.pixsee.ui.commands.Command;
-import com.marked.pixsee.ui.selfie.renderer.SelfieRenderer;
 
-import org.rajawali3d.renderer.ISurfaceRenderer;
-import org.rajawali3d.renderer.Renderer;
-
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 /**
@@ -22,12 +14,10 @@ import java.lang.ref.WeakReference;
 class FacePresenter implements SelfieContract.Presenter {
 	private final PixseeCamera cameraSource;
 	private WeakReference<SelfieContract.View> mView;
-	private Renderer renderer;
 	private SurfaceTexture mCameraSurfaceTexture;
 
-	FacePresenter(@NonNull SelfieContract.View view, @NonNull Renderer renderer, @NonNull PixseeCamera cameraSource) {
+	FacePresenter(@NonNull SelfieContract.View view, @NonNull PixseeCamera cameraSource) {
 		this.mView = new WeakReference<>(view);
-		this.renderer = renderer;
 		this.cameraSource = cameraSource;
 		this.mView.get().setPresenter(this);
 	}
@@ -35,17 +25,17 @@ class FacePresenter implements SelfieContract.Presenter {
 	@Override
 	public void takePicture() {
 		mView.get().displayEmojiActions(false);
-		cameraSource.takePicture(new ShutterCallback() {
-			@Override
-			public void onShutter() {
-				mView.get().showTakenPictureActions(); /* when the user touches the selfie button */
-			}
-		}, new PictureCallback() {
-			@Override
-			public void onPictureTaken(byte[] data) {
-				cameraSource.stop();
-			}
-		});
+//		cameraSource.takePicture(new ShutterCallback() {
+//			@Override
+//			public void onShutter() {
+//				mView.get().showTakenPictureActions(); /* when the user touches the selfie button */
+//			}
+//		}, new PictureCallback() {
+//			@Override
+//			public void onPictureTaken(byte[] data) {
+//				cameraSource.stop();
+//			}
+//		});
 	}
 
 	@Override
@@ -61,34 +51,28 @@ class FacePresenter implements SelfieContract.Presenter {
 	}
 
 	private void startCamera() {
-		try {
+//		try {
 			if (mCameraSurfaceTexture != null) {
-				cameraSource.start(mCameraSurfaceTexture);
+//				cameraSource.start(mCameraSurfaceTexture);
 				setPreviewSizes();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (RuntimeException cameraNotAvailable) {
-			mView.get().showCameraErrorDialog();
-		}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (RuntimeException cameraNotAvailable) {
+//			mView.get().showCameraErrorDialog();
+//		}
 	}
 
 	private void setPreviewSizes() {
-		Size size = cameraSource.getPreviewSize();
-		// render preview size
-		((SelfieRenderer) renderer).setCameraInfo(size, cameraSource.getCameraFacing());
+//		Size size = cameraSource.getPreviewSize();
+//		((SelfieRenderer) renderer).setCameraInfo(size, cameraSource.getCameraFacing());
 		// cameraTextureView preview size
-		mView.get().setCameraTextureViewSize(size);
+//		mView.get().setCameraTextureViewSize(size);
 	}
 
 	@Override
 	public void release() {
-		cameraSource.release();
-	}
-
-	@Override
-	public ISurfaceRenderer getRenderer() {
-		return renderer;
+//		cameraSource.release();
 	}
 
 	@Override

@@ -30,13 +30,13 @@ def versionSmallPatch = 1
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.1'
 
     defaultConfig {
         applicationId 'com.marked.pixsee'
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch * 10 +versionSmallPatch
+        versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch * 10 + versionSmallPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -50,7 +50,7 @@ android {
 //        }
 
     }
-
+    lintOptions { abortOnError false }
     archivesBaseName = rootProject.projectDir.getName()
     dexOptions {
         incremental true
@@ -79,7 +79,6 @@ android {
 //            minifyEnabled true
 //            proguardFiles(files { file('./proguard').listFiles() })
             multiDexEnabled true
-
         }
     }
 
@@ -103,7 +102,7 @@ android {
 dependencies {
     def supportVersion = "25.0.1"
     def gservicesVersion = "9.8.0"
-    //    compile project(':pixseecamera')
+    compile project(':openCVLibrary310')
     compile('io.socket:socket.io-client:0.8.2') {
         exclude group: 'org.json', module: 'json'
     }
@@ -115,8 +114,6 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$supportVersion"
     compile "com.android.support:design:$supportVersion"
     compile "com.google.firebase:firebase-messaging:$gservicesVersion"
-    // Firebase
-    compile "com.google.android.gms:play-services-vision:$gservicesVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     // DESIGN
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
@@ -124,9 +121,6 @@ dependencies {
     compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
     // ChatView
     compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
-    // Dilating Dots
-    compile 'org.rajawali3d:rajawali:1.1.505-SNAPSHOT@aar'
-    // Rajawali
     compile 'com.aurelhubert:ahbottomnavigation:1.2.3'
     // Bottom navigation
     compile 'com.github.clans:fab:1.6.2'

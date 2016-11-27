@@ -1,1 +1,1 @@
-include ':app', ':openCVLibrary310', ':pixseecamera'
+include ':app', ':openCVLibrary310'

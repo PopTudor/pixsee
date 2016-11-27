@@ -39,11 +39,6 @@ public class FakeUserDatasource implements UserDatasource {
 	}
 
 	@Override
-	public Observable<JsonObject> saveUser(@NonNull User user) {
-		return Observable.empty();
-	}
-
-	@Override
 	public void saveUser(@NonNull List<User> user) {
 
 	}
@@ -67,4 +62,15 @@ public class FakeUserDatasource implements UserDatasource {
 	public void clear() {
 
 	}
+
+	@Override
+	public Observable<JsonObject> acceptFriendRequest(@NonNull User user) {
+		return Observable.empty();
+	}
+
+	@Override
+	public Observable<JsonObject> rejectFriendRequest(@NonNull User user) {
+		return Observable.empty();
+	}
+
 }
