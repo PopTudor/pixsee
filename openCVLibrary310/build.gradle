@@ -35,4 +35,5 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'org.rajawali3d:rajawali:1.1.505-SNAPSHOT@aar'
+    compile "com.android.support:design:25.0.1"
 }

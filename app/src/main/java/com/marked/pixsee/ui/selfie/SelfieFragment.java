@@ -6,7 +6,6 @@ import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,23 +17,23 @@ import android.view.WindowManager;
 
 import com.marked.pixsee.Pixsee;
 import com.marked.pixsee.R;
-import com.marked.pixsee.camerasource.CameraTextureView;
 import com.marked.pixsee.injection.Injectable;
 import com.marked.pixsee.injection.components.ActivityComponent;
 import com.marked.pixsee.injection.components.DaggerActivityComponent;
 import com.marked.pixsee.injection.modules.ActivityModule;
 
+import org.pixsee.CameraFragment;
+import org.pixsee.CameraView;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 import static com.marked.pixsee.ui.selfie.PictureDetailShareFragment.OnPictureDetailShareListener;
 
-public class SelfieFragment extends Fragment implements OnPictureDetailShareListener, SelfieContract.View, Injectable {
+public class SelfieFragment extends CameraFragment implements OnPictureDetailShareListener, SelfieContract.View, Injectable {
 	private static final String TAG = SelfieFragment.class + "***";
-	private CameraTextureView mCameraTextureview;
 	private ViewGroup mBottomLayout;
 	private OnSelfieInteractionListener mOnSelfieInteractionListener;
 	@Inject
@@ -44,6 +43,7 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	TextureView.SurfaceTextureListener mCameraTextureAvailable;
 
 	public SelfieFragment() {
+		super();
 	}
 
 	public static SelfieFragment newInstance() {
@@ -65,8 +65,9 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_face, container, false);
 		mBottomLayout = (ViewGroup) view.findViewById(R.id.bottomLayout);
-		mCameraTextureview = (CameraTextureView) view.findViewById(R.id.camera_texture);
-		mCameraTextureview.setSurfaceTextureListener(mCameraTextureAvailable);
+//		FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.previewContainer);
+//		frameLayout.addView(mCameraView);
+		mCameraView = (CameraView) view.findViewById(R.id.cameraView);
 
 		return view;
 	}
@@ -77,20 +78,21 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	@Override
 	public void onResume() {
 		super.onResume();
-		setTextureIfAvailable();
+//		setTextureIfAvailable();
 		mFacePresenter.resumeSelfie();
 		/* if we resume and the user had the PictureAction screen, make him take another picture*/
 		if (getActivity().getSupportFragmentManager().getBackStackEntryCount() > 0)
 			getActivity().getSupportFragmentManager().popBackStack();
 	}
 
-	/**
-	 * if screen was locked cameraTextureview will not be recreated since we have one
-	 */
-	private void setTextureIfAvailable() {
-		if (mCameraTextureview.isAvailable())
-			mCameraTextureAvailable.onSurfaceTextureAvailable(mCameraTextureview.getSurfaceTexture(), mCameraTextureview.getWidth(), mCameraTextureview.getHeight());
-	}
+
+	//	/**
+//	 * if screen was locked cameraTextureview will not be recreated since we have one
+//	 */
+//	private void setTextureIfAvailable() {
+//		if (mCameraTextureview.isAvailable())
+//			mCameraTextureAvailable.onSurfaceTextureAvailable(mCameraTextureview.getSurfaceTexture(), mCameraTextureview.getWidth(), mCameraTextureview.getHeight());
+//	}
 
 	@Override
 	public void showTakenPictureActions() {
@@ -142,7 +144,8 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 	}
 
 	public Observable<Bitmap> getPicture() {
-		return Observable.just(mCameraTextureview.getDrawingCache()).subscribeOn(Schedulers.computation());
+//		return Observable.just(mCameraView.getDrawingCache()).subscribeOn(Schedulers.computation());
+		return Observable.empty();
 	}
 
 	//==============================================================================================
@@ -151,8 +154,8 @@ public class SelfieFragment extends Fragment implements OnPictureDetailShareList
 
 	@Override
 	public void resumeSelfie() {
-		if (mCameraTextureview.isAvailable())
-			mFacePresenter.resumeSelfie();
+//		if (mCameraTextureview.isAvailable())
+//			mFacePresenter.resumeSelfie();
 	}
 
 	@Override

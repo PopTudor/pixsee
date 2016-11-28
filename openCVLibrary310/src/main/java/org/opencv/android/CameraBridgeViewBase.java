@@ -28,15 +28,20 @@ import java.util.List;
  */
 public abstract class CameraBridgeViewBase extends SurfaceView implements SurfaceHolder.Callback {
 
+	private static final String TAG = "CameraBridge";
+	private static final int MAX_UNSPECIFIED = -1;
+	private static final int STOPPED = 0;
+	private static final int STARTED = 1;
 	public static final int CAMERA_ID_ANY = -1;
 	public static final int CAMERA_ID_BACK = 99;
 	public static final int CAMERA_ID_FRONT = 98;
 	public static final int RGBA = 1;
 	public static final int GRAY = 2;
-	private static final String TAG = "CameraBridge";
-	private static final int MAX_UNSPECIFIED = -1;
-	private static final int STOPPED = 0;
-	private static final int STARTED = 1;
+	private final Object mSyncObject = new Object();
+	private int mState = STOPPED;
+	private Bitmap mCacheBitmap;
+	private CvCameraViewListener2 mListener;
+	private boolean mSurfaceExist;
 	protected int mFrameWidth;
 	protected int mFrameHeight;
 	protected int mMaxHeight;
@@ -46,11 +51,6 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 	protected int mCameraIndex = CAMERA_ID_ANY;
 	protected boolean mEnabled;
 	protected FpsMeter mFpsMeter = null;
-	private int mState = STOPPED;
-	private Bitmap mCacheBitmap;
-	private CvCameraViewListener2 mListener;
-	private boolean mSurfaceExist;
-	private Object mSyncObject = new Object();
 
 	public CameraBridgeViewBase(Context context, int cameraId) {
 		super(context);
@@ -274,6 +274,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 			mCacheBitmap.recycle();
 		}
 	}
+
 
 	/**
 	 * This method shall be called by the subclasses when they have valid

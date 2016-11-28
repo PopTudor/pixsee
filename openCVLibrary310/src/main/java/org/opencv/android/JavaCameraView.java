@@ -30,8 +30,6 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
 
 	private static final int MAGIC_TEXTURE_ID = 10;
 	private static final String TAG = "JavaCameraView";
-	protected Camera mCamera;
-	protected JavaCameraFrame[] mCameraFrame;
 	private byte mBuffer[];
 	private Mat[] mFrameChain;
 	private int mChainIdx = 0;
@@ -39,6 +37,8 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
 	private boolean mStopThread;
 	private SurfaceTexture mSurfaceTexture;
 	private boolean mCameraFrameReady = false;
+	protected Camera mCamera;
+	protected JavaCameraFrame[] mCameraFrame;
 
 	public JavaCameraView(Context context, int cameraId) {
 		super(context, cameraId);
@@ -346,4 +346,5 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
 			Log.d(TAG, "Finish processing thread");
 		}
 	}
+
 }
