@@ -8,6 +8,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.hardware.Camera;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -38,6 +39,8 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 	public static final int RGBA = 1;
 	public static final int GRAY = 2;
 	private final Object mSyncObject = new Object();
+	private final Rect srcRect = new Rect();
+	private final Rect dstRect = new Rect();
 	private int mState = STOPPED;
 	private Bitmap mCacheBitmap;
 	private CvCameraViewListener2 mListener;
@@ -87,7 +90,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 		this.mCameraIndex = cameraIndex;
 	}
 
-	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
+	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.d(TAG, "call surfaceChanged event");
 		synchronized (mSyncObject) {
 			if (!mSurfaceExist) {
@@ -95,7 +98,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 				checkCurrentState();
 			} else {
 				/** Surface changed. We need to stop camera and restart with new parameters */
-	            /* Pretend that old surface has been destroyed */
+				/* Pretend that old surface has been destroyed */
 				mSurfaceExist = false;
 				checkCurrentState();
                 /* Now use new surface. Say we have it now */
@@ -309,21 +312,18 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 			if (canvas != null) {
 				canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
 				Log.d(TAG, "mStretch value: " + mScale);
+				canvas.save();
+				canvas.scale(mScale, mScale, getWidth() / 2, getHeight() / 2);
 
-				if (mScale != 0) {
-					canvas.drawBitmap(mCacheBitmap, new Rect(0, 0, mCacheBitmap.getWidth(), mCacheBitmap.getHeight()),
-							new Rect((int) ((canvas.getWidth() - mScale * mCacheBitmap.getWidth()) / 2),
-									        (int) ((canvas.getHeight() - mScale * mCacheBitmap.getHeight()) / 2),
-									        (int) ((canvas.getWidth() - mScale * mCacheBitmap.getWidth()) / 2 + mScale * mCacheBitmap.getWidth()),
-									        (int) ((canvas.getHeight() - mScale * mCacheBitmap.getHeight()) / 2 + mScale * mCacheBitmap.getHeight())), null);
-				} else {
-					canvas.drawBitmap(mCacheBitmap, new Rect(0, 0, mCacheBitmap.getWidth(), mCacheBitmap.getHeight()),
-							new Rect((canvas.getWidth() - mCacheBitmap.getWidth()) / 2,
-									        (canvas.getHeight() - mCacheBitmap.getHeight()) / 2,
-									        (canvas.getWidth() - mCacheBitmap.getWidth()) / 2 + mCacheBitmap.getWidth(),
-									        (canvas.getHeight() - mCacheBitmap.getHeight()) / 2 + mCacheBitmap.getHeight()), null);
-				}
+				srcRect.right = mCacheBitmap.getWidth();
+				srcRect.bottom = mCacheBitmap.getHeight();
 
+				dstRect.left = (canvas.getWidth() - mCacheBitmap.getWidth()) / 2;
+				dstRect.top = (canvas.getHeight() - mCacheBitmap.getHeight()) / 2;
+				dstRect.right = (canvas.getWidth() - mCacheBitmap.getWidth()) / 2 + mCacheBitmap.getWidth();
+				dstRect.bottom = (canvas.getHeight() - mCacheBitmap.getHeight()) / 2 + mCacheBitmap.getHeight();
+				canvas.drawBitmap(mCacheBitmap, srcRect, dstRect, null);
+				canvas.restore();
 				if (mFpsMeter != null) {
 					mFpsMeter.measure();
 					mFpsMeter.draw(canvas, 20, 30);
@@ -364,7 +364,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 	 * @param surfaceHeight
 	 * @return optimal frame size
 	 */
-	protected Size calculateCameraFrameSize(List<?> supportedSizes, ListItemAccessor accessor, int surfaceWidth, int surfaceHeight) {
+	protected Size calculateCameraFrameSize(List<Camera.Size> supportedSizes, int surfaceWidth, int surfaceHeight) {
 		int calcWidth = 0;
 		int calcHeight = 0;
 
@@ -372,8 +372,8 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 		int maxAllowedHeight = (mMaxHeight != MAX_UNSPECIFIED && mMaxHeight < surfaceHeight) ? mMaxHeight : surfaceHeight;
 
 		for (Object size : supportedSizes) {
-			int width = accessor.getWidth(size);
-			int height = accessor.getHeight(size);
+			int width = ((Camera.Size) size).width;
+			int height = ((Camera.Size) size).height;
 
 			if (width <= maxAllowedWidth && height <= maxAllowedHeight) {
 				if (width >= calcWidth && height >= calcHeight) {

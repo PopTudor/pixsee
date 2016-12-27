@@ -4,8 +4,10 @@ import android.content.Context;
 import android.hardware.Camera;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.SurfaceHolder;
 
 import org.opencv.android.JavaCameraView;
+import org.opencv.core.Size;
 
 import java.io.FileOutputStream;
 import java.util.List;
@@ -19,12 +21,22 @@ import static android.hardware.Camera.PictureCallback;
 public class CameraView extends JavaCameraView implements PictureCallback {
 	private static final String TAG = "Sample::CameraView";
 	private String mPictureFileName;
+	private Context mContext;
+
+	public CameraView(Context context) {
+		this(context, CAMERA_ID_FRONT);
+	}
 
 	public CameraView(Context context, int cameraId) {
 		super(context, cameraId);
+		mContext = context;
 	}
 
 	public CameraView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
+
+	public CameraView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs);
 	}
 
@@ -61,50 +73,6 @@ public class CameraView extends JavaCameraView implements PictureCallback {
 		connectCamera(getWidth(), getHeight());
 	}
 
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		int desiredWidth = 800;
-		int desiredHeight = 640;
-
-		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-		int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-		int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-		int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-		int width;
-		int height;
-
-		//Measure Width
-		if (widthMode == MeasureSpec.EXACTLY) {
-			//Must be this size
-			width = widthSize;
-		} else if (widthMode == MeasureSpec.AT_MOST) {
-			//Can't be bigger than...
-			width = Math.min(desiredWidth, widthSize);
-		} else {
-			//Be whatever you want
-			width = desiredWidth;
-		}
-
-		//Measure Height
-		if (heightMode == MeasureSpec.EXACTLY) {
-			//Must be this size
-			height = heightSize;
-		} else if (heightMode == MeasureSpec.AT_MOST) {
-			//Can't be bigger than...
-			height = Math.min(desiredHeight, heightSize);
-		} else {
-			//Be whatever you want
-			height = desiredHeight;
-		}
-		mMaxWidth = width;
-		mMaxHeight = height;
-
-		//MUST CALL THIS
-		setMeasuredDimension(width, height);
-	}
-
 	public void takePicture(final String fileName) {
 		Log.i(TAG, "Taking picture");
 		this.mPictureFileName = fileName;
@@ -114,6 +82,11 @@ public class CameraView extends JavaCameraView implements PictureCallback {
 
 		// PictureCallback is implemented by the current class
 		mCamera.takePicture(null, null, this);
+	}
+
+	@Override
+	public void surfaceCreated(SurfaceHolder holder) {
+		super.surfaceCreated(holder);
 	}
 
 	@Override
@@ -136,4 +109,53 @@ public class CameraView extends JavaCameraView implements PictureCallback {
 
 	}
 
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		final int width = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
+		final int height = resolveSize(getSuggestedMinimumHeight(), heightMeasureSpec);
+
+		if (mPreviewSize == null) {
+			setMeasuredDimension(width, height);
+			return;
+		}
+		float ratio = calculateViewRatio();
+		setMeasuredDimension(width, (int) (width * ratio));
+	}
+
+	@Override
+	protected Size calculateCameraFrameSize(List<Camera.Size> supportedSizes, int surfaceWidth, int surfaceHeight) {
+		final double ASPECT_TOLERANCE = 0.1;
+		double targetRatio = (double) surfaceHeight / surfaceWidth;
+
+		if (supportedSizes == null)
+			return null;
+
+		Camera.Size optimalSize = null;
+		double minDiff = Double.MAX_VALUE;
+
+		int targetHeight = surfaceHeight;
+
+		for (Camera.Size size : supportedSizes) {
+			double ratio = (double) size.height / size.width;
+			if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE)
+				continue;
+
+			if (Math.abs(size.height - targetHeight) < minDiff) {
+				optimalSize = size;
+				minDiff = Math.abs(size.height - targetHeight);
+			}
+		}
+
+		if (optimalSize == null) {
+			minDiff = Double.MAX_VALUE;
+			for (Camera.Size size : supportedSizes) {
+				if (Math.abs(size.height - targetHeight) < minDiff) {
+					optimalSize = size;
+					minDiff = Math.abs(size.height - targetHeight);
+				}
+			}
+		}
+
+		return new Size(optimalSize.width, optimalSize.height);
+	}
 }

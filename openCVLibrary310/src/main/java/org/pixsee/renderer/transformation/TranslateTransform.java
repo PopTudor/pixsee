@@ -1,4 +1,9 @@
-package org.pixsee.renderer.transformation;
+package com.marked.pixsee.ui.selfie.renderer.transformation;
+
+import com.google.android.gms.vision.CameraSource;
+import com.marked.pixsee.camerasource.face.PixseeFace;
+
+import org.rajawali3d.Object3D;
 
 /**
  * Created by Tudor on 20-Aug-16.
@@ -10,7 +15,7 @@ public class TranslateTransform extends Transform {
 
 	public TranslateTransform(int CAMERA_Z) {
 		this.CAMERA_Z = CAMERA_Z;
-//		mFacing = CameraSource.CAMERA_FACING_FRONT;
+		mFacing = CameraSource.CAMERA_FACING_FRONT;
 	}
 
 	public void setFacing(int facing) {
@@ -23,34 +28,34 @@ public class TranslateTransform extends Transform {
 	 * @param object3D the object to translate
 	 * @param pixseeFace     the pixseeFace to get it's position
 	 */
-//	@Override
-//	public void transform(Object3D object3D, PixseeFace pixseeFace) {
-//		float x = translateX(pixseeFace.centerX());
-//		float y = translateY(pixseeFace.centerY());
-//		object3D.setScreenCoordinates(x, y, sCurrentViewportWidth, sCurrentViewportHeight, CAMERA_Z);
-//	}
+	@Override
+	public void transform(Object3D object3D, PixseeFace pixseeFace) {
+		float x = translateX(pixseeFace.centerX());
+		float y = translateY(pixseeFace.centerY());
+		object3D.setScreenCoordinates(x, y, sCurrentViewportWidth, sCurrentViewportHeight, CAMERA_Z);
+	}
 
 	/**
 	 * Adjusts the y coordinate from the preview's coordinate system to the view coordinate
 	 * system.
 	 */
-//	private float translateY(float y) {
-//		if (mFacing == CameraSource.CAMERA_FACING_FRONT)
-//			return sCurrentViewportHeight - scaleY(y);
-//		else
-//			return scaleY(y);
-//	}
+	private float translateY(float y) {
+		if (mFacing == CameraSource.CAMERA_FACING_FRONT)
+			return sCurrentViewportHeight - scaleY(y);
+		else
+			return scaleY(y);
+	}
 
 	/**
 	 * Adjusts the x coordinate from the preview's coordinate system to the view coordinate
 	 * system.
 	 */
 	private float translateX(float x) {
-//		if (mFacing == CameraSource.CAMERA_FACING_FRONT) {
-//			return sCurrentViewportWidth - scaleX(x);
-//		} else {
+		if (mFacing == CameraSource.CAMERA_FACING_FRONT) {
+			return sCurrentViewportWidth - scaleX(x);
+		} else {
 			return scaleX(x);
-//		}
+		}
 	}
 
 	/**

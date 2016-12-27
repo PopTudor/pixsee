@@ -1,4 +1,8 @@
-package org.pixsee.renderer.transformation;
+package com.marked.pixsee.ui.selfie.renderer.transformation;
+
+import com.marked.pixsee.camerasource.face.PixseeFace;
+
+import org.rajawali3d.Object3D;
 
 /**
  * Created by Tudor on 20-Aug-16.
@@ -17,5 +21,5 @@ public abstract class Transform {
 		mWidthScaleFactor = widthScaleFactor;
 		mHeightScaleFactor = heightScaleFactor;
 	}
-//	public abstract void transform(Object3D object3D, PixseeFace pixseeFace);
+	public abstract void transform(Object3D object3D, PixseeFace pixseeFace);
 }

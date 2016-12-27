@@ -1,13 +1,18 @@
-package org.pixsee.renderer;
+package com.marked.pixsee.ui.selfie.renderer;
 
 import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import org.pixsee.renderer.transformation.RotationTransform;
-import org.pixsee.renderer.transformation.ScaleTransform;
-import org.pixsee.renderer.transformation.Transform;
-import org.pixsee.renderer.transformation.TranslateTransform;
+import com.google.android.gms.common.images.Size;
+import com.marked.pixsee.camerasource.face.PixseeFace;
+import com.marked.pixsee.ui.selfie.SelfieFragment.OnFavoritesListener;
+import com.marked.pixsee.ui.selfie.data.SelfieObject;
+import com.marked.pixsee.ui.selfie.renderer.transformation.RotationTransform;
+import com.marked.pixsee.ui.selfie.renderer.transformation.ScaleTransform;
+import com.marked.pixsee.ui.selfie.renderer.transformation.Transform;
+import com.marked.pixsee.ui.selfie.renderer.transformation.TranslateTransform;
+
 import org.rajawali3d.Object3D;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.loader.ALoader;
@@ -25,7 +30,7 @@ import java.util.List;
  * Used to render models onto a @{StreamingTexture} using the render thread
  * The renderer should only be created once we have a running camera
  */
-public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback {
+public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback, OnFavoritesListener, SelfieTrackerAR.TrackerCallback {
 	private static final String TAG = "***********";
 	private static final int CAMERA_Z = 6;
 	private final Object mLock = new Object();
@@ -78,40 +83,40 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback {
 		});
 	}
 
-//	@Override
-//	public void onFavoriteClicked(final SelfieObject object) {
-//		loadModel(object.getLoader(), SelfieRenderer.this, object.getResId());
-//		if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
-//			float widthScaleFactor = (float) mCurrentViewportWidth / (float) mPreviewWidth;
-//			float heightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
-//			Transform.setScaleFactor(widthScaleFactor, heightScaleFactor);
-//		}
-//	}
-//
-//	@Override
-//	public void onNewItem(int id, PixseeFace pixseeFace) {
-//		if (loadedObject != null)
-//			loadedObject.setVisible(true);
-//	}
-//
-//	@Override
-//	public void onUpdate(PixseeFace pixseeFace) {
-//		if (loadedObject != null && pixseeFace != null) {
-//			for (Transform it : mTransforms)
-//				it.transform(loadedObject, pixseeFace);
-//		}
-//	}
+	@Override
+	public void onFavoriteClicked(final SelfieObject object) {
+		loadModel(object.getLoader(), SelfieRenderer.this, object.getResId());
+		if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
+			float widthScaleFactor = (float) mCurrentViewportWidth / (float) mPreviewWidth;
+			float heightScaleFactor = (float) mCurrentViewportHeight / (float) mPreviewHeight;
+			Transform.setScaleFactor(widthScaleFactor, heightScaleFactor);
+		}
+	}
 
-//	@Override
-//	public void onDone() {
-//		if (loadedObject != null)
-//			loadedObject.setVisible(false);
-//	}
+	@Override
+	public void onNewItem(int id, PixseeFace pixseeFace) {
+		if (loadedObject != null)
+			loadedObject.setVisible(true);
+	}
+
+	@Override
+	public void onUpdate(PixseeFace pixseeFace) {
+		if (loadedObject != null && pixseeFace != null) {
+			for (Transform it : mTransforms)
+				it.transform(loadedObject, pixseeFace);
+		}
+	}
+
+	@Override
+	public void onDone() {
+		if (loadedObject != null)
+			loadedObject.setVisible(false);
+	}
 
 	@Override
 	public void onModelLoadFailed(ALoader loader) {
 		Log.d(TAG, "onModelLoadFailed: ");
-//		onDone();
+		onDone();
 	}
 
 	@Override
@@ -126,17 +131,17 @@ public class SelfieRenderer extends Renderer implements IAsyncLoaderCallback {
 	 * shown on the face. This sets the preview width/height of the rendering surface to be the same
 	 * as the camera surface so their sizes will match when overlapped
 	 */
-//	public void setCameraInfo(Size size, int facing) {
-//		int min = Math.min(size.getWidth(), size.getHeight());
-//		int max = Math.max(size.getWidth(), size.getHeight());
-//		if (Utils.isPortraitMode(mContext)) {
-//			// Swap width and height sizes when in portrait, since it will be rotated by
-//			// 90 degrees
-//			setCameraInfo(min, max, facing);
-//		} else {
-//			setCameraInfo(max, min, facing);
-//		}
-//	}
+	public void setCameraInfo(Size size, int facing) {
+		int min = Math.min(size.getWidth(), size.getHeight());
+		int max = Math.max(size.getWidth(), size.getHeight());
+		if (Utils.isPortraitMode(mContext)) {
+			// Swap width and height sizes when in portrait, since it will be rotated by
+			// 90 degrees
+			setCameraInfo(min, max, facing);
+		} else {
+			setCameraInfo(max, min, facing);
+		}
+	}
 
 	private void setCameraInfo(int previewWidth, int previewHeight, int facing) {
 		synchronized (mLock) {
