@@ -5,7 +5,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.google.android.gms.common.images.Size;
-import com.marked.pixsee.face.PixseeFace;
+import com.marked.pixsee.camerasource.face.PixseeFace;
 import com.marked.pixsee.ui.selfie.SelfieFragment.OnFavoritesListener;
 import com.marked.pixsee.ui.selfie.data.SelfieObject;
 import com.marked.pixsee.ui.selfie.renderer.transformation.RotationTransform;

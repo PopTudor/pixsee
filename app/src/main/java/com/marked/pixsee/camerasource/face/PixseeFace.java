@@ -1,4 +1,4 @@
-package com.marked.pixsee.face;
+package com.marked.pixsee.camerasource.face;
 
 /**
  * Created by Tudor on 29-Sep-16.

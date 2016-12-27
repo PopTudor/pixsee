@@ -1,4 +1,4 @@
-package com.tudorpop.pixseecamera;
+package org.pixsee;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;

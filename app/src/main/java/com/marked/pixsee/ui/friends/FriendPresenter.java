@@ -99,7 +99,7 @@ class FriendPresenter implements FriendsContract.Presenter {
 					.filter(new Func1<List<User>, Boolean>() {
 						@Override
 						public Boolean call(List<User> users) {
-							return users.size() > 0;
+							return users != null && users.size() > 0;
 						}
 					})
 					.subscribe(new Action1<List<User>>() {
@@ -113,7 +113,11 @@ class FriendPresenter implements FriendsContract.Presenter {
 							, new Action1<Throwable>() {
 								@Override
 								public void call(Throwable throwable) {
-									mView.get().showNoFriends();
+									try {
+										mView.get().showNoFriends();
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
 								}
 							});
 		}
